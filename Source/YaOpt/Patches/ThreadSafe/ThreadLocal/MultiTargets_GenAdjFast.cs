@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -22,18 +22,18 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{
-			yield return AccessTools.Method(typeof(GenAdjFast), 
+			yield return AccessTools.Method(typeof(GenAdjFast),
 				nameof(GenAdjFast.AdjacentCells8Way),
-				new [] { typeof(IntVec3) });
-			yield return AccessTools.Method(typeof(GenAdjFast), 
+				new[] { typeof(IntVec3) });
+			yield return AccessTools.Method(typeof(GenAdjFast),
 				nameof(GenAdjFast.AdjacentCells8Way),
-				new [] { typeof(IntVec3), typeof(Rot4), typeof(IntVec2) });
-			yield return AccessTools.Method(typeof(GenAdjFast), 
+				new[] { typeof(IntVec3), typeof(Rot4), typeof(IntVec2) });
+			yield return AccessTools.Method(typeof(GenAdjFast),
 				nameof(GenAdjFast.AdjacentCellsCardinal),
-				new [] { typeof(IntVec3) });
-			yield return AccessTools.Method(typeof(GenAdjFast), 
+				new[] { typeof(IntVec3) });
+			yield return AccessTools.Method(typeof(GenAdjFast),
 				nameof(GenAdjFast.AdjacentCellsCardinal),
-				new [] { typeof(IntVec3), typeof(Rot4), typeof(IntVec2) });
+				new[] { typeof(IntVec3), typeof(Rot4), typeof(IntVec2) });
 		}
 
 		static bool Prepare()

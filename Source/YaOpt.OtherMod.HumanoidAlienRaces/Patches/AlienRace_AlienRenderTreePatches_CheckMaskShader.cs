@@ -1,4 +1,4 @@
-﻿using AlienRace;
+using AlienRace;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;

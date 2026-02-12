@@ -1,4 +1,4 @@
-﻿using Verse;
+using Verse;
 using YaOpt.Helpers;
 using YaOpt.Patches;
 

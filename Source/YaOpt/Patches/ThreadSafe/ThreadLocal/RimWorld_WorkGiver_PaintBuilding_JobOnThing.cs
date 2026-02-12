@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
@@ -27,14 +27,14 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Stsfld && instruction.operand is FieldInfo fieldInfo1 &&
-				    fieldInfo1.Name == "tmpDye")
+					fieldInfo1.Name == "tmpDye")
 				{
 					yield return CodeInstruction.StoreLocal(local.LocalIndex)
 						.WithLabels(instruction.labels).WithBlocks(instruction.blocks);
 					continue;
 				}
 				if (instruction.opcode == OpCodes.Ldsfld && instruction.operand is FieldInfo fieldInfo2 &&
-				    fieldInfo2.Name == "tmpDye")
+					fieldInfo2.Name == "tmpDye")
 				{
 					yield return CodeInstruction.LoadLocal(local.LocalIndex)
 						.WithLabels(instruction.labels).WithBlocks(instruction.blocks);

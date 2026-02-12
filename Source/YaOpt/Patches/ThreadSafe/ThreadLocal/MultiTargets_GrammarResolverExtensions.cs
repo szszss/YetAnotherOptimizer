@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -18,9 +18,9 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{
-			yield return AccessTools.Method(typeof(GrammarResolverSimpleStringExtensions), 
+			yield return AccessTools.Method(typeof(GrammarResolverSimpleStringExtensions),
 				nameof(GrammarResolverSimpleStringExtensions.Formatted),
-				new [] { typeof(string), typeof(NamedArgument) });
+				new[] { typeof(string), typeof(NamedArgument) });
 			yield return AccessTools.Method(typeof(GrammarResolverSimpleStringExtensions),
 				nameof(GrammarResolverSimpleStringExtensions.Formatted),
 				new[] { typeof(string), typeof(NamedArgument), typeof(NamedArgument) });

@@ -1,4 +1,4 @@
-﻿using Gilzoide.ManagedJobs;
+using Gilzoide.ManagedJobs;
 using HarmonyLib;
 using RimWorld;
 using System;
@@ -141,7 +141,7 @@ namespace YaOpt.Helpers
 					if (pawnCanUseWorkGiver(jgw, pawn, workGiver))
 					{
 						if (CompatibilityDef.CachedWorkGiverParallelism
-						    .TryGetValue(workGiver.def.defName, out var parallelism) && parallelism != Full)
+							.TryGetValue(workGiver.def.defName, out var parallelism) && parallelism != Full)
 						{
 							serialTaskCount++;
 							workGiversProcessedByMainThread.Enqueue((workGiver, i));
@@ -162,7 +162,7 @@ namespace YaOpt.Helpers
 				if (JOBDEBUG)
 				{
 					pawn.jobs.DebugLogEvent($"{parallelTaskCount} of {jobList?.Count} WorkGivers are being processed by " +
-					                        $"{JobsUtility.JobWorkerMaximumCount} worker threads.");
+											$"{JobsUtility.JobWorkerMaximumCount} worker threads.");
 					if (mainThreadHasJobToDone)
 					{
 						pawn.jobs.DebugLogEvent(
@@ -184,8 +184,8 @@ namespace YaOpt.Helpers
 						if (JOBDEBUG)
 						{
 							pawn.jobs.DebugLogEvent($"A job (index={workingFence}) was issued. " +
-							                        $"Time passed: {debugStopwatch.Elapsed.TotalMilliseconds}ms. " +
-							                        "Stopping worker threads...");
+													$"Time passed: {debugStopwatch.Elapsed.TotalMilliseconds}ms. " +
+													"Stopping worker threads...");
 						}
 
 						jobHandle.CompleteWithSpinWait(); // Make sure it's finished
@@ -200,7 +200,7 @@ namespace YaOpt.Helpers
 				if (JOBDEBUG)
 				{
 					pawn.jobs.DebugLogEvent("All worker threads had stopped. " +
-					                        $"Total time passed: {debugStopwatch.Elapsed.TotalMilliseconds}ms.");
+											$"Total time passed: {debugStopwatch.Elapsed.TotalMilliseconds}ms.");
 					pawn.jobs.DebugLogEvent(PrintJobResults());
 				}
 
@@ -209,8 +209,8 @@ namespace YaOpt.Helpers
 				while (jobResults.TryTake(out var result))
 				{
 					if (result.Successful &&
-					    result.Index < bestIndex &&
-					    result.Index < jobIssueErrorAfter)
+						result.Index < bestIndex &&
+						result.Index < jobIssueErrorAfter)
 					{
 						bestIndex = result.Index;
 						bestResult = result;
@@ -231,7 +231,7 @@ namespace YaOpt.Helpers
 						else
 						{
 							pawn.jobs.DebugLogEvent(
-								$"JobGiver_Work parellelly produced non-scan Job {bestResult.ResultJob.ToStringSafe()} " + 
+								$"JobGiver_Work parellelly produced non-scan Job {bestResult.ResultJob.ToStringSafe()} " +
 								$"from {bestResult.Giver}");
 						}
 					}
@@ -250,13 +250,13 @@ namespace YaOpt.Helpers
 				else if (JOBDEBUG)
 				{
 					pawn.jobs.DebugLogEvent("No job was issued. This could be either an error, " +
-					                        "or maybe pawn really has nothing to do.");
+											"or maybe pawn really has nothing to do.");
 				}
 
 				if (JOBDEBUG)
 				{
 					pawn.jobs.DebugLogEvent("Returning ThinkResult. Total time passed: " +
-					                        $"{debugStopwatch.Elapsed.TotalMilliseconds}ms");
+											$"{debugStopwatch.Elapsed.TotalMilliseconds}ms");
 					debugStopwatch.Stop();
 				}
 
@@ -270,7 +270,7 @@ namespace YaOpt.Helpers
 				{
 					result.Dispose(pawn);
 				}
-				
+
 				foreach (var result in tmpList)
 				{
 					result.Dispose(pawn);
@@ -295,8 +295,8 @@ namespace YaOpt.Helpers
 			foreach (var result in list)
 			{
 				if (result.Successful &&
-				    result.Index < chosen &&
-				    result.Index < jobIssueErrorAfter)
+					result.Index < chosen &&
+					result.Index < jobIssueErrorAfter)
 				{
 					chosen = result.Index;
 				}
@@ -506,16 +506,16 @@ namespace YaOpt.Helpers
 						Thing thing;
 						var potentialWorkThings = scanner.PotentialWorkThingsGlobal(pawn);
 						var closure = new ScanThingsClosure(scanner, pawn);
-						bool flag = pawn.carryTracker?.CarriedThing != null && 
-						            scanner.PotentialWorkThingRequest.Accepts(pawn.carryTracker.CarriedThing) &&
-						            closure.Validate(pawn.carryTracker.CarriedThing);
+						bool flag = pawn.carryTracker?.CarriedThing != null &&
+									scanner.PotentialWorkThingRequest.Accepts(pawn.carryTracker.CarriedThing) &&
+									closure.Validate(pawn.carryTracker.CarriedThing);
 						if (ShouldStop(workGiverIndex))
 							return;
 						if (scanner.Prioritized)
 						{
-							var searchSet = potentialWorkThings ?? 
-							                pawn.Map.listerThings.ThingsMatching(
-								                scanner.PotentialWorkThingRequest);
+							var searchSet = potentialWorkThings ??
+											pawn.Map.listerThings.ThingsMatching(
+												scanner.PotentialWorkThingRequest);
 							if (ShouldStop(workGiverIndex))
 								return;
 							if (scanner.AllowUnreachable)
@@ -556,16 +556,16 @@ namespace YaOpt.Helpers
 						}
 						else if (scanner.AllowUnreachable)
 						{
-							var searchSet2 = potentialWorkThings ?? 
-							                 pawn.Map.listerThings.ThingsMatching(scanner.PotentialWorkThingRequest);
+							var searchSet2 = potentialWorkThings ??
+											 pawn.Map.listerThings.ThingsMatching(scanner.PotentialWorkThingRequest);
 							if (ShouldStop(workGiverIndex))
 								return;
 							thing = GenClosest.ClosestThing_Global(pawn.Position, searchSet2, 99999f, closure.Validate);
 						}
 						else
 						{
-							thing = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, 
-								scanner.PotentialWorkThingRequest, scanner.PathEndMode, 
+							thing = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map,
+								scanner.PotentialWorkThingRequest, scanner.PathEndMode,
 								TraverseParms.For(pawn, scanner.MaxPathDanger(pawn)), 9999f, closure.Validate,
 								potentialWorkThings, 0, scanner.MaxRegionsToScanBeforeGlobalSearch,
 								potentialWorkThings != null);
@@ -634,9 +634,9 @@ namespace YaOpt.Helpers
 							{
 								Successful = false,
 								ErrorInfo = $"{scannerWhoProvidedTarget.ToStringSafe()} " +
-								            $"provided target {bestTargetOfLastPriority} " +
-								            $"but yielded no actual job for pawn {pawn.ToStringSafe()}. " +
-								            "The CanGiveJob and JobOnX methods may not be synchronized.",
+											$"provided target {bestTargetOfLastPriority} " +
+											$"but yielded no actual job for pawn {pawn.ToStringSafe()}. " +
+											"The CanGiveJob and JobOnX methods may not be synchronized.",
 								ErrorOnceHash = workGiver.GetHashCode(),
 								Giver = workGiver,
 								Index = workGiverIndex

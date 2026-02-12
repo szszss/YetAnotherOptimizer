@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -42,9 +42,9 @@ namespace YaOpt.Helpers
 					catch (Exception ex)
 					{
 						YaOptMod.Error("An error was thrown while caching the types from " +
-						               $"assembly {assembly.FullName}. " +
-						               "Any call to AccessTools.TypeByName may fail to " +
-						               "retrieve the types in this assembly.");
+									   $"assembly {assembly.FullName}. " +
+									   "Any call to AccessTools.TypeByName may fail to " +
+									   "retrieve the types in this assembly.");
 					}
 				}
 			}

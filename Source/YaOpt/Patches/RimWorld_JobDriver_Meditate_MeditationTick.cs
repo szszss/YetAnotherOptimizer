@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -39,8 +39,8 @@ namespace YaOpt.Patches
 			{
 				// this.pawn.skills.Learn(SkillDefOf.Intellectual, 0.018000001f, false, false);
 				// change 0.018 to 1.8
-				if (instruction.opcode == OpCodes.Ldc_R4 
-				    && Mathf.Approximately(Convert.ToSingle(instruction.operand), 0.018f))
+				if (instruction.opcode == OpCodes.Ldc_R4
+					&& Mathf.Approximately(Convert.ToSingle(instruction.operand), 0.018f))
 				{
 					instruction.operand = 0.018f * RATIO;
 					YaOptMod.Log("YaOpt Meditation Patched1");

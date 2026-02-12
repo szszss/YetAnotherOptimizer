@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using Gilzoide.ManagedJobs;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -65,7 +65,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 			if (jobRunning)
 			{
 				YaOptMod.Error("Try to add a pending pawn while the updating facial animation job is running.\n" +
-				               $"Pawn: {pawn}");
+							   $"Pawn: {pawn}");
 				return;
 			}
 			pendingPawns.Add(pawn);
@@ -90,7 +90,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 
 				if (!comp.CheckUpdateableInitial())
 					return;
-				
+
 				comp.UpdateStatus(Find.TickManager.TicksGame);
 				comp.UpdateAnimation();
 			}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Verse;
@@ -107,9 +107,9 @@ namespace YaOpt.Helpers
 						for (var j = 0; j < 2; j++)
 						{
 							var region2 = regionLink.regions[j];
-							if (region2 != null && !close.Contains(region2.id) && 
-							    (region2.type & traversableRegionTypes) != RegionType.None && 
-							    (entryCondition == null || entryCondition(region, region2)))
+							if (region2 != null && !close.Contains(region2.id) &&
+								(region2.type & traversableRegionTypes) != RegionType.None &&
+								(entryCondition == null || entryCondition(region, region2)))
 							{
 								this.QueueNewOpenRegion(region2);
 							}

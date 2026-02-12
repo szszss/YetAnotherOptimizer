@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -20,7 +20,7 @@ namespace YaOpt.Helpers
 		private static readonly AccessTools.FieldRef<Dictionary<Type, ThingComp[]>, int> dictVersionFieldRef =
 			AccessTools.FieldRefAccess<int>(typeof(Dictionary<Type, ThingComp[]>), "_version");
 
-		private static readonly FieldInfo dictVersionField = 
+		private static readonly FieldInfo dictVersionField =
 			AccessTools.Field(typeof(Dictionary<Type, ThingComp[]>), "_version");
 
 		private static readonly Dictionary<Type, List<ThingComp>> tmpCompsByType =

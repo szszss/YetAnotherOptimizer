@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -31,8 +31,8 @@ namespace YaOpt.Patches.ThreadSafe
 			{
 				// from SimplePool<T>.Get()/Return(obj)/FreeItemsCount
 				// to ConcurrentPool<T>.Get()/Return(obj)/FreeItemsCount
-				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo && 
-				    (methodInfo.Name == "Get" || methodInfo.Name == "Return" || methodInfo.Name == "get_FreeItemsCount"))
+				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
+					(methodInfo.Name == "Get" || methodInfo.Name == "Return" || methodInfo.Name == "get_FreeItemsCount"))
 				{
 					var type = methodInfo.DeclaringType;
 					if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SimplePool<>))

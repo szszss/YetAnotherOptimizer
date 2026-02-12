@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -60,8 +60,8 @@ namespace YaOpt.Patches.Trampolines
 			for (int i = 0, j = codes.Length - 10; i < j; i++)
 			{
 				// Search 0x48 0x8D 0x64 0x24 0x00
-				if (codes[i] == 0x48 && codes[i + 1] == 0x8D && 
-				    codes[i + 2] == 0x64 && codes[i + 3] == 0x24 && codes[i + 4] == 0)
+				if (codes[i] == 0x48 && codes[i + 1] == 0x8D &&
+					codes[i + 2] == 0x64 && codes[i + 3] == 0x24 && codes[i + 4] == 0)
 				{
 					foundLea = true;
 				}

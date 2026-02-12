@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -17,16 +17,16 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{
-			yield return AccessTools.Method(typeof(WorkGiver_GrowerHarvest), 
+			yield return AccessTools.Method(typeof(WorkGiver_GrowerHarvest),
 				nameof(WorkGiver_GrowerHarvest.HasJobOnCell));
-			yield return AccessTools.Method(typeof(WorkGiver_GrowerSow), 
+			yield return AccessTools.Method(typeof(WorkGiver_GrowerSow),
 				nameof(WorkGiver_GrowerSow.JobOnCell));
 			yield return AccessTools.Method(typeof(WorkGiver_GrowerSow),
 				"ExtraRequirements");
 			foreach (var nestedType in typeof(WorkGiver_Grower).GetNestedTypes(
-				         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
-				var method = nestedType.GetMethod("MoveNext", 
+				var method = nestedType.GetMethod("MoveNext",
 					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 				if (method != null)
 				{
@@ -45,8 +45,8 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		{
 			foreach (var instruction in instructions)
 			{
-				if ((instruction.opcode == OpCodes.Ldsfld || instruction.opcode == OpCodes.Stsfld) && 
-				    instruction.operand is FieldInfo fieldInfo && fieldInfo.Name == "wantedPlantDef")
+				if ((instruction.opcode == OpCodes.Ldsfld || instruction.opcode == OpCodes.Stsfld) &&
+					instruction.operand is FieldInfo fieldInfo && fieldInfo.Name == "wantedPlantDef")
 				{
 					instruction.operand = AccessTools.Field(
 						typeof(MultiTargets_WorkGiverGrower),

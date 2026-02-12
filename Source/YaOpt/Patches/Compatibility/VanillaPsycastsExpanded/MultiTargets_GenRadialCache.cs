@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -25,7 +25,7 @@ namespace YaOpt.Patches.Compatibility.VanillaPsycastsExpanded
 				return true;
 
 			var shouldRun = (YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled) &&
-			                YaOptGlobal.HasMod("VanillaExpanded.VPsycastsE");
+							YaOptGlobal.HasMod("VanillaExpanded.VPsycastsE");
 
 			return shouldRun;
 		}

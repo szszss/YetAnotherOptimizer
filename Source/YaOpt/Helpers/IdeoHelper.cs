@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using Verse;
@@ -8,7 +8,7 @@ namespace YaOpt.Helpers
 	[StaticConstructorOnStartup]
 	internal static class IdeoHelper
 	{
-		private static readonly HashSet<Type> 
+		private static readonly HashSet<Type>
 			preceptsWithOverridenTick = new HashSet<Type>();
 		private static readonly HashSet<Type>
 			preceptCompsWithOverridenMemberWillingToDo = new HashSet<Type>();

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,7 +14,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 	{
 		static IEnumerable<MethodBase> TargetMethods()
 		{
-			yield return AccessTools.Method(typeof(ThingOwnerUtility), 
+			yield return AccessTools.Method(typeof(ThingOwnerUtility),
 				nameof(ThingOwnerUtility.TryGetInnerInteractableThingOwner));
 			yield return AccessTools.Method(typeof(ThingOwnerUtility),
 				nameof(ThingOwnerUtility.GetAllThingsRecursively),
@@ -31,8 +31,8 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		{
 			LocalBuilder localTmpStack = null;
 			LocalBuilder localTmpHolders = generator.DeclareLocal(typeof(List<IThingHolder>));
-			
-			yield return new CodeInstruction(OpCodes.Ldsfld, 
+
+			yield return new CodeInstruction(OpCodes.Ldsfld,
 				AccessTools.Field(
 					typeof(ThreadLocalThingOwnerUtility),
 					nameof(ThreadLocalThingOwnerUtility.TmpHolders)));
@@ -43,7 +43,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			if (methodBase.Name == nameof(ThingOwnerUtility.GetAllThingsRecursively))
 			{
 				localTmpStack = generator.DeclareLocal(typeof(Stack<IThingHolder>));
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalThingOwnerUtility),
 						nameof(ThreadLocalThingOwnerUtility.TmpStack)));

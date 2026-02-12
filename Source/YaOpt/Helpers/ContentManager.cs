@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld.IO;
 using System;
 using System.Collections.Generic;
@@ -91,7 +91,7 @@ namespace YaOpt.Helpers
 								Log.Error($"Mod lacks manager for asset type {itemType.Name}");
 								break;
 						}
-					
+
 						if (t != null)
 						{
 							if (LoadType == AssetType.Texture)
@@ -160,7 +160,7 @@ namespace YaOpt.Helpers
 							case AssetType.Texture:
 								return Resources.Load<Texture2D>(GenFilePaths.ContentPath<Texture2D>() + itemPath);
 							case AssetType.Audio:
-								return Resources.Load<AudioClip>(GenFilePaths.ContentPath<AudioClip>() + itemPath);;
+								return Resources.Load<AudioClip>(GenFilePaths.ContentPath<AudioClip>() + itemPath); ;
 						}
 						break;
 					case Source.Bundle:
@@ -274,7 +274,7 @@ namespace YaOpt.Helpers
 			if (!UnityData.IsInMainThread)
 			{
 				Log.Error($"Tried to get a resource {itemPath} from a different thread. " +
-				          "All resources must be loaded in the main thread.");
+						  "All resources must be loaded in the main thread.");
 				return null;
 			}
 
@@ -389,7 +389,7 @@ namespace YaOpt.Helpers
 				if (ddsHeader.PixelFormat.IsBgr888 && !ddsHeader.PixelFormat.IsCompressed)
 				{
 					var stride = (int)(ddsHeader.PixelFormat.RGBBitCount / 8);
-					for (var i = 0; i < dataSize; i+=stride)
+					for (var i = 0; i < dataSize; i += stride)
 					{
 						(data[i], data[i + 2]) = (data[i + 2], data[i]);
 					}
@@ -444,17 +444,17 @@ namespace YaOpt.Helpers
 			var mipmapBias = GetMipmapBias();
 			var array = file.ReadAllBytes();
 			texture.LoadImage(array);
-			if ((texture.width < 4 || texture.height < 4 || !Mathf.IsPowerOfTwo(texture.width) || 
-			     !Mathf.IsPowerOfTwo(texture.height)) && Prefs.TextureCompression)
+			if ((texture.width < 4 || texture.height < 4 || !Mathf.IsPowerOfTwo(texture.width) ||
+				 !Mathf.IsPowerOfTwo(texture.height)) && Prefs.TextureCompression)
 			{
 				var num = StaticTextureAtlas.CalculateMaxMipmapsForDxtSupport(texture);
 				if (Prefs.LogVerbose)
 				{
 					Log.Warning($"Texture {file.Name} is being reloaded with reduced mipmap count " +
-					            $"(clamped to {num}) due to non-power-of-two dimensions: " +
-					            $"({texture.width}x{texture.height}). This will be slower to load, and will look " +
-					            "worse when zoomed out. Consider using a power-of-two " +
-					            "texture size instead.");
+								$"(clamped to {num}) due to non-power-of-two dimensions: " +
+								$"({texture.width}x{texture.height}). This will be slower to load, and will look " +
+								"worse when zoomed out. Consider using a power-of-two " +
+								"texture size instead.");
 				}
 				if (!UnityData.ComputeShadersSupported)
 				{

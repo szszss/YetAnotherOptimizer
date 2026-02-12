@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -24,7 +24,7 @@ namespace YaOpt.Patches
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "get_RecacheRequested")
+					methodInfo.Name == "get_RecacheRequested")
 				{
 					yield return CodeInstruction.Call(
 						typeof(ParallelPreDrawHelper),

@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
@@ -32,7 +32,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 				yield return instruction;
 
 				if (instruction.opcode == OpCodes.Stfld && instruction.operand is FieldInfo field &&
-				    field.Name == "enableHighlight")
+					field.Name == "enableHighlight")
 				{
 					// ThoughtsHelper.TryUpdateThoughts(this.animationParam, this.pawn, false);
 					yield return CodeInstruction.LoadArgument(0);

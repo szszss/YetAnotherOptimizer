@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -51,7 +51,7 @@ namespace YaOpt.Helpers.ThreadLocal
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsRegionAlreadyReached(int regionReachId, int reachId, 
+		public static bool IsRegionAlreadyReached(int regionReachId, int reachId,
 			bool isMainThread, HashSet<int> reachedRegions, Region region)
 		{
 			return isMainThread ? regionReachId == reachId : reachedRegions.Contains(region.id);

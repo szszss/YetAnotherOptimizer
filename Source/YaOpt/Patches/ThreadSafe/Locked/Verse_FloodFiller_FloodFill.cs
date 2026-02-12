@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -7,9 +7,9 @@ using Verse;
 namespace YaOpt.Patches.ThreadSafe.Locked
 {
 	[HarmonyPatch(typeof(FloodFiller))]
-	[HarmonyPatch(nameof(FloodFiller.FloodFill), 
-		typeof(IntVec3), typeof(Predicate<IntVec3>), 
-		typeof(Func<IntVec3, int, bool>), typeof(int), 
+	[HarmonyPatch(nameof(FloodFiller.FloodFill),
+		typeof(IntVec3), typeof(Predicate<IntVec3>),
+		typeof(Func<IntVec3, int, bool>), typeof(int),
 		typeof(bool), typeof(IEnumerable<IntVec3>))]
 	internal static class Verse_FloodFiller_FloodFill
 	{

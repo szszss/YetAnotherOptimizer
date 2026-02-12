@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -26,7 +26,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Ldsfld && instruction.operand is FieldInfo fieldInfo &&
-				    fieldInfo.Name == "tmpThingsMatchingFilter")
+					fieldInfo.Name == "tmpThingsMatchingFilter")
 				{
 					yield return CodeInstruction.LoadLocal(local.LocalIndex)
 						.WithLabels(instruction.labels).WithBlocks(instruction.blocks);

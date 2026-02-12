@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -33,12 +33,12 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			LocalBuilder localTmpCanShootAtTarget = null;
 			LocalBuilder localTempDestList = null;
 			LocalBuilder localTempSourceList = null;
-			
+
 			if (methodBase.Name == nameof(AttackTargetFinder.BestAttackTarget))
 			{
 				localTmpTargets = generator.DeclareLocal(typeof(List<IAttackTarget>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalAttackTargetFinder),
 						nameof(ThreadLocalAttackTargetFinder.TmpTargets)));

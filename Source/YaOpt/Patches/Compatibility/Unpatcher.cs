@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System;
 using Verse;
@@ -22,8 +22,8 @@ namespace YaOpt.Patches.Compatibility
 		public static void Unpatch()
 		{
 			shouldRecoverPo = true;
-			if ((YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled) && 
-			    YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer"))
+			if ((YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled) &&
+				YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer"))
 			{
 				unpatchedPo = true;
 				shouldRecoverPo = false;
@@ -88,8 +88,8 @@ namespace YaOpt.Patches.Compatibility
 					shouldRecoverPo = false;
 
 					if (AccessTools.Field(
-						    AccessTools.TypeByName("WhileYoureUp.Mod"), 
-						    "harmony").GetValue(null) is Harmony harmony)
+							AccessTools.TypeByName("WhileYoureUp.Mod"),
+							"harmony").GetValue(null) is Harmony harmony)
 					{
 						harmony.Patch(AccessTools.Method(typeof(WorkGiver_Scanner), "HasJobOnThing"),
 							null, new HarmonyMethod(AccessTools.Method(

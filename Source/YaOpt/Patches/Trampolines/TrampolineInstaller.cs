@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using YaOpt.Helpers;
@@ -108,7 +108,7 @@ namespace YaOpt.Patches.Trampolines
 				catch (Exception e)
 				{
 					YaOptMod.Error($"Failed to uninstall trampolines for {installer.GetType().Name}. " +
-					               $"The game could be very instable!\n{e}");
+								   $"The game could be very instable!\n{e}");
 					installer.Installed = false;
 					installer.Available = false;
 				}

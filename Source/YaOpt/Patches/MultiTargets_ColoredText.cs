@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -29,7 +29,7 @@ namespace YaOpt.Patches
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "IndexOf" && methodInfo.GetParameters().Length == 1 &&
+					methodInfo.Name == "IndexOf" && methodInfo.GetParameters().Length == 1 &&
 					methodInfo.GetParameters()[0].ParameterType == typeof(string))
 				{
 					yield return new CodeInstruction(OpCodes.Ldc_I4_4);

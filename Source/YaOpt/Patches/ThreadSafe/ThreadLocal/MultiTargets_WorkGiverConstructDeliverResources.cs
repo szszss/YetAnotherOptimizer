@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,7 +14,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 	{
 		static IEnumerable<MethodBase> TargetMethods()
 		{
-			yield return AccessTools.Method(typeof(WorkGiver_ConstructDeliverResources), 
+			yield return AccessTools.Method(typeof(WorkGiver_ConstructDeliverResources),
 				"ResourceDeliverJobFor");
 			yield return AccessTools.Method(typeof(WorkGiver_ConstructDeliverResources),
 				"FindAvailableNearbyResources");
@@ -30,8 +30,8 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		{
 			LocalBuilder localResourcesAvailable = generator.DeclareLocal(typeof(List<Thing>));
 			LocalBuilder localMissingResources = null;
-			
-			yield return new CodeInstruction(OpCodes.Ldsfld, 
+
+			yield return new CodeInstruction(OpCodes.Ldsfld,
 				AccessTools.Field(
 					typeof(ThreadLocalConstructDeliverResources),
 					nameof(ThreadLocalConstructDeliverResources.ResourcesAvailable)));
@@ -42,7 +42,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			if (methodBase.Name == "ResourceDeliverJobFor")
 			{
 				localMissingResources = generator.DeclareLocal(typeof(Dictionary<ThingDef, int>));
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalConstructDeliverResources),
 						nameof(ThreadLocalConstructDeliverResources.MissingResources)));

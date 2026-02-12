@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
@@ -90,7 +90,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 					}
 				}
 			}
-			
+
 
 			foreach (FaceAnimation faceAnimation3 in temporaryAnimationList)
 			{

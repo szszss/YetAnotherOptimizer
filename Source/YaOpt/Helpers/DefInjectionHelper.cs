@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Verse;
 using static Verse.DefInjectionPackage;
 
@@ -23,7 +23,8 @@ namespace YaOpt.Helpers
 		{
 			if (CurrentMapping.TryGetValue(normalizedPath, out var dupInj))
 			{
-				if (dupInj.injected && dupInj.path != key) {
+				if (dupInj.injected && dupInj.path != key)
+				{
 					//YaOptMod.Warning($"Bad inj: {normalizedPath} {key}");
 					return dupInj;
 				}
@@ -35,7 +36,7 @@ namespace YaOpt.Helpers
 			List<string> errorList)
 		{
 			var text = "Duplicate def-injected translation key. Both " +
-			           $"{other.path} and {path} refer to the same field ({suggestedPath})";
+					   $"{other.path} and {path} refer to the same field ({suggestedPath})";
 			if (other.path != other.nonBackCompatiblePath)
 			{
 				text += $" ({other.nonBackCompatiblePath} was auto-renamed to {other.path})";

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -26,7 +26,7 @@ namespace YaOpt.Patches
 			{
 				// skip WindManager.plantMaterials[i].SetFloat(ShaderPropertyIDs.SwayHead, this.plantSwayHead);
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "get_CurrentMap")
+					methodInfo.Name == "get_CurrentMap")
 				{
 					instruction.opcode = OpCodes.Ret;
 					instruction.operand = null;

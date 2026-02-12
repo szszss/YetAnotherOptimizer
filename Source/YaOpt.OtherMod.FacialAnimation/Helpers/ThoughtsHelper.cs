@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Concurrent;

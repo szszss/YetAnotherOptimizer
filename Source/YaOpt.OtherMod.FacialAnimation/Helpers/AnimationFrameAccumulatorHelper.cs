@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using System;
 using Unity.Collections;
 using YaOpt.Unity;

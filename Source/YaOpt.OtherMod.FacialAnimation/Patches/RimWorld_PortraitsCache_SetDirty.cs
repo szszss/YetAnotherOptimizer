@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
@@ -30,7 +30,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 				yield return instruction;
 
 				if (instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo method &&
-				    method.Name == "Add")
+					method.Name == "Add")
 				{
 					yield return CodeInstruction.LoadArgument(0);
 					yield return CodeInstruction.Call(

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -36,11 +36,11 @@ namespace YaOpt.Patches
 			{
 				var instruction = list[i];
 				if (instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "MapMeshDirty")
+					methodInfo.Name == "MapMeshDirty")
 				{
 					var ldf = list[i - 6];
 					if (ldf.opcode != OpCodes.Ldfld || !(ldf.operand is FieldInfo fieldInfo) ||
-					    fieldInfo.Name != "mapDrawer")
+						fieldInfo.Name != "mapDrawer")
 					{
 						YaOptMod.Error($"Mismatched IL for method {method.FullName()}. Skipped.");
 						continue;

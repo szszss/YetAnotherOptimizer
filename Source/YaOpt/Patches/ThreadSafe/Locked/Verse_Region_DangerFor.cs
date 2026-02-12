@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Verse;
@@ -71,7 +71,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 						// skip other code
 						yield return CodeInstruction.LoadArgument(1);
 						yield return CodeInstruction.Call(
-							typeof(TemperatureHelper), 
+							typeof(TemperatureHelper),
 							nameof(TemperatureHelper.GetSafeTemperatureRange));
 						yield return CodeInstruction.StoreLocal(LOCAL_RANGE);
 						targetLabel = (Label)instruction.operand;

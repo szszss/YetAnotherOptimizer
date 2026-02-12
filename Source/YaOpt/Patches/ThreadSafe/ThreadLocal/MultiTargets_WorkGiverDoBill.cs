@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
@@ -16,7 +16,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 	{
 		static IEnumerable<MethodBase> TargetMethods()
 		{
-			yield return AccessTools.Method(typeof(WorkGiver_DoBill), 
+			yield return AccessTools.Method(typeof(WorkGiver_DoBill),
 				"StartOrResumeBillJob");
 			yield return AccessTools.Method(typeof(WorkGiver_DoBill),
 				"TryFindBestIngredientsHelper");
@@ -25,13 +25,13 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			yield return AccessTools.Method(typeof(WorkGiver_DoBill),
 				"TryFindBestIngredientsInSet_NoMixHelper");
 			foreach (var nestedType in typeof(WorkGiver_DoBill).GetNestedTypes(
-				         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
 				var method = AccessTools.FirstMethod(nestedType, methodInfo =>
 				{
 					var param = methodInfo.GetParameters();
 					return param?.Length == 1 && param[0].ParameterType == typeof(Region) &&
-					       (methodInfo.Name.Contains("<TryFindBestIngredientsHelper>b__4"));
+						   (methodInfo.Name.Contains("<TryFindBestIngredientsHelper>b__4"));
 				});
 				if (method != null)
 				{
@@ -56,13 +56,13 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			LocalBuilder localNewRelevantThings = null;
 			LocalBuilder localTmpMedicine = null;
 			LocalBuilder localAvailableCounts = null;
-			
+
 			if (methodBase.Name == "StartOrResumeBillJob")
 			{
 				localMissingIngredients = generator.DeclareLocal(typeof(List<IngredientCount>));
 				localTmpMissingUniqueIngredients = generator.DeclareLocal(typeof(List<Thing>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalDoBill),
 						nameof(ThreadLocalDoBill.MissingIngredients)));
@@ -70,7 +70,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 					AccessTools.PropertyGetter(typeof(ThreadLocal<List<IngredientCount>>), "Value"));
 				yield return CodeInstruction.StoreLocal(localMissingIngredients.LocalIndex);
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalDoBill),
 						nameof(ThreadLocalDoBill.TmpMissingUniqueIngredients)));
@@ -85,7 +85,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 				localProcessedThings = generator.DeclareLocal(typeof(HashSet<Thing>));
 				localNewRelevantThings = generator.DeclareLocal(typeof(List<Thing>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalDoBill),
 						nameof(ThreadLocalDoBill.RelevantThings)));
@@ -93,7 +93,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 					AccessTools.PropertyGetter(typeof(ThreadLocal<List<Thing>>), "Value"));
 				yield return CodeInstruction.StoreLocal(localRelevantThings.LocalIndex);
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalDoBill),
 						nameof(ThreadLocalDoBill.ProcessedThings)));
@@ -101,7 +101,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 					AccessTools.PropertyGetter(typeof(ThreadLocal<HashSet<Thing>>), "Value"));
 				yield return CodeInstruction.StoreLocal(localProcessedThings.LocalIndex);
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalDoBill),
 						nameof(ThreadLocalDoBill.NewRelevantThings)));
@@ -113,7 +113,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			if (methodBase.Name == "AddEveryMedicineToRelevantThings")
 			{
 				localTmpMedicine = generator.DeclareLocal(typeof(List<Thing>));
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalDoBill),
 						nameof(ThreadLocalDoBill.TmpMedicine)));
@@ -126,7 +126,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			{
 				var type = AccessTools.TypeByName("RimWorld.WorkGiver_DoBill/DefCountList");
 				localAvailableCounts = generator.DeclareLocal(type);
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalDoBill),
 						nameof(ThreadLocalDoBill.AvailableCounts)));

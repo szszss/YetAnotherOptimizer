@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -45,7 +45,7 @@ namespace YaOpt.Patches
 				}
 
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "ComputeMatrix")
+					methodInfo.Name == "ComputeMatrix")
 				{
 					instruction.operand = AccessTools.Method(
 						typeof(YaOptBurst),

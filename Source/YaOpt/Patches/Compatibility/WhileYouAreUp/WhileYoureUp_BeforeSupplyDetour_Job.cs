@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -38,7 +38,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 						typeof(Traverse),
 						nameof(Traverse.Create),
 						Type.EmptyTypes,
-						new [] { typeof(ThreadLocalConstructDeliverResources) });
+						new[] { typeof(ThreadLocalConstructDeliverResources) });
 				}
 				else if (instruction.Calls("Field"))
 				{

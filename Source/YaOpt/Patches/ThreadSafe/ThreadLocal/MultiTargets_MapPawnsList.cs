@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -61,9 +61,10 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 				case "get_AllHumanlike": fieldName = "humanlikePawnsResult"; break;
 				case "get_AllHumanlikeSpawned": fieldName = "humanlikeSpawnedPawnsResult"; break;
 				case "get_FreeColonistsAndPrisoners": fieldName = "freeColonistsAndPrisonersResult"; break;
-				case "get_AnyPawnBlockingMapRemoval": fieldName = "tmpThings";
+				case "get_AnyPawnBlockingMapRemoval":
+					fieldName = "tmpThings";
 					listType = typeof(List<Thing>);
-					threadLocalType =typeof(ThreadLocal<List<Thing>>);
+					threadLocalType = typeof(ThreadLocal<List<Thing>>);
 					break;
 				case "get_FreeAdultColonistsSpawned": fieldName = "freeAdultColonistsSpawnedResult"; break;
 				case "get_FreeColonistsAndPrisonersSpawned": fieldName = "freeColonistsAndPrisonersSpawnedResult"; break;
@@ -80,9 +81,10 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 				case "get_SpawnedDownedPawns": fieldName = "spawnedDownedPawnsResult"; break;
 				case "get_SpawnedPawnsWhoShouldHaveSurgeryDoneNow": fieldName = "spawnedPawnsWhoShouldHaveSurgeryDoneNowResult"; break;
 				case "get_SpawnedPawnsWhoShouldHaveInventoryUnloaded": fieldName = "spawnedPawnsWhoShouldHaveInventoryUnloadedResult"; break;
-				case "get_FreeColonistsSpawnedOrInPlayerEjectablePodsCount": fieldName = "tmpThings";
+				case "get_FreeColonistsSpawnedOrInPlayerEjectablePodsCount":
+					fieldName = "tmpThings";
 					listType = typeof(List<Thing>);
-					threadLocalType =typeof(ThreadLocal<List<Thing>>);
+					threadLocalType = typeof(ThreadLocal<List<Thing>>);
 					break;
 				case "get_SlavesAndPrisonersOfColonySpawned": fieldName = "slavesAndPrisonersOfColonySpawnedResult"; break;
 				default: throw new Exception($"Unexpected method {methodBase.Name}");
@@ -98,10 +100,10 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
 			yield return new CodeInstruction(OpCodes.Brfalse_S, labelElse);
 			yield return CodeInstruction.LoadArgument(0);
-			yield return new CodeInstruction(OpCodes.Ldfld, 
+			yield return new CodeInstruction(OpCodes.Ldfld,
 				AccessTools.Field(typeof(MapPawns), fieldName));
 			yield return new CodeInstruction(OpCodes.Br_S, labelEnd);
-			yield return new CodeInstruction(OpCodes.Ldsfld, 
+			yield return new CodeInstruction(OpCodes.Ldsfld,
 				AccessTools.Field(typeof(ThreadLocalMapPawns), fieldName.CapitalizeFirst())).WithLabels(labelElse);
 			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.PropertyGetter(threadLocalType, "Value"));
@@ -109,8 +111,8 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 
 			foreach (var instruction in instructions)
 			{
-				if (instruction.opcode == OpCodes.Ldfld && instruction.operand is FieldInfo fieldInfo && 
-				    fieldInfo.Name.EqualsIgnoreCase(fieldName))
+				if (instruction.opcode == OpCodes.Ldfld && instruction.operand is FieldInfo fieldInfo &&
+					fieldInfo.Name.EqualsIgnoreCase(fieldName))
 				{
 					yield return new CodeInstruction(OpCodes.Pop).WithBlocks(instruction.blocks);
 					yield return CodeInstruction.LoadLocal(local.LocalIndex).WithBlocks(instruction.blocks);

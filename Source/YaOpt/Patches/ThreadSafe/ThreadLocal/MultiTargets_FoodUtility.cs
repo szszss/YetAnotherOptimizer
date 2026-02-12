@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
@@ -20,15 +20,15 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			yield return AccessTools.Method(typeof(FoodUtility), "AddThoughtsFromIdeo");
 			yield return AccessTools.Method(typeof(FoodUtility), "ThoughtsFromIngesting");
 			yield return AccessTools.Method(typeof(FoodUtility), "AddIngestThoughtsFromIngredient");
-			
+
 			foreach (var nestedType in typeof(FoodUtility).GetNestedTypes(
-				         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
 				var method = AccessTools.FirstMethod(nestedType, methodInfo =>
 				{
 					var param = methodInfo.GetParameters();
 					return param?.Length == 1 && param[0].ParameterType == typeof(Region) &&
-					       methodInfo.Name.Contains("<BestPawnToHuntForPredator>");
+						   methodInfo.Name.Contains("<BestPawnToHuntForPredator>");
 				});
 				if (method != null)
 				{
@@ -51,12 +51,12 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			LocalBuilder localIngestThoughts = null;
 			LocalBuilder localExtraIngestThoughtsFromTraits = null;
 			LocalBuilder localIdeoIngestThoughtsCache = null;
-			
+
 			if (methodBase.Name == "BestFoodSourceOnMap")
 			{
 				localFiltered = generator.DeclareLocal(typeof(HashSet<Thing>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalFoodUtility),
 						nameof(ThreadLocalFoodUtility.Filtered)));
@@ -69,7 +69,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			{
 				localTmpPredatorCandidates = generator.DeclareLocal(typeof(List<Pawn>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalFoodUtility),
 						nameof(ThreadLocalFoodUtility.TmpPredatorCandidates)));
@@ -84,7 +84,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 				localIdeoIngestThoughtsCache = generator.DeclareLocal(
 					typeof(Dictionary<Ideo, Dictionary<HistoryEventDef, List<Precept>>>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalFoodUtility),
 						nameof(ThreadLocalFoodUtility.IngestThoughts)));
@@ -92,7 +92,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 					AccessTools.PropertyGetter(typeof(ThreadLocal<List<FoodUtility.ThoughtFromIngesting>>), "Value"));
 				yield return CodeInstruction.StoreLocal(localIngestThoughts.LocalIndex);
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalFoodUtility),
 						nameof(ThreadLocalFoodUtility.IdeoIngestThoughtsCache)));
@@ -107,7 +107,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 				localIngestThoughts = generator.DeclareLocal(typeof(List<FoodUtility.ThoughtFromIngesting>));
 				localExtraIngestThoughtsFromTraits = generator.DeclareLocal(typeof(List<ThoughtDef>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalFoodUtility),
 						nameof(ThreadLocalFoodUtility.IngestThoughts)));
@@ -115,7 +115,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 					AccessTools.PropertyGetter(typeof(ThreadLocal<List<FoodUtility.ThoughtFromIngesting>>), "Value"));
 				yield return CodeInstruction.StoreLocal(localIngestThoughts.LocalIndex);
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalFoodUtility),
 						nameof(ThreadLocalFoodUtility.ExtraIngestThoughtsFromTraits)));
@@ -128,7 +128,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			{
 				localExtraIngestThoughtsFromTraits = generator.DeclareLocal(typeof(List<ThoughtDef>));
 
-				yield return new CodeInstruction(OpCodes.Ldsfld, 
+				yield return new CodeInstruction(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(ThreadLocalFoodUtility),
 						nameof(ThreadLocalFoodUtility.ExtraIngestThoughtsFromTraits)));

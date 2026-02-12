@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using HarmonyLib;
 using System.Collections.Generic;
 using Verse;
@@ -17,7 +17,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 
 		private static readonly List<FaceAnimationCache> emptyList = new List<FaceAnimationCache>(0);
 
-		private static void FillAnimationByCachedDefs(List<FaceAnimation> anims, List<FaceAnimationCache> cache, 
+		private static void FillAnimationByCachedDefs(List<FaceAnimation> anims, List<FaceAnimationCache> cache,
 			ulong version, int initialTick)
 		{
 			foreach (var animCache in cache)

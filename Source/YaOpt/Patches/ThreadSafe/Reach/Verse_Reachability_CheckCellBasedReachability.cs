@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Verse;
 using YaOpt.Helpers.ThreadLocal;
 
@@ -19,7 +19,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			__state = false;
 			ThreadLocalReachability.EnterLock(ref __state);
 		}
-		
+
 		static void Finalizer(bool __state)
 		{
 			ThreadLocalReachability.ExitLock(__state);

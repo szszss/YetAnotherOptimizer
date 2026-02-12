@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -9,19 +9,19 @@ namespace YaOpt.Helpers
 {
 	internal static class ThreadLocalThingOwnerUtility
 	{
-		public static ThreadLocal<Stack<IThingHolder>> TmpStack = 
+		public static ThreadLocal<Stack<IThingHolder>> TmpStack =
 			new ThreadLocal<Stack<IThingHolder>>(() => new Stack<IThingHolder>());
 
-		public static ThreadLocal<List<IThingHolder>> TmpHolders = 
+		public static ThreadLocal<List<IThingHolder>> TmpHolders =
 			new ThreadLocal<List<IThingHolder>>(() => new List<IThingHolder>());
 
-		public static ThreadLocal<List<Thing>> TmpThings = 
+		public static ThreadLocal<List<Thing>> TmpThings =
 			new ThreadLocal<List<Thing>>(() => new List<Thing>());
 
-		public static ThreadLocal<List<IThingHolder>> TmpMapChildHolders = 
+		public static ThreadLocal<List<IThingHolder>> TmpMapChildHolders =
 			new ThreadLocal<List<IThingHolder>>(() => new List<IThingHolder>());
 
-		public static ThreadLocal<object[]> TmpParameters = 
+		public static ThreadLocal<object[]> TmpParameters =
 			new ThreadLocal<object[]>(() => new object[6]);
 
 		private static readonly Dictionary<Type, MethodInfo> getAllThingsRecursivelyMethodCache =
@@ -59,8 +59,8 @@ namespace YaOpt.Helpers
 			}
 		}
 
-		public static void GetAllThingsRecursively(Map map, ThingRequest request, 
-			List<Thing> outThings, bool allowUnreal = true, Predicate<IThingHolder> passCheck = null, 
+		public static void GetAllThingsRecursively(Map map, ThingRequest request,
+			List<Thing> outThings, bool allowUnreal = true, Predicate<IThingHolder> passCheck = null,
 			bool alsoGetSpawnedThings = true)
 		{
 			outThings.Clear();
@@ -88,8 +88,8 @@ namespace YaOpt.Helpers
 			tmpMapChildHolders.Clear();
 		}
 
-		public static void GetAllThingsRecursivelyGeneric<T>(Map map, ThingRequest request, 
-			List<T> outThings, bool allowUnreal = true, Predicate<IThingHolder> passCheck = null, 
+		public static void GetAllThingsRecursivelyGeneric<T>(Map map, ThingRequest request,
+			List<T> outThings, bool allowUnreal = true, Predicate<IThingHolder> passCheck = null,
 			bool alsoGetSpawnedThings = true) where T : Thing
 		{
 			outThings.Clear();

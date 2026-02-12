@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -67,11 +67,11 @@ namespace YaOpt.Helpers
 			public bool Equals(YaSilhouetteCacheKey other)
 			{
 				return hashcode == other.hashcode &&
-				       Equals(thingDef, other.thingDef) &&
-				       Equals(lifeStageDef, other.lifeStageDef) &&
-				       graphicIndex == other.graphicIndex &&
-				       gender == other.gender &&
-				       rotMode == other.rotMode;
+					   Equals(thingDef, other.thingDef) &&
+					   Equals(lifeStageDef, other.lifeStageDef) &&
+					   graphicIndex == other.graphicIndex &&
+					   gender == other.gender &&
+					   rotMode == other.rotMode;
 			}
 
 			public override bool Equals(object obj)

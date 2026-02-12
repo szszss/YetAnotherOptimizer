@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
@@ -11,7 +11,7 @@ namespace YaOpt.Helpers
 {
 	public static class JobPredictor
 	{
-		private static readonly ConcurrentDictionary<Pawn, JobPrediction> jobPredictionMap = 
+		private static readonly ConcurrentDictionary<Pawn, JobPrediction> jobPredictionMap =
 			new ConcurrentDictionary<Pawn, JobPrediction>();
 
 		[Flags]
@@ -83,9 +83,9 @@ namespace YaOpt.Helpers
 			public bool Equals(TargetStatusValidation other)
 			{
 				return ExpectedActorStatus == other.ExpectedActorStatus &&
-				       ExpectedTargetAStatus == other.ExpectedTargetAStatus &&
-				       ExpectedTargetBStatus == other.ExpectedTargetBStatus &&
-				       ExpectedTargetCStatus == other.ExpectedTargetCStatus;
+					   ExpectedTargetAStatus == other.ExpectedTargetAStatus &&
+					   ExpectedTargetBStatus == other.ExpectedTargetBStatus &&
+					   ExpectedTargetCStatus == other.ExpectedTargetCStatus;
 			}
 
 			public override bool Equals(object obj)
@@ -157,8 +157,8 @@ namespace YaOpt.Helpers
 			public bool AlmostEquals(TargetDistanceValidation other)
 			{
 				return DistanceAlmostEquals(ManhattanDistanceToTargetA, other.ManhattanDistanceToTargetA) &&
-				       DistanceAlmostEquals(ManhattanDistanceToTargetB, other.ManhattanDistanceToTargetB) &&
-				       DistanceAlmostEquals(ManhattanDistanceToTargetC, other.ManhattanDistanceToTargetC);
+					   DistanceAlmostEquals(ManhattanDistanceToTargetB, other.ManhattanDistanceToTargetB) &&
+					   DistanceAlmostEquals(ManhattanDistanceToTargetC, other.ManhattanDistanceToTargetC);
 			}
 		}
 
@@ -262,7 +262,7 @@ namespace YaOpt.Helpers
 						}
 					}
 				}
-				
+
 				var toil = ThingHelper.GetCurToil(jobDriver);
 				if (toil?.endConditions != null)
 				{
@@ -284,7 +284,7 @@ namespace YaOpt.Helpers
 			}
 			catch (Exception ex)
 			{
-				YaOptMod.Error("Exception in JobPredictor.PredictFail for pawn " + pawn.ToStringSafe() 
+				YaOptMod.Error("Exception in JobPredictor.PredictFail for pawn " + pawn.ToStringSafe()
 					+ "\n" + ex);
 				return true;
 			}
@@ -310,7 +310,7 @@ namespace YaOpt.Helpers
 			}
 			catch (Exception ex)
 			{
-				YaOptMod.Error("Exception in JobPredictor.PredictDoConstantJob for pawn " + pawn.ToStringSafe() 
+				YaOptMod.Error("Exception in JobPredictor.PredictDoConstantJob for pawn " + pawn.ToStringSafe()
 					+ "\n" + ex);
 				return true;
 			}

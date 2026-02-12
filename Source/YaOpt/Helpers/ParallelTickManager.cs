@@ -1,4 +1,4 @@
-﻿using Gilzoide.ManagedJobs;
+using Gilzoide.ManagedJobs;
 using LudeonTK;
 using RimWorld;
 using System;
@@ -146,7 +146,7 @@ namespace YaOpt.Helpers
 		public static void SingleTickPawns()
 		{
 			gameTick = GenTicks.TicksGame;
-			var result = Parallel.ForEach(pawns, new ParallelOptions(){MaxDegreeOfParallelism = Environment.ProcessorCount}, TickPawn);
+			var result = Parallel.ForEach(pawns, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, TickPawn);
 		}
 
 		private static void TickPawn(Pawn pawn)

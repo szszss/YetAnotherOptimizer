@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -76,7 +76,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			yield return new CodeInstruction(OpCodes.Dup);
 			yield return new CodeInstruction(OpCodes.Dup);
 			//     var openQueue = tlr.OpenQueue;
-			yield return CodeInstruction.LoadField(typeof(ThreadLocalReachability), 
+			yield return CodeInstruction.LoadField(typeof(ThreadLocalReachability),
 				nameof(ThreadLocalReachability.OpenQueue));
 			yield return CodeInstruction.StoreLocal(localOpenQueue.LocalIndex);
 			//     var startingRegions = tlr.StartingRegions;
@@ -185,7 +185,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 				 * try {
 				 */
 				if ((instruction.opcode == OpCodes.Brfalse || instruction.opcode == OpCodes.Brfalse_S) &&
-				    list[i - 1].Calls("Contains"))
+					list[i - 1].Calls("Contains"))
 				{
 					firstTryFinallyBlock = true;
 					yield return CodeInstruction.LoadLocal(localLockTaken.LocalIndex, true);

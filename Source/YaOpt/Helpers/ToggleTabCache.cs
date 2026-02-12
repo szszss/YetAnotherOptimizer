@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -67,7 +67,7 @@ namespace YaOpt.Helpers
 				return;
 
 			if (type.GetProperty(nameof(MainButtonWorker.Disabled),
-				    BindingFlags.Instance | BindingFlags.Public)?.GetMethod?.IsOverriden() == true)
+					BindingFlags.Instance | BindingFlags.Public)?.GetMethod?.IsOverriden() == true)
 			{
 				ToggleTabTypes.Add(type);
 			}
@@ -103,7 +103,7 @@ namespace YaOpt.Helpers
 			if (!tabCache.TryGetValue(tabClass, out var entry))
 				return false;
 			if (currentRealTime - entry.LastCheckRealTime + entry.ExtraCheckInterval >= CHECK_INTERVAL &&
-			    currentGameTick != entry.LastCheckGameTick)
+				currentGameTick != entry.LastCheckGameTick)
 				return false;
 			result = entry.LastCheckResult;
 			return true;

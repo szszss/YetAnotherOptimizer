@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -29,8 +29,8 @@ namespace YaOpt.Patches.Compatibility.PickUpAndHaul
 			if (original != null)
 				return true;
 
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled && 
-			       YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory");
+			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+				   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory");
 		}
 
 		public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

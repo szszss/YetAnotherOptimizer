@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using Verse;
@@ -19,7 +19,7 @@ namespace YaOpt.Patches
 		}
 
 		// Register/Unregister pawns to ParallelTickerManager
-		static void Prefix(TickerType ___tickType, 
+		static void Prefix(TickerType ___tickType,
 			List<Thing> ___thingsToRegister, List<Thing> ___thingsToDeregister)
 		{
 			if (___tickType == TickerType.Normal)

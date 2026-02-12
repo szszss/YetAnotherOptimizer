@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Unity.Collections;
@@ -27,26 +27,26 @@ namespace YaOpt.Patches
 			// var nativeArray = new NativeArray<DynamicDrawManager.ThingCullDetails>(
 			//		Find.CurrentMap.dynamicDrawManager.drawThings.Count, Allocator.TempJob, NativeArrayOptions.ClearMemory);
 			yield return CodeInstruction.LoadLocal(local.LocalIndex, true);
-			yield return new CodeInstruction(OpCodes.Call, 
+			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.PropertyGetter(typeof(Find), nameof(Find.CurrentMap)));
 			yield return CodeInstruction.LoadField(typeof(Map), nameof(Map.dynamicDrawManager));
 			yield return CodeInstruction.LoadField(typeof(DynamicDrawManager), "drawThings");
-			yield return new CodeInstruction(OpCodes.Callvirt, 
+			yield return new CodeInstruction(OpCodes.Callvirt,
 				AccessTools.PropertyGetter(typeof(List<Thing>), "Count"));
 			yield return new CodeInstruction(OpCodes.Ldc_I4_3);
 			yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-			yield return new CodeInstruction(OpCodes.Call, 
-				AccessTools.Constructor(typeNativeArrayThingCullDetails, 
-					new [] { typeof(int), typeof(Allocator), typeof(NativeArrayOptions) }));
+			yield return new CodeInstruction(OpCodes.Call,
+				AccessTools.Constructor(typeNativeArrayThingCullDetails,
+					new[] { typeof(int), typeof(Allocator), typeof(NativeArrayOptions) }));
 
 			// ParallelPreDrawHelper.Data = (object)nativeArray;
 			yield return CodeInstruction.LoadLocal(local.LocalIndex);
 			yield return new CodeInstruction(OpCodes.Box, typeNativeArrayThingCullDetails);
 			yield return CodeInstruction.StoreField(
-				typeof(ParallelPreDrawHelper), 
+				typeof(ParallelPreDrawHelper),
 				nameof(ParallelPreDrawHelper.Data));
 			// Find.CurrentMap.dynamicDrawManager.ComputeCulledThings(nativeArray)
-			yield return new CodeInstruction(OpCodes.Call, 
+			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.PropertyGetter(typeof(Find), nameof(Find.CurrentMap)));
 			yield return CodeInstruction.LoadField(typeof(Map), nameof(Map.dynamicDrawManager));
 			yield return CodeInstruction.LoadLocal(local.LocalIndex);

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Verse;
 
@@ -12,7 +12,7 @@ namespace YaOpt.Helpers
 			public FloatRange Range;
 		}
 
-		private static readonly ConcurrentDictionary<Pawn, CacheEntry> cachedSafeTemperatureRanges = 
+		private static readonly ConcurrentDictionary<Pawn, CacheEntry> cachedSafeTemperatureRanges =
 			new ConcurrentDictionary<Pawn, CacheEntry>();
 
 		private static int currentTick;

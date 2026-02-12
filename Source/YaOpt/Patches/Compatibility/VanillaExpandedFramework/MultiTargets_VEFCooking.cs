@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -24,8 +24,8 @@ namespace YaOpt.Patches.Compatibility.VanillaExpandedFramework
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{
-			yield return AccessTools.Method(typeof(WorkGiver_DoBill),"TryFindBestBillIngredientsInSet_AllowMix");
-			yield return AccessTools.Method(typeof(WorkGiver_DoBill),"TryFindBestIngredientsInSet_NoMixHelper");
+			yield return AccessTools.Method(typeof(WorkGiver_DoBill), "TryFindBestBillIngredientsInSet_AllowMix");
+			yield return AccessTools.Method(typeof(WorkGiver_DoBill), "TryFindBestIngredientsInSet_NoMixHelper");
 		}
 
 		static bool Prepare(MethodBase original)
@@ -33,8 +33,8 @@ namespace YaOpt.Patches.Compatibility.VanillaExpandedFramework
 			if (original != null)
 				return true;
 
-			var shouldRun = YaOptGlobal.Settings.OptParallelJobGiver.Enabled && 
-			                YaOptGlobal.HasMod("OskarPotocki.VanillaFactionsExpanded.Core");
+			var shouldRun = YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+							YaOptGlobal.HasMod("OskarPotocki.VanillaFactionsExpanded.Core");
 
 			if (shouldRun && typeRecipeExtension == null)
 			{

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Verse;
@@ -38,7 +38,8 @@ namespace YaOpt.Patches.Early
 				if (instruction.opcode == OpCodes.Stloc_S && instruction.LocalIndex() == LOCAL_HAS_ERROR)
 				{
 					skip = true;
-				} else if (skip && instruction.opcode == OpCodes.Endfinally)
+				}
+				else if (skip && instruction.opcode == OpCodes.Endfinally)
 				{
 					skip = false;
 					// var duplicate = DefInjectionHelper.CheckDuplicateInjection(normalizedPath, path);

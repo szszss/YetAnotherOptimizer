@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -10,7 +10,7 @@ namespace YaOpt.Helpers
 	[StaticConstructorOnStartup]
 	internal static class MapMeshUpdateThrottle
 	{
-		private static readonly Dictionary<Map, CacheEntry> nextUpdateDict = 
+		private static readonly Dictionary<Map, CacheEntry> nextUpdateDict =
 			new Dictionary<Map, CacheEntry>();
 
 		private static readonly List<Map> removeList = new List<Map>();
@@ -61,8 +61,8 @@ namespace YaOpt.Helpers
 						continue;
 					}
 
-					if (cache.HasAnyUpdate && 
-					    (currentTime - cache.LastUpdateTime >= interval || paused))
+					if (cache.HasAnyUpdate &&
+						(currentTime - cache.LastUpdateTime >= interval || paused))
 					{
 						foreach (var (mapMeshFlagDef, hashSet) in cache.UpdatingSectionCoords)
 						{

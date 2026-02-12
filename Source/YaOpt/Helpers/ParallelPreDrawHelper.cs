@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,11 +33,11 @@ namespace YaOpt.Helpers
 				return;
 
 			if (type.GetProperty(nameof(PawnRenderNode.RecacheRequested),
-				    BindingFlags.Instance | BindingFlags.Public)?.GetMethod?.IsOverriden() == true)
+					BindingFlags.Instance | BindingFlags.Public)?.GetMethod?.IsOverriden() == true)
 			{
 				YaOptMod.Warning($"Found a derived PawnRenderNode class ({type.FullName}) with overriding RecacheRequested. " +
-				                 "FastRecacheRequested optimization is disabled now. " +
-				                 "This is not an error. Just a compatibility measure.");
+								 "FastRecacheRequested optimization is disabled now. " +
+								 "This is not an error. Just a compatibility measure.");
 				FastRecacheRequestedAvailable = false;
 			}
 		}
@@ -50,7 +50,7 @@ namespace YaOpt.Helpers
 			if (type.IsMethodOverriden(nameof(PawnRenderNodeWorker.GetMaterialPropertyBlock)))
 			{
 				YaOptMod.Debug("Found a derived PawnRenderNodeWorker class " +
-				               $"with overriding GetMaterialPropertyBlock: {type.FullName}");
+							   $"with overriding GetMaterialPropertyBlock: {type.FullName}");
 				OverridenGetMaterialPropertyBlockTypes.Add(type);
 				OverridenGetMaterialPropertyBlockTypeCount++;
 				OverridenGetMaterialPropertyBlockTypeArray = OverridenGetMaterialPropertyBlockTypes.ToArray();
@@ -59,7 +59,7 @@ namespace YaOpt.Helpers
 			if (type.IsMethodOverriden(nameof(PawnRenderNodeWorker.PreDraw)))
 			{
 				YaOptMod.Debug("Found a derived PawnRenderNodeWorker class " +
-				               $"with overriding PreDraw: {type.FullName}");
+							   $"with overriding PreDraw: {type.FullName}");
 				OverridenPreDrawTypes.Add(type);
 			}
 		}

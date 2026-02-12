@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
@@ -27,7 +27,7 @@ namespace YaOpt.Helpers
 
 		public static bool ShouldTickInterval(Thing thing, out int tickDeltaPlusOne)
 		{
-			AccessHelper.Thing_TickDeltaAndIntervalRate(thing, 
+			AccessHelper.Thing_TickDeltaAndIntervalRate(thing,
 				out tickDeltaPlusOne, out var minTickIntervalRate, out var maxTickIntervalRate, out var updateRateTickOffset);
 			tickDeltaPlusOne++;
 			int num = Mathf.Min(Mathf.Max(thing.UpdateRateTicks, minTickIntervalRate), maxTickIntervalRate);

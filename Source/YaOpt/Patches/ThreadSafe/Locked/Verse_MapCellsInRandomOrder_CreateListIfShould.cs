@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -41,15 +41,15 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 				{
 					nullCheckPassed = true;
 				}
-				else if (instruction.opcode == OpCodes.Stfld && instruction.operand is FieldInfo fieldInfo1 && 
-				    fieldInfo1.Name == "randomizedCells")
+				else if (instruction.opcode == OpCodes.Stfld && instruction.operand is FieldInfo fieldInfo1 &&
+					fieldInfo1.Name == "randomizedCells")
 				{
 					yield return CodeInstruction.StoreLocal(local.LocalIndex);
 					yield return new CodeInstruction(OpCodes.Pop);
 					continue;
 				}
 				else if (instruction.opcode == OpCodes.Ldfld && instruction.operand is FieldInfo fieldInfo2 &&
-				         fieldInfo2.Name == "randomizedCells" && nullCheckPassed)
+						 fieldInfo2.Name == "randomizedCells" && nullCheckPassed)
 				{
 					yield return new CodeInstruction(OpCodes.Pop);
 					yield return CodeInstruction.LoadLocal(local.LocalIndex);
@@ -59,7 +59,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 				yield return instruction;
 
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "PopState")
+					methodInfo.Name == "PopState")
 				{
 					yield return CodeInstruction.LoadArgument(0);
 					yield return CodeInstruction.LoadLocal(local.LocalIndex);

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -13,7 +13,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		static MethodBase TargetMethod()
 		{
 			return AccessTools.FirstMethod(
-				typeof(ThingOwnerUtility), 
+				typeof(ThingOwnerUtility),
 				method => method.Name == "GetAllThingsRecursively" && method.IsGenericMethod)
 				.MakeGenericMethod(typeof(Thing));
 		}
@@ -23,8 +23,8 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
 		}
 
-		static bool Prefix(Map __0, ThingRequest __1, 
-			object __2, bool __3 = true, Predicate<IThingHolder> __4 = null, 
+		static bool Prefix(Map __0, ThingRequest __1,
+			object __2, bool __3 = true, Predicate<IThingHolder> __4 = null,
 			bool __5 = true)
 		{
 			var listType = __2.GetType();

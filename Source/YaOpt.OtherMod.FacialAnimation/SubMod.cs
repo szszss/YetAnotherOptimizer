@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -140,9 +140,9 @@ namespace YaOpt.OtherMod.FacialAnimation
 			ParallelUpdateHelper.Enabled = false;
 		}
 
-		private static void ToHashSet<K, T, S>() 
-			where K : ControllerBaseComp<T, S> 
-			where T : FaceTypeDef, new() 
+		private static void ToHashSet<K, T, S>()
+			where K : ControllerBaseComp<T, S>
+			where T : FaceTypeDef, new()
 			where S : Def, IFaceShapeDef, new()
 		{
 			var fieldInfo = AccessTools.Field(typeof(K), "faceShapeList");
@@ -158,7 +158,7 @@ namespace YaOpt.OtherMod.FacialAnimation
 				return;
 			}
 			var list = new List<S>(enumerable);
-			enumerable = list.Count > 4 ? (IEnumerable<S>) new HashSet<S>(list) : list;
+			enumerable = list.Count > 4 ? (IEnumerable<S>)new HashSet<S>(list) : list;
 			fieldInfo.SetValue(null, enumerable);
 		}
 	}

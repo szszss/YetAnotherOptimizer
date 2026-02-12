@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
@@ -19,7 +19,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 	internal static class FacialAnimation_AnimationFrameAccumulator_AccumResultFrameAndClear
 	{
 		private static bool useBurst;
-		
+
 		static bool Prepare(MethodBase original)
 		{
 			if (original != null)
@@ -152,25 +152,25 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 				accumMouthOffset += frame.mouthOffset;
 			}
 			float frameCount = accumFrames.Count + accumHeadOffset.y;
-			animationFrame.headOffset = (frameCount != 0 ? 
+			animationFrame.headOffset = (frameCount != 0 ?
 				new Vector3(accumHeadOffset.x / frameCount, 0f, accumHeadOffset.z / frameCount) : new Vector3());
 			frameCount = accumFrames.Count + accumBrowOffset.y;
-			animationFrame.browOffset = (frameCount != 0 ? 
+			animationFrame.browOffset = (frameCount != 0 ?
 				new Vector3(accumBrowOffset.x / frameCount, 0f, accumBrowOffset.z / frameCount) : new Vector3());
 			frameCount = accumFrames.Count + accumLidOffset.y;
-			animationFrame.lidOffset = (frameCount != 0 ? 
+			animationFrame.lidOffset = (frameCount != 0 ?
 				new Vector3(accumLidOffset.x / frameCount, 0f, accumLidOffset.z / frameCount) : new Vector3());
 			frameCount = accumFrames.Count + accumEyeballOffset.y;
-			animationFrame.eyeballOffset = (frameCount != 0 ? 
+			animationFrame.eyeballOffset = (frameCount != 0 ?
 				new Vector3(accumEyeballOffset.x / frameCount, 0f, accumEyeballOffset.z / frameCount) : new Vector3());
 			frameCount = accumFrames.Count + accumEyeballOffsetL.y;
-			animationFrame.eyeballOffsetL = (frameCount != 0 ? 
+			animationFrame.eyeballOffsetL = (frameCount != 0 ?
 				new Vector3(accumEyeballOffsetL.x / frameCount, 0f, accumEyeballOffsetL.z / frameCount) : new Vector3());
 			frameCount = accumFrames.Count + accumEyeballOffsetR.y;
-			animationFrame.eyeballOffsetR = (frameCount != 0 ? 
+			animationFrame.eyeballOffsetR = (frameCount != 0 ?
 				new Vector3(accumEyeballOffsetR.x / frameCount, 0f, accumEyeballOffsetR.z / frameCount) : new Vector3());
 			frameCount = accumFrames.Count + accumMouthOffset.y;
-			animationFrame.mouthOffset = (frameCount != 0 ? 
+			animationFrame.mouthOffset = (frameCount != 0 ?
 				new Vector3(accumMouthOffset.x / frameCount, 0f, accumMouthOffset.z / frameCount) : new Vector3());
 		}
 	}

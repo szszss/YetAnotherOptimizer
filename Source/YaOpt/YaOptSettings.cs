@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -79,7 +79,7 @@ namespace YaOpt
 			}
 
 			public string Name { get; set; } = string.Empty;
-			
+
 			public string Desc { get; set; } = string.Empty;
 
 			public string NoteStability { get; set; } = string.Empty;
@@ -923,7 +923,7 @@ namespace YaOpt
 				listing.Indent();
 				var rect = listing.GetRect(30);
 				listing.Gap(-30);
-				var result = (int) listing.SliderLabeled(
+				var result = (int)listing.SliderLabeled(
 					"YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval".Translate(settings.MapMeshUpdateInterval),
 					settings.MapMeshUpdateInterval, 100, 1000);
 				settings.MapMeshUpdateInterval = result / 100 * 100;

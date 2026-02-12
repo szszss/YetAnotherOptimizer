@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using System;
@@ -136,9 +136,9 @@ namespace YaOpt
 						if (hasClass && hasDefName)
 						{
 							YaOptMod.Error($"{mod} defined workGiverClass {compatibility.workGiverClass} " +
-							               $"and workGiverDefName {compatibility.workGiverDefName}. " +
-							               "It's not possible to define both workGiverClass and " +
-							               "workGiverDefName simultaneously.");
+										   $"and workGiverDefName {compatibility.workGiverDefName}. " +
+										   "It's not possible to define both workGiverClass and " +
+										   "workGiverDefName simultaneously.");
 						}
 
 						if (hasDefName)
@@ -153,7 +153,7 @@ namespace YaOpt
 								continue;
 							}
 							YaOptMod.Debug($"The parallelism of WorkGiver {wg.defName} now is {compatibility.parallelism}, " +
-							               $"set by {mod}.");
+										   $"set by {mod}.");
 							CachedWorkGiverParallelism[wg.defName] = compatibility.parallelism;
 						}
 						else if (hasClass)
@@ -168,10 +168,10 @@ namespace YaOpt
 								continue;
 							}
 							foreach (var wg in workGivers
-								         .Where(wgd => workGiverType.IsAssignableFrom(wgd.giverClass)))
+										 .Where(wgd => workGiverType.IsAssignableFrom(wgd.giverClass)))
 							{
 								YaOptMod.Debug($"The parallelism of WorkGiver {wg.defName} now is {compatibility.parallelism}, " +
-								               $"set by {mod}.");
+											   $"set by {mod}.");
 								CachedWorkGiverParallelism[wg.defName] = compatibility.parallelism;
 							}
 						}

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -38,18 +38,18 @@ namespace YaOpt.Patches
 					continue;
 				}*/
 				if (prp && instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "Complete")
+					methodInfo.Name == "Complete")
 				{
 					yield return new CodeInstruction(OpCodes.Pop);
 					yield return CodeInstruction.LoadLocal(2);
 					yield return CodeInstruction.StoreField(
-						typeof(ParallelPreDrawHelper), 
+						typeof(ParallelPreDrawHelper),
 						nameof(ParallelPreDrawHelper.PreDrawJobHandle));
 					yield return CodeInstruction.Call(typeof(JobHandle), nameof(JobHandle.ScheduleBatchedJobs));
 					continue;
 				}
 				if (pbc && instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo2 &&
-				    methodInfo2.Name == "GetIdealBatchCount")
+					methodInfo2.Name == "GetIdealBatchCount")
 				{
 					yield return new CodeInstruction(OpCodes.Pop);
 					yield return new CodeInstruction(OpCodes.Ldc_I4, 4);

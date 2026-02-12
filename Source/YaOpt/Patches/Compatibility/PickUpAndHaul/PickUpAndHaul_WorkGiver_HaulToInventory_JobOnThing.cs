@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Threading;
 using Verse;
 using YaOpt.Patches.Compatibility.WhileYouAreUp;
@@ -10,9 +10,9 @@ namespace YaOpt.Patches.Compatibility.PickUpAndHaul
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled && 
-			       YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") && 
-			       YaOptGlobal.HasType("WhileYoureUp.Mod");
+			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+				   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
+				   YaOptGlobal.HasType("WhileYoureUp.Mod");
 		}
 
 		[HarmonyPriority(Priority.High)]

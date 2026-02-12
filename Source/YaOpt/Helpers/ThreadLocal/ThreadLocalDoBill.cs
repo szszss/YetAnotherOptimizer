@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -9,25 +9,25 @@ namespace YaOpt.Helpers.ThreadLocal
 {
 	internal static class ThreadLocalDoBill
 	{
-		public static ThreadLocal<List<IngredientCount>> MissingIngredients = 
+		public static ThreadLocal<List<IngredientCount>> MissingIngredients =
 			new ThreadLocal<List<IngredientCount>>(NewList<IngredientCount>);
 
-		public static ThreadLocal<List<Thing>> TmpMissingUniqueIngredients = 
+		public static ThreadLocal<List<Thing>> TmpMissingUniqueIngredients =
 			new ThreadLocal<List<Thing>>(NewThingList);
 
-		public static ThreadLocal<List<Thing>> RelevantThings = 
+		public static ThreadLocal<List<Thing>> RelevantThings =
 			new ThreadLocal<List<Thing>>(NewThingList);
 
-		public static ThreadLocal<HashSet<Thing>> ProcessedThings = 
+		public static ThreadLocal<HashSet<Thing>> ProcessedThings =
 			new ThreadLocal<HashSet<Thing>>(NewThingSet);
 
-		public static ThreadLocal<List<Thing>> NewRelevantThings = 
+		public static ThreadLocal<List<Thing>> NewRelevantThings =
 			new ThreadLocal<List<Thing>>(NewThingList);
 
-		public static ThreadLocal<List<Thing>> TmpMedicine = 
+		public static ThreadLocal<List<Thing>> TmpMedicine =
 			new ThreadLocal<List<Thing>>(NewThingList);
 
-		public static ThreadLocal<object> AvailableCounts = 
+		public static ThreadLocal<object> AvailableCounts =
 			new ThreadLocal<object>(NewDefCountList);
 
 		private static readonly ConstructorInfo constructorDefCountList;

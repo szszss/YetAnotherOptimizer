@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Unity.Collections;
@@ -30,16 +30,16 @@ namespace YaOpt.Patches
 			var labelLoopBegin = generator.DefineLabel();
 			var labelShouldNotDraw = generator.DefineLabel();
 			// ParallelPreDrawHelper.WaitUntilCullJobComplete()
-			yield return CodeInstruction.Call(typeof(ParallelPreDrawHelper), 
+			yield return CodeInstruction.Call(typeof(ParallelPreDrawHelper),
 				nameof(ParallelPreDrawHelper.WaitUntilCullJobComplete));
 			// var nativeArray = (NativeArray<DynamicDrawManager.ThingCullDetails>)ParallelPreDrawHelper.Data
 			yield return CodeInstruction.LoadField(
-				typeof(ParallelPreDrawHelper), 
+				typeof(ParallelPreDrawHelper),
 				nameof(ParallelPreDrawHelper.Data));
 			yield return new CodeInstruction(OpCodes.Unbox_Any, typeNativeArrayThingCullDetails);
 			yield return CodeInstruction.StoreLocal(localNativeArray.LocalIndex);
 			// var things = Find.CurrentMap.dynamicDrawManager.drawThings
-			yield return new CodeInstruction(OpCodes.Call, 
+			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.PropertyGetter(typeof(Find), nameof(Find.CurrentMap)));
 			yield return CodeInstruction.LoadField(typeof(Map), nameof(Map.dynamicDrawManager));
 			yield return CodeInstruction.LoadField(typeof(DynamicDrawManager), "drawThings");
@@ -49,24 +49,24 @@ namespace YaOpt.Patches
 			yield return CodeInstruction.StoreLocal(localLoop.LocalIndex);
 			// int j = nativeArray.length
 			yield return CodeInstruction.LoadLocal(localNativeArray.LocalIndex, true);
-			yield return new CodeInstruction(OpCodes.Call, 
+			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.PropertyGetter(typeNativeArrayThingCullDetails, "Length"));
 			yield return CodeInstruction.StoreLocal(localLength.LocalIndex);
 			// labelLoopBegin:
 			// if (!nativeArray[i].shouldDraw) goto labelShouldNotDraw
 			yield return CodeInstruction.LoadLocal(localNativeArray.LocalIndex, true).WithLabels(labelLoopBegin);
 			yield return CodeInstruction.LoadLocal(localLoop.LocalIndex);
-			yield return new CodeInstruction(OpCodes.Call, 
+			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.Method(typeNativeArrayThingCullDetails, "get_Item"));
 			yield return CodeInstruction.LoadField(typeThingCullDetails, "shouldDraw");
 			yield return new CodeInstruction(OpCodes.Brfalse_S, labelShouldNotDraw);
 			// drawThings[i].DynamicDrawPhase(DrawPhase.EnsureInitialized);
 			yield return CodeInstruction.LoadLocal(localThings.LocalIndex);
 			yield return CodeInstruction.LoadLocal(localLoop.LocalIndex);
-			yield return new CodeInstruction(OpCodes.Callvirt, 
+			yield return new CodeInstruction(OpCodes.Callvirt,
 				AccessTools.Method(typeof(List<Thing>), "get_Item"));
 			yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-			yield return new CodeInstruction(OpCodes.Callvirt, 
+			yield return new CodeInstruction(OpCodes.Callvirt,
 				AccessTools.Method(typeof(Thing), nameof(Thing.DynamicDrawPhase)));
 			// labelShouldNotDraw:
 			// i++
@@ -79,7 +79,7 @@ namespace YaOpt.Patches
 			yield return CodeInstruction.LoadLocal(localLength.LocalIndex);
 			yield return new CodeInstruction(OpCodes.Blt_S, labelLoopBegin);
 			// Find.CurrentMap.dynamicDrawManager.PreDrawVisibleThings(nativeArray);
-			yield return new CodeInstruction(OpCodes.Call, 
+			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.PropertyGetter(typeof(Find), nameof(Find.CurrentMap)));
 			yield return CodeInstruction.LoadField(typeof(Map), nameof(Map.dynamicDrawManager));
 			yield return CodeInstruction.LoadLocal(localNativeArray.LocalIndex);

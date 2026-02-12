@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -28,7 +28,7 @@ namespace YaOpt.Helpers
 			RegexOptions.Compiled);
 
 		private static readonly Regex queryRegex = new Regex(
-			"^(?:(" + IDENTITY + @"*)\[" + ANY_SPACE + "(" + IDENTITY + "+)" + EQUALITY + 
+			"^(?:(" + IDENTITY + @"*)\[" + ANY_SPACE + "(" + IDENTITY + "+)" + EQUALITY +
 			@"""([^""]*)""" + ANY_SPACE + @"\])$",
 			RegexOptions.Compiled);
 
@@ -124,10 +124,10 @@ namespace YaOpt.Helpers
 								var nodeName = queryMatches.Groups[1].Value;
 								var queryName = queryMatches.Groups[2].Value;
 								var queryValue = queryMatches.Groups[3].Value;
-								if (i == 1 && queryName == "defName" && 
-								    xmlCache.TryGetValue(nodeName, out var dict) &&
-								    dict.TryGetValue(queryValue, out var nextNode) &&
-								    nextNode.ParentNode != null)
+								if (i == 1 && queryName == "defName" &&
+									xmlCache.TryGetValue(nodeName, out var dict) &&
+									dict.TryGetValue(queryValue, out var nextNode) &&
+									nextNode.ParentNode != null)
 								{
 									tmpQueue.Dequeue();
 									tmpQueue.Enqueue((nextNode, 1));
@@ -180,7 +180,7 @@ namespace YaOpt.Helpers
 				shouldFallback = true;
 				tmpQueue.Clear();
 				YaOptMod.Error("Error when optimized patching. Fallback to vanilla method. " +
-				               $"Exception: {ex}");
+							   $"Exception: {ex}");
 			}
 
 			if (!shouldFallback)

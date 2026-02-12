@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using Verse;
 using Verse.AI;
@@ -8,7 +8,7 @@ namespace YaOpt.Helpers.ThreadLocal
 {
 	internal static class ThreadLocalAttackTargetFinder
 	{
-		public static ThreadLocal<List<IAttackTarget>> TmpTargets = 
+		public static ThreadLocal<List<IAttackTarget>> TmpTargets =
 			new ThreadLocal<List<IAttackTarget>>(NewList<IAttackTarget>);
 
 		public static ThreadLocal<List<Pair<IAttackTarget, float>>> AvailableShootingTargets =
@@ -36,7 +36,7 @@ namespace YaOpt.Helpers.ThreadLocal
 			TmpTargets.Dispose();
 			TmpTargets = new ThreadLocal<List<IAttackTarget>>(NewList<IAttackTarget>);
 			AvailableShootingTargets.Dispose();
-			AvailableShootingTargets = 
+			AvailableShootingTargets =
 				new ThreadLocal<List<Pair<IAttackTarget, float>>>(NewList<Pair<IAttackTarget, float>>);
 			TmpTargetScores.Dispose();
 			TmpTargetScores = new ThreadLocal<List<float>>(NewList<float>);

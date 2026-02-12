@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -88,7 +88,7 @@ namespace YaOpt.Helpers
 			maxTickIntervalRate = 15;
 			updateRateTickOffset = 0;
 			if (thing == null || fieldTickDelta == null ||
-			    getterMinTickIntervalRate == null || getterMaxTickIntervalRate == null)
+				getterMinTickIntervalRate == null || getterMaxTickIntervalRate == null)
 				return;
 			tickDelta = delegateTickDelta(thing);
 			minTickIntervalRate = delegateMinTickIntervalRate(thing);

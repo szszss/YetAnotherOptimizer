@@ -1,4 +1,4 @@
-﻿using AlienRace;
+using AlienRace;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -9,7 +9,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Helpers
 	[StaticConstructorOnStartup]
 	internal static class HarHelper
 	{
-		private static readonly Dictionary<GraphicRequest, Graphic> graphicCache = 
+		private static readonly Dictionary<GraphicRequest, Graphic> graphicCache =
 			new Dictionary<GraphicRequest, Graphic>();
 
 		static HarHelper()

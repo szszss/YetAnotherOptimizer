@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,18 +33,18 @@ namespace YaOpt.Patches
 				var instruction = list[i];
 
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "CheckCurrentToilEndOrFail")
+					methodInfo.Name == "CheckCurrentToilEndOrFail")
 				{
 					var brfalse = list[i + 1];
 					var leave = list[i + 2];
 					if ((brfalse.opcode == OpCodes.Brfalse || brfalse.opcode == OpCodes.Brfalse_S) &&
-					    (leave.opcode == OpCodes.Leave || leave.opcode == OpCodes.Leave_S))
+						(leave.opcode == OpCodes.Leave || leave.opcode == OpCodes.Leave_S))
 					{
 						var labelGoOn = (Label)brfalse.operand;
-						var newILs = new []
+						var newILs = new[]
 						{
 							CodeInstruction.LoadField(
-								typeof(JobDriver), 
+								typeof(JobDriver),
 								nameof(JobDriver.pawn)),
 							CodeInstruction.Call(
 								typeof(JobPredictor),

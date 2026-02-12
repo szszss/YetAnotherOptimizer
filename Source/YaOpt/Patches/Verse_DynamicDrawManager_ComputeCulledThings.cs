@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -25,12 +25,12 @@ namespace YaOpt.Patches
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "Complete")
+					methodInfo.Name == "Complete")
 				{
 					yield return new CodeInstruction(OpCodes.Pop);
 					yield return CodeInstruction.LoadLocal(7);
 					yield return CodeInstruction.StoreField(
-						typeof(ParallelPreDrawHelper), 
+						typeof(ParallelPreDrawHelper),
 						nameof(ParallelPreDrawHelper.CullJobHandle));
 					yield return CodeInstruction.Call(typeof(JobHandle), nameof(JobHandle.ScheduleBatchedJobs));
 					continue;

@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -29,14 +29,14 @@ namespace YaOpt.Patches
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Ldsfld && instruction.operand is FieldInfo fieldInfo &&
-				    fieldInfo.Name == "checkedCells")
+					fieldInfo.Name == "checkedCells")
 				{
 					instruction.operand = AccessTools.Field(
 						typeof(ConnectivityCellCache),
 						nameof(ConnectivityCellCache.CurrentSet));
 				}
 				else if (instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo &&
-				         methodInfo.Name == "Clear")
+						 methodInfo.Name == "Clear")
 				{
 					instruction.opcode = OpCodes.Pop;
 					instruction.operand = null;

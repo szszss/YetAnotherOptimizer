@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -45,7 +45,7 @@ namespace YaOpt.Patches
 			{
 				// Call ConnectivityCellCache.StartClearJob after all MapPreTick
 				if (fcc && instruction.opcode == OpCodes.Ldsfld && instruction.operand is FieldInfo fieldInfo &&
-				    fieldInfo.Name == "fastEcology")
+					fieldInfo.Name == "fastEcology")
 				{
 					yield return CodeInstruction.Call(
 						typeof(ConnectivityCellCache),
@@ -56,7 +56,7 @@ namespace YaOpt.Patches
 
 				// Call ParallelTickManager.ParellellyPreTickMaps
 				if (ppt && instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo1 &&
-				    methodInfo1.Name == "get_Maps")
+					methodInfo1.Name == "get_Maps")
 				{
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return CodeInstruction.Call(
@@ -65,7 +65,7 @@ namespace YaOpt.Patches
 
 				// Call ParallelTickManager.ParellellyPostTickMaps
 				if (ppmt && instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo2 &&
-				    methodInfo2.Name == "WorldPostTick")
+					methodInfo2.Name == "WorldPostTick")
 				{
 					yield return CodeInstruction.Call(
 						typeof(ParallelTickManager), nameof(ParallelTickManager.ParellellyPostTickMaps));

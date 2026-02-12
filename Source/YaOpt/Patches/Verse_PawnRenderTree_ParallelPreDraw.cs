@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -19,7 +19,7 @@ namespace YaOpt.Patches
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptFastRecacheRequested.Enabled ||
-			       YaOptGlobal.Settings.OptParallelMaterialUpdate.Enabled;
+				   YaOptGlobal.Settings.OptParallelMaterialUpdate.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -28,7 +28,7 @@ namespace YaOpt.Patches
 			foreach (var instruction in instructions)
 			{
 				if (frr && instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "get_RecacheRequested")
+					methodInfo.Name == "get_RecacheRequested")
 				{
 					yield return CodeInstruction.Call(
 						typeof(ParallelPreDrawHelper),

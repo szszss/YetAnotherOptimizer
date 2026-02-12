@@ -1,4 +1,4 @@
-﻿using FacialAnimation;
+using FacialAnimation;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,7 +14,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 	/// </summary>
 	[HarmonyPatch(typeof(FacialAnimationControllerComp))]
 	[HarmonyPatch(nameof(FacialAnimationControllerComp.UpdateAnimation))]
-	internal static class  FacialAnimation_FacialAnimationControllerComp_UpdateAnimation
+	internal static class FacialAnimation_FacialAnimationControllerComp_UpdateAnimation
 	{
 		static bool Prepare(MethodBase original)
 		{

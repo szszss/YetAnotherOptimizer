@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Unity.Collections;
@@ -53,10 +53,10 @@ namespace YaOpt.Patches
 					var typeThingCullDetails = AccessTools.TypeByName("Verse.DynamicDrawManager/ThingCullDetails");
 					var typeNativeArrayThingCullDetails = typeof(NativeArray<>).MakeGenericType(typeThingCullDetails);
 					skip = false;
-					yield return CodeInstruction.Call(typeof(ParallelPreDrawHelper), 
+					yield return CodeInstruction.Call(typeof(ParallelPreDrawHelper),
 						nameof(ParallelPreDrawHelper.WaitUntilPreDrawJobComplete));
 					yield return CodeInstruction.LoadField(
-						typeof(ParallelPreDrawHelper), 
+						typeof(ParallelPreDrawHelper),
 						nameof(ParallelPreDrawHelper.Data));
 					yield return new CodeInstruction(OpCodes.Unbox_Any, typeNativeArrayThingCullDetails);
 					yield return CodeInstruction.StoreLocal(1);

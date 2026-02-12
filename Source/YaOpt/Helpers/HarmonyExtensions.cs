@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -44,9 +44,9 @@ namespace YaOpt.Helpers
 					opcodeCheck = opcode == OpCodes.Ldsfld;
 			else
 				if (byAddress)
-					opcodeCheck = opcode == OpCodes.Ldflda;
-				else
-					opcodeCheck = opcode == OpCodes.Ldfld;
+				opcodeCheck = opcode == OpCodes.Ldflda;
+			else
+				opcodeCheck = opcode == OpCodes.Ldfld;
 			return opcodeCheck && code.operand is FieldInfo fieldInfo && fieldInfo.Name == fieldName;
 		}
 

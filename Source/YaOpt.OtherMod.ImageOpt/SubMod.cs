@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using UnityEngine;
 using Verse;
@@ -38,7 +38,7 @@ namespace YaOpt.OtherMod.ImageOpt
 					if (ddsHeader.PixelFormat.IsBgr888 && !ddsHeader.PixelFormat.IsCompressed)
 					{
 						var stride = (int)(ddsHeader.PixelFormat.RGBBitCount / 8);
-						for (var i = 0; i < data.Length; i+=stride)
+						for (var i = 0; i < data.Length; i += stride)
 						{
 							(data[i], data[i + 2]) = (data[i + 2], data[i]);
 						}

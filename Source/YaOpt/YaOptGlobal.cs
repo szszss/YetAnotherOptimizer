@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Collections.Generic;
 using Verse;
 using YaOpt.Helpers;
@@ -25,7 +25,7 @@ namespace YaOpt
 		/// <seealso cref="YaOpt.Patches.ThreadSafe"/>
 		/// </summary>
 		public static bool NeedThreadSafe => YaOptMod.Instance.Settings.OptParallelPawnTick.Enabled ||
-		                                     YaOptMod.Instance.Settings.OptParallelJobGiver.Enabled;
+											 YaOptMod.Instance.Settings.OptParallelJobGiver.Enabled;
 
 		public static YaOptMod Mod => YaOptMod.Instance;
 
@@ -39,7 +39,7 @@ namespace YaOpt
 
 		private static readonly Dictionary<string, bool> typeLookup = new Dictionary<string, bool>();
 
-		private static readonly Dictionary<YaOptSettings.OptimizationOption, bool> optionSnapshot = 
+		private static readonly Dictionary<YaOptSettings.OptimizationOption, bool> optionSnapshot =
 			new Dictionary<YaOptSettings.OptimizationOption, bool>();
 
 		public static bool HasType(string typeFullName)

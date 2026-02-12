@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System.Collections.Generic;
 using System.Threading;
 using Verse;
@@ -8,19 +8,19 @@ namespace YaOpt.Helpers.ThreadLocal
 {
 	internal static class ThreadLocalFoodUtility
 	{
-		public static ThreadLocal<HashSet<Thing>> Filtered = 
+		public static ThreadLocal<HashSet<Thing>> Filtered =
 			new ThreadLocal<HashSet<Thing>>(NewThingSet);
 
-		public static ThreadLocal<List<Pawn>> TmpPredatorCandidates = 
+		public static ThreadLocal<List<Pawn>> TmpPredatorCandidates =
 			new ThreadLocal<List<Pawn>>(NewPawnList);
 
-		public static ThreadLocal<List<FoodUtility.ThoughtFromIngesting>> IngestThoughts = 
+		public static ThreadLocal<List<FoodUtility.ThoughtFromIngesting>> IngestThoughts =
 			new ThreadLocal<List<FoodUtility.ThoughtFromIngesting>>(NewList<FoodUtility.ThoughtFromIngesting>);
 
-		public static ThreadLocal<List<ThoughtDef>> ExtraIngestThoughtsFromTraits = 
+		public static ThreadLocal<List<ThoughtDef>> ExtraIngestThoughtsFromTraits =
 			new ThreadLocal<List<ThoughtDef>>(NewList<ThoughtDef>);
 
-		public static ThreadLocal<Dictionary<Ideo, Dictionary<HistoryEventDef, List<Precept>>>> IdeoIngestThoughtsCache = 
+		public static ThreadLocal<Dictionary<Ideo, Dictionary<HistoryEventDef, List<Precept>>>> IdeoIngestThoughtsCache =
 			new ThreadLocal<Dictionary<Ideo, Dictionary<HistoryEventDef, List<Precept>>>>(
 				NewDictionary<Ideo, Dictionary<HistoryEventDef, List<Precept>>>);
 

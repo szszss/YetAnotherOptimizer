@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ namespace YaOpt.Patches
 			{
 				var instruction = list[i];
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
-				    methodInfo.Name == "GetStatValue")
+					methodInfo.Name == "GetStatValue")
 				{
 					list[i - 1] = new CodeInstruction(OpCodes.Ldc_I4, 10);
 				}

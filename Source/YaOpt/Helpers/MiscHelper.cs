@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Security.Cryptography;
 using Unity.Jobs;
@@ -44,17 +44,17 @@ namespace YaOpt.Helpers
 				if (warn)
 				{
 					YaOptMod.Warning($"Method {method.FullName()} code does not match the expected code.\n" +
-					                 $"Actual code hash: {methodHash}\n" +
-					                 $"Expected code hash: {hash}\n" +
-					                 "This may cause the patch to fail. " +
-					                 "This issue is caused by YaOpt. Please report it to the YaOpt developers.");
+									 $"Actual code hash: {methodHash}\n" +
+									 $"Expected code hash: {hash}\n" +
+									 "This may cause the patch to fail. " +
+									 "This issue is caused by YaOpt. Please report it to the YaOpt developers.");
 				}
 
 				if (throwException)
 					throw new Exception($"Method {method.FullName()} code does not match the expected code.\n" +
-					                    $"Actual code hash: {methodHash}\n" +
-					                    $"Expected code hash: {hash}\n" +
-					                    "This issue is caused by YaOpt. Please report it to the YaOpt developers.");
+										$"Actual code hash: {methodHash}\n" +
+										$"Expected code hash: {hash}\n" +
+										"This issue is caused by YaOpt. Please report it to the YaOpt developers.");
 
 			}
 			catch (MethodAccessException)

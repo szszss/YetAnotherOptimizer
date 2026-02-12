@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Xml;
 using Verse;
 using YaOpt.Helpers;
