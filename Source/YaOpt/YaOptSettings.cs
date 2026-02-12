@@ -35,9 +35,9 @@ namespace YaOpt
 		public enum OptimizationFlag : ushort
 		{
 			None = 0,
-			MultiplayIncompatible = 0b0000_0001,
-			RequireWin64          = 0b0000_0010,
-			RequireBurst          = 0b0001_0000,
+			MultiplayerIncompatible = 0b0000_0001,
+			RequireWin64            = 0b0000_0010,
+			RequireBurst            = 0b0001_0000,
 
 			NoSnapshot            = 0b0001_0000_0000_0000,
 			IgnoreEnableAll       = 0b0010_0000_0000_0000,
@@ -55,7 +55,7 @@ namespace YaOpt
 			{
 				get
 				{
-					if (!MultiplayCompatibility && YaOptGlobal.IsMultiplay)
+					if (!MultiplayerCompatibility && YaOptGlobal.IsMultiplayer)
 						return false;
 					if (!string.IsNullOrWhiteSpace(RequiredMod) && !YaOptGlobal.HasMod(RequiredMod))
 						return false;
@@ -104,7 +104,7 @@ namespace YaOpt
 
 			public Action<YaOptSettings> FuncExposeData { get; set; } = null;
 
-			public bool MultiplayCompatibility => (Flags & OptimizationFlag.MultiplayIncompatible) == 0;
+			public bool MultiplayerCompatibility => (Flags & OptimizationFlag.MultiplayerIncompatible) == 0;
 
 			public bool Validate(bool dryRun, bool silent, out string message)
 			{
@@ -134,7 +134,7 @@ namespace YaOpt
 
 			public bool ShouldShow(YaOptSettings settings)
 			{
-				if (!MultiplayCompatibility && YaOptGlobal.IsMultiplay)
+				if (!MultiplayerCompatibility && YaOptGlobal.IsMultiplayer)
 					return false;
 				if (!string.IsNullOrWhiteSpace(RequiredMod) && !YaOptGlobal.HasMod(RequiredMod))
 					return false;
@@ -360,7 +360,7 @@ namespace YaOpt
 			NoteStability = "YaOpt.Setting.Option.ParallelPawnTick.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelPawnTick.Compatibility",
 			Category = OptimizationCategory.Tps,
-			Flags = OptimizationFlag.MultiplayIncompatible,
+			Flags = OptimizationFlag.MultiplayerIncompatible,
 		};
 
 		/// <summary>
@@ -374,7 +374,7 @@ namespace YaOpt
 			NoteStability = "YaOpt.Setting.Option.ParallelJobGiver.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelJobGiver.Compatibility",
 			Category = OptimizationCategory.Tps,
-			Flags = OptimizationFlag.MultiplayIncompatible,
+			Flags = OptimizationFlag.MultiplayerIncompatible,
 		};
 
 		/// <summary>
@@ -386,7 +386,7 @@ namespace YaOpt
 			Name = "YaOpt.Setting.Option.ParallelPostMapTick",
 			Desc = "YaOpt.Setting.Option.ParallelPostMapTick.Desc",
 			Category = OptimizationCategory.Tps,
-			Flags = OptimizationFlag.MultiplayIncompatible,
+			Flags = OptimizationFlag.MultiplayerIncompatible,
 		};
 
 		/// <summary>

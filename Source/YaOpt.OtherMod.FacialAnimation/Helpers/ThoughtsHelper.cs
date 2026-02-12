@@ -68,7 +68,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 					// In multiplayer games, we will never trigger thoughts updates.
 					// If we find that thoughts are dirty, we will put this request
 					// back into PullBack so they can be checked again in the next update.
-					if (YaOptGlobal.IsMultiplay && GetThoughtsDirty(thoughtHandler.situational))
+					if (YaOptGlobal.IsMultiplayer && GetThoughtsDirty(thoughtHandler.situational))
 					{
 						pullBackSet.Add((param, pawn));
 						return;

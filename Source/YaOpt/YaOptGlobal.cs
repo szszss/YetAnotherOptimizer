@@ -9,7 +9,7 @@ namespace YaOpt
 	{
 		public static bool IsDebug => Settings?.DebugLogging == true;
 
-		public static bool IsMultiplay { get; internal set; }
+		public static bool IsMultiplayer { get; internal set; }
 
 		public static bool IsWindows { get; internal set; }
 

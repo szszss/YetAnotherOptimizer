@@ -27,7 +27,7 @@ namespace YaOpt
 		public YaOptMod(ModContentPack content) : base(content)
 		{
 			Instance = this;
-			YaOptGlobal.IsMultiplay = YaOptGlobal.HasMod("rwmt.Multiplayer");
+			YaOptGlobal.IsMultiplayer = YaOptGlobal.HasMod("rwmt.Multiplayer");
 			SubMods.AddRange(YaOptSubMod.LoadAll());
 			YaOptSubMod.PreInitAll(SubMods);
 			Settings = GetSettings<YaOptSettings>();
