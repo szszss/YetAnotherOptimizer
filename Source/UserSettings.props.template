@@ -1,0 +1,7 @@
+<Project>
+	<PropertyGroup>
+		<!-- Example: D:\Steam\steamapps\workshop\ -->
+		<!-- If you put the mod into RimWorld\Mods, you can also use this relative path: ..\..\..\..\..\..\workshop\ -->
+		<SteamWorkshopDirectory></SteamWorkshopDirectory>
+	</PropertyGroup>
+</Project>

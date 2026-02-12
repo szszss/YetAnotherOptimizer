@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <Import Project="..\Settings.props"/>
+  <Import Project="..\UserSettings.props" Condition="exists('..\UserSettings.props')" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\YaOpt\YaOpt.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.6" />
+  </ItemGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)ZstdSharp.dll&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)System.Runtime.CompilerServices.Unsafe.dll&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)Microsoft.Bcl.AsyncInterfaces.dll&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)System.Buffers.dll&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)System.Memory.dll&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)System.Numerics.Vectors.dll&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)System.Threading.Tasks.Extensions.dll&quot; &quot;$(SolutionDir)..\1.6\Mods\Image Opt\Assemblies\&quot; /i /y" />
+  </Target>
+</Project>

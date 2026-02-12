@@ -1,0 +1,9 @@
+<loadFolders>
+	<v1.6>
+		<li>Common</li>
+		<li>1.6</li>
+		<li IfModActive="Nals.FacialAnimation">1.6/Mods/Facial Animation</li>
+		<li IfModActive="erdelf.HumanoidAlienRaces">1.6/Mods/Humanoid Alien Races</li>
+		<li IfModActive="dev.soeur.imageopt">1.6/Mods/Image Opt</li>
+	</v1.6>
+</loadFolders>

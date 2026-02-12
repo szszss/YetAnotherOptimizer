@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+	<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+	<ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>true</ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>
+  </PropertyGroup>
+  
+  <Import Project="..\Settings.props"/>
+  <Import Project="..\UserSettings.props" Condition="exists('..\UserSettings.props')" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\YaOpt\YaOpt.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
+    <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
+    <Reference Include="AlienRace">
+      <HintPath>$([System.IO.Path]::Combine($(SteamWorkshopDirectory), 'content\294100\839005762\$(GameVersion)\Assemblies\AlienRace.dll'))</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Mods\Humanoid Alien Races\Assemblies\&quot; /i /y" />
+  </Target>
+</Project>

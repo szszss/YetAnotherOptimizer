@@ -1,0 +1,986 @@
+﻿using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using Unity.Mathematics;
+using UnityEngine;
+using Verse;
+using YaOpt.Helpers;
+
+namespace YaOpt
+{
+	public class YaOptSettings : ModSettings
+	{
+		private enum SettingTab
+		{
+			Main,
+			Fps,
+			Tps,
+			Misc
+		}
+
+		[Flags]
+		public enum OptimizationCategory : byte
+		{
+			Hidden = 0,
+			Main = 0b0001,
+			Fps  = 0b0010,
+			Tps  = 0b0100,
+			Misc = 0b1000,
+			Any  = 0b1111
+		}
+
+		[Flags]
+		public enum OptimizationFlag : ushort
+		{
+			None = 0,
+			MultiplayIncompatible = 0b0000_0001,
+			RequireWin64          = 0b0000_0010,
+			RequireBurst          = 0b0001_0000,
+
+			NoSnapshot            = 0b0001_0000_0000_0000,
+			IgnoreEnableAll       = 0b0010_0000_0000_0000,
+			IgnoreDisableAll      = 0b0100_0000_0000_0000,
+			DontSave              = 0b1000_0000_0000_0000,
+		}
+
+		public class OptimizationOption
+		{
+			internal bool _enabled = true;
+
+			private bool _default = true;
+
+			public bool Enabled
+			{
+				get
+				{
+					if (!MultiplayCompatibility && YaOptGlobal.IsMultiplay)
+						return false;
+					if (!string.IsNullOrWhiteSpace(RequiredMod) && !YaOptGlobal.HasMod(RequiredMod))
+						return false;
+					if (RequiredOption != null && !RequiredOption.Enabled)
+						return false;
+					if (CompatibilityDef.CachedBannedOptimizations.Contains(SettingId))
+						return false;
+					return _enabled;
+				}
+				set => _enabled = value;
+			}
+
+			public bool Default
+			{
+				get => _default;
+				set
+				{
+					_default = value;
+					_enabled = value;
+				}
+			}
+
+			public string Name { get; set; } = string.Empty;
+			
+			public string Desc { get; set; } = string.Empty;
+
+			public string NoteStability { get; set; } = string.Empty;
+
+			public string NoteCompatibility { get; set; } = string.Empty;
+
+			public string RequiredMod { get; set; } = string.Empty;
+
+			public string SubCategory { get; set; } = string.Empty;
+
+			public string SettingId { get; set; } = string.Empty;
+
+			public OptimizationCategory Category { get; set; }
+
+			public OptimizationFlag Flags { get; set; }
+
+			public OptimizationOption RequiredOption;
+
+			public Func<YaOptSettings, bool> FuncShow { get; set; } = null;
+
+			public Action<YaOptSettings, Listing_Standard, OptimizationOption> FuncPostDraw { get; set; } = null;
+
+			public Action<YaOptSettings> FuncExposeData { get; set; } = null;
+
+			public bool MultiplayCompatibility => (Flags & OptimizationFlag.MultiplayIncompatible) == 0;
+
+			public bool Validate(bool dryRun, bool silent, out string message)
+			{
+				// Validator doesn't validate multiplay and mod requirements. They are validated in the getter of Enabled
+				message = string.Empty;
+				var error = false;
+				if (_enabled && (Flags & OptimizationFlag.RequireWin64) > 0 && !YaOptGlobal.IsWindows)
+				{
+					if (!dryRun)
+						_enabled = false;
+					error = true;
+					message = "YaOpt.Setting.InvalidOption.RequireWin64".Translate().ToString();
+				}
+				if (_enabled && (Flags & OptimizationFlag.RequireBurst) > 0 && !YaOptGlobal.IsBurstAvailable)
+				{
+					if (!dryRun)
+						_enabled = false;
+					error = true;
+					message = "YaOpt.Setting.InvalidOption.RequireBurst".Translate().ToString();
+				}
+				if (!silent && message != string.Empty)
+				{
+					YaOptMod.Error($"Optimization {Name.Translate()} has been disabled because {message}");
+				}
+				return !error;
+			}
+
+			public bool ShouldShow(YaOptSettings settings)
+			{
+				if (!MultiplayCompatibility && YaOptGlobal.IsMultiplay)
+					return false;
+				if (!string.IsNullOrWhiteSpace(RequiredMod) && !YaOptGlobal.HasMod(RequiredMod))
+					return false;
+				if (FuncShow != null && !FuncShow(settings))
+					return false;
+				return true;
+			}
+		}
+
+		public OptimizationOption DebugOutput { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.DebugOutput",
+			Desc = "YaOpt.Setting.Option.DebugOutput.Desc",
+			Category = OptimizationCategory.Main,
+			Flags = OptimizationFlag.IgnoreEnableAll | OptimizationFlag.IgnoreDisableAll | OptimizationFlag.NoSnapshot,
+			Default = false
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.UnityEngine_Material_GetColor"/>
+		/// <seealso cref="Patches.UnityEngine_Material_SetColor"/>
+		/// </summary>
+		public OptimizationOption OptMaterialGetColor { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.MaterialGetColor",
+			Desc = "YaOpt.Setting.Option.MaterialGetColor.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.MultiTargets_ColoredText"/>
+		/// </summary>
+		public OptimizationOption OptColoredText { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ColoredText",
+			Desc = "YaOpt.Setting.Option.ColoredText.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_DynamicDrawManager_ComputeCulledThings"/>
+		/// <seealso cref="Patches.Verse_DynamicDrawManager_DrawDynamicThings"/>
+		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
+		/// <seealso cref="Patches.Verse_MapDrawer_DrawMapMesh"/>
+		/// <seealso cref="Patches.Verse_MapDrawer_MapMeshDrawerUpdate_First"/>
+		/// </summary>
+		public OptimizationOption OptParallelRenderPrepare { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ParallelRenderPrepare",
+			Desc = "YaOpt.Setting.Option.ParallelRenderPrepare.Desc",
+			NoteCompatibility = "YaOpt.Setting.Option.ParallelRenderPrepare.Compatibility",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
+		/// </summary>
+		public OptimizationOption OptPrepareBatchCount { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.PrepareBatchCount",
+			Desc = "YaOpt.Setting.Option.PrepareBatchCount.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_PawnRenderNodeWorker_GetMaterialPropertyBlock"/>
+		/// <seealso cref="Patches.Verse_PawnRenderNodeWorker_PreDraw"/>
+		/// <seealso cref="Patches.Verse_PawnRenderTree_ParallelPreDraw"/>
+		/// </summary>
+		public OptimizationOption OptParallelMaterialUpdate { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ParallelMaterialUpdate",
+			Desc = "YaOpt.Setting.Option.ParallelMaterialUpdate.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_PawnRenderNode_EnsureInitialized"/>
+		/// <seealso cref="Patches.Verse_PawnRenderTree_ParallelPreDraw"/>
+		/// </summary>
+		public OptimizationOption OptFastRecacheRequested { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.FastRecacheRequested",
+			Desc = "YaOpt.Setting.Option.FastRecacheRequested.Desc",
+			NoteCompatibility = "YaOpt.Setting.Option.FastRecacheRequested.Compatibility",
+			Category = OptimizationCategory.Fps,
+			FuncShow = (_) => ParallelPreDrawHelper.FastRecacheRequestedAvailable
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.MultiTargets_MapMeshDirty"/>
+		/// </summary>
+		public OptimizationOption OptMapMeshUpdateThrottle { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.MapMeshUpdateThrottle",
+			Desc = "YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc",
+			Category = OptimizationCategory.Fps,
+			FuncPostDraw = MapMeshUpdateThrottlePostDraw,
+			FuncExposeData = (settings) =>
+			{
+				var interval = settings.MapMeshUpdateInterval;
+				Scribe_Values.Look(ref interval, "OptMapMeshUpdateThrottle_Interval", 300);
+				settings.MapMeshUpdateInterval = interval;
+			}
+		};
+
+		public int MapMeshUpdateInterval
+		{
+			get => _mapMeshUpdateInterval;
+			set => _mapMeshUpdateInterval = math.clamp(value, 100, 1000);
+		}
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_PawnRenderNodeProperties_Worker"/>
+		/// </summary>
+		public OptimizationOption OptPRNRWorker { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.PRNRWorker",
+			Desc = "YaOpt.Setting.Option.PRNRWorker.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_Graphic_Multi_Init"/>
+		/// </summary>
+		public OptimizationOption OptGraphicTextureCache { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.GraphicTextureCache",
+			Desc = "YaOpt.Setting.Option.GraphicTextureCache.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_SilhouetteUtility_GetCachedSilhouetteData"/>
+		/// <seealso cref="Patches.Verse_SilhouetteUtility_NotifyGraphicDirty"/>
+		/// </summary>
+		public OptimizationOption OptSilhouette { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.Silhouette",
+			Desc = "YaOpt.Setting.Option.Silhouette.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.MultiTargets_ToggleTab"/>
+		/// </summary>
+		public OptimizationOption OptToggleTabCheck { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ToggleTabCheck",
+			Desc = "YaOpt.Setting.Option.ToggleTabCheck.Desc",
+			Category = OptimizationCategory.Fps
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_PawnRenderTree_TryGetMatrix"/>
+		/// </summary>
+		public OptimizationOption OptComputeMatrixBurst { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ComputeMatrixBurst",
+			Desc = "YaOpt.Setting.Option.ComputeMatrixBurst.Desc",
+			NoteStability = "YaOpt.Setting.Option.ComputeMatrixBurst.Stable",
+			Category = OptimizationCategory.Fps,
+			Flags = OptimizationFlag.RequireWin64 | OptimizationFlag.RequireBurst,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Trampolines.Verse_ThingWithComps_GetComp"/>
+		/// </summary>
+		public OptimizationOption OptThingGetComp { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ThingGetComp",
+			Desc = "YaOpt.Setting.Option.ThingGetComp.Desc",
+			NoteStability = "YaOpt.Setting.Option.ThingGetComp.Stable",
+			Category = OptimizationCategory.Tps,
+			Flags = OptimizationFlag.RequireWin64,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.RimWorld_JobDriver_Meditate_MeditationTick"/>
+		/// </summary>
+		public OptimizationOption OptMeditationTick { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.MeditationTick",
+			Desc = "YaOpt.Setting.Option.MeditationTick.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.RimWorld_JobGiver_BoardOrLeaveGravship_TryGiveJob"/>
+		/// </summary>
+		/*public OptimizationOption OptGravshipJobGiver { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.GravshipJobGiver",
+			Desc = "YaOpt.Setting.Option.GravshipJobGiver.Desc",
+			Category = OptimizationCategory.Tps,
+		};*/
+
+		/// <summary>
+		/// <seealso cref="Patches.MultiTargets_ComfortableTemperature"/>
+		/// <seealso cref="Patches.MultiTargets_FilthRate"/>
+		/// <seealso cref="Patches.RimWorld_Pawn_ApparelTracker_Notify_ApparelChanged"/>
+		/// </summary>
+		public OptimizationOption OptStatCache { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.StatCache",
+			Desc = "YaOpt.Setting.Option.StatCache.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
+		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
+		/// <seealso cref="Patches.Verse_TickList_BucketOf"/>
+		/// <seealso cref="Patches.Verse_TickList_Constructor"/>
+		/// <seealso cref="Patches.Verse_TickList_Tick"/>
+		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
+		/// <seealso cref="YaOptGlobal.NeedThreadSafe"/>
+		/// </summary>
+		public OptimizationOption OptParallelPawnTick { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ParallelPawnTick",
+			Desc = "YaOpt.Setting.Option.ParallelPawnTick.Desc",
+			NoteStability = "YaOpt.Setting.Option.ParallelPawnTick.Stable",
+			NoteCompatibility = "YaOpt.Setting.Option.ParallelPawnTick.Compatibility",
+			Category = OptimizationCategory.Tps,
+			Flags = OptimizationFlag.MultiplayIncompatible,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.RimWorld_JobGiver_Work_TryIssueJobPackage"/>
+		/// <seealso cref="YaOptGlobal.NeedThreadSafe"/>
+		/// </summary>
+		public OptimizationOption OptParallelJobGiver { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ParallelJobGiver",
+			Desc = "YaOpt.Setting.Option.ParallelJobGiver.Desc",
+			NoteStability = "YaOpt.Setting.Option.ParallelJobGiver.Stable",
+			NoteCompatibility = "YaOpt.Setting.Option.ParallelJobGiver.Compatibility",
+			Category = OptimizationCategory.Tps,
+			Flags = OptimizationFlag.MultiplayIncompatible,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_Map_MapPostTick"/>
+		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
+		/// </summary>
+		public OptimizationOption OptParallelPostMapTick { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ParallelPostMapTick",
+			Desc = "YaOpt.Setting.Option.ParallelPostMapTick.Desc",
+			Category = OptimizationCategory.Tps,
+			Flags = OptimizationFlag.MultiplayIncompatible,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
+		/// </summary>
+		public OptimizationOption OptFastCacheClear { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.FastCacheClear",
+			Desc = "YaOpt.Setting.Option.FastCacheClear.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.RimWorld_Ideo_IdeoTick"/>
+		/// <seealso cref="Patches.RimWorld_Ideo_MemberWillingToDo"/>
+		/// <seealso cref="Patches.RimWorld_Ideo_RecachePrecepts"/>
+		/// </summary>
+		public OptimizationOption OptIdeoCheck { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.IdeoCheck",
+			Desc = "YaOpt.Setting.Option.IdeoCheck.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Verse_DynamicDrawManager_DrawDynamicThings"/>
+		/// <seealso cref="Patches.Verse_WindManager_WindManagerTick"/>
+		/// </summary>
+		public OptimizationOption OptWindUpdate { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.WindUpdate",
+			Desc = "YaOpt.Setting.Option.WindUpdate.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Trampolines.Verse_ContentFinder_Get"/>
+		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
+		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
+		/// <seealso cref="Patches.Early.Verse_ModContentLoader_LoadTexture"/>
+		/// </summary>
+		public OptimizationOption OptLazyTextureLoad { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.LazyTextureLoad",
+			Desc = "YaOpt.Setting.Option.LazyTextureLoad.Desc",
+			Category = OptimizationCategory.Misc,
+			Flags = OptimizationFlag.RequireWin64,
+			FuncPostDraw = LazyTextureLoadPostDraw,
+			FuncExposeData = (settings) =>
+			{
+				var ddsOnly = settings.LazyTextureLoadDdsOnly;
+				Scribe_Values.Look(ref ddsOnly, "OptLazyTextureLoad_DdsOnly", true);
+				settings.LazyTextureLoadDdsOnly = ddsOnly;
+			}
+		};
+
+		[field: Unsaved]
+		public bool LazyTextureLoadDdsOnly { get; set; } = true;
+
+		/// <summary>
+		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
+		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
+		/// <seealso cref="Patches.Early.Verse_LoadedModManager_ApplyPatches"/>
+		/// </summary>
+		public OptimizationOption OptFastPatchOperation { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.FastPatchOperation",
+			Desc = "YaOpt.Setting.Option.FastPatchOperation.Desc",
+			Category = OptimizationCategory.Misc
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_InjectIntoDefs"/>
+		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_SetDefFieldAtPath"/>
+		/// </summary>
+		public OptimizationOption OptFastTranslationInjection { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.FastTranslationInjection",
+			Desc = "YaOpt.Setting.Option.FastTranslationInjection.Desc",
+			Category = OptimizationCategory.Misc
+		};
+
+		/// <summary>
+		/// <seealso cref="Patches.Early.HarmonyLib_AccessTools_TypeByName"/>
+		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_SetDefFieldAtPath"/>
+		/// </summary>
+		public OptimizationOption OptRuntimeInfoCache { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.RuntimeInfoCache",
+			Desc = "YaOpt.Setting.Option.RuntimeInfoCache.Desc",
+			Category = OptimizationCategory.Misc
+		};
+
+		[Unsaved]
+		private readonly List<OptimizationOption> _allOptimizations;
+
+		[Unsaved]
+		private SettingTab _selectedTab = SettingTab.Main;
+
+		public IReadOnlyList<OptimizationOption> AllOptimizations => _allOptimizations.AsReadOnly();
+
+		[Unsaved]
+		private Vector2 _optionScrollPos = Vector2.zero;
+
+		[Unsaved]
+		private Vector2 _descTextScrollPos = Vector2.zero;
+
+		[Unsaved]
+		private float _optionViewHeight;
+
+		[Unsaved]
+		private OptimizationCategory _categoryFilter = OptimizationCategory.Any;
+
+		[Unsaved]
+		private OptimizationOption _lastMouseOverOption = null;
+
+		[Unsaved]
+		private Window _lastWindow = null;
+
+		[Unsaved]
+		private string _showingDesc = string.Empty;
+
+		[Unsaved]
+		private bool _checkOptionChanged = false;
+
+		[Unsaved]
+		private int _mapMeshUpdateInterval = 300;
+
+		public bool DebugLogging
+		{
+			set => DebugOutput.Enabled = value;
+			get => DebugOutput.Enabled;
+		}
+
+		public YaOptSettings()
+		{
+			_allOptimizations = new List<OptimizationOption>();
+			var props = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			foreach (var propertyInfo in props)
+			{
+				if (typeof(OptimizationOption).IsAssignableFrom(propertyInfo.PropertyType))
+				{
+					if (!(propertyInfo.GetValue(this) is OptimizationOption option))
+					{
+						// Should never happen
+						continue;
+					}
+					_allOptimizations.Add(option);
+					if (string.IsNullOrWhiteSpace(option.SettingId))
+						option.SettingId = propertyInfo.Name;
+				}
+			}
+
+			foreach (var subMod in YaOptGlobal.SubMods)
+			{
+				try
+				{
+					_allOptimizations.AddRange(subMod.OnCreateSettings());
+				}
+				catch (Exception ex)
+				{
+					YaOptMod.Error($"Failed to run OnCreateSettings for {subMod.GetType().FullName}\n{ex}");
+				}
+			}
+
+			_allOptimizations.Sort((a, b) =>
+			{
+				var i = a.Category.CompareTo(b.Category);
+				if (i == 0)
+				{
+					// Don't use translated text, so that the layout will be the same in any language
+					var subCatA = !string.IsNullOrWhiteSpace(a.SubCategory) ? a.SubCategory : null;
+					var subCatB = !string.IsNullOrWhiteSpace(b.SubCategory) ? b.SubCategory : null;
+					i = string.Compare(subCatA, subCatB, StringComparison.Ordinal);
+					if (i == 0)
+					{
+						i = string.Compare(a.Name, b.Name, StringComparison.Ordinal);
+					}
+				}
+				return i;
+			});
+		}
+
+		public override void ExposeData()
+		{
+			base.ExposeData();
+			if (YaOptGlobal.IsLibraryLoaded && Scribe.mode == LoadSaveMode.Saving)
+			{
+				foreach (var option in _allOptimizations)
+				{
+					option.Validate(false, false, out _);
+				}
+			}
+			foreach (var option in _allOptimizations)
+			{
+				if ((option.Flags & OptimizationFlag.DontSave) == 0)
+				{
+					Scribe_Values.Look(ref option._enabled, option.SettingId, option.Default);
+					if (option.FuncExposeData != null)
+						option.FuncExposeData(this);
+				}
+			}
+			if (YaOptGlobal.IsLibraryLoaded && Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				foreach (var option in _allOptimizations)
+				{
+					option.Validate(false, false, out _);
+				}
+			}
+		}
+
+		public static string GetCategoryText(OptimizationCategory category)
+		{
+			switch (category)
+			{
+				case OptimizationCategory.Hidden:
+				case OptimizationCategory.Main:
+					return string.Empty;
+				case OptimizationCategory.Fps: return "YaOpt.Setting.Category.Fps".Translate();
+				case OptimizationCategory.Tps: return "YaOpt.Setting.Category.Tps".Translate();
+				case OptimizationCategory.Misc: return "YaOpt.Setting.Category.Misc".Translate();
+				case OptimizationCategory.Any: return string.Empty;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(category), category, null);
+			}
+		}
+
+		public void ValidateOptions(bool silent)
+		{
+			foreach (var option in _allOptimizations)
+			{
+				option.Validate(false, silent, out _);
+			}
+		}
+
+		public void DoSettingsWindowContents(Rect inRect)
+		{
+			var currentWindow = Find.WindowStack.currentlyDrawnWindow;
+			if (_lastWindow != currentWindow)
+			{
+				_lastWindow = currentWindow;
+				_optionScrollPos = Vector2.zero;
+				_descTextScrollPos = Vector2.zero;
+				_lastMouseOverOption = null;
+				_showingDesc = string.Empty;
+			}
+
+			var tabHeader = inRect;
+			tabHeader.y += 35f;
+
+			var tabBody = tabHeader;
+			tabBody.height -= 40f;
+			Widgets.DrawMenuSection(tabBody);
+
+			var list = new List<TabRecord>
+			{
+				new TabRecord("YaOpt.Setting.Tab.Main".Translate(), delegate
+				{
+					_optionScrollPos = Vector2.zero;
+					_descTextScrollPos = Vector2.zero;
+					_lastMouseOverOption = null;
+					_showingDesc = string.Empty;
+					_categoryFilter = OptimizationCategory.Any;
+					_selectedTab = SettingTab.Main;
+				}, _selectedTab == SettingTab.Main),
+				new TabRecord("YaOpt.Setting.Tab.Fps".Translate(), delegate
+				{
+					_optionScrollPos = Vector2.zero;
+					_descTextScrollPos = Vector2.zero;
+					_lastMouseOverOption = null;
+					_showingDesc = string.Empty;
+					_categoryFilter = OptimizationCategory.Fps;
+					_selectedTab = SettingTab.Fps;
+				}, _selectedTab == SettingTab.Fps),
+				new TabRecord("YaOpt.Setting.Tab.Tps".Translate(), delegate
+				{
+					_optionScrollPos = Vector2.zero;
+					_descTextScrollPos = Vector2.zero;
+					_lastMouseOverOption = null;
+					_showingDesc = string.Empty;
+					_categoryFilter = OptimizationCategory.Tps;
+					_selectedTab = SettingTab.Tps;
+				}, _selectedTab == SettingTab.Tps),
+				new TabRecord("YaOpt.Setting.Tab.Misc".Translate(), delegate
+				{
+					_optionScrollPos = Vector2.zero;
+					_descTextScrollPos = Vector2.zero;
+					_lastMouseOverOption = null;
+					_showingDesc = string.Empty;
+					_categoryFilter = OptimizationCategory.Misc;
+					_selectedTab = SettingTab.Misc;
+				}, _selectedTab == SettingTab.Misc),
+			};
+			TabDrawer.DrawTabs(tabHeader, list);
+			DrawPage(tabBody.ContractedBy(10));
+
+			if (_checkOptionChanged)
+			{
+				if (!YaOptGlobal.AnyOptionChanged())
+				{
+					_checkOptionChanged = false;
+				}
+				else
+				{
+					var messageRect = new Rect(inRect.x + 5, inRect.yMax + 5, inRect.width * 0.4f, 50);
+					Text.Font = GameFont.Tiny;
+					Widgets.Label(messageRect, "YaOpt.Setting.Message.RequireReload".Translate());
+					Text.Font = GameFont.Small;
+				}
+			}
+		}
+
+		private void DrawPage(Rect inRect)
+		{
+			inRect.SplitVertically(inRect.width * 0.6f, out var leftRect, out var rightRect);
+
+			Widgets.DrawLineVertical(leftRect.xMax - 5f, leftRect.yMin, leftRect.height);
+			leftRect = leftRect.ContractedBy(0, 5);
+			leftRect.width -= 25;
+			var viewRect = new Rect(0, 0, leftRect.width - 25, _optionViewHeight);
+			Widgets.BeginScrollView(leftRect, ref _optionScrollPos, viewRect, true);
+			var listing = new Listing_Standard
+			{
+				verticalSpacing = 4f,
+				maxOneColumn = true,
+				ColumnWidth = viewRect.width * 0.93f
+			};
+			listing.Begin(viewRect);
+			var lastCategory = string.Empty;
+			var lastSubCategory = string.Empty;
+			switch (_selectedTab)
+			{
+				case SettingTab.Main:
+					lastCategory = GetCategoryText(OptimizationCategory.Main);
+					break;
+				case SettingTab.Fps:
+					lastCategory = GetCategoryText(OptimizationCategory.Fps);
+					break;
+				case SettingTab.Tps:
+					lastCategory = GetCategoryText(OptimizationCategory.Tps);
+					break;
+				case SettingTab.Misc:
+					lastCategory = GetCategoryText(OptimizationCategory.Misc);
+					break;
+			}
+			foreach (var option in _allOptimizations)
+			{
+				if ((_categoryFilter & option.Category) > 0 && option.ShouldShow(this))
+				{
+					var cateText = GetCategoryText(option.Category);
+					if (lastCategory != cateText)
+					{
+						lastCategory = cateText;
+						lastSubCategory = string.Empty;
+						if (!string.IsNullOrWhiteSpace(cateText))
+						{
+							Text.Font = GameFont.Medium;
+							listing.Label(cateText);
+							Text.Font = GameFont.Small;
+						}
+					}
+
+					var subCateText = !string.IsNullOrWhiteSpace(option.SubCategory) ?
+						option.SubCategory.Translate().ToString() :
+						string.Empty;
+					if (lastSubCategory != subCateText)
+					{
+						lastSubCategory = subCateText;
+						if (!string.IsNullOrWhiteSpace(subCateText))
+						{
+							listing.Label(subCateText);
+						}
+					}
+					DrawOption(listing, option);
+				}
+			}
+			listing.End();
+			Widgets.EndScrollView();
+			if (Event.current.type == EventType.Layout)
+			{
+				_optionViewHeight = listing.CurHeight;
+			}
+
+			Rect drawRect;
+#if DEBUG
+			rightRect.SplitHorizontally(rightRect.height - 35f, out rightRect, out drawRect);
+			Widgets.ButtonText(drawRect.ContractedBy(30, 2.5f), "YaOpt.Setting.Button.ShowDebugMenu".Translate());
+			string btnTextDisable;
+			string btnTextEnable;
+#endif
+			OptimizationCategory category;
+			switch (_selectedTab)
+			{
+				case SettingTab.Main:
+					btnTextDisable = "YaOpt.Setting.Button.DisableAll";
+					btnTextEnable = "YaOpt.Setting.Button.EnableAll";
+					category = OptimizationCategory.Any;
+					break;
+				case SettingTab.Fps:
+					btnTextDisable = "YaOpt.Setting.Button.DisableAllFps";
+					btnTextEnable = "YaOpt.Setting.Button.EnableAllFps";
+					category = OptimizationCategory.Fps;
+					break;
+				case SettingTab.Tps:
+					btnTextDisable = "YaOpt.Setting.Button.DisableAllTps";
+					btnTextEnable = "YaOpt.Setting.Button.EnableAllTps";
+					category = OptimizationCategory.Tps;
+					break;
+				case SettingTab.Misc:
+					btnTextDisable = "YaOpt.Setting.Button.DisableAllMisc";
+					btnTextEnable = "YaOpt.Setting.Button.EnableAllMisc";
+					category = OptimizationCategory.Misc;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			rightRect.SplitHorizontally(rightRect.height - 35f, out rightRect, out drawRect);
+			if (Widgets.ButtonText(drawRect.ContractedBy(30, 2.5f), btnTextDisable.Translate()))
+			{
+				SetAllOption(false, category);
+			}
+			rightRect.SplitHorizontally(rightRect.height - 35f, out rightRect, out drawRect);
+			if (Widgets.ButtonText(drawRect.ContractedBy(30, 2.5f), btnTextEnable.Translate()))
+			{
+				SetAllOption(true, category);
+			}
+
+			rightRect = rightRect.ContractedBy(10);
+			Widgets.LabelScrollable(rightRect, _showingDesc, ref _descTextScrollPos, true, false, true);
+		}
+
+		private void DrawOption(Listing_Standard listing, OptimizationOption option)
+		{
+			var label = option.Name.Translate().ToString();
+			var hasNoteS = !string.IsNullOrWhiteSpace(option.NoteStability);
+			var hasNoteC = !string.IsNullOrWhiteSpace(option.NoteCompatibility);
+			if (hasNoteS && hasNoteC)
+			{
+				label = string.Concat(label, " <color=#FF4040>[S]</color><color=#DEB0D0>[C]</color>");
+			}
+			else if (hasNoteS)
+			{
+				label = string.Concat(label, " <color=#FF4040>[S]</color>");
+			}
+			else if (hasNoteC)
+			{
+				label = string.Concat(label, " <color=#DEB0D0>[C]</color>");
+			}
+			var enabled = option._enabled;
+			var disabledByDef = CompatibilityDef.CachedBannedOptimizations.Contains(option.SettingId);
+			DrawCheckboxLabeled(listing, label, enabled, disabledByDef, out var mouseOver, out var result);
+			if (mouseOver && _lastMouseOverOption != option)
+			{
+				MouseOverOption(option);
+			}
+			if (result != enabled && !disabledByDef)
+			{
+				option._enabled = result;
+				if (!option.Validate(false, true, out var reason))
+				{
+					Messages.Message("YaOpt.Setting.InvalidOption".Translate().ToString() + reason,
+						null, MessageTypeDefOf.RejectInput, false);
+				}
+				CheckIfOptionChanged();
+			}
+			if (option.FuncPostDraw != null)
+				option.FuncPostDraw(this, listing, option);
+			listing.Gap(listing.verticalSpacing);
+		}
+
+		private static void DrawCheckboxLabeled(Listing_Standard listing, string label,
+			bool isChecked, bool isDisabled, out bool mouseOver, out bool result, float widthOffset = 0)
+		{
+			mouseOver = false;
+			result = false;
+			Rect rect = listing.GetRect(Text.CalcHeight(label, listing.ColumnWidth));
+			rect.width += widthOffset;
+			//rect.width = Math.Min(rect.width + 24f, listing.ColumnWidth);
+			Rect? boundingRectCached = listing.BoundingRectCached;
+			if (boundingRectCached.HasValue)
+			{
+				ref Rect local = ref rect;
+				Rect other = boundingRectCached.Value;
+				if (!local.Overlaps(other))
+				{
+					listing.Gap(listing.verticalSpacing);
+					return;
+				}
+			}
+			if (Mouse.IsOver(rect))
+			{
+				Widgets.DrawHighlight(rect);
+				mouseOver = true;
+			}
+			var enabled = isChecked;
+			Widgets.CheckboxLabeled(rect, label, ref enabled, isDisabled);
+			result = enabled;
+		}
+
+		private void MouseOverOption(OptimizationOption option)
+		{
+			_lastMouseOverOption = option;
+			var sb = new StringBuilder();
+
+			if (CompatibilityDef.CachedBannedOptimizations.Contains(option.SettingId))
+			{
+				sb.Append("<color=#FF2020>")
+					.Append("YaOpt.Setting.Note.Banned".Translate(
+						CompatibilityDef.CachedBannedBy[option.SettingId]))
+					.AppendLine("</color>");
+			}
+
+			sb.AppendLine(option.Desc.Translate());
+
+			if (!string.IsNullOrWhiteSpace(option.NoteStability))
+			{
+				sb.Append("\n\n").Append("<color=#FF4040>").Append("YaOpt.Setting.Note.Stability".Translate()).Append("\n")
+					.Append(option.NoteStability.Translate()).Append("</color>");
+			}
+
+			if (!string.IsNullOrWhiteSpace(option.NoteCompatibility))
+			{
+				sb.Append("\n\n").Append("<color=#DEB0D0>").Append("YaOpt.Setting.Note.Compatibility".Translate()).Append("\n")
+					.Append(option.NoteCompatibility.Translate()).Append("</color>");
+			}
+			_showingDesc = sb.ToString();
+		}
+
+		private static void MapMeshUpdateThrottlePostDraw(YaOptSettings settings,
+			Listing_Standard listing, OptimizationOption option)
+		{
+			if (option.Enabled)
+			{
+				listing.Indent();
+				var rect = listing.GetRect(30);
+				listing.Gap(-30);
+				var result = (int) listing.SliderLabeled(
+					"YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval".Translate(settings.MapMeshUpdateInterval),
+					settings.MapMeshUpdateInterval, 100, 1000);
+				settings.MapMeshUpdateInterval = result / 100 * 100;
+				listing.Outdent();
+				if (Mouse.IsOver(rect))
+				{
+					Widgets.DrawHighlight(rect);
+					if (settings._lastMouseOverOption != null)
+					{
+						settings._lastMouseOverOption = null;
+						settings._showingDesc = "YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc".Translate();
+					}
+				}
+			}
+		}
+
+		private static void LazyTextureLoadPostDraw(YaOptSettings settings,
+			Listing_Standard listing, OptimizationOption option)
+		{
+			if (option.Enabled)
+			{
+				listing.Gap(listing.verticalSpacing);
+				listing.Indent();
+				var ddsOnly = settings.LazyTextureLoadDdsOnly;
+				DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.LazyTextureLoad.DdsOnly".Translate(),
+					ddsOnly, false, out var mouseOver, out var result, -12);
+				if (mouseOver)
+				{
+					settings._lastMouseOverOption = null;
+					settings._showingDesc = "YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc".Translate();
+				}
+				if (ddsOnly != result)
+					settings.LazyTextureLoadDdsOnly = result;
+				listing.Outdent();
+				listing.Gap(listing.verticalSpacing);
+			}
+		}
+
+		private void SetAllOption(bool enable, OptimizationCategory category)
+		{
+			var filter = enable ? OptimizationFlag.IgnoreEnableAll : OptimizationFlag.IgnoreDisableAll;
+			foreach (var optimization in _allOptimizations)
+			{
+				if ((optimization.Category & category) > 0 && (optimization.Flags & filter) == 0)
+				{
+					optimization.Enabled = enable;
+				}
+			}
+			CheckIfOptionChanged();
+		}
+
+		private void CheckIfOptionChanged()
+		{
+			if (YaOptGlobal.AnyOptionChanged())
+			{
+				_checkOptionChanged = true;
+			}
+		}
+	}
+}

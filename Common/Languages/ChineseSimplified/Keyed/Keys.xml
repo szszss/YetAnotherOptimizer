@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+	<YaOpt.Loading.SearchingTypes>YaOpt: 初始化类型数据库</YaOpt.Loading.SearchingTypes>
+	<YaOpt.Loading.Patching>YaOpt: 重新应用设置</YaOpt.Loading.Patching>
+	<YaOpt.Message.ErrorWhilePatching>YaOpt在应用设置时出现了错误，游戏可能无法正常运行，查阅控制台获取详细信息。</YaOpt.Message.ErrorWhilePatching>
+	<YaOpt.Setting.Button.DisableAll>禁用全部优化</YaOpt.Setting.Button.DisableAll>
+	<YaOpt.Setting.Button.EnableAll>启用全部优化</YaOpt.Setting.Button.EnableAll>
+	<YaOpt.Setting.Button.DisableAllFps>禁用全部FPS优化</YaOpt.Setting.Button.DisableAllFps>
+	<YaOpt.Setting.Button.EnableAllFps>启用全部FPS优化</YaOpt.Setting.Button.EnableAllFps>
+	<YaOpt.Setting.Button.DisableAllTps>禁用全部TPS优化</YaOpt.Setting.Button.DisableAllTps>
+	<YaOpt.Setting.Button.EnableAllTps>启用全部TPS优化</YaOpt.Setting.Button.EnableAllTps>
+	<YaOpt.Setting.Button.DisableAllMisc>禁用全部杂类优化</YaOpt.Setting.Button.DisableAllMisc>
+	<YaOpt.Setting.Button.EnableAllMisc>启用全部杂类优化</YaOpt.Setting.Button.EnableAllMisc>
+	<YaOpt.Setting.Button.ShowDebugMenu>打开调试菜单</YaOpt.Setting.Button.ShowDebugMenu>
+	<YaOpt.Setting.Category.Fps>FPS优化</YaOpt.Setting.Category.Fps>
+	<YaOpt.Setting.Category.Tps>TPS优化</YaOpt.Setting.Category.Tps>
+	<YaOpt.Setting.Category.Misc>其他优化</YaOpt.Setting.Category.Misc>
+	<YaOpt.Setting.InvalidOption>无法启用该优化：</YaOpt.Setting.InvalidOption>
+	<YaOpt.Setting.InvalidOption.RequireWin64>需要64位Windows操作系统。</YaOpt.Setting.InvalidOption.RequireWin64>
+	<YaOpt.Setting.InvalidOption.RequireBurst>需要正常加载的Burst库。</YaOpt.Setting.InvalidOption.RequireBurst>
+	<YaOpt.Setting.Message.RequireReload>更改的设置将在加载存档或重启游戏后生效。</YaOpt.Setting.Message.RequireReload>
+	<YaOpt.Setting.Note.Banned>被{0}禁用</YaOpt.Setting.Note.Banned>
+	<YaOpt.Setting.Note.Stability>【稳定性说明】</YaOpt.Setting.Note.Stability>
+	<YaOpt.Setting.Note.Compatibility>【Mod兼容性说明】</YaOpt.Setting.Note.Compatibility>
+	<YaOpt.Setting.Option.DebugOutput>调试输出</YaOpt.Setting.Option.DebugOutput>
+	<YaOpt.Setting.Option.DebugOutput.Desc>在控制台中输出调试信息，启用这个选项可能会略微降低游戏速度，因为游戏会在每次输出控制台信息时记录整个调用栈，这是一个开销很大的操作。</YaOpt.Setting.Option.DebugOutput.Desc>
+	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>仅延迟加载DDS格式</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
+	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>只对DDS格式（以及ImageOpt的Zstd压缩DDS）纹理启用延迟加载，非DDS格式图片在载入时需要花费额外时间将其转换成能被游戏引擎渲染的格式，在运行中载入时会有明显的卡顿。</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>最短更新间隔: {0}毫秒</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>调整两次更新间最短的现实时间间隔，需要注意的是，由于游戏对地形贴图采用增量更新，这个选项是有边界效应的，将间隔设为1000毫秒并不能将更新开销降低为100毫秒的十分之一，因为单次更新需要处理的地块也多了。推荐值为300或500，如果你不在乎视觉效果，调成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
+	<YaOpt.Setting.SubCategory.FacialAnimation>动态表情联动</YaOpt.Setting.SubCategory.FacialAnimation>
+	<YaOpt.Setting.SubCategory.HumanoidAlienRaces>外星人框架联动</YaOpt.Setting.SubCategory.HumanoidAlienRaces>
+	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>
+	<YaOpt.Setting.Tab.Fps>FPS</YaOpt.Setting.Tab.Fps>
+	<YaOpt.Setting.Tab.Tps>TPS</YaOpt.Setting.Tab.Tps>
+	<YaOpt.Setting.Tab.Misc>其他</YaOpt.Setting.Tab.Misc>
+</LanguageData>

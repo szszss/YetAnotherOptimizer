@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Analyzer>
+    <YetAnotherOptimizer>
+        <Types>
+        </Types>
+        <Methods>
+            <li>YaOpt.Helpers.ParallelTickManager:ParellellyTickPawns</li>
+            <li>YaOpt.Helpers.ParallelTickManager:SingleTickPawns</li>
+        </Methods>
+        <NestedTypes>
+        </NestedTypes>
+    </YetAnotherOptimizer>
+</Analyzer>

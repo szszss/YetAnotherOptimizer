@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+	<YaOpt.Setting.InvalidOption.RequireWin64>Require Windows 64-bit operating system.</YaOpt.Setting.InvalidOption.RequireWin64>
+	<YaOpt.Setting.InvalidOption.RequireBurst>Require loaded Burst library.</YaOpt.Setting.InvalidOption.RequireBurst>
+	<YaOpt.Setting.Option.DebugOutput>Debug logging</YaOpt.Setting.Option.DebugOutput>
+	<YaOpt.Setting.Option.DebugOutput.Desc>Logging debug messages in the console.</YaOpt.Setting.Option.DebugOutput.Desc>
+	<YaOpt.Setting.Category.Fps>Logging debug messages in the console.</YaOpt.Setting.Category.Fps>
+</LanguageData>

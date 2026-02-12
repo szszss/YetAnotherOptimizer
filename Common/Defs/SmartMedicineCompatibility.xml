@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<YaOpt.CompatibilityDef>
+		<defName>HolyShit</defName>
+		<bannedOptimizations>
+			
+		</bannedOptimizations>
+		<ignoredToggleTabCaching>
+			
+		</ignoredToggleTabCaching>
+	</YaOpt.CompatibilityDef>
+	
+	<YaOpt.CompatibilityDef MayRequire="uuugggg.smartmedicine">
+		<defName>SmartMedicineCompatibility</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>RimWorld.WorkGiver_Tend</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+</Defs>
