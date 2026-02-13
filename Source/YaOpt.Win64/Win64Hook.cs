@@ -64,10 +64,6 @@ namespace YaOpt.Win64
 
 		public AsmHelper.ITrampoline CreateTrampoline(MethodInfo srcMethod, MethodInfo targetMethod, byte[] prefixCode = null)
 		{
-			//var codeLength = 5;
-			//if (prefixCode != null)
-			//    codeLength += prefixCode.Length;
-			//RuntimeHelpers.PrepareMethod(srcMethod.MethodHandle);
 			RuntimeHelpers.PrepareMethod(targetMethod.MethodHandle);
 			var srcPtr = srcMethod.MethodHandle.GetFunctionPointer();
 			var targetPtr = targetMethod.MethodHandle.GetFunctionPointer();
@@ -75,13 +71,6 @@ namespace YaOpt.Win64
 				throw new MissingMethodException("Cannot get the function pointer of " + srcMethod.Name);
 			if (targetPtr == IntPtr.Zero)
 				throw new MissingMethodException("Cannot get the function pointer of " + targetMethod.Name);
-			//var offset = targetPtr.ToInt64() - srcPtr.ToInt64() - codeLength;
-			//if (offset > int.MaxValue || offset < int.MinValue)
-			//    throw new Exception(
-			//	    $"Offset between the function pointer of {srcMethod.Name} (0x{srcPtr.ToString("X")}) " +
-			//	    $"and {targetMethod.Name} (0x{targetPtr.ToString("X")}) is greater than 4GB ({offset})");
-			// movabs rax, targetAddr
-			// jmp rax
 			var trampolineCode = (prefixCode ?? Array.Empty<byte>())
 				.Append((byte)0x48)
 				.Append((byte)0xB8)
