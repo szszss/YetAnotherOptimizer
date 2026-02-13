@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Verse;
 using YaOpt.Helpers.ThreadLocal;
 

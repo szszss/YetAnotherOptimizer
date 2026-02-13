@@ -1,4 +1,4 @@
-﻿using AlienRace.ExtendedGraphics;
+using AlienRace.ExtendedGraphics;
 using HarmonyLib;
 using System.Reflection;
 using UnityEngine;

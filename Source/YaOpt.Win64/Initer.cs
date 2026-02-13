@@ -1,4 +1,4 @@
-﻿namespace YaOpt.Win64
+namespace YaOpt.Win64
 {
 	public static class Initer
 	{

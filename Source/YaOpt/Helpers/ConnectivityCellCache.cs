@@ -1,4 +1,4 @@
-﻿using Gilzoide.ManagedJobs;
+using Gilzoide.ManagedJobs;
 using System.Collections.Generic;
 using Unity.Jobs;
 using Verse;

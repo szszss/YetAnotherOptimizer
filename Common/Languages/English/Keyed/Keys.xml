@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
 	<YaOpt.Setting.InvalidOption.RequireWin64>Require Windows 64-bit operating system.</YaOpt.Setting.InvalidOption.RequireWin64>
 	<YaOpt.Setting.InvalidOption.RequireBurst>Require loaded Burst library.</YaOpt.Setting.InvalidOption.RequireBurst>

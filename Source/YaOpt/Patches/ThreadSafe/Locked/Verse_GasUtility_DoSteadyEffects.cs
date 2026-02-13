@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using System.Threading;
 using Unity.Mathematics;
 using Verse;
