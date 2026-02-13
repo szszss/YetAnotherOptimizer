@@ -55,17 +55,13 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 			return SubMod.OptFAPawnSpawn.Enabled;
 		}
 
-		static bool Prefix(Pawn __0, int __1, out Dictionary<string, List<FaceAnimation>> __2)
+		static bool Prefix(Pawn pawn, int initialTick, out Dictionary<string, List<FaceAnimation>> animationDict)
 		{
-			__2 = new Dictionary<string, List<FaceAnimation>>();
-			var pawn = __0;
-			var initialTick = __1;
-			var animationDict = __2;
+			animationDict = new Dictionary<string, List<FaceAnimation>>();
 			var pawnRaceName = pawn.def.defName;
 			var version = ++cacheVersion;
 			var animDefDict = JobAnimationHelper.GetRaceAnimation(pawnRaceName);
-			if (!animDefDict.TryGetValue("ConstantJob", out var constantJobAnimDefs))
-				constantJobAnimDefs = emptyList;
+			var constantJobAnimDefs = animDefDict.GetValueOrDefault("ConstantJob", emptyList);
 			foreach (var jobDef in DefDatabase<JobDef>.AllDefs)
 			{
 				var list = CreateJobAnimation(animDefDict, constantJobAnimDefs, version, initialTick, jobDef.defName);

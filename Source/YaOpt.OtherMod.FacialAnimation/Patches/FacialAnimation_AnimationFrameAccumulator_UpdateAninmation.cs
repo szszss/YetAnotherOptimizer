@@ -24,40 +24,36 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 		}
 
 		static bool Prefix(AnimationFrameAccumulator __instance,
-			IEnumerable<FaceAnimation> __0,
-			int __1, bool __2,
-			List<FaceAnimation> __3,
+			IEnumerable<FaceAnimation> currentJobAnimationList,
+			int tickGame, bool isStanding,
+			List<FaceAnimation> temporaryAnimationList,
 			ref FaceAnimationDef.AnimationFrame __result, ref int ___lastTick,
 			List<FaceAnimationDef.AnimationFrame> ___accumFrames)
 		{
-			var currentJobAnimation = __0;
-			var currentJobAnimationList = currentJobAnimation as List<FaceAnimation>;
-			var tickGame = __1;
-			var isStanding = __2;
-			var temporaryAnimationList = __3;
+			var currentJobAnimationListReused = currentJobAnimationList as List<FaceAnimation>;
 			if (___lastTick > tickGame)
 			{
-				if (currentJobAnimationList != null)
+				if (currentJobAnimationListReused != null)
 				{
-					for (var i = 0; i < currentJobAnimationList.Count; i++)
+					for (var i = 0; i < currentJobAnimationListReused.Count; i++)
 					{
-						currentJobAnimationList[i].Reset(tickGame);
+						currentJobAnimationListReused[i].Reset(tickGame);
 					}
 				}
 				else
 				{
-					foreach (FaceAnimation faceAnimation in currentJobAnimation)
+					foreach (FaceAnimation faceAnimation in currentJobAnimationList)
 					{
 						faceAnimation.Reset(tickGame);
 					}
 				}
 			}
 			___lastTick = tickGame;
-			if (currentJobAnimationList != null)
+			if (currentJobAnimationListReused != null)
 			{
-				for (var i = 0; i < currentJobAnimationList.Count; i++)
+				for (var i = 0; i < currentJobAnimationListReused.Count; i++)
 				{
-					var faceAnimation2 = currentJobAnimationList[i];
+					var faceAnimation2 = currentJobAnimationListReused[i];
 					if (faceAnimation2.IsFinished(tickGame))
 					{
 						faceAnimation2.Reset(tickGame);
@@ -74,7 +70,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 			}
 			else
 			{
-				foreach (FaceAnimation faceAnimation2 in currentJobAnimation)
+				foreach (FaceAnimation faceAnimation2 in currentJobAnimationList)
 				{
 					if (faceAnimation2.IsFinished(tickGame))
 					{
