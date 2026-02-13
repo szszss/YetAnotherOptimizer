@@ -1,6 +1,6 @@
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
-using HarmonyLib;
 using Verse.AI;
 using YaOpt.Helpers;
 
