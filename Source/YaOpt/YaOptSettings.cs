@@ -323,16 +323,6 @@ namespace YaOpt
 		};
 
 		/// <summary>
-		/// <seealso cref="Patches.RimWorld_JobGiver_BoardOrLeaveGravship_TryGiveJob"/>
-		/// </summary>
-		/*public OptimizationOption OptGravshipJobGiver { get; } = new OptimizationOption
-		{
-			Name = "YaOpt.Setting.Option.GravshipJobGiver",
-			Desc = "YaOpt.Setting.Option.GravshipJobGiver.Desc",
-			Category = OptimizationCategory.Tps,
-		};*/
-
-		/// <summary>
 		/// <seealso cref="Patches.MultiTargets_ComfortableTemperature"/>
 		/// <seealso cref="Patches.MultiTargets_FilthRate"/>
 		/// <seealso cref="Patches.RimWorld_Pawn_ApparelTracker_Notify_ApparelChanged"/>
