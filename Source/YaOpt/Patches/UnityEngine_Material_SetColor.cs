@@ -16,9 +16,9 @@ namespace YaOpt.Patches
 			return YaOptGlobal.Settings.OptMaterialGetColor.Enabled;
 		}
 
-		static bool Prefix(Material __instance, Color __0)
+		static bool Prefix(Material __instance, Color value)
 		{
-			return MaterialColorCache.SetColor(__instance, __0);
+			return MaterialColorCache.SetColor(__instance, value);
 		}
 	}
 }

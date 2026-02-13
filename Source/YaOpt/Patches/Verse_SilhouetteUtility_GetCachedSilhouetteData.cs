@@ -18,25 +18,25 @@ namespace YaOpt.Patches
 			return YaOptGlobal.Settings.OptSilhouette.Enabled;
 		}
 
-		static bool Prefix(Thing __0, ref ValueTuple<Mesh, Material> __result)
+		static bool Prefix(Thing thing, ref ValueTuple<Mesh, Material> __result)
 		{
-			var key = SilhouetteHelper.GetKey(__0);
+			var key = SilhouetteHelper.GetKey(thing);
 			if (!SilhouetteHelper.TryGetCache(key, out var cache))
 			{
 				Graphic coloredVersion;
-				if (__0 is Pawn pawn)
+				if (thing is Pawn pawn)
 				{
 					coloredVersion = pawn.Drawer.renderer.SilhouetteGraphic;
 				}
 				else
 				{
-					coloredVersion = __0.Graphic;
+					coloredVersion = thing.Graphic;
 				}
 				coloredVersion = coloredVersion.GetColoredVersion(ShaderDatabase.Silhouette, Color.white, Color.white);
 				cache = SilhouetteHelper.AddCache(key, coloredVersion.MatEast, coloredVersion.MatWest);
 			}
 
-			if (__0.Rotation == Rot4.West)
+			if (thing.Rotation == Rot4.West)
 			{
 				__result = new ValueTuple<Mesh, Material>(MeshPool.GridPlaneFlip(Vector2.one), cache.west);
 			}

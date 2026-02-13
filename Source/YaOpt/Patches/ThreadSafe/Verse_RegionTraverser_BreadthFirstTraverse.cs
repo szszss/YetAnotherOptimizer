@@ -14,11 +14,11 @@ namespace YaOpt.Patches.ThreadSafe
 			return YaOptGlobal.NeedThreadSafe;
 		}
 
-		static bool Prefix(Region __0, RegionEntryPredicate __1, RegionProcessor __2, int __3, RegionType __4)
+		static bool Prefix(Region root, RegionEntryPredicate entryCondition, RegionProcessor regionProcessor, int maxRegions, RegionType traversableRegionTypes)
 		{
 			if (UnityData.IsInMainThread)
 				return true;
-			ParallelRegionTraverser.BreadthFirstTraverse(__0, __1, __2, __3, __4);
+			ParallelRegionTraverser.BreadthFirstTraverse(root, entryCondition, regionProcessor, maxRegions, traversableRegionTypes);
 			return false;
 		}
 

@@ -39,7 +39,7 @@ namespace YaOpt.Patches
 			}
 		}
 
-		static void Postfix(PawnRenderTree __instance, PawnDrawParms __0, List<PawnGraphicDrawRequest> ___drawRequests)
+		static void Postfix(PawnRenderTree __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> ___drawRequests)
 		{
 			if (!YaOptGlobal.IsParallelMaterialUpdateEnabled)
 				return;
@@ -56,19 +56,19 @@ namespace YaOpt.Patches
 
 				if (ParallelPreDrawHelper.CanParallelMaterialUpdate(worker))
 				{
-					if (__0.Statue)
+					if (parms.Statue)
 					{
-						matPropBlock.SetColor(colorId, __0.statueColor.Value);
+						matPropBlock.SetColor(colorId, parms.statueColor.Value);
 					}
 					else
 					{
-						matPropBlock.SetColor(colorId, __0.tint * material.color);
+						matPropBlock.SetColor(colorId, parms.tint * material.color);
 					}
 					if (material.shader == ShaderDatabase.CutoutWithOverlay)
 					{
-						if (__0.pawn.Faction != null && material.GetMaskTexture() != null)
+						if (parms.pawn.Faction != null && material.GetMaskTexture() != null)
 						{
-							PawnRenderUtility.SetMatPropBlockOverlay(matPropBlock, __0.pawn.Faction.AllegianceColor, 0.5f);
+							PawnRenderUtility.SetMatPropBlockOverlay(matPropBlock, parms.pawn.Faction.AllegianceColor, 0.5f);
 						}
 						else
 						{
@@ -78,7 +78,7 @@ namespace YaOpt.Patches
 				}
 				else
 				{
-					matPropBlock.SetColor(colorId, __0.tint * material.color);
+					matPropBlock.SetColor(colorId, parms.tint * material.color);
 				}
 			}
 		}
