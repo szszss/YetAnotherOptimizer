@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-	<YaOpt.Setting.InvalidOption.RequireWin64>Require Windows 64-bit operating system.</YaOpt.Setting.InvalidOption.RequireWin64>
-	<YaOpt.Setting.InvalidOption.RequireBurst>Require loaded Burst library.</YaOpt.Setting.InvalidOption.RequireBurst>
-	<YaOpt.Setting.Option.DebugOutput>Debug logging</YaOpt.Setting.Option.DebugOutput>
-	<YaOpt.Setting.Option.DebugOutput.Desc>Logging debug messages in the console.</YaOpt.Setting.Option.DebugOutput.Desc>
-	<YaOpt.Setting.Category.Fps>Logging debug messages in the console.</YaOpt.Setting.Category.Fps>
+	<YaOpt.Loading.SearchingTypes>YaOpt: Initializing type database</YaOpt.Loading.SearchingTypes>
+	<YaOpt.Loading.Patching>YaOpt: Re-applying settings</YaOpt.Loading.Patching>
+	<YaOpt.Message.ErrorWhilePatching>YaOpt encountered an error while applying settings. The game may not function correctly. Check the console for details.</YaOpt.Message.ErrorWhilePatching>
+	<YaOpt.Setting.Button.DisableAll>Disable All Optimizations</YaOpt.Setting.Button.DisableAll>
+	<YaOpt.Setting.Button.EnableAll>Enable All Optimizations</YaOpt.Setting.Button.EnableAll>
+	<YaOpt.Setting.Button.DisableAllFps>Disable All FPS Optimizations</YaOpt.Setting.Button.DisableAllFps>
+	<YaOpt.Setting.Button.EnableAllFps>Enable All FPS Optimizations</YaOpt.Setting.Button.EnableAllFps>
+	<YaOpt.Setting.Button.DisableAllTps>Disable All TPS Optimizations</YaOpt.Setting.Button.DisableAllTps>
+	<YaOpt.Setting.Button.EnableAllTps>Enable All TPS Optimizations</YaOpt.Setting.Button.EnableAllTps>
+	<YaOpt.Setting.Button.DisableAllMisc>Disable All Misc Optimizations</YaOpt.Setting.Button.DisableAllMisc>
+	<YaOpt.Setting.Button.EnableAllMisc>Enable All Misc Optimizations</YaOpt.Setting.Button.EnableAllMisc>
+	<YaOpt.Setting.Button.ShowDebugMenu>Open Debug Menu</YaOpt.Setting.Button.ShowDebugMenu>
+	<YaOpt.Setting.Category.Fps>FPS Optimizations</YaOpt.Setting.Category.Fps>
+	<YaOpt.Setting.Category.Tps>TPS Optimizations</YaOpt.Setting.Category.Tps>
+	<YaOpt.Setting.Category.Misc>Other Optimizations</YaOpt.Setting.Category.Misc>
+	<YaOpt.Setting.InvalidOption>Cannot enable optimization: </YaOpt.Setting.InvalidOption>
+	<YaOpt.Setting.InvalidOption.RequireWin64>Requires 64-bit Windows OS.</YaOpt.Setting.InvalidOption.RequireWin64>
+	<YaOpt.Setting.InvalidOption.RequireBurst>Requires loaded Burst library.</YaOpt.Setting.InvalidOption.RequireBurst>
+	<YaOpt.Setting.Message.RequireReload>Changed settings will take effect after loading a save or restarting the game.</YaOpt.Setting.Message.RequireReload>
+	<YaOpt.Setting.Note.Banned>Disabled by {0}</YaOpt.Setting.Note.Banned>
+	<YaOpt.Setting.Note.Stability>[Stability Note]</YaOpt.Setting.Note.Stability>
+	<YaOpt.Setting.Note.Compatibility>[Mod Compatibility Note]</YaOpt.Setting.Note.Compatibility>
+	<YaOpt.Setting.Option.DebugOutput>Debug Output</YaOpt.Setting.Option.DebugOutput>
+	<YaOpt.Setting.Option.DebugOutput.Desc>Output debug info to the console. Enabling this may slightly reduce game speed, as the game records the entire stack trace for each console message, which is an expensive operation.</YaOpt.Setting.Option.DebugOutput.Desc>
+	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>Lazy Load DDS Only</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
+	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>Only enable lazy loading for DDS textures (and Zstd compressed DDS from ImageOpt). Non-DDS formats require extra time to convert to a renderable format upon loading, causing noticeable stuttering during runtime loading.</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>Min Update Interval: {0}ms</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>Adjusts the minimum real-time interval between two updates. Note that since the game uses incremental updates for terrain, this option has diminishing returns. Setting the interval to 1000ms won't reduce update overhead to 1/10th of 100ms, because the number of cells to process per update increases. Recommended values are 300 or 500. If you don't care about visual lag, 1000 is also acceptable.</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
+	<YaOpt.Setting.SubCategory.FacialAnimation>Facial Animation Integration</YaOpt.Setting.SubCategory.FacialAnimation>
+	<YaOpt.Setting.SubCategory.HumanoidAlienRaces>HAR Integration</YaOpt.Setting.SubCategory.HumanoidAlienRaces>
+	<YaOpt.Setting.Tab.Main>All</YaOpt.Setting.Tab.Main>
+	<YaOpt.Setting.Tab.Fps>FPS</YaOpt.Setting.Tab.Fps>
+	<YaOpt.Setting.Tab.Tps>TPS</YaOpt.Setting.Tab.Tps>
+	<YaOpt.Setting.Tab.Misc>Misc</YaOpt.Setting.Tab.Misc>
 </LanguageData>
