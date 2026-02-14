@@ -48,6 +48,21 @@
 	<YaOpt.Setting.Option.PRNRWorker.Desc>PawnRenderNodeProperties的Worker在初始化时很慢。虽然游戏为它准备了缓存，但由于设计疏忽，缓存永远不会被读取。此优化修复了该Bug，使其能正确使用缓存。</YaOpt.Setting.Option.PRNRWorker.Desc>
 	<YaOpt.Setting.Option.GraphicTextureCache>贴图索引缓存</YaOpt.Setting.Option.GraphicTextureCache>
 	<YaOpt.Setting.Option.GraphicTextureCache.Desc>缓存Graphic_Multi初始化所需的纹理。原版游戏每次初始化时都需要通过字符串拼接构建东西南北四个朝向的纹理路径并进行资源查找。此优化缓存了这些纹理，消除了重复的字符串拼接和资源查找开销。本优化最初为外星人框架（HAR）开发，现已整合入本体，供任何频繁重建Graphic_Multi的物体受益。注：这个优化可能会导致开发者选项中的纹理热重载失效。</YaOpt.Setting.Option.GraphicTextureCache.Desc>
+	<YaOpt.Setting.Option.Silhouette>剪影缓存优化</YaOpt.Setting.Option.Silhouette>
+	<YaOpt.Setting.Option.Silhouette.Desc>优化剪影（屏幕边缘小图标）缓存的查找性能。原版游戏使用的查找键存在缺陷，导致每次查找都需要进行缓慢的反射比较。此优化修复了索引比较机制，消除了额外开销。</YaOpt.Setting.Option.Silhouette.Desc>
+	<YaOpt.Setting.Option.ToggleTabCheck>标签页检查节流</YaOpt.Setting.Option.ToggleTabCheck>
+	<YaOpt.Setting.Option.ToggleTabCheck.Desc>限制可隐藏标签页（如机械体页面）的可见性检查频率。部分Mod的标签页未实现缓存机制，导致每帧都进行复杂的可见性查询。此优化引入了一套上层缓存，将可见性检查限制为每500毫秒一次。当游戏暂停、解除暂停或切换地图时会强制刷新。</YaOpt.Setting.Option.ToggleTabCheck.Desc>
+	<YaOpt.Setting.Option.ComputeMatrixBurst>ComputeMatrix Burst加速</YaOpt.Setting.Option.ComputeMatrixBurst>
+	<YaOpt.Setting.Option.ComputeMatrixBurst.Desc>在物体渲染准备中，ComputeMatrix是一个运算量较大的步骤。游戏原计划使用Burst加速此过程，但因编程疏忽未能生效。此优化重写了Burst实现，使其正常工作。</YaOpt.Setting.Option.ComputeMatrixBurst.Desc>
+	<YaOpt.Setting.Option.ComputeMatrixBurst.Stable>目前仅支持Windows平台。</YaOpt.Setting.Option.ComputeMatrixBurst.Stable>
+	<YaOpt.Setting.Option.ThingGetComp>物体组件查询加速</YaOpt.Setting.Option.ThingGetComp>
+	<YaOpt.Setting.Option.ThingGetComp.Desc>原版游戏在查找存在的组件时很快，但在查找不存在的组件时非常慢。遗憾的是，判断组件是否存在的唯一办法就是通过GetComp查询并等待失败结果。该优化重写了GetComp的查询机制，确保当查找不存在的组件时也能迅速返回失败结果。</YaOpt.Setting.Option.ThingGetComp.Desc>
+	<YaOpt.Setting.Option.ThingGetComp.Stable>由于Harmony不支持为泛型方法打补丁，该优化通过Hook底层代码来实现，目前仅支持Windows平台。</YaOpt.Setting.Option.ThingGetComp.Stable>
+	<YaOpt.Setting.Option.MeditationTick>冥想更新节流</YaOpt.Setting.Option.MeditationTick>
+	<YaOpt.Setting.Option.MeditationTick.Desc>将冥想时的逻辑帧更新频率降低为每100帧一次，每次更新提供100倍效果。冥想更新相当消耗性能，特别是部落灵能者每帧都会扫描全图灵草。注：此优化会对游玩产生轻微影响，角色退出冥想时会损失未结算的冥想收益（平均每次提前中断冥想时损失50帧/0.83秒的冥想收益）。</YaOpt.Setting.Option.MeditationTick.Desc>
+	<YaOpt.Setting.Option.MeditationTick.Compatibility>兼容原版灵能扩展（Vanilla Psycasts Expanded）,但可能会与其他大幅修改冥想机制的Mod产生冲突。</YaOpt.Setting.Option.MeditationTick.Compatibility>
+	<YaOpt.Setting.Option.StatCache>更多属性缓存</YaOpt.Setting.Option.StatCache>
+	<YaOpt.Setting.Option.StatCache.Desc>将角色（Pawn）的舒适温度（Comfortable Temperature）和污垢率（Filth Rate）加入原版的属性缓存系统。舒适温度改为每10帧更新一次（装备变动时强制刷新），污垢率每60帧更新一次。这能减少频繁访问这些高开销属性时的性能损耗。</YaOpt.Setting.Option.StatCache.Desc>
 	<YaOpt.Setting.SubCategory.FacialAnimation>动态表情联动</YaOpt.Setting.SubCategory.FacialAnimation>
 	<YaOpt.Setting.SubCategory.HumanoidAlienRaces>外星人框架联动</YaOpt.Setting.SubCategory.HumanoidAlienRaces>
 	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>

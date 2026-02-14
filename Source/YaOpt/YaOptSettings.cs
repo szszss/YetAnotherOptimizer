@@ -324,6 +324,11 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes <see cref="SilhouetteUtility.GetCachedSilhouetteData"/>.
+		/// Vanilla uses a struct as a dictionary key for silhouette caching but fails to implement <see cref="IEquatable{T}"/>.
+		/// This forces the runtime to use <see cref="ValueType.Equals(object)"/>, causing boxing and reflection overhead for every lookup.
+		/// This optimization replaces the cache key with a custom implementation that properly implements <see cref="IEquatable{T}"/> to eliminate this overhead.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_SilhouetteUtility_GetCachedSilhouetteData"/>
 		/// <seealso cref="Patches.Verse_SilhouetteUtility_NotifyGraphicDirty"/>
 		/// </summary>
@@ -335,6 +340,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Throttles the visibility check for toggleable tabs (e.g., the Mechanoid tab).
+		/// The game queries whether each tab should be hidden every render frame.
+		/// While vanilla tabs cache this check, some modded tabs perform complex queries every frame without caching.
+		/// This optimization implements an upper-level cache that throttles visibility updates to once every 500ms (real-time).
+		/// The cache is forcibly refreshed when pausing/unpausing or switching maps.
+		/// <br/>
 		/// <seealso cref="Patches.MultiTargets_ToggleTab"/>
 		/// </summary>
 		public OptimizationOption OptToggleTabCheck { get; } = new OptimizationOption
@@ -345,6 +356,10 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Accelerates the matrix computation step in render preparation using Burst.
+		/// Vanilla intended to use Burst for this computationally expensive step but failed due to an implementation oversight.
+		/// This optimization rewrites the Burst implementation to make it functional.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_PawnRenderTree_TryGetMatrix"/>
 		/// </summary>
 		public OptimizationOption OptComputeMatrixBurst { get; } = new OptimizationOption
@@ -357,6 +372,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Accelerates <see cref="ThingWithComps.GetComp{T}"/>.
+		/// Vanilla lookup is fast for existing components but very slow for missing ones,
+		/// as it iterates through the entire component list.
+		/// Unfortunately, checking if a component exists requires calling GetComp and waiting for a null result.
+		/// This optimization rewrites the lookup mechanism to ensure fast failure for missing components.
+		/// <br/>
 		/// <seealso cref="Patches.Trampolines.Verse_ThingWithComps_GetComp"/>
 		/// </summary>
 		public OptimizationOption OptThingGetComp { get; } = new OptimizationOption
@@ -369,16 +390,29 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Throttles pawn meditation ticks from every tick to once every 100 ticks.
+		/// Each throttled tick provides 100x the effect.
+		/// Meditation can be performance-intensive,
+		/// especially for tribal psykers scanning for Anima grass every frame.
+		/// Note: This has a minor gameplay impact. When a pawn stops meditating,
+		/// any accrued progress between the 100-tick intervals is lost.
+		/// <br/>
 		/// <seealso cref="Patches.RimWorld_JobDriver_Meditate_MeditationTick"/>
 		/// </summary>
 		public OptimizationOption OptMeditationTick { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.MeditationTick",
 			Desc = "YaOpt.Setting.Option.MeditationTick.Desc",
+			NoteCompatibility = "YaOpt.Setting.Option.MeditationTick.Compatibility",
 			Category = OptimizationCategory.Tps,
 		};
 
 		/// <summary>
+		/// Extends the vanilla stat caching system to include <see cref="StatDefOf.ComfyTemperatureMin"/>,
+		/// <see cref="StatDefOf.ComfyTemperatureMax"/>, and <see cref="StatDefOf.FilthRate"/>.
+		/// Comfortable Temperature is updated every 10 ticks (and invalidated on apparel changes).
+		/// Filth Rate is updated every 60 ticks.
+		/// <br/>
 		/// <seealso cref="Patches.MultiTargets_ComfortableTemperature"/>
 		/// <seealso cref="Patches.MultiTargets_FilthRate"/>
 		/// <seealso cref="Patches.RimWorld_Pawn_ApparelTracker_Notify_ApparelChanged"/>
