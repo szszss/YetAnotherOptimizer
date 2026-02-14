@@ -488,16 +488,6 @@ namespace YaOpt
 		};
 
 		/// <summary>
-		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
-		/// </summary>
-		public OptimizationOption OptFastCacheClear { get; } = new OptimizationOption
-		{
-			Name = "YaOpt.Setting.Option.FastCacheClear",
-			Desc = "YaOpt.Setting.Option.FastCacheClear.Desc",
-			Category = OptimizationCategory.Tps,
-		};
-
-		/// <summary>
 		/// <seealso cref="Patches.RimWorld_Ideo_IdeoTick"/>
 		/// <seealso cref="Patches.RimWorld_Ideo_MemberWillingToDo"/>
 		/// <seealso cref="Patches.RimWorld_Ideo_RecachePrecepts"/>

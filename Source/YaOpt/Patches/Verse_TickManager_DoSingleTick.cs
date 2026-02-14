@@ -11,7 +11,6 @@ namespace YaOpt.Patches
 	/// <seealso cref="Helpers.UpdateCallbackHelper"/>
 	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 	/// <seealso cref="YaOptSettings.OptParallelPostMapTick"/>
-	/// <seealso cref="YaOptSettings.OptFastCacheClear"/>
 	/// </summary>
 	[HarmonyPatch(typeof(TickManager))]
 	[HarmonyPatch(nameof(TickManager.DoSingleTick))]
@@ -31,27 +30,9 @@ namespace YaOpt.Patches
 		{
 			var ppt = YaOptGlobal.Settings.OptParallelPawnTick.Enabled;
 			var ppmt = YaOptGlobal.Settings.OptParallelPostMapTick.Enabled;
-			var fcc = YaOptGlobal.Settings.OptFastCacheClear.Enabled;
-
-			// Call ConnectivityCellCache.EnsureCleared before any MapPreTick
-			if (fcc)
-			{
-				yield return CodeInstruction.Call(
-					typeof(ConnectivityCellCache),
-					nameof(ConnectivityCellCache.EnsureCleared));
-			}
 
 			foreach (var instruction in instructions)
 			{
-				// Call ConnectivityCellCache.StartClearJob after all MapPreTick
-				if (fcc && instruction.opcode == OpCodes.Ldsfld && instruction.operand is FieldInfo fieldInfo &&
-					fieldInfo.Name == "fastEcology")
-				{
-					yield return CodeInstruction.Call(
-						typeof(ConnectivityCellCache),
-						nameof(ConnectivityCellCache.StartClearJob));
-				}
-
 				yield return instruction;
 
 				// Call ParallelTickManager.ParellellyPreTickMaps
