@@ -425,6 +425,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Introduces a limited multi-threaded handling for pawn updates.
+		/// It implements a multi-threaded job interruption predictor that checks if the current job
+		/// might fail or be interrupted by emergency jobs (e.g., fleeing enemies) in the current frame.
+		/// If the prediction passes (no interruption), the main thread skips the redundant check.
+		/// Otherwise, the main thread performs the standard check.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
 		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
 		/// <seealso cref="Patches.Verse_TickList_BucketOf"/>
@@ -444,6 +450,13 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes job giving by checking job priorities in parallel.
+		/// Job giving is one of the most expensive operations. It iterates through a prioritized list of allowed jobs
+		/// until a valid one is found. This optimization uses multiple threads to check this list.
+		/// When a thread finds a valid job, it truncates the list (discarding lower priority jobs)
+		/// and waits for threads checking higher priority jobs to finish.
+		/// Finally, the valid job with the highest priority is selected.
+		/// <br/>
 		/// <seealso cref="Patches.RimWorld_JobGiver_Work_TryIssueJobPackage"/>
 		/// <seealso cref="YaOptGlobal.NeedThreadSafe"/>
 		/// </summary>
@@ -458,6 +471,11 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes map post-tick processing by running independent updates in parallel.
+		/// Specifically, it targets Steady Environment Effects (e.g., rain/snow settlement) and Gas updates.
+		/// These operations iterate over the map grid and are safe to execute on worker threads,
+		/// reducing the main thread's workload during the map tick.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_Map_MapPostTick"/>
 		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
 		/// </summary>
