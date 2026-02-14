@@ -8,7 +8,7 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelRenderPrepare"/>
+	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	/// <seealso cref="YaOptSettings.OptWindUpdate"/>
 	/// </summary>
 	[HarmonyPatch(typeof(DynamicDrawManager))]
@@ -18,13 +18,13 @@ namespace YaOpt.Patches
 		static bool Prepare()
 		{
 			var settings = YaOptGlobal.Settings;
-			return settings.OptParallelRenderPrepare.Enabled || settings.OptWindUpdate.Enabled;
+			return settings.OptEarlyRenderPrepare.Enabled || settings.OptWindUpdate.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
 			var settings = YaOptGlobal.Settings;
-			var prp = settings.OptParallelRenderPrepare.Enabled;
+			var prp = settings.OptEarlyRenderPrepare.Enabled;
 			var wind = settings.OptWindUpdate.Enabled;
 			var firstTime = true;
 			var skip = false;

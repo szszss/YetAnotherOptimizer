@@ -9,7 +9,7 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelRenderPrepare"/>
+	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	/// <seealso cref="YaOptSettings.OptPrepareBatchCount"/>
 	/// </summary>
 	[HarmonyPatch(typeof(DynamicDrawManager))]
@@ -18,12 +18,12 @@ namespace YaOpt.Patches
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelRenderPrepare.Enabled || YaOptGlobal.Settings.OptPrepareBatchCount.Enabled;
+			return YaOptGlobal.Settings.OptEarlyRenderPrepare.Enabled || YaOptGlobal.Settings.OptPrepareBatchCount.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
-			var prp = YaOptGlobal.Settings.OptParallelRenderPrepare.Enabled;
+			var prp = YaOptGlobal.Settings.OptEarlyRenderPrepare.Enabled;
 			var pbc = YaOptGlobal.Settings.OptPrepareBatchCount.Enabled;
 			foreach (var instruction in instructions)
 			{

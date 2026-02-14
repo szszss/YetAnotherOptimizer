@@ -24,10 +24,30 @@
 	<YaOpt.Setting.Note.Compatibility>【Mod兼容性说明】</YaOpt.Setting.Note.Compatibility>
 	<YaOpt.Setting.Option.DebugOutput>调试输出</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>在控制台中输出调试信息，启用这个选项可能会略微降低游戏速度，因为游戏会在每次输出控制台信息时记录整个调用栈，这是一个开销很大的操作。</YaOpt.Setting.Option.DebugOutput.Desc>
+	<YaOpt.Setting.Option.MaterialGetColor>材质颜色缓存</YaOpt.Setting.Option.MaterialGetColor>
+	<YaOpt.Setting.Option.MaterialGetColor.Desc>缓存材质颜色以减少频繁调用底层引擎函数带来的开销。当颜色发生变化时会自动更新缓存。</YaOpt.Setting.Option.MaterialGetColor.Desc>
+	<YaOpt.Setting.Option.ColoredText>富文本优化</YaOpt.Setting.Option.ColoredText>
+	<YaOpt.Setting.Option.ColoredText.Desc>优化富文本（如彩色文字）的解析性能。原版游戏在查找标签位置时使用了性能较低的IndexOf重载（涉及区域性相关检查），此优化将其替换为性能更高、只进行直接字节比较的重载。</YaOpt.Setting.Option.ColoredText.Desc>
+	<YaOpt.Setting.Option.EarlyRenderPrepare>提前准备物体渲染</YaOpt.Setting.Option.EarlyRenderPrepare>
+	<YaOpt.Setting.Option.EarlyRenderPrepare.Desc>提前启动物体渲染的准备工作。原版游戏虽然支持多线程准备物体渲染数据，但只在静态地形绘制完成后才开始。此优化将准备工作提前到地形绘制之前启动，利用主线程绘制地形的时间在后台并行处理物体数据，从而减少主线程的等待时间。</YaOpt.Setting.Option.EarlyRenderPrepare.Desc>
+	<YaOpt.Setting.Option.EarlyRenderPrepare.Compatibility>按照游戏规范，物体在渲染准备阶段不应进行任何实际渲染。如果有Mod在准备阶段绘制物体，它绘制的物体会被地形覆盖住。</YaOpt.Setting.Option.EarlyRenderPrepare.Compatibility>
+	<YaOpt.Setting.Option.PrepareBatchCount>微调渲染准备批次数量</YaOpt.Setting.Option.PrepareBatchCount>
+	<YaOpt.Setting.Option.PrepareBatchCount.Desc>原版游戏在并行准备渲染数据时使用较大的批次数量。然而不同物体（如角色与物品）的渲染准备开销差异巨大，且分布不均（如袭击时的角色扎堆）。这导致线程负载不均衡，部分线程早早完成，而其他线程仍在处理重负载。此优化将批次数量调小，使空闲线程能通过工作窃取算法分担更多工作，从而平衡负载。</YaOpt.Setting.Option.PrepareBatchCount.Desc>
+	<YaOpt.Setting.Option.ParallelMaterialUpdate>并行材质参数更新</YaOpt.Setting.Option.ParallelMaterialUpdate>
+	<YaOpt.Setting.Option.ParallelMaterialUpdate.Desc>将材质参数更新放入并行的物体渲染准备中进行。原版游戏仅在主线程中执行此操作，但通常并不需要。如果检测到有Mod重载了特定物体的材质参数更新逻辑（可能包含非线程安全的操作），本Mod会自动将这些物体的更新退化回主线程执行。</YaOpt.Setting.Option.ParallelMaterialUpdate.Desc>
+	<YaOpt.Setting.Option.FastRecacheRequested>内联缓存更新检查</YaOpt.Setting.Option.FastRecacheRequested>
+	<YaOpt.Setting.Option.FastRecacheRequested.Desc>优化物体是否需要重新生成渲染参数的检查。原版游戏通过递归调用渲染树上的每一个子节点来检查是否有子节点要求更新。统计发现97%的物体渲染树不超过4层，此优化将前4层节点的检查内联到一个函数中，省去了虚函数调用的开销。注：性能监测显示提升很小，未来版本可能移除。</YaOpt.Setting.Option.FastRecacheRequested.Desc>
+	<YaOpt.Setting.Option.FastRecacheRequested.Compatibility>该优化假设所有的渲染节点都使用原版的缓存更新检查逻辑。如果在游戏启动时检测到有其他Mod重写了缓存更新检查，此优化会被自动禁用。</YaOpt.Setting.Option.FastRecacheRequested.Compatibility>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>仅延迟加载DDS格式</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>只对DDS格式（以及ImageOpt的Zstd压缩DDS）纹理启用延迟加载，非DDS格式图片在载入时需要花费额外时间将其转换成能被游戏引擎渲染的格式，在运行中载入时会有明显的卡顿。</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle>地形更新限流</YaOpt.Setting.Option.MapMeshUpdateThrottle>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>限制地图网格（地形渲染）的更新频率。原版游戏中，雪或沙尘厚度的任何变化都会在渲染帧立即触发网格更新，在变化频繁时（如降雪或融化）会消耗大量资源。此优化设置了更新之间的最短现实时间间隔。当游戏暂停时会强制更新。</YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>最短更新间隔: {0}毫秒</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>调整两次更新间最短的现实时间间隔，需要注意的是，由于游戏对地形贴图采用增量更新，这个选项是有边界效应的，将间隔设为1000毫秒并不能将更新开销降低为100毫秒的十分之一，因为单次更新需要处理的地块也多了。推荐值为300或500，如果你不在乎视觉效果，调成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
+	<YaOpt.Setting.Option.PRNRWorker>修复PawnRenderNodeProperties缓存</YaOpt.Setting.Option.PRNRWorker>
+	<YaOpt.Setting.Option.PRNRWorker.Desc>PawnRenderNodeProperties的Worker在初始化时很慢。虽然游戏为它准备了缓存，但由于设计疏忽，缓存永远不会被读取。此优化修复了该Bug，使其能正确使用缓存。</YaOpt.Setting.Option.PRNRWorker.Desc>
+	<YaOpt.Setting.Option.GraphicTextureCache>贴图索引缓存</YaOpt.Setting.Option.GraphicTextureCache>
+	<YaOpt.Setting.Option.GraphicTextureCache.Desc>缓存Graphic_Multi初始化所需的纹理。原版游戏每次初始化时都需要通过字符串拼接构建东西南北四个朝向的纹理路径并进行资源查找。此优化缓存了这些纹理，消除了重复的字符串拼接和资源查找开销。本优化最初为外星人框架（HAR）开发，现已整合入本体，供任何频繁重建Graphic_Multi的物体受益。注：这个优化可能会导致开发者选项中的纹理热重载失效。</YaOpt.Setting.Option.GraphicTextureCache.Desc>
 	<YaOpt.Setting.SubCategory.FacialAnimation>动态表情联动</YaOpt.Setting.SubCategory.FacialAnimation>
 	<YaOpt.Setting.SubCategory.HumanoidAlienRaces>外星人框架联动</YaOpt.Setting.SubCategory.HumanoidAlienRaces>
 	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>

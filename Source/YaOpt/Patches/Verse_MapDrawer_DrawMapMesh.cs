@@ -8,7 +8,7 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelRenderPrepare"/>
+	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	/// </summary>
 	[HarmonyPatch(typeof(MapDrawer))]
 	[HarmonyPatch(nameof(MapDrawer.DrawMapMesh))]
@@ -16,7 +16,7 @@ namespace YaOpt.Patches
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelRenderPrepare.Enabled;
+			return YaOptGlobal.Settings.OptEarlyRenderPrepare.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

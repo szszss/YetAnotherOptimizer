@@ -154,6 +154,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes <see cref="Material.color"/> by caching the value in a managed container.
+		/// Unity <see cref="Material.color"/> involves a managed-to-native transition,
+		/// which creates significant overhead when called frequently.
+		/// This option patchs the setter of <see cref="Material.color"/> to update the cache and
+		///  the getter of <see cref="Material.GetColor(string)"/> to retrieve the value from cache.
+		/// <br/>
 		/// <seealso cref="Patches.UnityEngine_Material_GetColor"/>
 		/// <seealso cref="Patches.UnityEngine_Material_SetColor"/>
 		/// </summary>
@@ -165,6 +171,10 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes <see cref="ColoredText.Resolve(TaggedString)"/> and <see cref="ColoredText.StripTags(string)"/>.
+		/// Replaces <see cref="string.IndexOf(string)"/> (culture-sensitive) with <see cref="string.IndexOf(string, StringComparison)"/>
+		/// using <see cref="StringComparison.Ordinal"/> to avoid unnecessary overhead during text tagging.
+		/// <br/>
 		/// <seealso cref="Patches.MultiTargets_ColoredText"/>
 		/// </summary>
 		public OptimizationOption OptColoredText { get; } = new OptimizationOption
@@ -175,21 +185,40 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Starts the render preparation for dynamic objects earlier.
+		/// <br/>
+		/// Details:
+		/// <list type="bullet">
+		/// <item>Removes <c>ComputeCulledThings</c>, <c>DynamicDrawPhase(DrawPhase.EnsureInitialized)</c>,
+		///		and <c>PreDrawVisibleThings</c> from <c>DynamicDrawManager.DrawDynamicThings</c>.</item>
+		/// <item>Moves camera culling (<c>ComputeCulledThings</c>) to <c>MapMeshDrawerUpdate_First</c>
+		///		(which runs before dynamic drawing).</item>
+		/// <item>Moves initialization and parallel preparation to <c>DrawMapMesh</c>
+		///		(which allows the main thread to render the static map mesh while worker threads prepare dynamic things).</item>
+		/// </list>
+		/// <br/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_ComputeCulledThings"/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_DrawDynamicThings"/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
 		/// <seealso cref="Patches.Verse_MapDrawer_DrawMapMesh"/>
 		/// <seealso cref="Patches.Verse_MapDrawer_MapMeshDrawerUpdate_First"/>
 		/// </summary>
-		public OptimizationOption OptParallelRenderPrepare { get; } = new OptimizationOption
+		public OptimizationOption OptEarlyRenderPrepare { get; } = new OptimizationOption
 		{
-			Name = "YaOpt.Setting.Option.ParallelRenderPrepare",
-			Desc = "YaOpt.Setting.Option.ParallelRenderPrepare.Desc",
-			NoteCompatibility = "YaOpt.Setting.Option.ParallelRenderPrepare.Compatibility",
+			Name = "YaOpt.Setting.Option.EarlyRenderPrepare",
+			Desc = "YaOpt.Setting.Option.EarlyRenderPrepare.Desc",
+			NoteCompatibility = "YaOpt.Setting.Option.EarlyRenderPrepare.Compatibility",
 			Category = OptimizationCategory.Fps
 		};
 
 		/// <summary>
+		/// Optimizes the batch size for parallel render preparation.
+		/// Vanilla uses a large batch size for parallel render preparation.
+		/// However, rendering costs vary significantly between objects (e.g., pawns vs. items),
+		/// and objects are often clustered (e.g., raids).
+		/// This can lead to thread imbalance where some threads finish early while others are stuck with heavy batches.
+		/// This optimization reduces the batch size, allowing the work-stealing algorithm to distribute the load more evenly.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
 		/// </summary>
 		public OptimizationOption OptPrepareBatchCount { get; } = new OptimizationOption
@@ -200,6 +229,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Moves material parameter updates (e.g., via <see cref="PawnRenderNodeWorker"/>)
+		/// to the parallel rendering preparation phase.
+		/// Vanilla performs these updates on the main thread, but they are generally thread-safe.
+		/// If a mod overrides the update logic in a way that might not be thread-safe,
+		/// YaOpt will detect this and falls back to the main thread for those specific objects.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_PawnRenderNodeWorker_GetMaterialPropertyBlock"/>
 		/// <seealso cref="Patches.Verse_PawnRenderNodeWorker_PreDraw"/>
 		/// <seealso cref="Patches.Verse_PawnRenderTree_ParallelPreDraw"/>
@@ -212,6 +247,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes the check for whether an object needs to regenerate render parameters.
+		/// Vanilla checks this by recursively calling every child node in the render tree.
+		/// Since 97% of render trees are shallow (less than or equal to 4 layers),
+		/// this optimization inlines the check for the first 4 layers into a single function,
+		/// avoiding virtual function call overhead.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_PawnRenderNode_EnsureInitialized"/>
 		/// <seealso cref="Patches.Verse_PawnRenderTree_ParallelPreDraw"/>
 		/// </summary>
@@ -225,6 +266,11 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Throttles the update frequency of the map mesh (terrain rendering).
+		/// In vanilla, any change in snow or dust thickness triggers an immediate mesh update in the rendering frame,
+		/// consuming significant resources during frequent changes (e.g., snowfall or melting).
+		/// This optimization imposes a minimum real-time interval between updates.
+		/// <br/>
 		/// <seealso cref="Patches.MultiTargets_MapMeshDirty"/>
 		/// </summary>
 		public OptimizationOption OptMapMeshUpdateThrottle { get; } = new OptimizationOption
@@ -248,6 +294,9 @@ namespace YaOpt
 		}
 
 		/// <summary>
+		/// Fixes a bug where <see cref="PawnRenderNodeProperties.Worker"/>
+		/// cache was not being used, causing slow initialization.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_PawnRenderNodeProperties_Worker"/>
 		/// </summary>
 		public OptimizationOption OptPRNRWorker { get; } = new OptimizationOption
@@ -258,6 +307,13 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes the initialization of <see cref="Graphic_Multi"/> by caching the textures
+		/// for the four cardinal directions.
+		/// Vanilla constructs texture paths via string concatenation (e.g. "_north", "_south")
+		/// and performs a content lookup for every new graphic instance.
+		/// This optimization caches the resolved textures based on the base path,
+		/// eliminating the overhead of string manipulation and repeated asset lookups.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_Graphic_Multi_Init"/>
 		/// </summary>
 		public OptimizationOption OptGraphicTextureCache { get; } = new OptimizationOption

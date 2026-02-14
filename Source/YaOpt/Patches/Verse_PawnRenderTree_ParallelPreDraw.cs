@@ -58,7 +58,7 @@ namespace YaOpt.Patches
 				{
 					if (parms.Statue)
 					{
-						matPropBlock.SetColor(colorId, parms.statueColor.Value);
+						matPropBlock.SetColor(colorId, parms.statueColor.GetValueOrDefault(Color.white));
 					}
 					else
 					{
