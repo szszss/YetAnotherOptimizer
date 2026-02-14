@@ -38,15 +38,24 @@
 	<YaOpt.Setting.Option.FastRecacheRequested>内联缓存更新检查</YaOpt.Setting.Option.FastRecacheRequested>
 	<YaOpt.Setting.Option.FastRecacheRequested.Desc>优化物体是否需要重新生成渲染参数的检查。原版游戏通过递归调用渲染树上的每一个子节点来检查是否有子节点要求更新。统计发现97%的物体渲染树不超过4层，此优化将前4层节点的检查内联到一个函数中，省去了虚函数调用的开销。注：性能监测显示提升很小，未来版本可能移除。</YaOpt.Setting.Option.FastRecacheRequested.Desc>
 	<YaOpt.Setting.Option.FastRecacheRequested.Compatibility>该优化假设所有的渲染节点都使用原版的缓存更新检查逻辑。如果在游戏启动时检测到有其他Mod重写了缓存更新检查，此优化会被自动禁用。</YaOpt.Setting.Option.FastRecacheRequested.Compatibility>
+	<YaOpt.Setting.Option.LazyTextureLoad>延迟纹理加载</YaOpt.Setting.Option.LazyTextureLoad>
+	<YaOpt.Setting.Option.LazyTextureLoad.Desc>原版游戏会在启动时将所有Mod纹理加载入显存中。这个优化会让纹理仅在被首次调用时加载，能降低启动耗时和显存占用，但会让游戏内首次载入纹理时顿卡。需要注意的是，目前尚未实现纹理卸载机制，当你一次游戏玩得足够久时，显存占用仍可能会逐渐增加至巅峰。</YaOpt.Setting.Option.LazyTextureLoad.Desc>
+	<YaOpt.Setting.Option.LazyTextureLoad.Stable>由于Harmony不支持为泛型方法打补丁，该优化通过Hook底层代码来实现，目前仅支持Windows平台。</YaOpt.Setting.Option.LazyTextureLoad.Stable>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>仅延迟加载DDS格式</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>只对DDS格式（以及ImageOpt的Zstd压缩DDS）纹理启用延迟加载，非DDS格式图片在载入时需要花费额外时间将其转换成能被游戏引擎渲染的格式，在运行中载入时会有明显的卡顿。</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
+	<YaOpt.Setting.Option.FastPatchOperation>简化XPath</YaOpt.Setting.Option.FastPatchOperation>
+	<YaOpt.Setting.Option.FastPatchOperation.Desc>如果XML补丁中XPath表达式比较简单，形如Defs/定义类型[defName = "定义名"]，那么这个优化将会将XPath表达式简化为简单的节点查询，提高游戏启动速度。</YaOpt.Setting.Option.FastPatchOperation.Desc>
+	<YaOpt.Setting.Option.FastTranslationInjection>优化文本注入</YaOpt.Setting.Option.FastTranslationInjection>
+	<YaOpt.Setting.Option.FastTranslationInjection.Desc>游戏在启动时会将文本文件注入到XML数据中，在此过程中还会检查有无错误文本文件错误，例如重复对一个字段注入文本。然而这个检查过程是个时间复杂度为O(N^2)的操作，该优化将其中一段循环对比优化成了查表，将时间复杂度降为O(N)。它能加速游戏启动速度，在非英文语言中效果更明显。</YaOpt.Setting.Option.FastTranslationInjection.Desc>
+	<YaOpt.Setting.Option.RuntimeInfoCache>类型信息缓存</YaOpt.Setting.Option.RuntimeInfoCache>
+	<YaOpt.Setting.Option.RuntimeInfoCache.Desc>在游戏启动时缓存程序中的类型信息，加快Harmony类型检索，能提高一些Mod的Harmony补丁处理速度。在Mod环境下加快游戏启动速度，在原版环境中无用。</YaOpt.Setting.Option.RuntimeInfoCache.Desc>
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle>地形更新限流</YaOpt.Setting.Option.MapMeshUpdateThrottle>
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>限制地图网格（地形渲染）的更新频率。原版游戏中，雪或沙尘厚度的任何变化都会在渲染帧立即触发网格更新，在变化频繁时（如降雪或融化）会消耗大量资源。此优化设置了更新之间的最短现实时间间隔。当游戏暂停时会强制更新。</YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>最短更新间隔: {0}毫秒</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>
-	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>调整两次更新间最短的现实时间间隔，需要注意的是，由于游戏对地形贴图采用增量更新，这个选项是有边界效应的，将间隔设为1000毫秒并不能将更新开销降低为100毫秒的十分之一，因为单次更新需要处理的地块也多了。推荐值为300或500，如果你不在乎视觉效果，调成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>调整两次更新间最短的现实时间间隔，需要注意的是，由于游戏对地形采用增量更新，这个选项是有边界效应的，将间隔设为1000毫秒并不能将更新开销降低为100毫秒的十分之一，因为单次更新需要处理的地块也多了。推荐值为300或500，如果你不在乎视觉效果，调成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
 	<YaOpt.Setting.Option.PRNRWorker>修复PawnRenderNodeProperties缓存</YaOpt.Setting.Option.PRNRWorker>
 	<YaOpt.Setting.Option.PRNRWorker.Desc>PawnRenderNodeProperties的Worker在初始化时很慢。虽然游戏为它准备了缓存，但由于设计疏忽，缓存永远不会被读取。此优化修复了该Bug，使其能正确使用缓存。</YaOpt.Setting.Option.PRNRWorker.Desc>
-	<YaOpt.Setting.Option.GraphicTextureCache>贴图索引缓存</YaOpt.Setting.Option.GraphicTextureCache>
+	<YaOpt.Setting.Option.GraphicTextureCache>纹理索引缓存</YaOpt.Setting.Option.GraphicTextureCache>
 	<YaOpt.Setting.Option.GraphicTextureCache.Desc>缓存Graphic_Multi初始化所需的纹理。原版游戏每次初始化时都需要通过字符串拼接构建东西南北四个朝向的纹理路径并进行资源查找。此优化缓存了这些纹理，消除了重复的字符串拼接和资源查找开销。本优化最初为外星人框架（HAR）开发，现已整合入本体，供任何频繁重建Graphic_Multi的物体受益。注：这个优化可能会导致开发者选项中的纹理热重载失效。</YaOpt.Setting.Option.GraphicTextureCache.Desc>
 	<YaOpt.Setting.Option.Silhouette>剪影缓存优化</YaOpt.Setting.Option.Silhouette>
 	<YaOpt.Setting.Option.Silhouette.Desc>优化剪影（屏幕边缘小图标）缓存的查找性能。原版游戏使用的查找键存在缺陷，导致每次查找都需要进行缓慢的反射比较。此优化修复了索引比较机制，消除了额外开销。</YaOpt.Setting.Option.Silhouette.Desc>
@@ -68,13 +77,15 @@
 	<YaOpt.Setting.Option.ParallelJobGiver.Compatibility>Mod不能在工作发布的判断逻辑中产生副作用（即不能对游戏产生实际影响），不能执行非线程安全的操作。永远不应假定发布的任务一定会被执行（多线程处理时可能会产生多个可执行的工作，只有优先级最高的那个会被采纳，其他的会被丢弃）。</YaOpt.Setting.Option.ParallelJobGiver.Compatibility>
 	<YaOpt.Setting.Option.ParallelPostMapTick>并行地图更新</YaOpt.Setting.Option.ParallelPostMapTick>
 	<YaOpt.Setting.Option.ParallelPostMapTick.Desc>多线程执行地图的环境效果（Steady Environment Effects）和气体（Gas）更新。</YaOpt.Setting.Option.ParallelPostMapTick.Desc>
+	<YaOpt.Setting.Option.IdeoCheck>文化检查优化</YaOpt.Setting.Option.IdeoCheck>
+	<YaOpt.Setting.Option.IdeoCheck.Desc>游戏在检查文化是否允许做某事时，会遍历其下所有的戒律。此优化会在戒律每次更新时，为它创建缓存，记录那些涉及到禁令的戒律，然后在检查文化是否允许做某事时，只遍历那些有禁令的戒律。</YaOpt.Setting.Option.IdeoCheck.Desc>
+	<YaOpt.Setting.Option.WindUpdate>植物摇曳效果优化</YaOpt.Setting.Option.WindUpdate>
+	<YaOpt.Setting.Option.WindUpdate.Desc>游戏会在每一个逻辑帧中为所有植物材质更新风力强度参数，这是没必要的。优化后将仅在渲染帧中更新风力强度。</YaOpt.Setting.Option.WindUpdate.Desc>
 	<YaOpt.Setting.Option.MeditationTick>冥想更新节流</YaOpt.Setting.Option.MeditationTick>
 	<YaOpt.Setting.Option.MeditationTick.Desc>将冥想时的逻辑帧更新频率降低为每100帧一次，每次更新提供100倍效果。冥想更新相当消耗性能，特别是部落灵能者每帧都会扫描全图灵草。注：此优化会对游玩产生轻微影响，角色退出冥想时会损失未结算的冥想收益（平均每次提前中断冥想时损失50帧/0.83秒的冥想收益）。</YaOpt.Setting.Option.MeditationTick.Desc>
 	<YaOpt.Setting.Option.MeditationTick.Compatibility>兼容原版灵能扩展（Vanilla Psycasts Expanded）,但可能会与其他大幅修改冥想机制的Mod产生冲突。</YaOpt.Setting.Option.MeditationTick.Compatibility>
 	<YaOpt.Setting.Option.StatCache>更多属性缓存</YaOpt.Setting.Option.StatCache>
 	<YaOpt.Setting.Option.StatCache.Desc>将角色的舒适温度和污垢率加入原版的属性缓存系统。舒适温度改为每10帧更新一次（装备变动时强制刷新），污垢率每60帧更新一次。这能减少频繁访问这些高开销属性时的性能损耗。</YaOpt.Setting.Option.StatCache.Desc>
-	<YaOpt.Setting.SubCategory.FacialAnimation>动态表情联动</YaOpt.Setting.SubCategory.FacialAnimation>
-	<YaOpt.Setting.SubCategory.HumanoidAlienRaces>外星人框架联动</YaOpt.Setting.SubCategory.HumanoidAlienRaces>
 	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>
 	<YaOpt.Setting.Tab.Fps>FPS</YaOpt.Setting.Tab.Fps>
 	<YaOpt.Setting.Tab.Tps>TPS</YaOpt.Setting.Tab.Tps>

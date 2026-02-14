@@ -488,6 +488,11 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes the check for whether an Ideoligion allows a specific action.
+		/// Vanilla iterates through all precepts to make this determination.
+		/// This optimization creates a cache of precepts that impose restrictions whenever precepts are updated.
+		/// When checking permissions, it only iterates through these cached restrictive precepts, ignoring irrelevant ones.
+		/// <br/>
 		/// <seealso cref="Patches.RimWorld_Ideo_IdeoTick"/>
 		/// <seealso cref="Patches.RimWorld_Ideo_MemberWillingToDo"/>
 		/// <seealso cref="Patches.RimWorld_Ideo_RecachePrecepts"/>
@@ -500,6 +505,10 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes plant sway effect updates.
+		/// Vanilla updates wind strength parameters for all plant materials every logic tick, which is unnecessary.
+		/// This optimization restricts these updates to render frames only.
+		/// <br/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_DrawDynamicThings"/>
 		/// <seealso cref="Patches.Verse_WindManager_WindManagerTick"/>
 		/// </summary>
@@ -511,6 +520,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Delays texture loading until they are first requested.
+		/// Vanilla loads all mod textures into VRAM at startup.
+		/// This optimization reduces startup time and initial VRAM usage,
+		/// but may cause stutters when textures are loaded during gameplay.
+		/// Note: Texture unloading is not implemented, so VRAM usage may increase over time.
+		/// <br/>
 		/// <seealso cref="Patches.Trampolines.Verse_ContentFinder_Get"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
@@ -520,6 +535,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.LazyTextureLoad",
 			Desc = "YaOpt.Setting.Option.LazyTextureLoad.Desc",
+			NoteStability = "YaOpt.Setting.Option.LazyTextureLoad.Stable",
 			Category = OptimizationCategory.Misc,
 			Flags = OptimizationFlag.RequireWin64,
 			FuncPostDraw = LazyTextureLoadPostDraw,
@@ -535,6 +551,11 @@ namespace YaOpt
 		public bool LazyTextureLoadDdsOnly { get; set; } = true;
 
 		/// <summary>
+		/// Optimizes XML patch operations by simplifying common XPath expressions.
+		/// If an XPath expression follows a simple pattern like <c>Defs/DefType[defName="DefName"]</c>,
+		/// this optimization replaces the complex XPath evaluation with a faster, direct node lookup.
+		/// This significantly improves game startup time, especially with many mods.
+		/// <br/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
 		/// <seealso cref="Patches.Early.Verse_LoadedModManager_ApplyPatches"/>
@@ -547,6 +568,12 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Optimizes the translation injection process during game startup.
+		/// When injecting translation data into XML Defs, the game checks for errors (e.g., duplicate injections).
+		/// Vanilla uses an O(N^2) nested loop for this check, which is very slow with large numbers of Defs.
+		/// This optimization replaces the inner loop with a hash set lookup, reducing the complexity to O(N).
+		/// This speeds up game startup, especially for non-English languages.
+		/// <br/>
 		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_InjectIntoDefs"/>
 		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_SetDefFieldAtPath"/>
 		/// </summary>
@@ -558,6 +585,10 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Caches type information at startup to accelerate Harmony type retrieval.
+		/// This speeds up Harmony patch processing for some mods, improving game startup time in modded environments.
+		/// It has no effect in a vanilla environment.
+		/// <br/>
 		/// <seealso cref="Patches.Early.HarmonyLib_AccessTools_TypeByName"/>
 		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_SetDefFieldAtPath"/>
 		/// </summary>
