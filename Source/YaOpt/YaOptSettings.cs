@@ -425,9 +425,9 @@ namespace YaOpt
 		};
 
 		/// <summary>
-		/// Introduces a limited multi-threaded handling for pawn updates.
+		/// Introduces a restricted multi-threaded handling for pawn updates.
 		/// It implements a multi-threaded job interruption predictor that checks if the current job
-		/// might fail or be interrupted by emergency jobs (e.g., fleeing enemies) in the current frame.
+		/// might fail or be interrupted by emergency jobs (e.g. fleeing enemies) in the current frame.
 		/// If the prediction passes (no interruption), the main thread skips the redundant check.
 		/// Otherwise, the main thread performs the standard check.
 		/// <br/>
@@ -472,9 +472,7 @@ namespace YaOpt
 
 		/// <summary>
 		/// Optimizes map post-tick processing by running independent updates in parallel.
-		/// Specifically, it targets Steady Environment Effects (e.g., rain/snow settlement) and Gas updates.
-		/// These operations iterate over the map grid and are safe to execute on worker threads,
-		/// reducing the main thread's workload during the map tick.
+		/// Supports steady environment effects and gas updates.
 		/// <br/>
 		/// <seealso cref="Patches.Verse_Map_MapPostTick"/>
 		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
@@ -488,7 +486,7 @@ namespace YaOpt
 		};
 
 		/// <summary>
-		/// Optimizes the check for whether an Ideoligion allows a specific action.
+		/// Optimizes the check for whether an Ideoligion allows a willing action.
 		/// Vanilla iterates through all precepts to make this determination.
 		/// This optimization creates a cache of precepts that impose restrictions whenever precepts are updated.
 		/// When checking permissions, it only iterates through these cached restrictive precepts, ignoring irrelevant ones.
@@ -569,9 +567,9 @@ namespace YaOpt
 
 		/// <summary>
 		/// Optimizes the translation injection process during game startup.
-		/// When injecting translation data into XML Defs, the game checks for errors (e.g., duplicate injections).
+		/// When injecting translation data into XML Defs, the game checks for errors (e.g. duplicate injections).
 		/// Vanilla uses an O(N^2) nested loop for this check, which is very slow with large numbers of Defs.
-		/// This optimization replaces the inner loop with a hash set lookup, reducing the complexity to O(N).
+		/// This optimization replaces the inner loop with a hash lookup, reducing the complexity to O(N).
 		/// This speeds up game startup, especially for non-English languages.
 		/// <br/>
 		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_InjectIntoDefs"/>
@@ -590,7 +588,7 @@ namespace YaOpt
 		/// It has no effect in a vanilla environment.
 		/// <br/>
 		/// <seealso cref="Patches.Early.HarmonyLib_AccessTools_TypeByName"/>
-		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_SetDefFieldAtPath"/>
+		/// <seealso cref="Patches.Early.System_Reflection_RuntimeAssembly_FullName"/>
 		/// </summary>
 		public OptimizationOption OptRuntimeInfoCache { get; } = new OptimizationOption
 		{

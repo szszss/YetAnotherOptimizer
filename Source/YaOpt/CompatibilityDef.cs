@@ -25,7 +25,7 @@ namespace YaOpt
 
 		public bool NoErrorLog { get => noErrorLog; set => noErrorLog = value; }
 
-		public List<string> BannedOptimizations { get => bannedOptimizations;  set => bannedOptimizations = value; }
+		public List<string> BannedOptimizations { get => bannedOptimizations; set => bannedOptimizations = value; }
 
 		public List<string> IgnoredToggleTabCaching { get => ignoredToggleTabCaching; set => ignoredToggleTabCaching = value; }
 

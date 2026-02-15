@@ -18,6 +18,7 @@ namespace YaOpt.OtherMod.FacialAnimation
 		/// <br/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FacialAnimationControllerComp_GatherPawnParam"/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_NLFacialAnimationMasterNodeWorker_PreDraw"/>
+		/// <seealso cref="FacialAnimation.Patches.RimWorld_PortraitsCache_SetDirty"/>
 		/// <seealso cref="FacialAnimation.Patches.Verse_Corpse_DynamicDrawPhaseAt"/>
 		/// <seealso cref="FacialAnimation.Patches.Verse_Pawn_DynamicDrawPhaseAt"/>
 		/// </summary>
@@ -102,6 +103,8 @@ namespace YaOpt.OtherMod.FacialAnimation
 		/// Optimizes the loading of facial textures by the Facial Animation mod,
 		/// making it use the texture caching system provided by this mod,
 		/// reducing stuttering during pawn generation.
+		/// <br/>
+		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_GraphicHelper_CheckTexPathExist"/>
 		/// </summary>
 		public static OptimizationOption OptFATextureCache { get; } = new OptimizationOption
 		{

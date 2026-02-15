@@ -11,6 +11,11 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces
 		/// <summary>
 		/// Rewrites LINQ expressions into GC-friendly loops.
 		/// LINQ generates significant GC overhead in Unity.
+		/// <br/>
+		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_AlienPartGenerator_RotationOffset_GetOffset"/>
+		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_ExtendedGraphics_ConditionApparel_Satisfied"/>
+		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_ExtendedGraphics_ExtendedGraphicsPawnWrapper_GetBodyPart"/>
+		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_ThoughtSettings_ReplaceIfApplicable"/>
 		/// </summary>
 		public static OptimizationOption OptHARDeLinq { get; } = new OptimizationOption
 		{
@@ -25,6 +30,9 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces
 		/// <summary>
 		/// Optimizes texture loading for HAR by utilizing the texture caching system.
 		/// Significantly improves performance for races with dynamic body parts.
+		/// <br/>
+		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_AlienPartGenerator_BodyAddon_GetGraphic"/>
+		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_AlienRenderTreePatches_CheckMaskShader"/>
 		/// </summary>
 		public static OptimizationOption OptHARTextureCache { get; } = new OptimizationOption
 		{

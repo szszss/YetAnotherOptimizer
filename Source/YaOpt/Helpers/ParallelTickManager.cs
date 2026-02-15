@@ -121,7 +121,7 @@ namespace YaOpt.Helpers
 			/*var workerCount = math.clamp((int)math.round(_parellellyTickPawnsWorkerCount), 1, 16);
 			for (var i = 0; i < workerCount; i++)
 			{
-				handle = JobHandle.CombineDependencies(handle, 
+				handle = JobHandle.CombineDependencies(handle,
 					new ManagedJob(new ParallelPawnJob(
 						_jobQueue, _pawns, _gameTick)).Schedule());
 
@@ -167,7 +167,7 @@ namespace YaOpt.Helpers
 			private readonly List<Pawn> _pawns;
 			private readonly int _gameTick;
 
-public ParallelPawnJob(ConcurrentQueue<int> jobQueue, List<Pawn> pawns, int gameTick)
+			public ParallelPawnJob(ConcurrentQueue<int> jobQueue, List<Pawn> pawns, int gameTick)
 			{
 				_jobQueue = jobQueue;
 				_pawns = pawns;
