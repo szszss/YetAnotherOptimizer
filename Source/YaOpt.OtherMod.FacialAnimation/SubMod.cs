@@ -14,6 +14,8 @@ namespace YaOpt.OtherMod.FacialAnimation
 	internal class SubMod : YaOptSubMod
 	{
 		/// <summary>
+		/// Moves facial animation updates from the main thread to the parallel render preparation phase.
+		/// <br/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FacialAnimationControllerComp_GatherPawnParam"/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_NLFacialAnimationMasterNodeWorker_PreDraw"/>
 		/// <seealso cref="FacialAnimation.Patches.Verse_Corpse_DynamicDrawPhaseAt"/>
@@ -30,6 +32,9 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
+		/// Rewrites LINQ expressions into GC-friendly loops.
+		/// LINQ generates significant GC overhead in Unity.
+		/// <br/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_AnimationFrameAccumulator_AccumResultFrameAndClear"/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_AnimationFrameAccumulator_UpdateAninmation"/>
 		/// </summary>
@@ -44,6 +49,8 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
+		/// Accelerates facial animation processing using Burst.
+		/// <br/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_AnimationFrameAccumulator_AccumResultFrameAndClear"/>
 		/// </summary>
 		public static OptimizationOption OptFADeLinqBurst { get; } = new OptimizationOption
@@ -61,6 +68,8 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
+		/// Caches the list of facial animations to avoid frequent reconstruction.
+		/// <br/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FacialAnimationControllerComp_InitializeIfNeed"/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FacialAnimationControllerComp_UpdateAnimation"/>
 		/// </summary>
@@ -75,6 +84,8 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
+		/// Caches some information used during pawn generation to reduce stuttering when pawns spawn.
+		/// <br/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FAHelper_CreateAnimationDict"/>
 		/// </summary>
 		public static OptimizationOption OptFAPawnSpawn { get; } = new OptimizationOption
@@ -88,6 +99,9 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
+		/// Optimizes the loading of facial textures by the Facial Animation mod,
+		/// making it use the texture caching system provided by this mod,
+		/// reducing stuttering during pawn generation.
 		/// </summary>
 		public static OptimizationOption OptFATextureCache { get; } = new OptimizationOption
 		{
@@ -125,6 +139,7 @@ namespace YaOpt.OtherMod.FacialAnimation
 			yield return OptFADeLinqBurst;
 			yield return OptFAAnimCache;
 			yield return OptFAPawnSpawn;
+			yield return OptFATextureCache;
 		}
 
 		public override bool OnPatch(Harmony harmony)
