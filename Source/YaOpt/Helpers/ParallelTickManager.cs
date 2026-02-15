@@ -15,19 +15,19 @@ namespace YaOpt.Helpers
 	public static class ParallelTickManager
 	{
 		[TweakValue("exampleCategory", 1f, 16f)]
-		private static float parellellyTickPawnsWorkerCount = 5f;
+		private static float _parellellyTickPawnsWorkerCount = 5f;
 
-		private static readonly ConcurrentQueue<int> jobQueue = new ConcurrentQueue<int>();
+		private static readonly ConcurrentQueue<int> _jobQueue = new ConcurrentQueue<int>();
 
-		private static readonly List<Pawn> pawns = new List<Pawn>();
+		private static readonly List<Pawn> _pawns = new List<Pawn>();
 
-		private static int finishedJobCount;
+		private static int _finishedJobCount;
 
-		private static JobHandle postMapTickJobHandle = default;
+		private static JobHandle _postMapTickJobHandle = default;
 
-		private static NativeArray<JobHandle> tmpJobHandles = default;
+		private static NativeArray<JobHandle> _tmpJobHandles = default;
 
-		private static int gameTick;
+		private static int _gameTick;
 
 		/*private static float debugTime;
 		private static int debugCount;
@@ -46,7 +46,7 @@ namespace YaOpt.Helpers
 			{
 				if (thing is Pawn pawn)
 				{
-					pawns.Add(pawn);
+					_pawns.Add(pawn);
 					JobPredictor.AddPawn(pawn);
 				}
 			}
@@ -58,7 +58,7 @@ namespace YaOpt.Helpers
 			{
 				if (thing is Pawn pawn)
 				{
-					pawns.Remove(pawn);
+					_pawns.Remove(pawn);
 					JobPredictor.RemovePawn(pawn);
 				}
 			}
@@ -71,28 +71,28 @@ namespace YaOpt.Helpers
 		public static void ParellellyPostTickMaps()
 		{
 			var maps = Find.Maps;
-			postMapTickJobHandle = default;
-			if (!tmpJobHandles.IsCreated || tmpJobHandles.Length != maps.Count * 2)
+			_postMapTickJobHandle = default;
+			if (!_tmpJobHandles.IsCreated || _tmpJobHandles.Length != maps.Count * 2)
 			{
-				tmpJobHandles.Dispose();
-				tmpJobHandles = new NativeArray<JobHandle>(maps.Count * 2, Allocator.Persistent);
+				_tmpJobHandles.Dispose();
+				_tmpJobHandles = new NativeArray<JobHandle>(maps.Count * 2, Allocator.Persistent);
 			}
 			var i = 0;
 			foreach (var map in maps)
 			{
 				// Rebuilding any dirty region.
 				map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
-				tmpJobHandles[i++] = new ManagedJob(new SteadyEnvironmentEffectsJob(map.steadyEnvironmentEffects)).Schedule();
-				//tmpJobHandles[i++] = new ManagedJob(new TempTerrainManagerJob(map.tempTerrain)).Schedule();
-				tmpJobHandles[i++] = new ManagedJob(new GasGridJob(map.gasGrid)).Schedule();
+				_tmpJobHandles[i++] = new ManagedJob(new SteadyEnvironmentEffectsJob(map.steadyEnvironmentEffects)).Schedule();
+				//_tmpJobHandles[i++] = new ManagedJob(new TempTerrainManagerJob(map.tempTerrain)).Schedule();
+				_tmpJobHandles[i++] = new ManagedJob(new GasGridJob(map.gasGrid)).Schedule();
 			}
-			postMapTickJobHandle = JobHandle.CombineDependencies(tmpJobHandles);
+			_postMapTickJobHandle = JobHandle.CombineDependencies(_tmpJobHandles);
 		}
 
 		public static void FinishPostMapTick(int tick)
 		{
-			postMapTickJobHandle.Complete();
-			postMapTickJobHandle = default;
+			_postMapTickJobHandle.Complete();
+			_postMapTickJobHandle = default;
 		}
 
 		public static void ParellellyTickPawns()
@@ -103,35 +103,35 @@ namespace YaOpt.Helpers
 				map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
 			}
 			//debugStopwatch.Restart();
-			gameTick = GenTicks.TicksGame;
-			var pawnCount = pawns.Count;
+			_gameTick = GenTicks.TicksGame;
+			var pawnCount = _pawns.Count;
 			var jobCount = (int)(pawnCount + 6);
 			//var parallel = math.clamp(Environment.ProcessorCount, 1, 4);
-			while (jobQueue.TryDequeue(out _))
+			while (_jobQueue.TryDequeue(out _))
 			{
 			}
 			for (var i = 0; i < pawnCount; i++)
 			{
-				jobQueue.Enqueue(i);
+				_jobQueue.Enqueue(i);
 			}
 			JobHandle handle = default;
-			finishedJobCount = 0;
-			handle = new ManagedJobFor(new ParallelPawnJob(jobQueue, pawns, gameTick))
-				.ScheduleParallel(jobCount, jobCount / (int)parellellyTickPawnsWorkerCount);
-			/*var workerCount = math.clamp((int)math.round(parellellyTickPawnsWorkerCount), 1, 16);
+			_finishedJobCount = 0;
+			handle = new ManagedJobFor(new ParallelPawnJob(_jobQueue, _pawns, _gameTick))
+				.ScheduleParallel(jobCount, jobCount / (int)_parellellyTickPawnsWorkerCount);
+			/*var workerCount = math.clamp((int)math.round(_parellellyTickPawnsWorkerCount), 1, 16);
 			for (var i = 0; i < workerCount; i++)
 			{
 				handle = JobHandle.CombineDependencies(handle, 
 					new ManagedJob(new ParallelPawnJob(
-						jobQueue, pawns, gameTick)).Schedule());
+						_jobQueue, _pawns, _gameTick)).Schedule());
 
 			}*/
 			JobHandle.ScheduleBatchedJobs();
 			//handle.Complete();
-			while (finishedJobCount != pawnCount && !handle.IsCompleted)
+			while (_finishedJobCount != pawnCount && !handle.IsCompleted)
 			{
 			}
-			//SpinWait.SpinUntil(() => finishedJobCount == pawnCount || handle.IsCompleted);
+			//SpinWait.SpinUntil(() => _finishedJobCount == pawnCount || handle.IsCompleted);
 			/*debugStopwatch.Stop();
 			debugTime += (float) debugStopwatch.Elapsed.TotalMilliseconds;
 			if (++debugCount >= 60)
@@ -145,20 +145,20 @@ namespace YaOpt.Helpers
 
 		public static void SingleTickPawns()
 		{
-			gameTick = GenTicks.TicksGame;
-			var result = Parallel.ForEach(pawns, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, TickPawn);
+			_gameTick = GenTicks.TicksGame;
+			var result = Parallel.ForEach(_pawns, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, TickPawn);
 		}
 
 		private static void TickPawn(Pawn pawn)
 		{
-			JobPredictor.ProcessPawn(pawn, gameTick);
+			JobPredictor.ProcessPawn(pawn, _gameTick);
 		}
 
 		private static void ClearCache()
 		{
-			pawns.Clear();
+			_pawns.Clear();
 			JobPredictor.CleanCache();
-			postMapTickJobHandle = default;
+			_postMapTickJobHandle = default;
 		}
 
 		private readonly struct ParallelPawnJob : IJobFor
@@ -167,7 +167,7 @@ namespace YaOpt.Helpers
 			private readonly List<Pawn> _pawns;
 			private readonly int _gameTick;
 
-			public ParallelPawnJob(ConcurrentQueue<int> jobQueue, List<Pawn> pawns, int gameTick)
+public ParallelPawnJob(ConcurrentQueue<int> jobQueue, List<Pawn> pawns, int gameTick)
 			{
 				_jobQueue = jobQueue;
 				_pawns = pawns;
@@ -179,25 +179,25 @@ namespace YaOpt.Helpers
 				if (_jobQueue.TryDequeue(out var jobIndex))
 				{
 					JobPredictor.ProcessPawn(_pawns[jobIndex], _gameTick);
-					Interlocked.Increment(ref finishedJobCount);
+					Interlocked.Increment(ref _finishedJobCount);
 				}
 			}
 		}
 
 		private readonly struct SteadyEnvironmentEffectsJob : IJob
 		{
-			private readonly SteadyEnvironmentEffects steadyEnvironmentEffects;
+			private readonly SteadyEnvironmentEffects _steadyEnvironmentEffects;
 
 			public SteadyEnvironmentEffectsJob(SteadyEnvironmentEffects steadyEnvironmentEffects)
 			{
-				this.steadyEnvironmentEffects = steadyEnvironmentEffects;
+				_steadyEnvironmentEffects = steadyEnvironmentEffects;
 			}
 
 			public void Execute()
 			{
 				try
 				{
-					steadyEnvironmentEffects.SteadyEnvironmentEffectsTick();
+					_steadyEnvironmentEffects.SteadyEnvironmentEffectsTick();
 				}
 				catch (Exception ex)
 				{
@@ -212,18 +212,18 @@ namespace YaOpt.Helpers
 		[Obsolete]
 		private readonly struct TempTerrainManagerJob : IJob
 		{
-			private readonly TempTerrainManager tempTerrainManager;
+			private readonly TempTerrainManager _tempTerrainManager;
 
 			public TempTerrainManagerJob(TempTerrainManager tempTerrainManager)
 			{
-				this.tempTerrainManager = tempTerrainManager;
+				_tempTerrainManager = tempTerrainManager;
 			}
 
 			public void Execute()
 			{
 				try
 				{
-					tempTerrainManager.Tick();
+					_tempTerrainManager.Tick();
 				}
 				catch (Exception ex)
 				{
@@ -234,18 +234,18 @@ namespace YaOpt.Helpers
 
 		private readonly struct GasGridJob : IJob
 		{
-			private readonly GasGrid gasGrid;
+			private readonly GasGrid _gasGrid;
 
 			public GasGridJob(GasGrid gasGrid)
 			{
-				this.gasGrid = gasGrid;
+				_gasGrid = gasGrid;
 			}
 
 			public void Execute()
 			{
 				try
 				{
-					gasGrid.Tick();
+					_gasGrid.Tick();
 				}
 				catch (Exception ex)
 				{

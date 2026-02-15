@@ -12,12 +12,12 @@ namespace YaOpt.Helpers
 	{
 		public const int DONT_CHECK_VERSION = -1;
 
-		private static readonly Type ThingCompType = typeof(ThingComp);
+		private static readonly Type _thingCompType = typeof(ThingComp);
 
 		private static readonly AccessTools.FieldRef<List<ThingComp>, int> _listVersionFieldRef =
 			AccessTools.FieldRefAccess<int>(typeof(List<ThingComp>), "_version");
 
-		private static readonly AccessTools.FieldRef<Dictionary<Type, ThingComp[]>, int> __dictVersionFieldRef =
+		private static readonly AccessTools.FieldRef<Dictionary<Type, ThingComp[]>, int> _dictVersionFieldRef =
 			AccessTools.FieldRefAccess<int>(typeof(Dictionary<Type, ThingComp[]>), "_version");
 
 		private static readonly FieldInfo _dictVersionField =
@@ -153,13 +153,13 @@ namespace YaOpt.Helpers
 			if (compsByType == null)
 				return GetCompBySlowPath(compType, compList);
 
-			var expectVersion = __dictVersionFieldRef(compsByType);
+			var expectVersion = _dictVersionFieldRef(compsByType);
 			if (version != expectVersion)
 			{
 				lock (compsByType)
 				{
 					Interlocked.MemoryBarrier();
-					expectVersion = __dictVersionFieldRef(compsByType);
+					expectVersion = _dictVersionFieldRef(compsByType);
 					if (version != expectVersion)
 					{
 						RecreateCompsByType(compsByType, compList);

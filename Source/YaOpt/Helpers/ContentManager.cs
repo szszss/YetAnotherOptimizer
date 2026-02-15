@@ -12,14 +12,14 @@ namespace YaOpt.Helpers
 {
 	public static class ContentManager
 	{
-		public static List<ModContentPack> modsContainTexture = new List<ModContentPack>();
-		public static List<ModContentPack> modsContainAudio = new List<ModContentPack>();
-		public static List<ModContentPack> modsContainString = new List<ModContentPack>();
-		public static Dictionary<Type, List<ModContentPack>> modsByContainType = new Dictionary<Type, List<ModContentPack>>()
+		public static List<ModContentPack> ModsContainTexture = new List<ModContentPack>();
+		public static List<ModContentPack> ModsContainAudio = new List<ModContentPack>();
+		public static List<ModContentPack> ModsContainString = new List<ModContentPack>();
+		public static Dictionary<Type, List<ModContentPack>> ModsByContainType = new Dictionary<Type, List<ModContentPack>>()
 		{
-			{ typeof(Texture2D), modsContainTexture },
-			{ typeof(AudioClip), modsContainAudio },
-			{ typeof(string), modsContainString },
+			{ typeof(Texture2D), ModsContainTexture },
+			{ typeof(AudioClip), ModsContainAudio },
+			{ typeof(string), ModsContainString },
 		};
 
 		private static readonly Dictionary<string, RouteSign> textureRouteSigns = new Dictionary<string, RouteSign>();
@@ -41,7 +41,7 @@ namespace YaOpt.Helpers
 		public static LoadZstdDdsTextureDelegate LoadZstdDdsTexture;
 
 		private static readonly byte[] _tmpDdsHeaderBytes = new byte[128];
-		private static readonly byte[] tmpTextureDataBytes = new byte[(int)(512 * 512 * 4 * sizeof(int) * 1.34f)];
+		private static readonly byte[] _tmpTextureDataBytes = new byte[(int)(512 * 512 * 4 * sizeof(int) * 1.34f)];
 		private static GCHandle _tmpDdsHeaderHandle;
 
 		public static bool OnlyLazilyLoadDds;
@@ -69,7 +69,7 @@ namespace YaOpt.Helpers
 				//YaOptMod.Warning($"Try load {itemType.Name} from {itemPath}");
 
 				_loadSource = Source.Missing;
-				if (itemType != typeof(Shader) && modsByContainType.TryGetValue(itemType, out var runningModsListForReading))
+				if (itemType != typeof(Shader) && ModsByContainType.TryGetValue(itemType, out var runningModsListForReading))
 				{
 					for (var i = runningModsListForReading.Count - 1; i >= 0; i--)
 					{
@@ -239,32 +239,32 @@ namespace YaOpt.Helpers
 			 * Between these two Inits, all asset reading operations will follow
 			 * the original logic - iterating through all ModContentPacks.
 			 */
-			modsContainTexture.AddRange(LoadedModManager.RunningModsListForReading);
-			modsContainAudio.AddRange(LoadedModManager.RunningModsListForReading);
-			modsContainString.AddRange(LoadedModManager.RunningModsListForReading);
+			ModsContainTexture.AddRange(LoadedModManager.RunningModsListForReading);
+			ModsContainAudio.AddRange(LoadedModManager.RunningModsListForReading);
+			ModsContainString.AddRange(LoadedModManager.RunningModsListForReading);
 		}
 
 		public static void PostInit()
 		{
-			modsContainTexture.Clear();
-			modsContainAudio.Clear();
-			modsContainString.Clear();
+			ModsContainTexture.Clear();
+			ModsContainAudio.Clear();
+			ModsContainString.Clear();
 			foreach (var contentPack in LoadedModManager.RunningModsListForReading)
 			{
 				var texHolder = contentPack.GetContentHolder<Texture2D>();
 				if (texHolder.contentList.Count > 0)
 				{
-					modsContainTexture.Add(contentPack);
+					ModsContainTexture.Add(contentPack);
 				}
 				var audioHolder = contentPack.GetContentHolder<AudioClip>();
 				if (audioHolder.contentList.Count > 0)
 				{
-					modsContainAudio.Add(contentPack);
+					ModsContainAudio.Add(contentPack);
 				}
 				var stringHolder = contentPack.GetContentHolder<string>();
 				if (stringHolder.contentList.Count > 0)
 				{
-					modsContainString.Add(contentPack);
+					ModsContainString.Add(contentPack);
 				}
 			}
 		}
@@ -375,13 +375,13 @@ namespace YaOpt.Helpers
 				}
 				var dataSize = (int)dataSizeLong;
 				byte[] data;
-				if (dataSize > tmpTextureDataBytes.LongLength)
+				if (dataSize > _tmpTextureDataBytes.LongLength)
 				{
 					data = new byte[dataSize];
 				}
 				else
 				{
-					data = tmpTextureDataBytes;
+					data = _tmpTextureDataBytes;
 				}
 				// ReSharper disable once MustUseReturnValue
 				fs.Read(data, 0, dataSize);
