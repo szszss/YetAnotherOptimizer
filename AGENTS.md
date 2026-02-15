@@ -61,6 +61,7 @@ Root
       DoSomething();
   }
   ```
+- **Exemption**: Ignore the non-standard naming in `Source/YaOpt/CompatibilityDef.cs`, where member names are designed for compatibility with RimWorld deserialization.
 
 ### 3.2 Performance Guidelines
 Since this is an optimization mod, performance is the highest priority:

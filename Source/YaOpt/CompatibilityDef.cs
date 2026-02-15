@@ -23,28 +23,38 @@ namespace YaOpt
 		public static readonly Dictionary<string, Parallelism> CachedWorkGiverParallelism =
 			new Dictionary<string, Parallelism>();
 
-		public bool noErrorLog;
+		public bool NoErrorLog { get => noErrorLog; set => noErrorLog = value; }
+
+		public List<string> BannedOptimizations { get => bannedOptimizations;  set => bannedOptimizations = value; }
+
+		public List<string> IgnoredToggleTabCaching { get => ignoredToggleTabCaching; set => ignoredToggleTabCaching = value; }
+
+		public List<JobDef> IgnoredJobFailurePredicting { get => ignoredJobFailurePredicting; set => ignoredJobFailurePredicting = value; }
+
+		public List<WorkGiverCompatibility> WorkGiverCompatibilities { get => workGiverCompatibilities; set => workGiverCompatibilities = value; }
+
+		private bool noErrorLog;
 
 		[NoTranslate]
-		public List<string> bannedOptimizations;
+		private List<string> bannedOptimizations;
 
 		[NoTranslate]
-		public List<string> ignoredToggleTabCaching;
+		private List<string> ignoredToggleTabCaching;
 
 		[NoTranslate]
-		public List<JobDef> ignoredJobFailurePredicting;
+		private List<JobDef> ignoredJobFailurePredicting;
 
-		public List<WorkGiverCompatibility> workGiverCompatibilities;
+		private List<WorkGiverCompatibility> workGiverCompatibilities;
 
 		public class WorkGiverCompatibility
 		{
 			[NoTranslate]
-			public string workGiverDefName;
+			public string WorkGiverDefName;
 
 			[NoTranslate]
-			public string workGiverClass;
+			public string WorkGiverClass;
 
-			public Parallelism parallelism;
+			public Parallelism WorkGiverParallelism;
 
 			public enum Parallelism
 			{
@@ -59,18 +69,18 @@ namespace YaOpt
 				XmlNode elem = null;
 				if ((elem = xmlRoot.SelectSingleNode("workGiverDefName")) != null)
 				{
-					workGiverDefName = ParseHelper.FromString<string>(elem.InnerText);
+					WorkGiverDefName = ParseHelper.FromString<string>(elem.InnerText);
 				}
 				if ((elem = xmlRoot.SelectSingleNode("workGiverClass")) != null)
 				{
-					workGiverClass = ParseHelper.FromString<string>(elem.InnerText);
+					WorkGiverClass = ParseHelper.FromString<string>(elem.InnerText);
 				}
 				if ((elem = xmlRoot.SelectSingleNode("parallelism")) != null)
 				{
-					if (!Enum.TryParse(ParseHelper.FromString<string>(elem.InnerText), true, out parallelism))
+					if (!Enum.TryParse(ParseHelper.FromString<string>(elem.InnerText), true, out WorkGiverParallelism))
 					{
 						throw new XmlException(
-							$"Wrong YaOpt.CompatibilityDef.WorkGiverCompatibility.Parallelism: {parallelism}");
+							$"Wrong YaOpt.CompatibilityDef.WorkGiverCompatibility.Parallelism: {WorkGiverParallelism}");
 					}
 				}
 			}
@@ -84,15 +94,15 @@ namespace YaOpt
 			{
 				var mod = def.modContentPack.Name;
 
-				if (def.bannedOptimizations != null)
+				if (def.BannedOptimizations != null)
 				{
-					foreach (var bannedOptimization in def.bannedOptimizations)
+					foreach (var bannedOptimization in def.BannedOptimizations)
 					{
 						var index = YaOptGlobal.Settings.AllOptimizations.FirstIndexOf(
 							opt => opt.SettingId == bannedOptimization);
 						if (index < 0)
 						{
-							if (def.noErrorLog)
+							if (def.NoErrorLog)
 								YaOptMod.Debug($"Optimization {bannedOptimization} not found.");
 							else
 								YaOptMod.Error($"{mod} couldn't find optimization {bannedOptimization}");
@@ -104,14 +114,14 @@ namespace YaOpt
 					}
 				}
 
-				if (def.ignoredToggleTabCaching != null)
+				if (def.IgnoredToggleTabCaching != null)
 				{
-					foreach (var toggleTabTypeName in def.ignoredToggleTabCaching)
+					foreach (var toggleTabTypeName in def.IgnoredToggleTabCaching)
 					{
 						var type = AccessTools.TypeByName(toggleTabTypeName);
 						if (type == null)
 						{
-							if (def.noErrorLog)
+							if (def.NoErrorLog)
 								YaOptMod.Debug($"Toggle tab {toggleTabTypeName} not found.");
 							else
 								YaOptMod.Error($"{mod} tried to ignore an inexistent toggle tab {toggleTabTypeName} from {mod}.");
@@ -122,57 +132,57 @@ namespace YaOpt
 					}
 				}
 
-				if (def.ignoredJobFailurePredicting != null)
+				if (def.IgnoredJobFailurePredicting != null)
 				{
-					CachedIgnoredJobFailurePredicting.AddRange(def.ignoredJobFailurePredicting);
+					CachedIgnoredJobFailurePredicting.AddRange(def.IgnoredJobFailurePredicting);
 				}
 
-				if (def.workGiverCompatibilities != null)
+				if (def.WorkGiverCompatibilities != null)
 				{
-					foreach (var compatibility in def.workGiverCompatibilities)
+					foreach (var compatibility in def.WorkGiverCompatibilities)
 					{
-						var hasClass = !string.IsNullOrWhiteSpace(compatibility.workGiverClass);
-						var hasDefName = !string.IsNullOrWhiteSpace(compatibility.workGiverDefName);
+						var hasClass = !string.IsNullOrWhiteSpace(compatibility.WorkGiverClass);
+						var hasDefName = !string.IsNullOrWhiteSpace(compatibility.WorkGiverDefName);
 						if (hasClass && hasDefName)
 						{
-							YaOptMod.Error($"{mod} defined workGiverClass {compatibility.workGiverClass} " +
-										   $"and workGiverDefName {compatibility.workGiverDefName}. " +
+							YaOptMod.Error($"{mod} defined workGiverClass {compatibility.WorkGiverClass} " +
+										   $"and workGiverDefName {compatibility.WorkGiverDefName}. " +
 										   "It's not possible to define both workGiverClass and " +
 										   "workGiverDefName simultaneously.");
 						}
 
 						if (hasDefName)
 						{
-							var wg = workGivers.Find(wgd => wgd.defName == compatibility.workGiverDefName);
+							var wg = workGivers.Find(wgd => wgd.defName == compatibility.WorkGiverDefName);
 							if (wg == null)
 							{
-								if (def.noErrorLog)
-									YaOptMod.Debug($"WorkGiver {compatibility.workGiverDefName} not found.");
+								if (def.NoErrorLog)
+									YaOptMod.Debug($"WorkGiver {compatibility.WorkGiverDefName} not found.");
 								else
-									YaOptMod.Error($"{mod} couldn't find WorkGiver {compatibility.workGiverDefName}.");
+									YaOptMod.Error($"{mod} couldn't find WorkGiver {compatibility.WorkGiverDefName}.");
 								continue;
 							}
-							YaOptMod.Debug($"The parallelism of WorkGiver {wg.defName} now is {compatibility.parallelism}, " +
+							YaOptMod.Debug($"The parallelism of WorkGiver {wg.defName} now is {compatibility.WorkGiverParallelism}, " +
 										   $"set by {mod}.");
-							CachedWorkGiverParallelism[wg.defName] = compatibility.parallelism;
+							CachedWorkGiverParallelism[wg.defName] = compatibility.WorkGiverParallelism;
 						}
 						else if (hasClass)
 						{
-							var workGiverType = AccessTools.TypeByName(compatibility.workGiverClass);
+							var workGiverType = AccessTools.TypeByName(compatibility.WorkGiverClass);
 							if (workGiverType == null)
 							{
-								if (def.noErrorLog)
-									YaOptMod.Debug($"WorkGiver class {compatibility.workGiverClass} not found.");
+								if (def.NoErrorLog)
+									YaOptMod.Debug($"WorkGiver class {compatibility.WorkGiverClass} not found.");
 								else
-									YaOptMod.Error($"{mod} couldn't find WorkGiver class {compatibility.workGiverClass}.");
+									YaOptMod.Error($"{mod} couldn't find WorkGiver class {compatibility.WorkGiverClass}.");
 								continue;
 							}
 							foreach (var wg in workGivers
 										 .Where(wgd => workGiverType.IsAssignableFrom(wgd.giverClass)))
 							{
-								YaOptMod.Debug($"The parallelism of WorkGiver {wg.defName} now is {compatibility.parallelism}, " +
+								YaOptMod.Debug($"The parallelism of WorkGiver {wg.defName} now is {compatibility.WorkGiverParallelism}, " +
 											   $"set by {mod}.");
-								CachedWorkGiverParallelism[wg.defName] = compatibility.parallelism;
+								CachedWorkGiverParallelism[wg.defName] = compatibility.WorkGiverParallelism;
 							}
 						}
 					}
