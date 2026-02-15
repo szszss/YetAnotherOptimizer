@@ -14,16 +14,16 @@ namespace YaOpt.Helpers
 
 		private static readonly Type ThingCompType = typeof(ThingComp);
 
-		private static readonly AccessTools.FieldRef<List<ThingComp>, int> listVersionFieldRef =
+		private static readonly AccessTools.FieldRef<List<ThingComp>, int> _listVersionFieldRef =
 			AccessTools.FieldRefAccess<int>(typeof(List<ThingComp>), "_version");
 
-		private static readonly AccessTools.FieldRef<Dictionary<Type, ThingComp[]>, int> dictVersionFieldRef =
+		private static readonly AccessTools.FieldRef<Dictionary<Type, ThingComp[]>, int> __dictVersionFieldRef =
 			AccessTools.FieldRefAccess<int>(typeof(Dictionary<Type, ThingComp[]>), "_version");
 
-		private static readonly FieldInfo dictVersionField =
+		private static readonly FieldInfo _dictVersionField =
 			AccessTools.Field(typeof(Dictionary<Type, ThingComp[]>), "_version");
 
-		private static readonly Dictionary<Type, List<ThingComp>> tmpCompsByType =
+		private static readonly Dictionary<Type, List<ThingComp>> _tmpCompsByType =
 			new Dictionary<Type, List<ThingComp>>();
 
 		//private static HashSet<IntPtr> usedMrgctx = new HashSet<IntPtr>();
@@ -38,17 +38,17 @@ namespace YaOpt.Helpers
 		public static void RecreateCompsByType(
 			Dictionary<Type, ThingComp[]> compsByType, List<ThingComp> comps, bool synchronizeVersion = true)
 		{
-			lock (tmpCompsByType)
+			lock (_tmpCompsByType)
 			{
 				var objType = typeof(object);
-				tmpCompsByType.Clear();
+				_tmpCompsByType.Clear();
 				foreach (var comp in comps)
 				{
 					var type = comp.GetType();
-					if (!tmpCompsByType.TryGetValue(type, out var list))
+					if (!_tmpCompsByType.TryGetValue(type, out var list))
 					{
 						list = SimplePool<List<ThingComp>>.Get();
-						tmpCompsByType[type] = list;
+						_tmpCompsByType[type] = list;
 					}
 					list.Add(comp);
 				}
@@ -57,17 +57,17 @@ namespace YaOpt.Helpers
 					var parentType = comp.GetType().BaseType;
 					while (parentType != null && parentType != objType)
 					{
-						if (!tmpCompsByType.TryGetValue(parentType, out var list))
+						if (!_tmpCompsByType.TryGetValue(parentType, out var list))
 						{
 							list = SimplePool<List<ThingComp>>.Get();
-							tmpCompsByType[parentType] = list;
+							_tmpCompsByType[parentType] = list;
 						}
 						list.Add(comp);
 						parentType = parentType.BaseType;
 					}
 				}
 				compsByType.Clear();
-				using (var enumerator = tmpCompsByType.GetEnumerator())
+				using (var enumerator = _tmpCompsByType.GetEnumerator())
 				{
 					while (enumerator.MoveNext())
 					{
@@ -80,11 +80,11 @@ namespace YaOpt.Helpers
 						SimplePool<List<ThingComp>>.Return(pair.Value);
 					}
 				}
-				tmpCompsByType.Clear();
+				_tmpCompsByType.Clear();
 				if (synchronizeVersion)
 				{
-					var version = listVersionFieldRef(comps);
-					dictVersionField.SetValue(compsByType, version);
+					var version = _listVersionFieldRef(comps);
+					_dictVersionField.SetValue(compsByType, version);
 				}
 			}
 		}
@@ -153,13 +153,13 @@ namespace YaOpt.Helpers
 			if (compsByType == null)
 				return GetCompBySlowPath(compType, compList);
 
-			var expectVersion = dictVersionFieldRef(compsByType);
+			var expectVersion = __dictVersionFieldRef(compsByType);
 			if (version != expectVersion)
 			{
 				lock (compsByType)
 				{
 					Interlocked.MemoryBarrier();
-					expectVersion = dictVersionFieldRef(compsByType);
+					expectVersion = __dictVersionFieldRef(compsByType);
 					if (version != expectVersion)
 					{
 						RecreateCompsByType(compsByType, compList);

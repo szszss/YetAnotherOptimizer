@@ -20,7 +20,7 @@ namespace YaOpt.Helpers
 			}
 		}
 
-		private static readonly ConcurrentDictionary<Material, Color> cache = new ConcurrentDictionary<Material, Color>(new ObjectComparer());
+		private static readonly ConcurrentDictionary<Material, Color> _cache = new ConcurrentDictionary<Material, Color>(new ObjectComparer());
 
 		static MaterialColorCache()
 		{
@@ -29,25 +29,25 @@ namespace YaOpt.Helpers
 
 		private static void ClearCache()
 		{
-			cache.Clear();
+			_cache.Clear();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool SetColor(Material material, in Color color)
 		{
-			if (cache.TryGetValue(material, out var oldColor))
+			if (_cache.TryGetValue(material, out var oldColor))
 			{
 				if (oldColor == color)
 					return false;
 			}
-			cache[material] = color;
+			_cache[material] = color;
 			return true;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool GetColor(Material material, out Color color)
 		{
-			return cache.TryGetValue(material, out color);
+			return _cache.TryGetValue(material, out color);
 		}
 	}
 }

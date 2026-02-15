@@ -11,7 +11,7 @@ namespace YaOpt.Helpers
 {
 	public static class JobPredictor
 	{
-		private static readonly ConcurrentDictionary<Pawn, JobPrediction> jobPredictionMap =
+		private static readonly ConcurrentDictionary<Pawn, JobPrediction> _jobPredictionMap =
 			new ConcurrentDictionary<Pawn, JobPrediction>();
 
 		[Flags]
@@ -174,7 +174,7 @@ namespace YaOpt.Helpers
 
 		public static void AddPawn(Pawn pawn)
 		{
-			if (!jobPredictionMap.TryAdd(pawn, new JobPrediction()))
+			if (!_jobPredictionMap.TryAdd(pawn, new JobPrediction()))
 			{
 				return; //todo: error
 			}
@@ -182,7 +182,7 @@ namespace YaOpt.Helpers
 
 		public static void RemovePawn(Pawn pawn)
 		{
-			if (!jobPredictionMap.TryRemove(pawn, out _))
+			if (!_jobPredictionMap.TryRemove(pawn, out _))
 			{
 				return; //todo: error
 			}
@@ -193,10 +193,10 @@ namespace YaOpt.Helpers
 			JobPrediction prediction = null;
 			try
 			{
-				if (!jobPredictionMap.TryGetValue(pawn, out prediction))
+				if (!_jobPredictionMap.TryGetValue(pawn, out prediction))
 				{
 					prediction = new JobPrediction();
-					jobPredictionMap[pawn] = prediction;
+					_jobPredictionMap[pawn] = prediction;
 				}
 				prediction.MayFail = PredictFail(pawn);
 				if (!prediction.MayFail)
@@ -319,12 +319,12 @@ namespace YaOpt.Helpers
 
 		public static void CleanCache()
 		{
-			jobPredictionMap.Clear();
+			_jobPredictionMap.Clear();
 		}
 
 		public static bool ShouldCheckJobFail(Pawn pawn)
 		{
-			if (jobPredictionMap.TryGetValue(pawn, out var prediction))
+			if (_jobPredictionMap.TryGetValue(pawn, out var prediction))
 			{
 				if (Find.TickManager.TicksGame == prediction.UpdateTick)
 				{
@@ -349,7 +349,7 @@ namespace YaOpt.Helpers
 
 		public static bool ShouldCheckConstantJob(Pawn pawn)
 		{
-			if (jobPredictionMap.TryGetValue(pawn, out var prediction))
+			if (_jobPredictionMap.TryGetValue(pawn, out var prediction))
 			{
 				if (Find.TickManager.TicksGame == prediction.UpdateTick)
 				{

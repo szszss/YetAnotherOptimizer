@@ -29,63 +29,63 @@ namespace YaOpt.Helpers
 
 		private static readonly Dictionary<int, VirtualFile> texturesNotLoaded = new Dictionary<int, VirtualFile>();
 
-		private static bool hasImageOpt;
-		private static bool hasGraphicsSettings;
-		private static object imageOptSettings;
-		private static object gsSettings;
-		private static AccessTools.FieldRef<object, int> imageOptAnisoLevel;
-		private static AccessTools.FieldRef<object, float> imageOptMipmapBias;
-		private static AccessTools.FieldRef<object, float> gsMipmapBias;
+		private static bool _hasImageOpt;
+		private static bool _hasGraphicsSettings;
+		private static object _imageOptSettings;
+		private static object _gsSettings;
+		private static AccessTools.FieldRef<object, int> _imageOptAnisoLevel;
+		private static AccessTools.FieldRef<object, float> _imageOptMipmapBias;
+		private static AccessTools.FieldRef<object, float> _gsMipmapBias;
 
 		public delegate bool LoadZstdDdsTextureDelegate(Texture2D texture, string zstdFilePath);
 		public static LoadZstdDdsTextureDelegate LoadZstdDdsTexture;
 
-		private static readonly byte[] tmpDdsHeaderBytes = new byte[128];
+		private static readonly byte[] _tmpDdsHeaderBytes = new byte[128];
 		private static readonly byte[] tmpTextureDataBytes = new byte[(int)(512 * 512 * 4 * sizeof(int) * 1.34f)];
-		private static GCHandle tmpDdsHeaderHandle;
+		private static GCHandle _tmpDdsHeaderHandle;
 
 		public static bool OnlyLazilyLoadDds;
 
 		private struct RouteSign
 		{
-			private ModContentHolder<Texture2D> ModTextureSource;
-			private ModContentHolder<AudioClip> ModAudioSource;
-			private ModContentHolder<string> ModStringSource;
-			private Source LoadSource;
-			private AssetType LoadType;
+			private ModContentHolder<Texture2D> _modTextureSource;
+			private ModContentHolder<AudioClip> _modAudioSource;
+			private ModContentHolder<string> _modStringSource;
+			private Source _loadSource;
+			private AssetType _loadType;
 
 			public object TryLoad(Type itemType, string itemPath)
 			{
 				object t = null;
 				if (itemType == typeof(Texture2D))
-					LoadType = AssetType.Texture;
+					_loadType = AssetType.Texture;
 				else if (itemType == typeof(AudioClip))
-					LoadType = AssetType.Audio;
+					_loadType = AssetType.Audio;
 				else if (itemType == typeof(string))
-					LoadType = AssetType.String;
+					_loadType = AssetType.String;
 				else if (itemType == typeof(Shader))
-					LoadType = AssetType.Shader;
+					_loadType = AssetType.Shader;
 
 				//YaOptMod.Warning($"Try load {itemType.Name} from {itemPath}");
 
-				LoadSource = Source.Missing;
+				_loadSource = Source.Missing;
 				if (itemType != typeof(Shader) && modsByContainType.TryGetValue(itemType, out var runningModsListForReading))
 				{
 					for (var i = runningModsListForReading.Count - 1; i >= 0; i--)
 					{
-						switch (LoadType)
+						switch (_loadType)
 						{
 							case AssetType.Texture:
-								ModTextureSource = runningModsListForReading[i].GetContentHolder<Texture2D>();
-								t = ModTextureSource.Get(itemPath);
+								_modTextureSource = runningModsListForReading[i].GetContentHolder<Texture2D>();
+								t = _modTextureSource.Get(itemPath);
 								break;
 							case AssetType.Audio:
-								ModAudioSource = runningModsListForReading[i].GetContentHolder<AudioClip>();
-								t = ModAudioSource.Get(itemPath);
+								_modAudioSource = runningModsListForReading[i].GetContentHolder<AudioClip>();
+								t = _modAudioSource.Get(itemPath);
 								break;
 							case AssetType.String:
-								ModStringSource = runningModsListForReading[i].GetContentHolder<string>();
-								t = ModStringSource.Get(itemPath);
+								_modStringSource = runningModsListForReading[i].GetContentHolder<string>();
+								t = _modStringSource.Get(itemPath);
 								break;
 							default:
 								Log.Error($"Mod lacks manager for asset type {itemType.Name}");
@@ -94,15 +94,15 @@ namespace YaOpt.Helpers
 
 						if (t != null)
 						{
-							if (LoadType == AssetType.Texture)
+							if (_loadType == AssetType.Texture)
 								MakeSureTextureLoaded((Texture2D)t);
-							LoadSource = Source.Mod;
+							_loadSource = Source.Mod;
 							return t;
 						}
 					}
 				}
 
-				switch (LoadType)
+				switch (_loadType)
 				{
 					case AssetType.Texture:
 						t = Resources.Load<Texture2D>(GenFilePaths.ContentPath<Texture2D>() + itemPath);
@@ -113,11 +113,11 @@ namespace YaOpt.Helpers
 				}
 				if (t != null)
 				{
-					LoadSource = Source.Resources;
+					_loadSource = Source.Resources;
 					return t;
 				}
 
-				switch (LoadType)
+				switch (_loadType)
 				{
 					case AssetType.Texture:
 						t = ContentFinder<Texture2D>.TryFindAssetInModBundles(itemPath);
@@ -131,7 +131,7 @@ namespace YaOpt.Helpers
 				}
 				if (t != null)
 				{
-					LoadSource = Source.Bundle;
+					_loadSource = Source.Bundle;
 					return t;
 				}
 				return null;
@@ -139,23 +139,23 @@ namespace YaOpt.Helpers
 
 			public object Load(string itemPath)
 			{
-				switch (LoadSource)
+				switch (_loadSource)
 				{
 					case Source.Mod:
-						switch (LoadType)
+						switch (_loadType)
 						{
 							case AssetType.Texture:
-								var tex = ModTextureSource.Get(itemPath);
+								var tex = _modTextureSource.Get(itemPath);
 								MakeSureTextureLoaded(tex);
 								return tex;
 							case AssetType.Audio:
-								return ModAudioSource.Get(itemPath);
+								return _modAudioSource.Get(itemPath);
 							case AssetType.String:
-								return ModStringSource.Get(itemPath);
+								return _modStringSource.Get(itemPath);
 						}
 						break;
 					case Source.Resources:
-						switch (LoadType)
+						switch (_loadType)
 						{
 							case AssetType.Texture:
 								return Resources.Load<Texture2D>(GenFilePaths.ContentPath<Texture2D>() + itemPath);
@@ -164,7 +164,7 @@ namespace YaOpt.Helpers
 						}
 						break;
 					case Source.Bundle:
-						switch (LoadType)
+						switch (_loadType)
 						{
 							case AssetType.Texture:
 								return ContentFinder<Texture2D>.TryFindAssetInModBundles(itemPath);
@@ -198,34 +198,34 @@ namespace YaOpt.Helpers
 
 		public static void Init()
 		{
-			tmpDdsHeaderHandle = GCHandle.Alloc(tmpDdsHeaderBytes, GCHandleType.Pinned);
-			hasImageOpt = YaOptGlobal.HasType("ImageOpt.TextureLoadPatch");
-			if (hasImageOpt)
+			_tmpDdsHeaderHandle = GCHandle.Alloc(_tmpDdsHeaderBytes, GCHandleType.Pinned);
+			_hasImageOpt = YaOptGlobal.HasType("ImageOpt.TextureLoadPatch");
+			if (_hasImageOpt)
 			{
 				try
 				{
 					var type = AccessTools.TypeByName("ImageOpt.Settings");
-					imageOptAnisoLevel = AccessTools.FieldRefAccess<int>(type, "aniso_level");
-					imageOptMipmapBias = AccessTools.FieldRefAccess<float>(type, "mipmap_bias");
+					_imageOptAnisoLevel = AccessTools.FieldRefAccess<int>(type, "aniso_level");
+					_imageOptMipmapBias = AccessTools.FieldRefAccess<float>(type, "mipmap_bias");
 				}
 				catch (Exception ex)
 				{
 					YaOptMod.Error(ex.ToString());
-					hasImageOpt = false;
+					_hasImageOpt = false;
 				}
 			}
-			hasGraphicsSettings = YaOptGlobal.HasType("ImageOpt.TextureLoadPatch");
-			if (hasGraphicsSettings)
+			_hasGraphicsSettings = YaOptGlobal.HasType("ImageOpt.TextureLoadPatch");
+			if (_hasGraphicsSettings)
 			{
 				try
 				{
 					var type = AccessTools.TypeByName("GraphicSetter.SettingsGroup");
-					gsMipmapBias = AccessTools.FieldRefAccess<float>(type, "mipMapBias");
+					_gsMipmapBias = AccessTools.FieldRefAccess<float>(type, "mipMapBias");
 				}
 				catch (Exception ex)
 				{
 					YaOptMod.Error(ex.ToString());
-					hasGraphicsSettings = false;
+					_hasGraphicsSettings = false;
 				}
 			}
 
@@ -357,11 +357,11 @@ namespace YaOpt.Helpers
 
 			using (var fs = new FileStream(file.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
-				if (fs.Read(tmpDdsHeaderBytes, 0, 128) != 128)
+				if (fs.Read(_tmpDdsHeaderBytes, 0, 128) != 128)
 				{
 					throw new InvalidDataException("Invalid DDS file");
 				}
-				var ddsHeader = Marshal.PtrToStructure<DdsHeader>(tmpDdsHeaderHandle.AddrOfPinnedObject());
+				var ddsHeader = Marshal.PtrToStructure<DdsHeader>(_tmpDdsHeaderHandle.AddrOfPinnedObject());
 				CheckDdsHeader(ddsHeader);
 				if (ddsHeader.PixelFormat.IsBc7) // Actually it checks if the texture has Dx10 extension 
 				{
@@ -497,17 +497,17 @@ namespace YaOpt.Helpers
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static int GetAnisoLevel()
 		{
-			if (hasImageOpt)
+			if (_hasImageOpt)
 			{
-				if (imageOptSettings == null)
+				if (_imageOptSettings == null)
 				{
-					imageOptSettings = AccessTools.Field(
+					_imageOptSettings = AccessTools.Field(
 							AccessTools.TypeByName("ImageOpt.ImageOpt"), "settings")
 						.GetValue(null);
 				}
-				return imageOptAnisoLevel(imageOptSettings);
+				return _imageOptAnisoLevel(_imageOptSettings);
 			}
-			else if (hasGraphicsSettings)
+			else if (_hasGraphicsSettings)
 			{
 				return 1;
 			}
@@ -517,25 +517,25 @@ namespace YaOpt.Helpers
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static float GetMipmapBias()
 		{
-			if (hasImageOpt)
+			if (_hasImageOpt)
 			{
-				if (imageOptSettings == null)
+				if (_imageOptSettings == null)
 				{
-					imageOptSettings = AccessTools.Field(
+					_imageOptSettings = AccessTools.Field(
 							AccessTools.TypeByName("ImageOpt.ImageOpt"), "settings")
 						.GetValue(null);
 				}
-				return imageOptMipmapBias(imageOptSettings);
+				return _imageOptMipmapBias(_imageOptSettings);
 			}
-			else if (hasGraphicsSettings)
+			else if (_hasGraphicsSettings)
 			{
-				if (gsSettings == null)
+				if (_gsSettings == null)
 				{
-					gsSettings = AccessTools.Field(
+					_gsSettings = AccessTools.Field(
 							AccessTools.TypeByName("GraphicSetter.GraphicsSettings"), "mainSettings")
 						.GetValue(null);
 				}
-				return gsMipmapBias(gsSettings);
+				return _gsMipmapBias(_gsSettings);
 			}
 			return 0;
 		}

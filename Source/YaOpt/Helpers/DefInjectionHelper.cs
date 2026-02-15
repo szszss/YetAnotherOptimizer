@@ -9,19 +9,19 @@ namespace YaOpt.Helpers
 		private static readonly Dictionary<DefInjectionPackage, Dictionary<string, DefInjection>>
 			AllNormalizedPathToInjectionMapping = new Dictionary<DefInjectionPackage, Dictionary<string, DefInjection>>();
 
-		private static Dictionary<string, DefInjection> CurrentMapping = null;
+		private static Dictionary<string, DefInjection> _currentMapping = null;
 
 		public static void AddInjection(DefInjection defInjection)
 		{
 			//YaOptMod.Warning($"Add Inj: {defInjection.path} - {defInjection.normalizedPath} - {defInjection.injected}");
-			if (defInjection.injected && !CurrentMapping.ContainsKey(defInjection.normalizedPath))
-				CurrentMapping[defInjection.normalizedPath] = defInjection;
+			if (defInjection.injected && !_currentMapping.ContainsKey(defInjection.normalizedPath))
+				_currentMapping[defInjection.normalizedPath] = defInjection;
 		}
 
 		public static DefInjection CheckDuplicateInjection(
 			string normalizedPath, string key)
 		{
-			if (CurrentMapping.TryGetValue(normalizedPath, out var dupInj))
+			if (_currentMapping.TryGetValue(normalizedPath, out var dupInj))
 			{
 				if (dupInj.injected && dupInj.path != key)
 				{
@@ -52,13 +52,13 @@ namespace YaOpt.Helpers
 				mapping = new Dictionary<string, DefInjection>();
 				AllNormalizedPathToInjectionMapping[package] = mapping;
 			}
-			CurrentMapping = mapping;
+			_currentMapping = mapping;
 		}
 
 		public static void ClearCache()
 		{
 			AllNormalizedPathToInjectionMapping.Clear();
-			CurrentMapping = null;
+			_currentMapping = null;
 		}
 	}
 }

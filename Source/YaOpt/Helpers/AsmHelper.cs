@@ -27,7 +27,7 @@ namespace YaOpt.Helpers
 
 		public static ITrampolineFactory TrampolineFactory { set; get; }
 
-		private static readonly byte[] ExpectHeader =
+		private static readonly byte[] _expectHeader =
 		{
 			0x55,					 //	push   rbp
 			0x48, 0x8B, 0xEC,		//	mov    rbp,rsp
@@ -43,7 +43,7 @@ namespace YaOpt.Helpers
 			0x48, 0x8b, 0xF1		//	mov    rsi,rcx
 		};
 
-		private static readonly byte[] Search =
+		private static readonly byte[] _search =
 		{
 			0x48, 0x89, 0x45, 0xA8,	// mov    QWORD PTR [rbp-0x58],rax
 			0x48, 0x8B, 0x4D, 0xC0,	// mov    rcx,QWORD PTR [rbp-0x40]
