@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using YaOpt.Helpers;
 
-namespace YaOpt.Win64
+namespace YaOpt.Native.Win64
 {
 	internal class Win64Hook : AsmHelper.ITrampolineFactory
 	{

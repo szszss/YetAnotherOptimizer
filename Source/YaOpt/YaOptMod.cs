@@ -37,40 +37,58 @@ namespace YaOpt
 			{
 				Error("Cannot get the location of mod dll. Some functions will not work.");
 			}
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.Is64BitProcess && Environment.Is64BitOperatingSystem)
+			string nativeDllName = null;
+			string initerName = null;
+			string burstDllName = null;
+
+			if (Environment.Is64BitProcess && Environment.Is64BitOperatingSystem)
 			{
-				YaOptGlobal.IsWindows = true;
+				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+				{
+					YaOptGlobal.IsWindows = true;
+					nativeDllName = "YaOpt.Native.Win64.dll";
+					initerName = "YaOpt.Native.Win64.Initer";
+					burstDllName = "yaopt_burst_win64.dll";
+				}
+				// else if (Environment.OSVersion.Platform == PlatformID.Unix) { ... }
+			}
+			
+			if (nativeDllName != null)
+			{
 				if (!string.IsNullOrEmpty(dllDirectory))
 				{
 					try
 					{
-						var win64Dll = Path.GetFullPath(Path.Combine(dllDirectory, "YaOpt.Win64.dll"));
-						Debug($"Load Win64 library from {win64Dll}");
-						var dll = Assembly.LoadFile(win64Dll);
-						var type = dll.GetType("YaOpt.Win64.Initer", true);
+						var nativeDll = Path.GetFullPath(Path.Combine(dllDirectory, nativeDllName));
+						Debug($"Load Native library from {nativeDll}");
+						var dll = Assembly.LoadFile(nativeDll);
+						var type = dll.GetType(initerName, true);
 						// ReSharper disable once PossibleNullReferenceException
 						type.GetMethod("Init").Invoke(null, null);
 					}
 					catch (Exception e)
 					{
-						Error($"Error when load YaOpt.Win64. Trampoline will be unavailable\n {e}");
+						Error($"Error when load {nativeDllName}. Trampoline will be unavailable\n {e}");
 					}
 					try
 					{
-						var burstDll = Path.GetFullPath(Path.Combine(dllDirectory, "..\\Burst\\yaopt_burst_win64.dll"));
-						if (!File.Exists(burstDll))
+						if (burstDllName != null)
 						{
-							throw new FileNotFoundException("Cannot find Burst library", burstDll);
-						}
-						Debug($"Load Burst library from {burstDll}");
-						if (BurstRuntime.LoadAdditionalLibrary(burstDll))
-						{
-							YaOptGlobal.IsBurstAvailable = true;
-						}
-						else
-						{
-							YaOptMod.Error($"Failed to load Burst library from {burstDll}. " +
-										   "Any features that require Burst will not work.");
+							var burstDll = Path.GetFullPath(Path.Combine(dllDirectory, "..\\Burst\\" + burstDllName));
+							if (!File.Exists(burstDll))
+							{
+								throw new FileNotFoundException("Cannot find Burst library", burstDll);
+							}
+							Debug($"Load Burst library from {burstDll}");
+							if (BurstRuntime.LoadAdditionalLibrary(burstDll))
+							{
+								YaOptGlobal.IsBurstAvailable = true;
+							}
+							else
+							{
+								YaOptMod.Error($"Failed to load Burst library from {burstDll}. " +
+											   "Any features that require Burst will not work.");
+							}
 						}
 					}
 					catch (Exception e)
@@ -81,7 +99,7 @@ namespace YaOpt
 			}
 			else
 			{
-				Warning($"Some functions only work on 64Bit Windows OS, current OS: {Environment.OSVersion}");
+				Warning($"Some functions only work on 64Bit OS, current OS: {Environment.OSVersion}");
 			}
 			YaOptGlobal.IsLibraryLoaded = true;
 			Settings.ValidateOptions(true);

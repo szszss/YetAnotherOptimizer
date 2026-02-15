@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaOpt", "YaOpt\YaOpt.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaOpt.OtherMod.FacialAnimation", "YaOpt.OtherMod.FacialAnimation\YaOpt.OtherMod.FacialAnimation.csproj", "{7E51FEB7-46F8-4362-A6E5-26246B3FDFFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaOpt.Win64", "YaOpt.Win64\YaOpt.Win64.csproj", "{CC03C856-13C1-4464-BB7A-C7AF513C4660}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaOpt.Native.Win64", "YaOpt.Native.Win64\YaOpt.Native.Win64.csproj", "{CC03C856-13C1-4464-BB7A-C7AF513C4660}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YaOpt.OtherMod.HumanoidAlienRaces", "YaOpt.OtherMod.HumanoidAlienRaces\YaOpt.OtherMod.HumanoidAlienRaces.csproj", "{DA156E42-3BBC-48E8-A840-15080D128FD7}"
 EndProject
