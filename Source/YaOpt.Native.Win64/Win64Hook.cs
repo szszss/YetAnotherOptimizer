@@ -83,17 +83,5 @@ namespace YaOpt.Native.Win64
 
 			return new Trampoline(srcMethod, trampolineCode, originalCode);
 		}
-
-		public unsafe IntPtr GetObjectMemoryAddress(object obj)
-		{
-			object* pointer = &obj;
-			return Marshal.ReadIntPtr(new IntPtr(pointer));
-		}
-
-		public unsafe T GetObjectFromPtr<T>(IntPtr ptr) where T : class
-		{
-			T* pT = (T*)(&ptr);
-			return *pT;
-		}
 	}
 }

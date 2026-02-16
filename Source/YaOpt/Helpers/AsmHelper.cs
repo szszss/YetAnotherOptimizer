@@ -12,10 +12,6 @@ namespace YaOpt.Helpers
 		public interface ITrampolineFactory
 		{
 			ITrampoline CreateTrampoline(MethodInfo getCompMethod, MethodInfo targetMethod, byte[] prefixCode = null);
-
-			IntPtr GetObjectMemoryAddress(object obj);
-
-			T GetObjectFromPtr<T>(IntPtr ptr) where T : class;
 		}
 
 		public interface ITrampoline
