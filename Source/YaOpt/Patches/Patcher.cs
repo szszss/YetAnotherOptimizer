@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using Verse;
 using YaOpt.Helpers;
+using YaOpt.Helpers.Trampoline;
 using YaOpt.Patches.Compatibility;
 using YaOpt.Patches.Trampolines;
 

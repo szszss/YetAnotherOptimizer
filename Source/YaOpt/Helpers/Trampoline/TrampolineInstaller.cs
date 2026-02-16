@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using YaOpt.Helpers;
+using YaOpt.Patches.Trampolines;
 
-namespace YaOpt.Patches.Trampolines
+namespace YaOpt.Helpers.Trampoline
 {
 	internal abstract class TrampolineInstaller
 	{
@@ -23,7 +23,7 @@ namespace YaOpt.Patches.Trampolines
 
 		protected byte[] PrefixCode { set; get; }
 
-		protected AsmHelper.ITrampoline Trampoline { set; get; }
+		protected AsmHelper.Trampoline Trampoline { set; get; }
 
 		public static void EarlyInit()
 		{

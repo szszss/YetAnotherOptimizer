@@ -14,44 +14,26 @@ namespace YaOpt.Native.Win64
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern bool VirtualProtect(IntPtr lpAddress, int dwSize, int flNewProtect, out int lpflOldProtect);
 
-		public class Trampoline : AsmHelper.ITrampoline
+		public class TrampolineWin64 : AsmHelper.Trampoline
 		{
-			public MethodInfo SourceMethod;
-
-			public byte[] TrampolineCode;
-
-			public byte[] OriginalMethodCode;
-
-			public Trampoline(MethodInfo sourceMethod, byte[] trampolineCode, byte[] originalMethodCode)
+			public TrampolineWin64(MethodInfo sourceMethod, byte[] trampolineCode, byte[] originalMethodCode) :
+				base(sourceMethod, trampolineCode, originalMethodCode)
 			{
-				SourceMethod = sourceMethod;
-				TrampolineCode = trampolineCode;
-				OriginalMethodCode = originalMethodCode;
 			}
 
-			public void Install()
-			{
-				Do(true);
-			}
-
-			public void Uninstall()
-			{
-				Do(false);
-			}
-
-			private void Do(bool install)
+			protected override void Write(byte[] codeBytes)
 			{
 				var srcPtr = SourceMethod.MethodHandle.GetFunctionPointer();
-				var codeLength = TrampolineCode.Length;
+				var codeLength = codeBytes.Length;
 				if (!VirtualProtect(srcPtr, codeLength, PAGE_EXECUTE_READWRITE, out var oldProtect))
 					throw new Exception("Cannot set memory permissions for " + SourceMethod.Name +
-										" on address 0x" + srcPtr.ToString("X"));
+					                    " on address 0x" + srcPtr.ToString("X"));
 
-				Marshal.Copy(install ? TrampolineCode : OriginalMethodCode, 0, srcPtr, codeLength);
+				Marshal.Copy(codeBytes, 0, srcPtr, codeLength);
 
 				if (!VirtualProtect(srcPtr, codeLength, oldProtect, out var _))
 					YaOptMod.Warning("Cannot restore memory permissions for " + SourceMethod.Name +
-									 " on address 0x" + srcPtr.ToString("X"));
+					                 " on address 0x" + srcPtr.ToString("X"));
 			}
 		}
 
@@ -62,7 +44,7 @@ namespace YaOpt.Native.Win64
 			AsmHelper.TrampolineFactory = new Win64Hook();
 		}
 
-		public AsmHelper.ITrampoline CreateTrampoline(MethodInfo srcMethod, MethodInfo targetMethod, byte[] prefixCode = null)
+		public AsmHelper.Trampoline CreateTrampoline(MethodInfo srcMethod, MethodInfo targetMethod, byte[] prefixCode = null)
 		{
 			RuntimeHelpers.PrepareMethod(targetMethod.MethodHandle);
 			var srcPtr = srcMethod.MethodHandle.GetFunctionPointer();
@@ -81,7 +63,7 @@ namespace YaOpt.Native.Win64
 			var originalCode = new byte[trampolineCode.Length];
 			Marshal.Copy(srcPtr, originalCode, 0, originalCode.Length);
 
-			return new Trampoline(srcMethod, trampolineCode, originalCode);
+			return new TrampolineWin64(srcMethod, trampolineCode, originalCode);
 		}
 	}
 }

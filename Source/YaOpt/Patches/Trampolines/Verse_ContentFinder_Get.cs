@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
+using YaOpt.Helpers.Trampoline;
 
 namespace YaOpt.Patches.Trampolines
 {
