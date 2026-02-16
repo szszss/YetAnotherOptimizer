@@ -22,7 +22,7 @@ namespace YaOpt.Patches
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptToggleTabCheck.Enabled;
+			return YaOptGlobal.Settings.OptToggleTabCheck.Enabled && ToggleTabCache.ToggleTabTypes.Count > 0;
 		}
 
 		static bool Prefix(object __instance, ref bool __result)

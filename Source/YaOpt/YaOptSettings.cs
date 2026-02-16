@@ -116,14 +116,16 @@ namespace YaOpt
 					if (!dryRun)
 						_enabled = false;
 					error = true;
-					message = "YaOpt.Setting.InvalidOption.RequireWin64".Translate().ToString();
+					if (!silent) // Don't translate text on the very early stage since there is not active language
+						message = "YaOpt.Setting.InvalidOption.RequireWin64".Translate().ToString();
 				}
 				if (_enabled && (Flags & OptimizationFlag.RequireBurst) > 0 && !YaOptGlobal.IsBurstAvailable)
 				{
 					if (!dryRun)
 						_enabled = false;
 					error = true;
-					message = "YaOpt.Setting.InvalidOption.RequireBurst".Translate().ToString();
+					if (!silent)
+						message = "YaOpt.Setting.InvalidOption.RequireBurst".Translate().ToString();
 				}
 				if (!silent && message != string.Empty)
 				{

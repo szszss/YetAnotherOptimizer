@@ -34,7 +34,7 @@ namespace YaOpt
 			NativeLoader.LoadLibraries(Assembly.GetExecutingAssembly());
 
 			ApplySettings();
-			ApplyPatches();
+			ApplyEarlyPatches();
 		}
 
 		private void InitSubMods()
@@ -53,7 +53,7 @@ namespace YaOpt
 #endif
 		}
 
-		private void ApplyPatches()
+		private void ApplyEarlyPatches()
 		{
 			if (Settings.OptLazyTextureLoad.Enabled)
 			{
