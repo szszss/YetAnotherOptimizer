@@ -17,6 +17,7 @@ namespace YaOpt
 			TypeSearcher.Init(); // Must init before patcher. Some patchers depend it.
 			Patcher.Init();
 			YaOptSubMod.PostInitAll(YaOptGlobal.SubMods);
+			DebugHelper.Init();
 		}
 	}
 }

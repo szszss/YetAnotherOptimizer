@@ -13,7 +13,7 @@ namespace YaOpt.Patches.Trampolines
 	/// </summary>
 	internal class Verse_ContentFinder_Get : TrampolineInstaller
 	{
-		/* Tip: You can always ask ChatGPT
+		/* Tip: You can always ask AI
 		 * push   rbp
 		 * mov    rbp,rsp
 		 * sub    rsp,0x40

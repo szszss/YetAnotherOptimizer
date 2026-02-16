@@ -12,7 +12,7 @@ namespace YaOpt.Patches.Trampolines
 	/// </summary>
 	internal class Verse_ThingWithComps_GetComp : TrampolineInstaller
 	{
-		/* Tip: You can always ask ChatGPT
+		/* Tip: You can always ask AI
 		 * mov    rax,QWORD PTR [rcx+0xb8]
 		 * test   rax,rax
 		 * jnz    not_null

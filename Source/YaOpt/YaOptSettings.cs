@@ -876,7 +876,7 @@ namespace YaOpt
 						lastSubCategory = subCateText;
 						if (!string.IsNullOrWhiteSpace(subCateText))
 						{
-							listing.Label(subCateText);
+							listing.Label($"<b><i>{subCateText}</i></b>");
 						}
 					}
 					DrawOption(listing, option);
