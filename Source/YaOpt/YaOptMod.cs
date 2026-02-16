@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
-using YaOpt.Helpers.Trampoline;
+using YaOpt.Helpers.Trampolines;
 using YaOpt.Patches;
 using YaOpt.Patches.Trampolines;
 
@@ -33,6 +33,7 @@ namespace YaOpt
 			Log("Now loading...");
 
 			NativeLoader.LoadLibraries(Assembly.GetExecutingAssembly());
+			YaOptGlobal.IsLibraryLoaded = true;
 
 			ApplySettings();
 			ApplyEarlyPatches();
@@ -56,13 +57,17 @@ namespace YaOpt
 
 		private void ApplyEarlyPatches()
 		{
+			if (!YaOptGlobal.IsTrampolineAvailable)
+				return;
+
 			if (Settings.OptLazyTextureLoad.Enabled)
 			{
 				ContentManager.Init();
 				ContentManager.OnlyLazilyLoadDds = Settings.LazyTextureLoadDdsOnly;
 			}
-			TrampolineInstaller.EarlyInit();
-			TrampolineInstaller.EarlyInstallAll();
+			TrampolinePatcher.RegisterTrampolineInstallers();
+			TrampolinePatcher.EarlyInit();
+			TrampolinePatcher.EarlyInstallAll();
 			EarlyHarmony.TryPatchAll(Assembly.GetExecutingAssembly(), true);
 		}
 

@@ -4,7 +4,7 @@ namespace YaOpt.Native.Win64
 	{
 		public static void Init()
 		{
-			Win64Hook.CreateInstance();
+			Win64TrampolineFactory.CreateInstance();
 		}
 	}
 }

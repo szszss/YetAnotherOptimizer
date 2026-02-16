@@ -3,18 +3,20 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using YaOpt.Helpers;
+using YaOpt.Helpers.Trampolines;
+using YaOpt.Native.Win64.Trampolines;
+using YaOpt.Patches.Trampolines;
 
 namespace YaOpt.Native.Win64
 {
-	internal class Win64Hook : AsmHelper.ITrampolineFactory
+	internal class Win64TrampolineFactory : TrampolineFactory
 	{
 		private const int PAGE_EXECUTE_READWRITE = 0x40;
 
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern bool VirtualProtect(IntPtr lpAddress, int dwSize, int flNewProtect, out int lpflOldProtect);
 
-		public class TrampolineWin64 : AsmHelper.Trampoline
+		public class TrampolineWin64 : Trampoline
 		{
 			public TrampolineWin64(MethodInfo sourceMethod, byte[] trampolineCode, byte[] originalMethodCode) :
 				base(sourceMethod, trampolineCode, originalMethodCode)
@@ -27,24 +29,24 @@ namespace YaOpt.Native.Win64
 				var codeLength = codeBytes.Length;
 				if (!VirtualProtect(srcPtr, codeLength, PAGE_EXECUTE_READWRITE, out var oldProtect))
 					throw new Exception("Cannot set memory permissions for " + SourceMethod.Name +
-					                    " on address 0x" + srcPtr.ToString("X"));
+										" on address 0x" + srcPtr.ToString("X"));
 
 				Marshal.Copy(codeBytes, 0, srcPtr, codeLength);
 
 				if (!VirtualProtect(srcPtr, codeLength, oldProtect, out var _))
 					YaOptMod.Warning("Cannot restore memory permissions for " + SourceMethod.Name +
-					                 " on address 0x" + srcPtr.ToString("X"));
+									 " on address 0x" + srcPtr.ToString("X"));
 			}
 		}
 
 		public static void CreateInstance()
 		{
-			if (AsmHelper.TrampolineFactory != null)
+			if (Instance != null)
 				return;
-			AsmHelper.TrampolineFactory = new Win64Hook();
+			Instance = new Win64TrampolineFactory();
 		}
 
-		public AsmHelper.Trampoline CreateTrampoline(MethodInfo srcMethod, MethodInfo targetMethod, byte[] prefixCode = null)
+		public override Trampoline CreateTrampoline(MethodInfo srcMethod, MethodInfo targetMethod, byte[] prefixCode = null)
 		{
 			RuntimeHelpers.PrepareMethod(targetMethod.MethodHandle);
 			var srcPtr = srcMethod.MethodHandle.GetFunctionPointer();
@@ -64,6 +66,12 @@ namespace YaOpt.Native.Win64
 			Marshal.Copy(srcPtr, originalCode, 0, originalCode.Length);
 
 			return new TrampolineWin64(srcMethod, trampolineCode, originalCode);
+		}
+
+		public override void CreateTrampolineInstallers()
+		{
+			Verse_ContentFinder_Get.Instance = new Verse_ContentFinder_Get_Win64();
+			Verse_ThingWithComps_GetComp.Instance = new Verse_ThingWithComps_GetComp_Win64();
 		}
 	}
 }

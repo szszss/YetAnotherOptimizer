@@ -3,8 +3,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using Verse;
 using UnityEngine;
+using Verse;
 
 namespace YaOpt.Helpers
 {

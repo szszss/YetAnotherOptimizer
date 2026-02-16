@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using Unity.Burst;
-using Verse;
 
 namespace YaOpt
 {
@@ -25,7 +24,6 @@ namespace YaOpt
 			{
 				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 				{
-					YaOptGlobal.IsWindows = true;
 					nativeDllName = "YaOpt.Native.Win64.dll";
 					initerName = "YaOpt.Native.Win64.Initer";
 					burstDllName = "yaopt_burst_win64.dll";
@@ -34,21 +32,18 @@ namespace YaOpt
 				// else if (Environment.OSVersion.Platform == PlatformID.Unix) { ... }
 			}
 
-			if (nativeDllName != null)
+			if (nativeDllName != null && initerName != null)
 			{
 				LoadNativeLibrary(dllDirectory, nativeDllName, initerName);
-				
-				if (burstDllName != null)
-				{
-					LoadBurstLibrary(dllDirectory, burstDllName);
-				}
 			}
-			else
+			if (burstDllName != null)
+			{
+				LoadBurstLibrary(dllDirectory, burstDllName);
+			}
+			if (nativeDllName == null || burstDllName == null)
 			{
 				YaOptMod.Warning($"Some functions only work on 64Bit OS, current OS: {Environment.OSVersion}");
 			}
-
-			YaOptGlobal.IsLibraryLoaded = true;
 		}
 
 		private static void LoadNativeLibrary(string directory, string dllName, string initerType)
@@ -61,6 +56,7 @@ namespace YaOpt
 				var type = dll.GetType(initerType, true);
 				// ReSharper disable once PossibleNullReferenceException
 				type.GetMethod("Init").Invoke(null, null);
+				YaOptGlobal.IsNativeAvailable = true;
 			}
 			catch (Exception e)
 			{

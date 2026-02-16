@@ -3,7 +3,6 @@ using System;
 using System.Reflection;
 using Verse;
 using YaOpt.Helpers;
-using YaOpt.Helpers.Trampoline;
 using YaOpt.Patches.Compatibility;
 using YaOpt.Patches.Trampolines;
 
@@ -15,7 +14,7 @@ namespace YaOpt.Patches
 
 		public static void Init()
 		{
-			TrampolineInstaller.Init();
+			TrampolinePatcher.Init();
 			LongEventHandler.QueueLongEvent(PatchOnStartup, "YaOpt.Loading.Patching".Translate(), false, null);
 		}
 
@@ -50,14 +49,14 @@ namespace YaOpt.Patches
 				{
 					YaOptMod.Debug("Uninstalling exist patches...");
 					harmony.UnpatchAll(harmony.Id);
-					TrampolineInstaller.UninstallAll();
+					TrampolinePatcher.UninstallAll();
 					YaOptSubMod.UnpatchAll(YaOptGlobal.SubMods, harmony);
 					hasPatched = false;
 				}
 
 				YaOptMod.Debug("Patching...");
 				noError &= harmony.TryPatchAll(assembly);
-				TrampolineInstaller.InstallAll();
+				TrampolinePatcher.InstallAll();
 				noError &= YaOptSubMod.PatchAll(YaOptGlobal.SubMods, harmony);
 				Unpatcher.Unpatch();
 				Unpatcher.PatchAgain();

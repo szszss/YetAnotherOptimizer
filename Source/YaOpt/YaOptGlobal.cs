@@ -1,7 +1,7 @@
 using HarmonyLib;
 using System.Collections.Generic;
 using Verse;
-using YaOpt.Helpers;
+using YaOpt.Helpers.Trampolines;
 
 namespace YaOpt
 {
@@ -11,13 +11,13 @@ namespace YaOpt
 
 		public static bool IsMultiplayer { get; internal set; }
 
-		public static bool IsWindows { get; internal set; }
+		public static bool IsNativeAvailable { get; internal set; }
 
 		public static bool IsBurstAvailable { get; internal set; }
 
 		public static bool IsLibraryLoaded { get; internal set; }
 
-		public static bool IsTrampolineAvailable => AsmHelper.IsAvailable;
+		public static bool IsTrampolineAvailable => TrampolineFactory.IsAvailable;
 
 		public static bool IsParallelMaterialUpdateEnabled { get; internal set; }
 

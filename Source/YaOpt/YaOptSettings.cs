@@ -111,7 +111,7 @@ namespace YaOpt
 				// Validator doesn't validate multiplay and mod requirements. They are validated in the getter of Enabled
 				message = string.Empty;
 				var error = false;
-				if (_enabled && (Flags & OptimizationFlag.RequireWin64) > 0 && !YaOptGlobal.IsWindows)
+				if (_enabled && (Flags & OptimizationFlag.RequireWin64) > 0 && !YaOptGlobal.IsNativeAvailable)
 				{
 					if (!dryRun)
 						_enabled = false;
