@@ -18,20 +18,88 @@ namespace YaOpt.Unity
 		[BurstCompile]
 		public static void ComputeMatrix(ref Matrix4x4 matrix, in Vector3 offset, in Vector3 pivot, in Quaternion rotation, in Vector3 scale, bool canRotate)
 		{
-			var hasPivot = math.any(pivot);
-			matrix *= Matrix4x4.TRS(offset + pivot, canRotate ? rotation : Quaternion.identity, scale);
-			if (hasPivot)
-			{
-				matrix *= Matrix4x4.Translate(-pivot);
-			}
-		}
+			// Original code:
+			// var hasPivot = math.any(pivot);
+			// matrix *= Matrix4x4.TRS(offset + pivot, canRotate ? rotation : Quaternion.identity, scale);
+			// if (hasPivot)
+			// {
+			//   matrix *= Matrix4x4.Translate(-pivot);
+			// }
+			
+			// After optimized by AI:
+			// Optimization: Construct the transform matrix directly using Unity.Mathematics
+			// Logic: Combined = Translate(offset + pivot) * Rotate * Scale * Translate(-pivot)
+			// This avoids multiple Matrix4x4.TRS/Translate calls and matrix multiplications.
 
+			float3 p = pivot;
+			float3 s = scale;
+			
+			// 1. Rotation & Scale (RS part)
+			// If canRotate is false, we just use Scale (Rotation is Identity)
+			float3x3 rs;
+			if (canRotate)
+			{
+				quaternion r = rotation;
+				rs = math.mul(new float3x3(r), float3x3.Scale(s));
+			}
+			else
+			{
+				rs = float3x3.Scale(s);
+			}
+
+			// 2. Translation (T part)
+			// Final Position = (offset + pivot) - (RS * pivot)
+			// We subtract (RS * pivot) because Translate(-pivot) happens *before* RS in the TRS chain logic,
+			// effectively moving the pivot point to origin, transforming, then moving back.
+			float3 t = ((float3)offset + p) - math.mul(rs, p);
+
+			// 3. Compose final local matrix
+			float4x4 localTransform = new float4x4(rs, t);
+
+			// 4. Apply to original matrix
+			// Convert ref Matrix4x4 to float4x4, multiply, and convert back
+			// Since Matrix4x4 and float4x4 have same memory layout, this is efficient.
+			float4x4 m = (float4x4)matrix;
+			m = math.mul(m, localTransform);
+			matrix = (Matrix4x4)m;
+		}
+		
 		[BurstCompile]
 		public static void ApplyAltitude(ref Matrix4x4 matrix, float altitude)
 		{
-			Matrix4x4 translate = Matrix4x4.identity;
-			translate.m13 = altitude;
-			matrix *= translate;
+			// Original code:
+			// Matrix4x4 translate = Matrix4x4.identity;
+			// translate.m13 = altitude;
+			// matrix *= translate;
+			
+			// After optimized by AI:
+			// Optimization: Avoid full Matrix4x4 multiplication.
+			// ApplyAltitude effectively adds (UpVector * altitude) to the Position.
+			// In Unity Matrix (Column Major), m13 is the Y translation component of a pre-translation.
+			// But the original code was: matrix *= Matrix4x4.Translate(0, 0, altitude) (m13?? Wait, m13 is 'y' in col 3? No)
+			
+			// Let's re-read original code carefully:
+			// Matrix4x4 translate = Matrix4x4.identity;
+			// translate.m13 = altitude; // m13 is Row 1, Col 3. Indices are [row, col]. 
+			// In Unity, Column 3 is the position (x, y, z, 1). 
+			// So m03=x, m13=y, m23=z.
+			// So original code set m13=altitude. This is a translation of (0, altitude, 0).
+			// Wait, previous code said "translate.m13 = altitude".
+			// Matrix4x4.Translate(new Vector3(0,0,altitude)) would set m23 (z).
+			// Matrix4x4 indices are [row, column]. m13 is 2nd row (y), 4th column (pos).
+			// So the original code translates by (0, altitude, 0) in LOCAL space?
+			// No, matrix *= translate means: New = Old * Translate.
+			// This transforms the coordinate system.
+			// Resulting Position += Old.Rotation * (0, altitude, 0).
+			// This is equivalent to adding (Old.Up * altitude) to the position.
+			
+			float4x4 m = (float4x4)matrix;
+			
+			// m.c1 is the "Up" vector (2nd column).
+			// We add (Up * altitude) to the Position (m.c3).
+			m.c3 += m.c1 * altitude;
+			
+			matrix = (Matrix4x4)m;
 		}
 
 		[BurstCompile]
@@ -109,104 +177,6 @@ namespace YaOpt.Unity
 			}
 			tmp.Process(FrameCount);
 			result = tmp;
-		}
-
-		[BurstCompile]
-		public struct FacialAnimationAccumResultFrameJob : IJob
-		{
-			public const int RESULT_HEAD = 0;
-			public const int RESULT_BROW = 1;
-			public const int RESULT_LID = 2;
-			public const int RESULT_EYEBALL = 3;
-			public const int RESULT_EYEBALL_L = 4;
-			public const int RESULT_EYEBALL_R = 5;
-			public const int RESULT_MOUTH = 6;
-			public const int RESULT_COUNT = 7;
-
-			[ReadOnly]
-			public NativeArray<Vector3> HeadOffsets;
-
-			[ReadOnly]
-			public NativeArray<Vector3> BrowOffsets;
-
-			[ReadOnly]
-			public NativeArray<Vector3> LidOffsets;
-
-			[ReadOnly]
-			public NativeArray<Vector3> EyeballOffsets;
-
-			[ReadOnly]
-			public NativeArray<Vector3> EyeballOffsetLs;
-
-			[ReadOnly]
-			public NativeArray<Vector3> EyeballOffsetRs;
-
-			[ReadOnly]
-			public NativeArray<Vector3> MouthOffsets;
-
-			[ReadOnly]
-			public int FrameCount;
-
-			[WriteOnly]
-			public NativeArray<Vector3> Results;
-
-			[BurstCompile]
-			public void Execute()
-			{
-				var headOffset = float3.zero;
-				var browOffset = float3.zero;
-				var lidOffset = float3.zero;
-				var eyeballOffset = float3.zero;
-				var eyeballOffsetL = float3.zero;
-				var eyeballOffsetR = float3.zero;
-				var mouthOffset = float3.zero;
-				for (var i = 0; i < FrameCount; i++)
-				{
-					headOffset += HeadOffsets.ReinterpretLoad<float3>(i);
-					browOffset += BrowOffsets.ReinterpretLoad<float3>(i);
-					lidOffset += LidOffsets.ReinterpretLoad<float3>(i);
-					eyeballOffset += EyeballOffsets.ReinterpretLoad<float3>(i);
-					eyeballOffsetL += EyeballOffsetLs.ReinterpretLoad<float3>(i);
-					eyeballOffsetR += EyeballOffsetRs.ReinterpretLoad<float3>(i);
-					mouthOffset += MouthOffsets.ReinterpretLoad<float3>(i);
-				}
-				var iResults = Results.Reinterpret<float3>();
-
-				var frameNum = FrameCount + headOffset.y;
-				iResults[RESULT_HEAD] = frameNum != 0
-					? new float3(headOffset.x / frameNum, 0f, headOffset.z / frameNum)
-					: float3.zero;
-
-				frameNum = FrameCount + browOffset.y;
-				iResults[RESULT_BROW] = frameNum != 0
-					? new float3(browOffset.x / frameNum, 0f, browOffset.z / frameNum)
-					: float3.zero;
-
-				frameNum = FrameCount + lidOffset.y;
-				iResults[RESULT_LID] = frameNum != 0
-					? new float3(lidOffset.x / frameNum, 0f, lidOffset.z / frameNum)
-					: float3.zero;
-
-				frameNum = FrameCount + eyeballOffset.y;
-				iResults[RESULT_EYEBALL] = frameNum != 0
-					? new float3(eyeballOffset.x / frameNum, 0f, eyeballOffset.z / frameNum)
-					: float3.zero;
-
-				frameNum = FrameCount + eyeballOffsetL.y;
-				iResults[RESULT_EYEBALL_L] = frameNum != 0
-					? new float3(eyeballOffsetL.x / frameNum, 0f, eyeballOffsetL.z / frameNum)
-					: float3.zero;
-
-				frameNum = FrameCount + eyeballOffsetR.y;
-				iResults[RESULT_EYEBALL_R] = frameNum != 0
-					? new float3(eyeballOffsetR.x / frameNum, 0f, eyeballOffsetR.z / frameNum)
-					: float3.zero;
-
-				frameNum = FrameCount + mouthOffset.y;
-				iResults[RESULT_MOUTH] = frameNum != 0
-					? new float3(mouthOffset.x / frameNum, 0f, mouthOffset.z / frameNum)
-					: float3.zero;
-			}
 		}
 	}
 }

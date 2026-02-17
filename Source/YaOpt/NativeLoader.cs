@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Unity.Burst;
 
 namespace YaOpt
@@ -22,28 +23,41 @@ namespace YaOpt
 
 			if (Environment.Is64BitProcess && Environment.Is64BitOperatingSystem)
 			{
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 				{
 					nativeDllName = "YaOpt.Native.Win64.dll";
 					initerName = "YaOpt.Native.Win64.Initer";
 					burstDllName = "yaopt_burst_win64.dll";
 				}
+				else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+				{
+					burstDllName = "yaopt_burst_linux64.so";
+				}
+				else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+				{
+					burstDllName = "yaopt_burst_osx64.bundle";
+				}
 				// Future: Add Linux/Mac support here
 				// else if (Environment.OSVersion.Platform == PlatformID.Unix) { ... }
 			}
 
-			if (nativeDllName != null && initerName != null)
+			if (nativeDllName != null)
 			{
 				LoadNativeLibrary(dllDirectory, nativeDllName, initerName);
+			}
+			else
+			{
+				YaOptMod.Warning($"Some functions only work on Windows. Current OS: {Environment.OSVersion}");
 			}
 			if (burstDllName != null)
 			{
 				LoadBurstLibrary(dllDirectory, burstDllName);
 			}
-			if (nativeDllName == null || burstDllName == null)
+			else
 			{
-				YaOptMod.Warning($"Some functions only work on 64Bit OS, current OS: {Environment.OSVersion}");
+				YaOptMod.Warning($"This system doesn't support Burst. Current OS: {Environment.OSVersion}");
 			}
+
 		}
 
 		private static void LoadNativeLibrary(string directory, string dllName, string initerType)
