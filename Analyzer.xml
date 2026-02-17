@@ -4,8 +4,6 @@
         <Types>
         </Types>
         <Methods>
-            <li>YaOpt.Helpers.ParallelTickManager:ParellellyTickPawns</li>
-            <li>YaOpt.Helpers.ParallelTickManager:SingleTickPawns</li>
         </Methods>
         <NestedTypes>
         </NestedTypes>

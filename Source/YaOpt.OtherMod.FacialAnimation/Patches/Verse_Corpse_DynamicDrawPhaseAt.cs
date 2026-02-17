@@ -18,10 +18,6 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 	{
 		static bool Prepare(MethodBase original)
 		{
-			if (original != null)
-			{
-				MiscHelper.CheckHash(original, Hash128.Parse("dcbb36f4b8f2d28d9c4b0aa0a5e7d63d"));
-			}
 			return SubMod.OptFAParallelUpdate.Enabled;
 		}
 
