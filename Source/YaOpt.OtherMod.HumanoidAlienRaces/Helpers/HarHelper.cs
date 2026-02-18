@@ -9,7 +9,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Helpers
 	[StaticConstructorOnStartup]
 	internal static class HarHelper
 	{
-		private static readonly Dictionary<GraphicRequest, Graphic> graphicCache =
+		private static readonly Dictionary<GraphicRequest, Graphic> _graphicCache =
 			new Dictionary<GraphicRequest, Graphic>();
 
 		static HarHelper()
@@ -19,7 +19,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Helpers
 
 		private static void ClearCache()
 		{
-			graphicCache.Clear();
+			_graphicCache.Clear();
 		}
 
 		public static Graphic GetGraphic(string path, Shader shader,
@@ -27,12 +27,12 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Helpers
 		{
 			var key = new GraphicRequest(typeof(Graphic_Multi_RotationFromData),
 				path, shader, drawSize, color, colorTwo, data, 0, null, maskPath);
-			if (graphicCache.TryGetValue(key, out var graphic))
+			if (_graphicCache.TryGetValue(key, out var graphic))
 				return graphic;
 
 			graphic = GraphicDatabase.Get<Graphic_Multi_RotationFromData>(
 				path, shader, drawSize, color, colorTwo, data, maskPath);
-			graphicCache[key] = graphic;
+			_graphicCache[key] = graphic;
 			return graphic;
 		}
 	}
