@@ -9,7 +9,7 @@ The project consists of four core modules, each handling optimization at a diffe
 ### 1.1 `Source/YaOpt` (Core Module)
 - **Purpose**: Contains the main logic of the mod, Harmony patches, and general helper tools.
 - **Key Components**:
-  - `Patches/`: Harmony patches organized by target namespace (Prefix, Postfix, Transpiler).
+  - `Patches/`: Harmony patches organized by target namespace.
   - `Helpers/`: Contains `ParallelTickManager` (parallel Tick management), `MaterialColorCache` (rendering cache), etc.
   - `YaOptSettings.cs`: Mod settings management.
 
@@ -21,7 +21,7 @@ The project consists of four core modules, each handling optimization at a diffe
   - Uses `[BurstCompile]` to mark critical paths.
   - Strictly prohibits referencing any managed objects (reference types); only uses `NativeArray` and unmanaged structures (`struct`).
 
-### 1.3 `Source/YaOpt.Win64` (Native Module)
+### 1.3 `Source/YaOpt.Native.Win64` (Native Module)
 - **Purpose**: Handles x64 native interop and low-level memory modification.
 - **Functions**:
   - Implements `ITrampolineFactory` to bypass Harmony limitations (e.g., hooking generic methods) by manually writing x64 machine code (`MOV RAX, ... JMP RAX`).
@@ -42,7 +42,7 @@ Root
 ├── Source/
 │   ├── YaOpt/              # Core C# project
 │   ├── YaOpt.Unity/        # Unity Burst project
-│   ├── YaOpt.Win64/        # Win64 Interop project
+│   ├── YaOpt.Native.Win64/ # Win64 Interop project
 │   └── YaOpt.OtherMod.*/   # Compatibility projects
 ├── About/                  # Mod metadata
 └── LoadFolders.xml         # Loading logic
@@ -66,7 +66,7 @@ Root
 ### 3.2 Performance Guidelines
 Since this is an optimization mod, performance is the highest priority:
 - **Hot Paths**: In `Tick`, `Draw`, `Update` loops:
-  - **Strictly NO LINQ**.
+  - **NO LINQ IN HOT CODE** (LINQ in the initialization code are acceptable.). 
   - **Avoid Memory Allocations** (new Class(), lambda closures, params object[]).
 - **Inlining**: Use `[MethodImpl(MethodImplOptions.AggressiveInlining)]` for small, frequently called methods.
 - **Structs**: Strictly use `struct` in `YaOpt.Unity` and pass by `ref` to reduce copying.
@@ -78,7 +78,7 @@ Since this is an optimization mod, performance is the highest priority:
 
 ### 3.4 Unsafe Code
 - `unsafe` code blocks and pointer operations are allowed in performance-critical areas but must ensure boundary checks and memory safety.
-- In `YaOpt.Win64`, exercise extreme caution when directly manipulating memory addresses to ensure alignment and read/write permissions.
+- In `YaOpt.Native.Win64`, exercise extreme caution when directly manipulating memory addresses to ensure alignment and read/write permissions.
 
 ## 4. Build & Test
 - **Build**: Open `Source/YaOpt.sln` with Visual Studio to compile.
