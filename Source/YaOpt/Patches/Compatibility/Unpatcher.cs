@@ -33,21 +33,6 @@ namespace YaOpt.Patches.Compatibility
 					HarmonyPatchType.Prefix, "PerformanceOptimizer.Main");
 
 				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
-						typeof(Hediff),
-						nameof(Hediff.TendableNow)),
-					HarmonyPatchType.Transpiler, "PerformanceOptimizer.Main");
-
-				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
-						typeof(HediffUtility),
-						nameof(HediffUtility.IsTended)),
-					HarmonyPatchType.Transpiler, "PerformanceOptimizer.Main");
-
-				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
-						typeof(HediffUtility),
-						nameof(HediffUtility.IsPermanent)),
-					HarmonyPatchType.Transpiler, "PerformanceOptimizer.Main");
-
-				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
 						typeof(ForbidUtility),
 						nameof(ForbidUtility.IsForbidden), new[] { typeof(Thing), typeof(Pawn) }),
 					HarmonyPatchType.All, "PerformanceOptimizer.Main");
