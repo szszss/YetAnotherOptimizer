@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace YaOpt.Helpers
+namespace YaOpt.Helpers.ThreadLocal
 {
 	public static class ThreadLocalTmpList<K, T>
 	{

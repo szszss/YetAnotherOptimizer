@@ -12,6 +12,9 @@ namespace YaOpt.Helpers
 	{
 		public static void Init()
 		{
+#if !DEBUG
+			return;
+#endif
 			// 1. ContentFinder<Texture2D>.Get
 			var method1 = typeof(ContentFinder<Texture2D>).GetMethod("Get", new Type[] { typeof(string), typeof(bool) });
 			if (method1 != null)

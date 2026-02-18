@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Verse;
 using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 {

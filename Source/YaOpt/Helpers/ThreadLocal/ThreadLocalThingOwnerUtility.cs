@@ -1,11 +1,11 @@
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using HarmonyLib;
 using Verse;
 
-namespace YaOpt.Helpers
+namespace YaOpt.Helpers.ThreadLocal
 {
 	internal static class ThreadLocalThingOwnerUtility
 	{

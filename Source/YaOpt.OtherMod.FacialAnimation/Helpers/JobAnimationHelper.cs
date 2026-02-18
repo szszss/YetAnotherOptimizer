@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.OtherMod.FacialAnimation.Helpers
 {
