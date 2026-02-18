@@ -22,12 +22,12 @@ namespace YaOpt.Helpers
 			{ typeof(string), ModsContainString },
 		};
 
-		private static readonly Dictionary<string, RouteSign> textureRouteSigns = new Dictionary<string, RouteSign>();
-		private static readonly Dictionary<string, RouteSign> audioRouteSigns = new Dictionary<string, RouteSign>();
-		private static readonly Dictionary<string, RouteSign> stringRouteSigns = new Dictionary<string, RouteSign>();
-		private static readonly Dictionary<string, RouteSign> shaderRouteSigns = new Dictionary<string, RouteSign>();
+		private static readonly Dictionary<string, RouteSign> _textureRouteSigns = new Dictionary<string, RouteSign>();
+		private static readonly Dictionary<string, RouteSign> _audioRouteSigns = new Dictionary<string, RouteSign>();
+		private static readonly Dictionary<string, RouteSign> _stringRouteSigns = new Dictionary<string, RouteSign>();
+		private static readonly Dictionary<string, RouteSign> _shaderRouteSigns = new Dictionary<string, RouteSign>();
 
-		private static readonly Dictionary<int, VirtualFile> texturesNotLoaded = new Dictionary<int, VirtualFile>();
+		private static readonly Dictionary<int, VirtualFile> _texturesNotLoaded = new Dictionary<int, VirtualFile>();
 
 		private static bool _hasImageOpt;
 		private static bool _hasGraphicsSettings;
@@ -281,13 +281,13 @@ namespace YaOpt.Helpers
 			object t = null;
 			Dictionary<string, RouteSign> routeSigns = null;
 			if (itemType == typeof(Texture2D))
-				routeSigns = textureRouteSigns;
+				routeSigns = _textureRouteSigns;
 			else if (itemType == typeof(AudioClip))
-				routeSigns = audioRouteSigns;
+				routeSigns = _audioRouteSigns;
 			else if (itemType == typeof(string))
-				routeSigns = stringRouteSigns;
+				routeSigns = _stringRouteSigns;
 			else if (itemType == typeof(Shader))
-				routeSigns = shaderRouteSigns;
+				routeSigns = _shaderRouteSigns;
 
 			if (routeSigns != null)
 			{
@@ -316,7 +316,7 @@ namespace YaOpt.Helpers
 
 		public static void RegisterTextureNotLoaded(int textureId, VirtualFile file)
 		{
-			texturesNotLoaded[textureId] = file;
+			_texturesNotLoaded[textureId] = file;
 		}
 
 		public static void MakeSureTextureLoaded(Texture2D texture)
@@ -324,9 +324,9 @@ namespace YaOpt.Helpers
 			if (texture is null)
 				return;
 			var id = texture.GetInstanceID();
-			if (texturesNotLoaded.TryGetValue(id, out var file))
+			if (_texturesNotLoaded.TryGetValue(id, out var file))
 			{
-				texturesNotLoaded.Remove(id);
+				_texturesNotLoaded.Remove(id);
 
 				if (LoadZstdDdsTexture != null && file.FullPath != null)
 				{

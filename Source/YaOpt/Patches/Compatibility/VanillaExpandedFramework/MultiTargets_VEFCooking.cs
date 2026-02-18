@@ -18,9 +18,9 @@ namespace YaOpt.Patches.Compatibility.VanillaExpandedFramework
 		[ThreadStatic]
 		public static HashSet<ThingDef> AlreadyUsed;
 
-		private static Type typeRecipeExtension;
+		private static Type _typeRecipeExtension;
 
-		private static AccessTools.FieldRef<object, bool> fieldIndividualIngredients;
+		private static AccessTools.FieldRef<object, bool> _fieldIndividualIngredients;
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{
@@ -36,10 +36,10 @@ namespace YaOpt.Patches.Compatibility.VanillaExpandedFramework
 			var shouldRun = YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
 							YaOptGlobal.HasMod("OskarPotocki.VanillaFactionsExpanded.Core");
 
-			if (shouldRun && typeRecipeExtension == null)
+			if (shouldRun && _typeRecipeExtension == null)
 			{
-				typeRecipeExtension = AccessTools.TypeByName("VEF.Cooking.Recipe_Extension");
-				fieldIndividualIngredients = AccessTools.FieldRefAccess<bool>(typeRecipeExtension, "individualIngredients");
+				_typeRecipeExtension = AccessTools.TypeByName("VEF.Cooking.Recipe_Extension");
+				_fieldIndividualIngredients = AccessTools.FieldRefAccess<bool>(_typeRecipeExtension, "individualIngredients");
 			}
 
 			return shouldRun;
@@ -57,9 +57,9 @@ namespace YaOpt.Patches.Compatibility.VanillaExpandedFramework
 			{
 				foreach (var extension in recipe.modExtensions)
 				{
-					if (typeRecipeExtension.IsInstanceOfType(extension))
+					if (_typeRecipeExtension.IsInstanceOfType(extension))
 					{
-						adjust = fieldIndividualIngredients(extension);
+						adjust = _fieldIndividualIngredients(extension);
 					}
 					break;
 				}

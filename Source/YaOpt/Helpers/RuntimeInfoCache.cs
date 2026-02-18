@@ -7,10 +7,10 @@ namespace YaOpt.Helpers
 {
 	internal static class RuntimeInfoCache
 	{
-		private static readonly HashSet<Assembly> cachedAssemblies = new HashSet<Assembly>();
-		private static readonly Dictionary<string, Type> typesByName = new Dictionary<string, Type>();
-		private static readonly Dictionary<string, Type> typesByFullName = new Dictionary<string, Type>();
-		private static readonly Dictionary<Assembly, string> assemblyNames = new Dictionary<Assembly, string>();
+		private static readonly HashSet<Assembly> _cachedAssemblies = new HashSet<Assembly>();
+		private static readonly Dictionary<string, Type> _typesByName = new Dictionary<string, Type>();
+		private static readonly Dictionary<string, Type> _typesByFullName = new Dictionary<string, Type>();
+		private static readonly Dictionary<Assembly, string> _assemblyNames = new Dictionary<Assembly, string>();
 
 		public static void TryUpdateCache(IEnumerable<Assembly> enumerable = null)
 		{
@@ -21,7 +21,7 @@ namespace YaOpt.Helpers
 
 			foreach (Assembly assembly in enumerable)
 			{
-				if (cachedAssemblies.Add(assembly))
+				if (_cachedAssemblies.Add(assembly))
 				{
 					try
 					{
@@ -29,13 +29,13 @@ namespace YaOpt.Helpers
 						{
 							var name = type.Name;
 							var fullName = type.FullName;
-							if (!string.IsNullOrWhiteSpace(name) && !typesByName.ContainsKey(name))
+							if (!string.IsNullOrWhiteSpace(name) && !_typesByName.ContainsKey(name))
 							{
-								typesByName[name] = type;
+								_typesByName[name] = type;
 							}
-							if (!string.IsNullOrWhiteSpace(fullName) && !typesByFullName.ContainsKey(fullName))
+							if (!string.IsNullOrWhiteSpace(fullName) && !_typesByFullName.ContainsKey(fullName))
 							{
-								typesByFullName[fullName] = type;
+								_typesByFullName[fullName] = type;
 							}
 						}
 					}
@@ -53,23 +53,23 @@ namespace YaOpt.Helpers
 		public static Type GetTypeByName(string name)
 		{
 			TryUpdateCache();
-			if (typesByFullName.TryGetValue(name, out var type))
+			if (_typesByFullName.TryGetValue(name, out var type))
 				return type;
-			if (typesByName.TryGetValue(name, out type))
+			if (_typesByName.TryGetValue(name, out type))
 				return type;
 			return null;
 		}
 
 		public static string GetCachedAssemblyName(Assembly assembly)
 		{
-			if (assemblyNames.TryGetValue(assembly, out var name))
+			if (_assemblyNames.TryGetValue(assembly, out var name))
 				return name;
 			return null;
 		}
 
 		public static void SetCachedAssemblyName(Assembly assembly, string name)
 		{
-			assemblyNames[assembly] = name;
+			_assemblyNames[assembly] = name;
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace YaOpt.Patches.Compatibility.VanillaPsycastsExpanded
 	[HarmonyPatch]
 	internal static class MultiTargets_GenRadialCache
 	{
-		private static readonly object objLock = new object();
+		private static readonly object _objLock = new object();
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{
@@ -33,13 +33,13 @@ namespace YaOpt.Patches.Compatibility.VanillaPsycastsExpanded
 		static void Prefix(out bool __state)
 		{
 			__state = false;
-			Monitor.Enter(objLock, ref __state);
+			Monitor.Enter(_objLock, ref __state);
 		}
 
 		static void Finalizer(bool __state)
 		{
 			if (__state)
-				Monitor.Exit(objLock);
+				Monitor.Exit(_objLock);
 		}
 	}
 }

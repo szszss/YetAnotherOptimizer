@@ -10,8 +10,8 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 	[HarmonyPatch]
 	internal static class MultiTargets_Rand
 	{
-		private static int lastThreadId;
-		private static readonly object objLock = new object();
+		private static int _lastThreadId;
+		private static readonly object _objLock = new object();
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{
@@ -35,19 +35,19 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 		static void Prefix(out bool __state)
 		{
 			/*var threadId = Thread.CurrentThread.ManagedThreadId;
-			if (lastThreadId != threadId)
+			if (_lastThreadId != threadId)
 			{
-				lastThreadId = threadId;
+				_lastThreadId = threadId;
 				YaOptMod.Warning($"Change rand state fron different thread: {threadId}");
 			}*/
 			__state = false;
-			Monitor.Enter(objLock, ref __state);
+			Monitor.Enter(_objLock, ref __state);
 		}
 
 		static void Finalizer(bool __state)
 		{
 			if (__state)
-				Monitor.Exit(objLock);
+				Monitor.Exit(_objLock);
 		}
 	}
 }

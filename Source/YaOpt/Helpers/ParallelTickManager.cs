@@ -146,7 +146,10 @@ namespace YaOpt.Helpers
 		public static void SingleTickPawns()
 		{
 			_gameTick = GenTicks.TicksGame;
-			var result = Parallel.ForEach(_pawns, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, TickPawn);
+			var result = Parallel.ForEach(_pawns, new ParallelOptions
+			{
+				MaxDegreeOfParallelism = Environment.ProcessorCount
+			}, TickPawn);
 		}
 
 		private static void TickPawn(Pawn pawn)

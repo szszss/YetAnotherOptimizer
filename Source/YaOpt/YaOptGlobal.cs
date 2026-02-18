@@ -40,11 +40,11 @@ namespace YaOpt
 
 		public static List<YaOptSubMod> SubMods => Mod.SubMods;
 
-		private static readonly Dictionary<string, bool> modLookup = new Dictionary<string, bool>();
+		private static readonly Dictionary<string, bool> _modLookup = new Dictionary<string, bool>();
 
-		private static readonly Dictionary<string, bool> typeLookup = new Dictionary<string, bool>();
+		private static readonly Dictionary<string, bool> _typeLookup = new Dictionary<string, bool>();
 
-		private static readonly Dictionary<OptimizationOption, bool> optionSnapshot =
+		private static readonly Dictionary<OptimizationOption, bool> _optionSnapshot =
 			new Dictionary<OptimizationOption, bool>();
 
 		[ThreadStatic]
@@ -52,20 +52,20 @@ namespace YaOpt
 
 		public static bool HasType(string typeFullName)
 		{
-			if (!typeLookup.TryGetValue(typeFullName, out var result))
+			if (!_typeLookup.TryGetValue(typeFullName, out var result))
 			{
 				result = AccessTools.TypeByName(typeFullName) != null;
-				typeLookup[typeFullName] = result;
+				_typeLookup[typeFullName] = result;
 			}
 			return result;
 		}
 
 		public static bool HasMod(string modId)
 		{
-			if (!modLookup.TryGetValue(modId, out var result))
+			if (!_modLookup.TryGetValue(modId, out var result))
 			{
 				result = ModLister.GetActiveModWithIdentifier(modId) != null;
-				modLookup[modId] = result;
+				_modLookup[modId] = result;
 			}
 			return result;
 		}
@@ -76,7 +76,7 @@ namespace YaOpt
 			{
 				if ((option.Flags & OptimizationFlags.NoSnapshot) == 0)
 				{
-					optionSnapshot[option] = option._enabled;
+					_optionSnapshot[option] = option._enabled;
 				}
 			}
 			IsParallelMaterialUpdateEnabled = Settings.OptParallelMaterialUpdate.Enabled;
@@ -84,7 +84,7 @@ namespace YaOpt
 
 		public static bool AnyOptionChanged()
 		{
-			foreach (var pair in optionSnapshot)
+			foreach (var pair in _optionSnapshot)
 			{
 				if (pair.Key._enabled != pair.Value)
 					return true;

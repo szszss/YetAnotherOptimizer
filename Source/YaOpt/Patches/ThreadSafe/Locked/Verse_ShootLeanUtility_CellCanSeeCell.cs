@@ -9,7 +9,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 	internal static class Verse_ShootLeanUtility_CellCanSeeCell
 	{
 		// In fact, there are currently no known multithreading conflict yet. This is just a precaution.
-		private static readonly object lockObj = new object();
+		private static readonly object _lockObj = new object();
 
 		static bool Prepare()
 		{
@@ -19,13 +19,13 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 		static void Prefix(out bool __state)
 		{
 			__state = false;
-			Monitor.Enter(lockObj, ref __state);
+			Monitor.Enter(_lockObj, ref __state);
 		}
 
 		static void Finalizer(bool __state)
 		{
 			if (__state)
-				Monitor.Exit(lockObj);
+				Monitor.Exit(_lockObj);
 		}
 	}
 }

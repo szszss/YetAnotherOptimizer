@@ -16,7 +16,7 @@ namespace YaOpt.Patches.Early
 	[EarlyPatch]
 	internal static class Verse_ModContentLoader_LoadTexture
 	{
-		private static readonly byte[] EMPTY_TEX_DATA = { 0, 0, 0, 0, 0 };
+		private static readonly byte[] _emptyTexData = { 0, 0, 0, 0, 0 };
 
 		static bool Prepare()
 		{
@@ -41,7 +41,7 @@ namespace YaOpt.Patches.Early
 						return true;
 				}
 				var tex = new Texture2D(2, 2, TextureFormat.Alpha8, true);
-				tex.LoadRawTextureData(EMPTY_TEX_DATA);
+				tex.LoadRawTextureData(_emptyTexData);
 				ContentManager.RegisterTextureNotLoaded(tex.GetInstanceID(), __0);
 				tex.name = Path.GetFileNameWithoutExtension(__0.Name);
 				__result = tex;

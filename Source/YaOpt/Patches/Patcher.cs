@@ -10,7 +10,7 @@ namespace YaOpt.Patches
 {
 	internal static class Patcher
 	{
-		private static bool hasPatched;
+		private static bool _hasPatched;
 
 		public static void Init()
 		{
@@ -45,13 +45,13 @@ namespace YaOpt.Patches
 				var assembly = Assembly.GetExecutingAssembly();
 				var harmony = YaOptGlobal.Harmony;
 
-				if (hasPatched)
+				if (_hasPatched)
 				{
 					YaOptMod.Debug("Uninstalling exist patches...");
 					harmony.UnpatchAll(harmony.Id);
 					TrampolinePatcher.UninstallAll();
 					YaOptSubMod.UnpatchAll(YaOptGlobal.SubMods, harmony);
-					hasPatched = false;
+					_hasPatched = false;
 				}
 
 				YaOptMod.Debug("Patching...");
@@ -60,7 +60,7 @@ namespace YaOpt.Patches
 				noError &= YaOptSubMod.PatchAll(YaOptGlobal.SubMods, harmony);
 				Unpatcher.Unpatch();
 				Unpatcher.PatchAgain();
-				hasPatched = true;
+				_hasPatched = true;
 				YaOptMod.Debug("Patcher complated");
 			}
 			catch (Exception ex)

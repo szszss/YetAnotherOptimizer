@@ -12,7 +12,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 	[HarmonyPatch(nameof(StatWorker.GetValue), typeof(Thing), typeof(bool), typeof(int))]
 	internal static class RimWorld_StatWorker_GetValue
 	{
-		private static readonly ConcurrentDictionary<StatWorker, ReaderWriterLockSlim> statLocks =
+		private static readonly ConcurrentDictionary<StatWorker, ReaderWriterLockSlim> _statLocks =
 			new ConcurrentDictionary<StatWorker, ReaderWriterLockSlim>();
 
 		static bool Prepare()
@@ -22,7 +22,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 
 		public static ReaderWriterLockSlim GetLock(StatWorker worker)
 		{
-			return statLocks.GetOrAdd(worker, _ => new ReaderWriterLockSlim(/*LockRecursionPolicy.SupportsRecursion*/));
+			return _statLocks.GetOrAdd(worker, _ => new ReaderWriterLockSlim(/*LockRecursionPolicy.SupportsRecursion*/));
 		}
 
 		/*static void Postfix(StatWorker __instance, ref float __result)

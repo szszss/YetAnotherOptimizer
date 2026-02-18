@@ -6,9 +6,9 @@ namespace YaOpt.Patches.Trampolines
 {
 	internal static class TrampolinePatcher
 	{
-		private static readonly List<TrampolineInstaller> registeredTrampolines = new List<TrampolineInstaller>();
+		private static readonly List<TrampolineInstaller> _registeredTrampolines = new List<TrampolineInstaller>();
 
-		private static readonly List<TrampolineInstaller> registeredEarlyTrampolines = new List<TrampolineInstaller>();
+		private static readonly List<TrampolineInstaller> _registeredEarlyTrampolines = new List<TrampolineInstaller>();
 
 		public static bool CanUseTrampoline => YaOptGlobal.IsNativeAvailable && YaOptGlobal.IsTrampolineAvailable;
 
@@ -25,8 +25,8 @@ namespace YaOpt.Patches.Trampolines
 			if (!CanUseTrampoline)
 				return;
 
-			registeredEarlyTrampolines.Add(Verse_ContentFinder_Get.Instance);
-			InitDo(registeredEarlyTrampolines);
+			_registeredEarlyTrampolines.Add(Verse_ContentFinder_Get.Instance);
+			InitDo(_registeredEarlyTrampolines);
 		}
 
 		public static void Init()
@@ -34,8 +34,8 @@ namespace YaOpt.Patches.Trampolines
 			if (!CanUseTrampoline)
 				return;
 
-			registeredTrampolines.Add(Verse_ThingWithComps_GetComp.Instance);
-			InitDo(registeredTrampolines);
+			_registeredTrampolines.Add(Verse_ThingWithComps_GetComp.Instance);
+			InitDo(_registeredTrampolines);
 		}
 
 		public static void EarlyInstallAll()
@@ -43,7 +43,7 @@ namespace YaOpt.Patches.Trampolines
 			if (!CanUseTrampoline)
 				return;
 
-			InstallDo(registeredEarlyTrampolines);
+			InstallDo(_registeredEarlyTrampolines);
 		}
 
 		public static void InstallAll()
@@ -51,7 +51,7 @@ namespace YaOpt.Patches.Trampolines
 			if (!CanUseTrampoline)
 				return;
 
-			InstallDo(registeredTrampolines);
+			InstallDo(_registeredTrampolines);
 		}
 
 		private static void InitDo(List<TrampolineInstaller> trampolineInstallers)
@@ -89,7 +89,7 @@ namespace YaOpt.Patches.Trampolines
 			if (!CanUseTrampoline)
 				return;
 
-			foreach (var installer in registeredTrampolines)
+			foreach (var installer in _registeredTrampolines)
 			{
 				try
 				{

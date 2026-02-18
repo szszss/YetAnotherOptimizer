@@ -11,7 +11,7 @@ namespace YaOpt.Patches.Compatibility.RocketMan
 	[HarmonyBefore("Krkr.RocketMan")]
 	internal static class RimWorld_StatWorker_GetValue
 	{
-		private static readonly object lockObj = new object();
+		private static readonly object _lockObj = new object();
 
 		static bool Prepare()
 		{
@@ -34,7 +34,7 @@ namespace YaOpt.Patches.Compatibility.RocketMan
 				.SetAndAdvance(OpCodes.Ldsfld,
 					AccessTools.Field(
 						typeof(RimWorld_StatWorker_GetValue),
-					nameof(lockObj)))
+					nameof(_lockObj)))
 				.InsertAndAdvance(
 					CodeInstruction.Call(typeof(Monitor), nameof(Monitor.Enter),
 						new[] { typeof(object) }),
@@ -44,7 +44,7 @@ namespace YaOpt.Patches.Compatibility.RocketMan
 				.InsertAfter(
 					new CodeInstruction(CodeInstruction.LoadField(
 						typeof(RimWorld_StatWorker_GetValue),
-						nameof(lockObj))
+						nameof(_lockObj))
 						.WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock))),
 					CodeInstruction.Call(typeof(Monitor), nameof(Monitor.Exit)),
 					new CodeInstruction(OpCodes.Endfinally)
