@@ -6,7 +6,7 @@ using System.Reflection;
 using Verse;
 using YaOpt.Helpers;
 using YaOpt.OtherMod.FacialAnimation.Helpers;
-using static YaOpt.YaOptSettings;
+using YaOpt.Settings;
 using HeadTypeDef = FacialAnimation.HeadTypeDef;
 
 namespace YaOpt.OtherMod.FacialAnimation
@@ -63,7 +63,7 @@ namespace YaOpt.OtherMod.FacialAnimation
 			RequiredMod = "Nals.FacialAnimation",
 			SubCategory = "YaOpt.Setting.SubCategory.FacialAnimation",
 			Category = OptimizationCategory.Fps,
-			Flags = OptimizationFlag.RequireWin64 | OptimizationFlag.RequireBurst,
+			Flags = OptimizationFlags.RequireWin64 | OptimizationFlags.RequireBurst,
 			RequiredOption = OptFADeLinq,
 			FuncShow = (_) => OptFADeLinq.Enabled
 		};

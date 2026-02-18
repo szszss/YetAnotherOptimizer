@@ -2,6 +2,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using Verse;
 using YaOpt.Helpers.Trampolines;
+using YaOpt.Settings;
 
 namespace YaOpt
 {
@@ -39,8 +40,8 @@ namespace YaOpt
 
 		private static readonly Dictionary<string, bool> typeLookup = new Dictionary<string, bool>();
 
-		private static readonly Dictionary<YaOptSettings.OptimizationOption, bool> optionSnapshot =
-			new Dictionary<YaOptSettings.OptimizationOption, bool>();
+		private static readonly Dictionary<OptimizationOption, bool> optionSnapshot =
+			new Dictionary<OptimizationOption, bool>();
 
 		public static bool HasType(string typeFullName)
 		{
@@ -66,7 +67,7 @@ namespace YaOpt
 		{
 			foreach (var option in Settings.AllOptimizations)
 			{
-				if ((option.Flags & YaOptSettings.OptimizationFlag.NoSnapshot) == 0)
+				if ((option.Flags & OptimizationFlags.NoSnapshot) == 0)
 				{
 					optionSnapshot[option] = option._enabled;
 				}

@@ -2,7 +2,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using YaOpt.Helpers;
-using static YaOpt.YaOptSettings;
+using YaOpt.Settings;
 
 namespace YaOpt.OtherMod.HumanoidAlienRaces
 {
@@ -44,7 +44,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces
 			Category = OptimizationCategory.Fps,
 		};
 
-		public override IEnumerable<YaOptSettings.OptimizationOption> OnCreateSettings()
+		public override IEnumerable<OptimizationOption> OnCreateSettings()
 		{
 			yield return OptHARDeLinq;
 			yield return OptHARTextureCache;

@@ -2,6 +2,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using Verse;
+using YaOpt.Settings;
 
 namespace YaOpt
 {
@@ -19,7 +20,7 @@ namespace YaOpt
 		{
 		}
 
-		public virtual IEnumerable<YaOptSettings.OptimizationOption> OnCreateSettings()
+		public virtual IEnumerable<OptimizationOption> OnCreateSettings()
 		{
 			yield break;
 		}
