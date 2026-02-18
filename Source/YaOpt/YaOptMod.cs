@@ -4,7 +4,6 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
-using YaOpt.Helpers.Trampolines;
 using YaOpt.Patches;
 using YaOpt.Patches.Trampolines;
 

@@ -2,9 +2,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using UnityEngine;
 using Verse;
-using YaOpt.Helpers;
 using YaOpt.OtherMod.FacialAnimation.Helpers;
 
 namespace YaOpt.OtherMod.FacialAnimation.Patches
