@@ -1,5 +1,7 @@
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using Verse;
 using YaOpt.Helpers.Trampolines;
 using YaOpt.Settings;
@@ -22,6 +24,8 @@ namespace YaOpt
 
 		public static bool IsParallelMaterialUpdateEnabled { get; internal set; }
 
+		public static bool IsInMainThread => _isInMainThread;
+
 		/// <summary>
 		/// <seealso cref="YaOpt.Patches.ThreadSafe"/>
 		/// </summary>
@@ -42,6 +46,9 @@ namespace YaOpt
 
 		private static readonly Dictionary<OptimizationOption, bool> optionSnapshot =
 			new Dictionary<OptimizationOption, bool>();
+
+		[ThreadStatic]
+		private static bool _isInMainThread;
 
 		public static bool HasType(string typeFullName)
 		{
@@ -83,6 +90,16 @@ namespace YaOpt
 					return true;
 			}
 			return false;
+		}
+
+		internal static void MarkAsMainThread()
+		{
+			if (!UnityData.IsInMainThread)
+			{
+				YaOptMod.Error($"Thread {Thread.CurrentThread.Name} is not the Unity main thread, " +
+							   $"but MarkAsMainThread was called within it.");
+			}
+			_isInMainThread = true;
 		}
 	}
 }

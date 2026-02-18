@@ -9,6 +9,7 @@ namespace YaOpt
 	{
 		static PostIniter()
 		{
+			YaOptGlobal.MarkAsMainThread();
 			DefInjectionHelper.ClearCache();
 			AccessHelper.Init();
 			ThingHelper.Init();
