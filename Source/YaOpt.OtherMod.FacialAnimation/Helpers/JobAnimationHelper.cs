@@ -9,10 +9,10 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 {
 	internal static class JobAnimationHelper
 	{
-		private static readonly Dictionary<string, Dictionary<string, List<FaceAnimationCache>>> raceAnimationCache =
+		private static readonly Dictionary<string, Dictionary<string, List<FaceAnimationCache>>> _raceAnimationCache =
 			new Dictionary<string, Dictionary<string, List<FaceAnimationCache>>>();
 
-		private static readonly HashSet<string> cachedRaces = new HashSet<string>();
+		private static readonly HashSet<string> _cachedRaces = new HashSet<string>();
 
 		public class FaceAnimationCache
 		{
@@ -28,15 +28,15 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 
 		private static void ClearCache()
 		{
-			raceAnimationCache.Clear();
-			cachedRaces.Clear();
+			_raceAnimationCache.Clear();
+			_cachedRaces.Clear();
 		}
 
 		public static Dictionary<string, List<FaceAnimationCache>> GetRaceAnimation(string pawnDefName)
 		{
-			if (cachedRaces.Contains(pawnDefName))
+			if (_cachedRaces.Contains(pawnDefName))
 			{
-				return raceAnimationCache[pawnDefName];
+				return _raceAnimationCache[pawnDefName];
 			}
 			var dict = new Dictionary<string, List<FaceAnimationCache>>();
 			CacheRaceAnimations(dict, pawnDefName);
@@ -44,8 +44,8 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 			{
 				CacheRaceAnimations(dict, string.Empty);
 			}
-			cachedRaces.Add(pawnDefName);
-			raceAnimationCache[pawnDefName] = dict;
+			_cachedRaces.Add(pawnDefName);
+			_raceAnimationCache[pawnDefName] = dict;
 			return dict;
 		}
 
