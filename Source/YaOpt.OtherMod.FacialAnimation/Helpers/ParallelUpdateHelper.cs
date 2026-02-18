@@ -18,7 +18,10 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 
 		private static readonly List<Pawn> pendingPawns = new List<Pawn>();
 
-		private static readonly ConcurrentDictionary<Pawn, int> lastUpdateTicks = new ConcurrentDictionary<Pawn, int>();
+		// This is actually a concurrent hashset since there is not ConcurrentSet in .net
+		// Key is thingIdNumber and value is pawn
+		private static readonly ConcurrentDictionary<int, Pawn> _updatedPawns
+			= new ConcurrentDictionary<int, Pawn>();
 
 		static ParallelUpdateHelper()
 		{
@@ -31,7 +34,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 		{
 			jobHandle = default;
 			pendingPawns.Clear();
-			lastUpdateTicks.Clear();
+			_updatedPawns.Clear();
 		}
 
 		private static void PreRender(int tick)
@@ -39,9 +42,6 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 			if (!Enabled)
 				return;
 
-			// Clear cache per 3600 ticks
-			if (tick % 3600 == 0)
-				lastUpdateTicks.Clear();
 			if (pendingPawns.Count > 0)
 			{
 				jobRunning = true;
@@ -58,6 +58,21 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 				jobRunning = false;
 				pendingPawns.Clear();
 			}
+			_updatedPawns.Clear();
+		}
+
+		private static bool ShouldPawnUpdate(Pawn pawn)
+		{
+			if (_updatedPawns.TryGetValue(pawn.thingIDNumber, out var renderPawn))
+			{
+				if (renderPawn == pawn)
+					return false;
+			}
+			else if (!_updatedPawns.TryAdd(pawn.thingIDNumber, pawn))
+			{
+				return false;
+			}
+			return true;
 		}
 
 		public static void AddPendingPawn(Pawn pawn)
@@ -75,22 +90,10 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 		{
 			if (pawn.TryGetComp<FacialAnimationControllerComp>(out var comp))
 			{
-				var tick = Find.TickManager.TicksGame;
-				if (lastUpdateTicks.TryGetValue(pawn, out var lastTick))
-				{
-					if (lastTick == tick)
-						return;
-					if (!lastUpdateTicks.TryUpdate(pawn, tick, lastTick))
-						return;
-				}
-				else if (!lastUpdateTicks.TryAdd(pawn, tick))
-				{
+				if (!ShouldPawnUpdate(pawn))
 					return;
-				}
-
 				if (!comp.CheckUpdateableInitial())
 					return;
-
 				comp.UpdateStatus(Find.TickManager.TicksGame);
 				comp.UpdateAnimation();
 			}
