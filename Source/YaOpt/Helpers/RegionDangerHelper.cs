@@ -5,23 +5,23 @@ using Verse;
 namespace YaOpt.Helpers
 {
 	/// <summary>
-	/// Caches pawn safe temperature ranges per tick to avoid repeated calculations.
+	/// Replace vanilla safe temperature cache with a thread safe one.
 	/// </summary>
-	/// <seealso cref="YaOptSettings.OptStatCache"/>
-	internal static class TemperatureHelper
+	/// <seealso cref="YaOpt.Patches.ThreadSafe.Locked.Verse_Region_DangerFor"/>
+	internal static class RegionDangerHelper
 	{
 		private struct CacheEntry
 		{
-			public int Tick;
+			public int CreatedTick;
 			public FloatRange Range;
 		}
 
-		private static readonly ConcurrentDictionary<Pawn, CacheEntry> cachedSafeTemperatureRanges =
+		private static readonly ConcurrentDictionary<Pawn, CacheEntry> _cachedSafeTemperatureRanges =
 			new ConcurrentDictionary<Pawn, CacheEntry>();
 
-		private static int currentTick;
+		private static int _currentTick;
 
-		static TemperatureHelper()
+		static RegionDangerHelper()
 		{
 			UpdateCallbackHelper.RegisterPreTickCallback(ClearCache);
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
@@ -29,28 +29,29 @@ namespace YaOpt.Helpers
 
 		private static void ClearCache(int tick)
 		{
-			currentTick = tick;
+			_currentTick = tick;
 		}
 
 		private static void ClearCache()
 		{
-			cachedSafeTemperatureRanges.Clear();
+			_cachedSafeTemperatureRanges.Clear();
 		}
 
 		/// <summary>
 		/// Gets the safe temperature range for a pawn, cached per tick.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static FloatRange GetSafeTemperatureRange(Pawn pawn)
+		public static FloatRange GetSafeTemperatureRange(Pawn pawn, int cacheLifespan)
 		{
-			if (!cachedSafeTemperatureRanges.TryGetValue(pawn, out var entry) || entry.Tick != currentTick)
+			if (!_cachedSafeTemperatureRanges.TryGetValue(pawn, out var entry) ||
+			    _currentTick - entry.CreatedTick >= cacheLifespan)
 			{
 				entry = new CacheEntry()
 				{
 					Range = pawn.SafeTemperatureRange(),
-					Tick = currentTick
+					CreatedTick = _currentTick
 				};
-				cachedSafeTemperatureRanges.TryAdd(pawn, entry);
+				_cachedSafeTemperatureRanges.TryAdd(pawn, entry);
 			}
 			return entry.Range;
 		}

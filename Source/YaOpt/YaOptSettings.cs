@@ -278,7 +278,7 @@ namespace YaOpt
 		/// <summary>
 		/// Extends the vanilla stat caching system to include <see cref="StatDefOf.ComfyTemperatureMin"/>,
 		/// <see cref="StatDefOf.ComfyTemperatureMax"/>, and <see cref="StatDefOf.FilthRate"/>.
-		/// Comfortable Temperature is updated every 10 ticks (and invalidated on apparel changes).
+		/// Comfortable Temperature is updated every 20 ticks (and invalidated on apparel changes).
 		/// Filth Rate is updated every 60 ticks.
 		/// <br/>
 		/// <seealso cref="Patches.MultiTargets_ComfortableTemperature"/>

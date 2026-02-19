@@ -9,7 +9,7 @@ using Verse;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// Caches comfortable temperature stat lookups with 10-tick intervals.
+	/// Caches comfortable temperature stat lookups with 20-tick intervals.
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptStatCache"/>
 	[HarmonyPatch]
@@ -40,7 +40,7 @@ namespace YaOpt.Patches
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo &&
 					methodInfo.Name == "GetStatValue")
 				{
-					list[i - 1] = new CodeInstruction(OpCodes.Ldc_I4, 10);
+					list[i - 1] = new CodeInstruction(OpCodes.Ldc_I4, 20);
 				}
 			}
 			return list;

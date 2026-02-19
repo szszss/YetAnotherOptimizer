@@ -70,9 +70,11 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 						// floatRange = TemperatureHelper.GetSafeTemperatureRange(pawn);
 						// skip other code
 						yield return CodeInstruction.LoadArgument(1);
+						yield return new CodeInstruction(OpCodes.Ldc_I4,
+							YaOptGlobal.Settings.OptStatCache.Enabled ? 20 : 1);
 						yield return CodeInstruction.Call(
-							typeof(TemperatureHelper),
-							nameof(TemperatureHelper.GetSafeTemperatureRange));
+							typeof(RegionDangerHelper),
+							nameof(RegionDangerHelper.GetSafeTemperatureRange));
 						yield return CodeInstruction.StoreLocal(LOCAL_RANGE);
 						targetLabel = (Label)instruction.operand;
 						skip = true;

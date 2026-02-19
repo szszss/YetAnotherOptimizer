@@ -85,7 +85,7 @@
 	<YaOpt.Setting.Option.MeditationTick.Desc>Throttles the meditation update frequency from every tick to once every 100 ticks (with 100x effect compensation). Meditation is surprisingly expensive, especially for tribal psykers scanning for Anima grass every frame. Note: This slightly impacts gameplay, as partial progress (avg. 50 ticks / 0.83s) is lost when meditation is interrupted.</YaOpt.Setting.Option.MeditationTick.Desc>
 	<YaOpt.Setting.Option.MeditationTick.Compatibility>Tested and compatible with Vanilla Psycasts Expanded. May conflict with other mods that heavily alter meditation mechanics.</YaOpt.Setting.Option.MeditationTick.Compatibility>
 	<YaOpt.Setting.Option.StatCache>Extended Stat Caching</YaOpt.Setting.Option.StatCache>
-	<YaOpt.Setting.Option.StatCache.Desc>Extends the vanilla stat caching system to include Comfortable Temperature and Filth Rate. Comfortable Temperature is updated every 10 ticks (and forcibly refreshed when apparel changes), while Filth Rate is updated every 60 ticks. This reduces the overhead of frequently accessing these expensive stats.</YaOpt.Setting.Option.StatCache.Desc>
+	<YaOpt.Setting.Option.StatCache.Desc>Extends the vanilla stat caching system to include Comfortable Temperature and Filth Rate. Comfortable Temperature is updated every 20 ticks (and forcibly refreshed when apparel changes), while Filth Rate is updated every 60 ticks. This reduces the overhead of frequently accessing these expensive stats.</YaOpt.Setting.Option.StatCache.Desc>
 	<YaOpt.Setting.Tab.Main>All</YaOpt.Setting.Tab.Main>
 	<YaOpt.Setting.Tab.Fps>FPS</YaOpt.Setting.Tab.Fps>
 	<YaOpt.Setting.Tab.Tps>TPS</YaOpt.Setting.Tab.Tps>
