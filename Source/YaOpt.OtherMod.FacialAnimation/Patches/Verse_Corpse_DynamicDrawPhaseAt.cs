@@ -8,8 +8,9 @@ using YaOpt.OtherMod.FacialAnimation.Helpers;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
+	/// Triggers facial animation updates for corpses during parallel pre-draw phase.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
 	[HarmonyPatch(typeof(Corpse))]
 	[HarmonyPatch(nameof(Corpse.DynamicDrawPhaseAt))]
 	internal static class Verse_Corpse_DynamicDrawPhaseAt

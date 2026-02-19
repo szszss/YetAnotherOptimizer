@@ -11,17 +11,19 @@ using HeadTypeDef = FacialAnimation.HeadTypeDef;
 
 namespace YaOpt.OtherMod.FacialAnimation
 {
+	/// <summary>
+	/// Compatibility module for the Facial Animation mod. Provides parallel updates and GC optimizations.
+	/// </summary>
 	internal class SubMod : YaOptSubMod
 	{
 		/// <summary>
 		/// Moves facial animation updates from the main thread to the parallel render preparation phase.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FacialAnimationControllerComp_GatherPawnParam"/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_NLFacialAnimationMasterNodeWorker_PreDraw"/>
 		/// <seealso cref="FacialAnimation.Patches.RimWorld_PortraitsCache_SetDirty"/>
 		/// <seealso cref="FacialAnimation.Patches.Verse_Corpse_DynamicDrawPhaseAt"/>
 		/// <seealso cref="FacialAnimation.Patches.Verse_Pawn_DynamicDrawPhaseAt"/>
-		/// </summary>
 		public static OptimizationOption OptFAParallelUpdate { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FAParallelUpdate",
@@ -33,12 +35,10 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
-		/// Rewrites LINQ expressions into GC-friendly loops.
-		/// LINQ generates significant GC overhead in Unity.
-		/// <br/>
+		/// Rewrites LINQ expressions into GC-friendly loops to reduce garbage collection overhead.
+		/// </summary>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_AnimationFrameAccumulator_AccumResultFrameAndClear"/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_AnimationFrameAccumulator_UpdateAninmation"/>
-		/// </summary>
 		public static OptimizationOption OptFADeLinq { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FADeLinq",
@@ -50,10 +50,9 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
-		/// Accelerates facial animation processing using Burst.
-		/// <br/>
-		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_AnimationFrameAccumulator_AccumResultFrameAndClear"/>
+		/// Accelerates facial animation frame accumulation using Burst SIMD instructions.
 		/// </summary>
+		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_AnimationFrameAccumulator_AccumResultFrameAndClear"/>
 		public static OptimizationOption OptFADeLinqBurst { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FADeLinqBurst",
@@ -69,11 +68,10 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
-		/// Caches the list of facial animations to avoid frequent reconstruction.
-		/// <br/>
+		/// Caches facial animation lists to avoid frequent reconstruction during updates.
+		/// </summary>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FacialAnimationControllerComp_InitializeIfNeed"/>
 		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FacialAnimationControllerComp_UpdateAnimation"/>
-		/// </summary>
 		public static OptimizationOption OptFAAnimCache { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FAAnimCache",
@@ -85,10 +83,9 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
-		/// Caches some information used during pawn generation to reduce stuttering when pawns spawn.
-		/// <br/>
-		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FAHelper_CreateAnimationDict"/>
+		/// Caches information used during pawn generation to reduce spawn stuttering.
 		/// </summary>
+		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_FAHelper_CreateAnimationDict"/>
 		public static OptimizationOption OptFAPawnSpawn { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FAPawnSpawn",
@@ -100,12 +97,9 @@ namespace YaOpt.OtherMod.FacialAnimation
 		};
 
 		/// <summary>
-		/// Optimizes the loading of facial textures by the Facial Animation mod,
-		/// making it use the texture caching system provided by this mod,
-		/// reducing stuttering during pawn generation.
-		/// <br/>
-		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_GraphicHelper_CheckTexPathExist"/>
+		/// Integrates Facial Animation texture loading with YaOpt's texture cache.
 		/// </summary>
+		/// <seealso cref="FacialAnimation.Patches.FacialAnimation_GraphicHelper_CheckTexPathExist"/>
 		public static OptimizationOption OptFATextureCache { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FATextureCache",

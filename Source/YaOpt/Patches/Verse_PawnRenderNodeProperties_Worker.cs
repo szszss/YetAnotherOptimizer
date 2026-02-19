@@ -7,8 +7,9 @@ using Verse;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptPRNRWorker"/>
+	/// Fixes vanilla bug where PawnRenderNodeProperties.Worker cache was not being used.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptPRNRWorker"/>
 	[HarmonyPatch(typeof(PawnRenderNodeProperties))]
 	[HarmonyPatch(nameof(PawnRenderNodeProperties.Worker), MethodType.Getter)]
 	internal static class Verse_PawnRenderNodeProperties_Worker

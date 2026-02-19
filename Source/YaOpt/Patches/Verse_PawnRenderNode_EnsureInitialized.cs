@@ -8,8 +8,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptFastRecacheRequested"/>
+	/// Replaces recursive RecacheRequested check with inlined fast path for shallow render trees.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptFastRecacheRequested"/>
 	[HarmonyPatch(typeof(PawnRenderNode))]
 	[HarmonyPatch(nameof(PawnRenderNode.EnsureInitialized))]
 	internal static class Verse_PawnRenderNode_EnsureInitialized

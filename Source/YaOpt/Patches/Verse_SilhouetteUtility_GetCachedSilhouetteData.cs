@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptSilhouette"/>
+	/// Replaces silhouette cache key with IEquatable implementation to avoid boxing overhead.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptSilhouette"/>
 	[HarmonyPatch(typeof(SilhouetteUtility))]
 	[HarmonyPatch("GetCachedSilhouetteData")]
 	internal static class Verse_SilhouetteUtility_GetCachedSilhouetteData

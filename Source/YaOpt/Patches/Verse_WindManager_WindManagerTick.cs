@@ -9,8 +9,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptWindUpdate"/>
+	/// Defers wind material updates to render frames only, skipping logic tick updates.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptWindUpdate"/>
 	[HarmonyPatch(typeof(WindManager))]
 	[HarmonyPatch(nameof(WindManager.WindManagerTick))]
 	internal static class Verse_WindManager_WindManagerTick

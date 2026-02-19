@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Early
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptFastTranslationInjection"/>
+	/// Replaces O(N²) duplicate check with O(N) hash lookup for translation injection.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptFastTranslationInjection"/>
 	[HarmonyPatch(typeof(DefInjectionPackage))]
 	[HarmonyPatch("SetDefFieldAtPath")]
 	[EarlyPatch]

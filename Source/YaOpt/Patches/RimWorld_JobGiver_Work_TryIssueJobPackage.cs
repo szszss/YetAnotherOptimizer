@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelJobGiver"/>
+	/// Parallelizes job giver work assignment across multiple threads.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelJobGiver"/>
 	[HarmonyPatch(typeof(JobGiver_Work))]
 	[HarmonyPatch(nameof(JobGiver_Work.TryIssueJobPackage))]
 	internal static class RimWorld_JobGiver_Work_TryIssueJobPackage

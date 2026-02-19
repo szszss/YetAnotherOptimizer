@@ -4,8 +4,9 @@ using RimWorld;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptStatCache"/>
+	/// Clears temperature stat caches when pawn apparel changes.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptStatCache"/>
 	[HarmonyPatch(typeof(Pawn_ApparelTracker))]
 	[HarmonyPatch(nameof(Pawn_ApparelTracker.Notify_ApparelChanged))]
 	internal static class RimWorld_Pawn_ApparelTracker_Notify_ApparelChanged

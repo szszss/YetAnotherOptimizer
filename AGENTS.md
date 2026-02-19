@@ -80,6 +80,30 @@ Since this is an optimization mod, performance is the highest priority:
 - `unsafe` code blocks and pointer operations are allowed in performance-critical areas but must ensure boundary checks and memory safety.
 - In `YaOpt.Native.Win64`, exercise extreme caution when directly manipulating memory addresses to ensure alignment and read/write permissions.
 
+### 3.5 Documentation Style
+- **Be Concise**: XML documentation should be brief and to the point.
+- **Summary Only for Simple Members**: For straightforward methods/properties, a single `<summary>` line is sufficient.
+- **Remarks for Complexity**: Use `<remarks>` only when explaining non-obvious behavior, thread safety, or performance implications.
+- **No param/returns**: Do not write `<param>` or `<returns>` tags unless the meaning is truly ambiguous.
+- **Avoid Lists**: Minimize use of `<list>` elements. Prefer direct prose.
+- **Example**:
+  ```csharp
+  // Good - simple and clear
+  /// <summary>
+  /// Gets the singleton mod instance.
+  /// </summary>
+  public static YaOptMod Instance { get; }
+  
+  // Good - complex behavior warrants remarks
+  /// <summary>
+  /// Checks if thread-safe code paths are required.
+  /// </summary>
+  /// <remarks>
+  /// Returns true when parallel pawn tick or job giver optimizations are enabled.
+  /// </remarks>
+  public static bool NeedThreadSafe => ...;
+  ```
+
 ## 4. Build & Test
 - **Build**: Open `Source/YaOpt.sln` with Visual Studio to compile.
 - **Output**: Compilation results are automatically output to `1.6/Assemblies`.

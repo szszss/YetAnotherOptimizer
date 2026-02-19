@@ -8,8 +8,9 @@ using YaOpt.Unity;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptComputeMatrixBurst"/>
+	/// Replaces matrix computation with Burst-optimized SIMD implementation.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptComputeMatrixBurst"/>
 	[HarmonyPatch(typeof(PawnRenderTree))]
 	[HarmonyPatch(nameof(PawnRenderTree.TryGetMatrix))]
 	internal static class Verse_PawnRenderTree_TryGetMatrix

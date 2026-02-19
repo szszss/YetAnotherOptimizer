@@ -5,8 +5,9 @@ using Verse;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
+	/// Adds an extra bucket for parallel pawn tick processing.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 	[HarmonyPatch(typeof(TickList))]
 	[HarmonyPatch(MethodType.Constructor, typeof(TickerType))]
 	internal static class Verse_TickList_Constructor

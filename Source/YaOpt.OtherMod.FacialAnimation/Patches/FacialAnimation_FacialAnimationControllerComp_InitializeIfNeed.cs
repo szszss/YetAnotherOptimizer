@@ -10,8 +10,9 @@ using YaOpt.OtherMod.FacialAnimation.Helpers;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// <seealso cref="SubMod.OptFAAnimCache"/>
+	/// Caches animation lists during controller initialization to avoid repeated rebuilds.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFAAnimCache"/>
 	[HarmonyPatch(typeof(FacialAnimationControllerComp))]
 	[HarmonyPatch("InitializeIfNeed")]
 	internal static class FacialAnimation_FacialAnimationControllerComp_InitializeIfNeed

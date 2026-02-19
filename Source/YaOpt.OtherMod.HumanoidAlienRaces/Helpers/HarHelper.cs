@@ -6,6 +6,9 @@ using YaOpt.Helpers;
 
 namespace YaOpt.OtherMod.HumanoidAlienRaces.Helpers
 {
+	/// <summary>
+	/// Caches HAR graphic requests to avoid repeated GraphicDatabase lookups.
+	/// </summary>
 	[StaticConstructorOnStartup]
 	internal static class HarHelper
 	{

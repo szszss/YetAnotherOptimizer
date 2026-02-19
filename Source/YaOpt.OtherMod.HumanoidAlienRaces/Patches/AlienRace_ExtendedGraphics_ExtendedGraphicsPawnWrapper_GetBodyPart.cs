@@ -7,6 +7,10 @@ using YaOpt.Helpers;
 
 namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 {
+	/// <summary>
+	/// Replaces LINQ-based body part lookups with simple loops.
+	/// </summary>
+	/// <seealso cref="SubMod.OptHARDeLinq"/>
 	[HarmonyPatch(typeof(ExtendedGraphicsPawnWrapper))]
 	[HarmonyPatch(nameof(ExtendedGraphicsPawnWrapper.GetBodyPart))]
 	internal static class AlienRace_ExtendedGraphics_ExtendedGraphicsPawnWrapper_GetBodyPart

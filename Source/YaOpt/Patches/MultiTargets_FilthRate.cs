@@ -8,8 +8,9 @@ using System.Reflection.Emit;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptStatCache"/>
+	/// Caches filth rate stat lookups with 60-tick intervals.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptStatCache"/>
 	[HarmonyPatch]
 	internal static class MultiTargets_FilthRate
 	{

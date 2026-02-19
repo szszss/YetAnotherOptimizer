@@ -11,9 +11,10 @@ using static FacialAnimation.FaceAnimationDef;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
+	/// Replaces LINQ-based frame accumulation with loops, optionally using Burst for SIMD acceleration.
+	/// </summary>
 	/// <seealso cref="SubMod.OptFADeLinq"/>
 	/// <seealso cref="SubMod.OptFADeLinqBurst"/>
-	/// </summary>
 	[HarmonyPatch(typeof(AnimationFrameAccumulator))]
 	[HarmonyPatch(nameof(AnimationFrameAccumulator.AccumResultFrameAndClear))]
 	internal static class FacialAnimation_AnimationFrameAccumulator_AccumResultFrameAndClear

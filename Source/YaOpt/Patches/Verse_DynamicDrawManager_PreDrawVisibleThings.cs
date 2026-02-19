@@ -9,9 +9,10 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
+	/// Defers pre-draw job completion and reduces batch size for better work-stealing.
+	/// </summary>
 	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	/// <seealso cref="YaOptSettings.OptPrepareBatchCount"/>
-	/// </summary>
 	[HarmonyPatch(typeof(DynamicDrawManager))]
 	[HarmonyPatch("PreDrawVisibleThings")]
 	internal static class Verse_DynamicDrawManager_PreDrawVisibleThings

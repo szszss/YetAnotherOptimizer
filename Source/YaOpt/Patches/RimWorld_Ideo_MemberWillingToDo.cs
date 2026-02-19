@@ -5,8 +5,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptIdeoCheck"/>
+	/// Optimizes Ideo.MemberWillingToDo by caching restrictive precept comps.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptIdeoCheck"/>
 	[HarmonyPatch(typeof(Ideo))]
 	[HarmonyPatch(nameof(Ideo.MemberWillingToDo))]
 	internal static class RimWorld_Ideo_MemberWillingToDo

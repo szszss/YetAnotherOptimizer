@@ -6,8 +6,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Early
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptFastPatchOperation"/>
+	/// Creates XPath cache before patch operations for faster lookups.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptFastPatchOperation"/>
 	[HarmonyPatch(typeof(LoadedModManager))]
 	[HarmonyPatch(nameof(LoadedModManager.ApplyPatches))]
 	[EarlyPatch]

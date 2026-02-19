@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptToggleTabCheck"/>
+	/// Caches toggle tab visibility checks to avoid per-frame queries.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptToggleTabCheck"/>
 	[HarmonyPatch]
 	internal static class MultiTargets_ToggleTab
 	{

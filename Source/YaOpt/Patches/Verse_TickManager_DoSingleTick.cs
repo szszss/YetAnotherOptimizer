@@ -8,10 +8,10 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="Helpers.UpdateCallbackHelper"/>
+	/// Patches TickManager.DoSingleTick to enable parallel pawn ticks and map post-tick processing.
+	/// </summary>
 	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 	/// <seealso cref="YaOptSettings.OptParallelPostMapTick"/>
-	/// </summary>
 	[HarmonyPatch(typeof(TickManager))]
 	[HarmonyPatch(nameof(TickManager.DoSingleTick))]
 	internal static class Verse_TickManager_DoSingleTick

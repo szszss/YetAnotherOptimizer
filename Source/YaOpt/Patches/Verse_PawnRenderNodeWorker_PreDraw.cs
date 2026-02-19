@@ -6,8 +6,9 @@ using Verse;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelMaterialUpdate"/>
+	/// Skips PreDraw for workers with parallel material updates (handled in ParallelPreDraw).
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelMaterialUpdate"/>
 	[HarmonyPatch(typeof(PawnRenderNodeWorker))]
 	[HarmonyPatch(nameof(PawnRenderNodeWorker.PreDraw))]
 	internal static class Verse_PawnRenderNodeWorker_PreDraw

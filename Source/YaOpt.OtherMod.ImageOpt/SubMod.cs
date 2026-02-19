@@ -7,6 +7,9 @@ using ZstdSharp;
 
 namespace YaOpt.OtherMod.ImageOpt
 {
+	/// <summary>
+	/// Compatibility module for ImageOpt mod. Provides Zstd-compressed DDS texture loading.
+	/// </summary>
 	internal class SubMod : YaOptSubMod
 	{
 		public override void OnInit()

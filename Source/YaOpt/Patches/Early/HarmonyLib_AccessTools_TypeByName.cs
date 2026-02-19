@@ -6,8 +6,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Early
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptRuntimeInfoCache"/>
+	/// Caches AccessTools.TypeByName results for faster Harmony type lookups.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptRuntimeInfoCache"/>
 	[HarmonyPatch(typeof(AccessTools))]
 	[HarmonyPatch(nameof(AccessTools.TypeByName))]
 	[EarlyPatch]

@@ -7,6 +7,10 @@ using YaOpt.Helpers;
 
 namespace YaOpt.OtherMod.FacialAnimation.Patches.Compatibility.EliteBionicsFramework
 {
+	/// <summary>
+	/// Fixes race condition in Elite Bionics Framework's health cache when accessed from parallel threads.
+	/// Replaces random cache lifespan with fixed value to avoid Rand state corruption.
+	/// </summary>
 	[HarmonyPatch("EBF.Util.MaxHealthCache", "SetCachedBodyPartMaxHealth")]
 	internal static class EBF_Util_MaxHealthCache_SetCachedBodyPartMaxHealth
 	{

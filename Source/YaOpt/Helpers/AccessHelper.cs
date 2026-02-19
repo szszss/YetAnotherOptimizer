@@ -7,6 +7,12 @@ using Verse.AI;
 
 namespace YaOpt.Helpers
 {
+	/// <summary>
+	/// Cached delegates for fast access to private/internal RimWorld members.
+	/// </summary>
+	/// <remarks>
+	/// Uses compiled expression trees and delegate creation to avoid reflection overhead in hot paths.
+	/// </remarks>
 	internal static class AccessHelper
 	{
 		private static FieldInfo _fieldTickDelta;

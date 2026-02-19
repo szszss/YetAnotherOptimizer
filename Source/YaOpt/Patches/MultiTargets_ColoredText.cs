@@ -8,8 +8,9 @@ using Verse;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptColoredText"/>
+	/// Replaces culture-sensitive string.IndexOf with ordinal comparison in ColoredText methods.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptColoredText"/>
 	[HarmonyPatch]
 	internal static class MultiTargets_ColoredText
 	{

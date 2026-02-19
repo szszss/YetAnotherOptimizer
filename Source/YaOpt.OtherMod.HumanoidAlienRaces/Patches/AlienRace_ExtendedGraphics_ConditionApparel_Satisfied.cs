@@ -8,6 +8,10 @@ using YaOpt.Helpers;
 
 namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 {
+	/// <summary>
+	/// Replaces LINQ-based apparel condition checks with simple loops.
+	/// </summary>
+	/// <seealso cref="SubMod.OptHARDeLinq"/>
 	[HarmonyPatch(typeof(ConditionApparel))]
 	[HarmonyPatch(nameof(ConditionApparel.Satisfied))]
 	internal static class AlienRace_ExtendedGraphics_ConditionApparel_Satisfied

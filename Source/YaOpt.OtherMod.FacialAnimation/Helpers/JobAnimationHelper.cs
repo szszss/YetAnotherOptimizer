@@ -8,6 +8,9 @@ using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.OtherMod.FacialAnimation.Helpers
 {
+	/// <summary>
+	/// Caches animation definitions by race and job to avoid repeated Def lookups during pawn spawn.
+	/// </summary>
 	internal static class JobAnimationHelper
 	{
 		private static readonly Dictionary<string, Dictionary<string, List<FaceAnimationCache>>> _raceAnimationCache =

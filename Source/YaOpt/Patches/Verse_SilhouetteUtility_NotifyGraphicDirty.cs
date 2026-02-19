@@ -5,8 +5,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptSilhouette"/>
+	/// Invalidates silhouette cache when pawn graphics change.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptSilhouette"/>
 	[HarmonyPatch(typeof(SilhouetteUtility))]
 	[HarmonyPatch(nameof(SilhouetteUtility.NotifyGraphicDirty))]
 	internal static class Verse_SilhouetteUtility_NotifyGraphicDirty

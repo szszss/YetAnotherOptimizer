@@ -8,6 +8,10 @@ using YaOpt.Helpers;
 
 namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 {
+	/// <summary>
+	/// Routes mask texture lookups through YaOpt's texture cache.
+	/// </summary>
+	/// <seealso cref="SubMod.OptHARTextureCache"/>
 	[HarmonyPatch(typeof(AlienRenderTreePatches))]
 	[HarmonyPatch(nameof(AlienRenderTreePatches.CheckMaskShader))]
 	internal static class AlienRace_AlienRenderTreePatches_CheckMaskShader

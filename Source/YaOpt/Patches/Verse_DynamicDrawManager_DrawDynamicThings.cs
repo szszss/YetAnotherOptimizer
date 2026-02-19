@@ -8,9 +8,10 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
+	/// Patches DynamicDrawManager.DrawDynamicThings to enable early render preparation and wind update optimization.
+	/// </summary>
 	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	/// <seealso cref="YaOptSettings.OptWindUpdate"/>
-	/// </summary>
 	[HarmonyPatch(typeof(DynamicDrawManager))]
 	[HarmonyPatch(nameof(DynamicDrawManager.DrawDynamicThings))]
 	internal static class Verse_DynamicDrawManager_DrawDynamicThings

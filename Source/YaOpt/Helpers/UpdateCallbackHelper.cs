@@ -5,10 +5,19 @@ using Verse;
 
 namespace YaOpt.Helpers
 {
+	/// <summary>
+	/// Provides callbacks for game update lifecycle events (tick, render, cache clear).
+	/// </summary>
 	public static class UpdateCallbackHelper
 	{
+		/// <summary>
+		/// Callback invoked with the current game tick.
+		/// </summary>
 		public delegate void UpdateCallback(int tick);
 
+		/// <summary>
+		/// Callback invoked when caches should be cleared.
+		/// </summary>
 		public delegate void ClearCacheCallback();
 
 		private static readonly List<UpdateCallback> preTickMethods = new List<UpdateCallback>();
@@ -21,6 +30,9 @@ namespace YaOpt.Helpers
 
 		private static readonly List<ClearCacheCallback> clearCacheMethods = new List<ClearCacheCallback>();
 
+		/// <summary>
+		/// Registers a callback to be invoked before each game tick.
+		/// </summary>
 		public static void RegisterPreTickCallback(UpdateCallback callback)
 		{
 			lock (preTickMethods)
@@ -30,6 +42,9 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Registers a callback to be invoked after each game tick.
+		/// </summary>
 		public static void RegisterPostTickCallback(UpdateCallback callback)
 		{
 			lock (postTickMethods)
@@ -39,6 +54,9 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Registers a callback to be invoked before each render frame.
+		/// </summary>
 		public static void RegisterPreRenderCallback(UpdateCallback callback)
 		{
 			lock (preRenderMethods)
@@ -48,6 +66,9 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Registers a callback to be invoked after each render frame.
+		/// </summary>
 		public static void RegisterPostRenderCallback(UpdateCallback callback)
 		{
 			lock (postRenderMethods)
@@ -57,6 +78,9 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Registers a callback to be invoked when caches should be cleared (game load).
+		/// </summary>
 		public static void RegisterClearCacheCallback(ClearCacheCallback callback)
 		{
 			lock (clearCacheMethods)

@@ -8,8 +8,9 @@ using YaOpt.OtherMod.FacialAnimation.Helpers;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
+	/// Queues pawns for facial animation update when portrait cache is dirtied.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
 	[HarmonyPatch(typeof(PortraitsCache))]
 	[HarmonyPatch(nameof(PortraitsCache.SetDirty))]
 	internal static class RimWorld_PortraitsCache_SetDirty

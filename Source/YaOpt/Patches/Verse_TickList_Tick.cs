@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
+	/// Executes parallel pawn tick prediction and processes pawns from dedicated bucket.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 	[HarmonyPatch(typeof(TickList))]
 	[HarmonyPatch(nameof(TickList.Tick))]
 	internal static class Verse_TickList_Tick

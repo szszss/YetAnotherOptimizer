@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Early
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptFastPatchOperation"/>
+	/// Replaces SelectNodes with optimized enumerator for multi-node patch operations.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptFastPatchOperation"/>
 	[HarmonyPatch]
 	[EarlyPatch]
 	internal static class MultiTargets_PatchOperationMulti

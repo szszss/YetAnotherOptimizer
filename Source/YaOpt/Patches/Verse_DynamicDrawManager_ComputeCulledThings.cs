@@ -9,8 +9,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
+	/// Defers culling job completion to enable parallel execution with map mesh rendering.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	[HarmonyPatch(typeof(DynamicDrawManager))]
 	[HarmonyPatch("ComputeCulledThings")]
 	internal static class Verse_DynamicDrawManager_ComputeCulledThings

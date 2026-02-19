@@ -9,8 +9,9 @@ using Verse;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptStatCache"/>
+	/// Caches comfortable temperature stat lookups with 10-tick intervals.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptStatCache"/>
 	[HarmonyPatch]
 	internal static class MultiTargets_ComfortableTemperature
 	{

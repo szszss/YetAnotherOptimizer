@@ -8,8 +8,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
+	/// Performs parallel pawn render preparation while map mesh is being drawn.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	[HarmonyPatch(typeof(MapDrawer))]
 	[HarmonyPatch(nameof(MapDrawer.DrawMapMesh))]
 	internal static class Verse_MapDrawer_DrawMapMesh

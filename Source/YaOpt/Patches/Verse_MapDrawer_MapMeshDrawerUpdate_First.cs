@@ -8,8 +8,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
+	/// Initiates parallel camera culling before map mesh rendering starts.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	[HarmonyPatch(typeof(MapDrawer))]
 	[HarmonyPatch(nameof(MapDrawer.MapMeshDrawerUpdate_First))]
 	internal static class Verse_MapDrawer_MapMeshDrawerUpdate_First

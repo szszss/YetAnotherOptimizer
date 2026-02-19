@@ -9,9 +9,10 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
+	/// Applies fast recache check and parallel material property updates during render preparation.
+	/// </summary>
 	/// <seealso cref="YaOptSettings.OptFastRecacheRequested"/>
 	/// <seealso cref="YaOptSettings.OptParallelMaterialUpdate"/>
-	/// </summary>
 	[HarmonyPatch(typeof(PawnRenderTree))]
 	[HarmonyPatch(nameof(PawnRenderTree.ParallelPreDraw))]
 	internal static class Verse_PawnRenderTree_ParallelPreDraw

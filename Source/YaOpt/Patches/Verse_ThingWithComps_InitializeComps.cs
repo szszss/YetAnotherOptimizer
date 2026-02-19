@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptThingGetComp"/>
+	/// Builds compsByType lookup during initialization for fast GetComp lookups.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptThingGetComp"/>
 	[HarmonyPatch(typeof(ThingWithComps))]
 	[HarmonyPatch(nameof(ThingWithComps.InitializeComps))]
 	internal static class Verse_ThingWithComps_InitializeComps

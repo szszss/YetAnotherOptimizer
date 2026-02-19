@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelMaterialUpdate"/>
+	/// Returns cached material property block for workers that support parallel updates.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelMaterialUpdate"/>
 	[HarmonyPatch(typeof(PawnRenderNodeWorker))]
 	[HarmonyPatch(nameof(PawnRenderNodeWorker.GetMaterialPropertyBlock))]
 	internal static class Verse_PawnRenderNodeWorker_GetMaterialPropertyBlock

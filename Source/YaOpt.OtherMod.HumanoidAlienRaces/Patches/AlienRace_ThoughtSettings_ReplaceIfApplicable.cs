@@ -8,8 +8,9 @@ using YaOpt.Helpers;
 namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 {
 	/// <summary>
-	/// This is actually a TPS optimization.
+	/// Replaces LINQ-based thought replacement lookups with simple loops.
 	/// </summary>
+	/// <seealso cref="SubMod.OptHARDeLinq"/>
 	[HarmonyPatch(typeof(ThoughtSettings))]
 	[HarmonyPatch(nameof(ThoughtSettings.ReplaceIfApplicable))]
 	internal static class AlienRace_ThoughtSettings_ReplaceIfApplicable

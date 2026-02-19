@@ -7,8 +7,9 @@ using Verse;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelPostMapTick"/>
+	/// Removes steady environment effects and gas grid ticks from MapPostTick for parallel execution.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelPostMapTick"/>
 	[HarmonyPatch(typeof(Map))]
 	[HarmonyPatch(nameof(Map.MapPostTick))]
 	internal static class Verse_Map_MapPostTick

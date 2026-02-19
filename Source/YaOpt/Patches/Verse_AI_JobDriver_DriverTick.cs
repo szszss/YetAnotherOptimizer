@@ -10,8 +10,10 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
+	/// Patches JobDriver.DriverTick to skip redundant job failure checks using prediction results.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
+	/// <seealso cref="JobPredictor.ShouldCheckJobFail"/>
 	[HarmonyPatch(typeof(JobDriver))]
 	[HarmonyPatch(nameof(JobDriver.DriverTick))]
 	internal static class Verse_AI_JobDriver_DriverTick

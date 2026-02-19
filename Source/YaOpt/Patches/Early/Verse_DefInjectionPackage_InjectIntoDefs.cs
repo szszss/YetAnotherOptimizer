@@ -6,8 +6,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Early
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptFastTranslationInjection"/>
+	/// Optimizes translation injection by using hash lookups instead of nested loops.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptFastTranslationInjection"/>
 	[HarmonyPatch(typeof(DefInjectionPackage))]
 	[HarmonyPatch(nameof(DefInjectionPackage.InjectIntoDefs))]
 	[EarlyPatch]

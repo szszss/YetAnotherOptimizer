@@ -9,22 +9,56 @@ using Exception = System.Exception;
 
 namespace YaOpt.Helpers
 {
+	/// <summary>
+	/// Predicts pawn job outcomes to enable parallel processing and skip redundant checks on the main thread.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This class is the core of the parallel pawn tick optimization. It runs on worker threads
+	/// during the parallel tick phase and pre-calculates:
+	/// <list type="bullet">
+	/// <item>Whether a pawn's current job will fail (enabling the main thread to skip job failure checks).</item>
+	/// <item>Whether a pawn needs to start a constant job (like reacting to threats).</item>
+	/// <item>Target status and distance validation for quick comparison on the main thread.</item>
+	/// </list>
+	/// </para>
+	/// </remarks>
+	/// <seealso cref="ParallelTickManager"/>
+	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 	public static class JobPredictor
 	{
+		/// <summary>
+		/// Thread-safe map from pawn to its prediction data.
+		/// </summary>
 		private static readonly ConcurrentDictionary<Pawn, JobPrediction> _jobPredictionMap =
 			new ConcurrentDictionary<Pawn, JobPrediction>();
 
+		/// <summary>
+		/// Flags representing the expected state of a target (actor or job target).
+		/// </summary>
 		[Flags]
 		public enum ExpectedTargetStatus : byte
 		{
 			None          = 0b0000_0000,
+			/// <summary>Target is spawned and not destroyed.</summary>
 			Spawned       = 0b0000_0001,
+			/// <summary>Target is a pawn that is not dead.</summary>
 			Alive         = 0b0000_0011,
+			/// <summary>Target is a pawn that is not downed.</summary>
 			Awake         = 0b0000_0111,
+			/// <summary>Target is a pawn that is in a mental state.</summary>
 			InMentalState = 0b0000_1000,
+			/// <summary>Target is a thing and is forbidden.</summary>
 			Forbidden     = 0b0001_0000,
 		}
 
+		/// <summary>
+		/// Stores the expected status of actor and job targets for quick comparison.
+		/// </summary>
+		/// <remarks>
+		/// Used to detect when job targets have changed state, requiring the main thread to
+		/// perform a full job failure check.
+		/// </remarks>
 		public struct TargetStatusValidation : IEquatable<TargetStatusValidation>
 		{
 			public ExpectedTargetStatus ExpectedActorStatus;
@@ -32,6 +66,9 @@ namespace YaOpt.Helpers
 			public ExpectedTargetStatus ExpectedTargetBStatus;
 			public ExpectedTargetStatus ExpectedTargetCStatus;
 
+			/// <summary>
+			/// Computes the expected status flags for a target.
+			/// </summary>
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public static ExpectedTargetStatus GetExpectedTargetStatus(Thing thing)
 			{
@@ -66,6 +103,9 @@ namespace YaOpt.Helpers
 				return status;
 			}
 
+			/// <summary>
+			/// Creates a validation snapshot for the actor and all job targets.
+			/// </summary>
 			public static TargetStatusValidation CreateValidation(Pawn actor, Job job)
 			{
 				if (actor == null || job == null)
@@ -116,14 +156,33 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Stores the expected Manhattan distances to job targets for quick comparison.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Used to detect when a pawn has moved significantly relative to its targets,
+		/// which may indicate that the job state has changed.
+		/// </para>
+		/// <para>
+		/// Uses Manhattan distance instead of Euclidean for faster calculation.
+		/// A tolerance of <see cref="TOLERANCE"/> cells allows for minor position changes
+		/// without triggering a full check.
+		/// </para>
+		/// </remarks>
 		public struct TargetDistanceValidation
 		{
+			/// <summary>Allowed deviation in cells before triggering a full check.</summary>
 			public const int TOLERANCE = 2;
+			/// <summary>Negative tolerance for comparison.</summary>
 			public const int NEG_TOLERANCE = -TOLERANCE;
 			public ushort ManhattanDistanceToTargetA;
 			public ushort ManhattanDistanceToTargetB;
 			public ushort ManhattanDistanceToTargetC;
 
+			/// <summary>
+			/// Computes the Manhattan distance between two things.
+			/// </summary>
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public static ushort GetManhattanDistance([NotNull] Thing a, [CanBeNull] Thing b)
 			{
@@ -131,9 +190,12 @@ namespace YaOpt.Helpers
 					return 0;
 
 				var delta = a.Position - b.Position;
-				return (ushort)(delta.x + delta.z);
+				return (ushort)(Math.Abs(delta.x) + Math.Abs(delta.z));
 			}
 
+			/// <summary>
+			/// Creates a distance validation snapshot for the actor and all job targets.
+			/// </summary>
 			public static TargetDistanceValidation CreateValidation(Pawn actor, Job job)
 			{
 				if (actor == null || job == null)
@@ -147,6 +209,9 @@ namespace YaOpt.Helpers
 				};
 			}
 
+			/// <summary>
+			/// Checks if two distances are within the tolerance.
+			/// </summary>
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private static bool DistanceAlmostEquals(ushort distance1, ushort distance2)
 			{
@@ -154,6 +219,9 @@ namespace YaOpt.Helpers
 				return delta >= NEG_TOLERANCE && delta <= TOLERANCE;
 			}
 
+			/// <summary>
+			/// Checks if all distances are within tolerance of the other validation.
+			/// </summary>
 			public bool AlmostEquals(TargetDistanceValidation other)
 			{
 				return DistanceAlmostEquals(ManhattanDistanceToTargetA, other.ManhattanDistanceToTargetA) &&
@@ -162,16 +230,34 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Stores prediction results for a single pawn.
+		/// </summary>
+		/// <remarks>
+		/// Structured with <see cref="StructLayoutAttribute"/> to fill a cache line (64 bytes)
+		/// and avoid false sharing between threads when processing multiple pawns.
+		/// </remarks>
 		[StructLayout(LayoutKind.Auto, Size = 64)] // Fill a cache line to avoid false sharing
 		public sealed class JobPrediction
 		{
+			/// <summary>
+			/// The game tick when this prediction was last updated.
+			/// </summary>
+			/// <remarks>A value of -1 indicates invalid/stale data.</remarks>
 			public int UpdateTick = -1;
+			/// <summary>If <c>true</c>, the pawn's job may fail this tick and requires main thread verification.</summary>
 			public bool MayFail = false;
+			/// <summary>If <c>true</c>, the pawn may need to start a constant job this tick.</summary>
 			public bool ShouldDoConstantJob = false;
+			/// <summary>Cached distance validation for quick comparison.</summary>
 			public TargetDistanceValidation DistanceValidation;
+			/// <summary>Cached status validation for quick comparison.</summary>
 			public TargetStatusValidation StatusValidation;
 		}
 
+		/// <summary>
+		/// Registers a pawn for job prediction tracking.
+		/// </summary>
 		public static void AddPawn(Pawn pawn)
 		{
 			if (!_jobPredictionMap.TryAdd(pawn, new JobPrediction()))
@@ -180,6 +266,9 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Unregisters a pawn from job prediction tracking.
+		/// </summary>
 		public static void RemovePawn(Pawn pawn)
 		{
 			if (!_jobPredictionMap.TryRemove(pawn, out _))
@@ -188,6 +277,19 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Performs parallel job prediction for a single pawn.
+		/// </summary>
+		/// <remarks>
+		/// Updates the following:
+		/// <list type="bullet">
+		/// <item><see cref="JobPrediction.MayFail"/> - Whether the job might fail.</item>
+		/// <item><see cref="JobPrediction.DistanceValidation"/> - Target distances.</item>
+		/// <item><see cref="JobPrediction.StatusValidation"/> - Target statuses.</item>
+		/// <item><see cref="JobPrediction.ShouldDoConstantJob"/> - Whether constant job check is needed.</item>
+		/// </list>
+		/// </remarks>
+		/// <seealso cref="ParallelTickManager.ParellellyTickPawns"/>
 		public static void ProcessPawn(Pawn pawn, int gameTick)
 		{
 			JobPrediction prediction = null;
@@ -225,6 +327,24 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Predicts whether a pawn's current job will fail this tick.
+		/// </summary>
+		/// <returns><c>true</c> if the job may fail; <c>false</c> if the job is stable.</returns>
+		/// <remarks>
+		/// <para>
+		/// Checks:
+		/// <list type="bullet">
+		/// <item>Global job fail conditions (e.g., pawn died, target destroyed).</item>
+		/// <item>Current toil end conditions.</item>
+		/// <item>Job-specific ignore list for jobs that shouldn't be predicted.</item>
+		/// </list>
+		/// </para>
+		/// <para>
+		/// Jobs with target queues are not predicted because their validations are too complex.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Verse.AI.JobDriver.CheckCurrentToilEndOrFail"/>
 		public static bool PredictFail(Pawn pawn)
 		{
 			if (pawn.jobs == null || pawn.jobs.curDriver == null)
@@ -291,6 +411,13 @@ namespace YaOpt.Helpers
 			return false;
 		}
 
+		/// <summary>
+		/// Predicts whether a pawn needs to check for constant jobs (e.g., reacting to threats).
+		/// </summary>
+		/// <returns><c>true</c> if constant job check is needed; otherwise, <c>false</c>.</returns>
+		/// <remarks>
+		/// Runs the pawn's constant think tree to see if a higher-priority job should interrupt.
+		/// </remarks>
 		public static bool PredictDoConstantJob(Pawn pawn, int delta)
 		{
 			if (!pawn.Spawned || pawn.jobs == null || !pawn.IsHashIntervalTick(30, delta))
@@ -317,11 +444,32 @@ namespace YaOpt.Helpers
 			return false;
 		}
 
+		/// <summary>
+		/// Clears all prediction data.
+		/// </summary>
 		public static void CleanCache()
 		{
 			_jobPredictionMap.Clear();
 		}
 
+		/// <summary>
+		/// Checks if the main thread should perform a full job failure check for a pawn.
+		/// </summary>
+		/// <returns>
+		/// <c>false</c> if the parallel prediction guarantees the job won't fail this tick;
+		/// <c>true</c> if a full check is needed.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Skips the full check when:
+		/// <list type="bullet">
+		/// <item>Prediction says the job won't fail (<see cref="JobPrediction.MayFail"/> is <c>false</c>).</item>
+		/// <item>Target distances haven't changed significantly.</item>
+		/// <item>Target statuses haven't changed.</item>
+		/// </list>
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
 		public static bool ShouldCheckJobFail(Pawn pawn)
 		{
 			if (_jobPredictionMap.TryGetValue(pawn, out var prediction))
@@ -347,6 +495,10 @@ namespace YaOpt.Helpers
 			return true;
 		}
 
+		/// <summary>
+		/// Checks if the main thread should check for constant jobs for a pawn.
+		/// </summary>
+		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
 		public static bool ShouldCheckConstantJob(Pawn pawn)
 		{
 			if (_jobPredictionMap.TryGetValue(pawn, out var prediction))

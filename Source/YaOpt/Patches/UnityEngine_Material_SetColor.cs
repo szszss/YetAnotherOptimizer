@@ -5,8 +5,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptMaterialGetColor"/>
+	/// Caches material color on setter to enable fast getter lookups.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptMaterialGetColor"/>
 	[HarmonyPatch(typeof(Material))]
 	[HarmonyPatch("color", MethodType.Setter)]
 	internal static class UnityEngine_Material_SetColor

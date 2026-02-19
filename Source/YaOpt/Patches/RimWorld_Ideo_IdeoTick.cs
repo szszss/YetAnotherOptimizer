@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptIdeoCheck"/>
+	/// Optimizes IdeoTick by iterating only precepts with overridden tick methods.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptIdeoCheck"/>
 	[HarmonyPatch(typeof(Ideo))]
 	[HarmonyPatch(nameof(Ideo.IdeoTick))]
 	internal static class RimWorld_Ideo_IdeoTick

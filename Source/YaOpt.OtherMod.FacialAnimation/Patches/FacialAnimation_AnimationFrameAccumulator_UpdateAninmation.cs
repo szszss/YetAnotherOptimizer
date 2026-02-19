@@ -8,8 +8,9 @@ using YaOpt.Helpers;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// <seealso cref="SubMod.OptFADeLinq"/>
+	/// Replaces LINQ-based animation updates with GC-friendly loops.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFADeLinq"/>
 	[HarmonyPatch(typeof(AnimationFrameAccumulator))]
 	[HarmonyPatch(nameof(AnimationFrameAccumulator.UpdateAninmation))]
 	internal static class FacialAnimation_AnimationFrameAccumulator_UpdateAninmation

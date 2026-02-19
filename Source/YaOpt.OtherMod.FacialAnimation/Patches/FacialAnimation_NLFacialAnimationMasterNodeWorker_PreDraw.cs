@@ -9,9 +9,9 @@ using YaOpt.Helpers;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// Skip the original update.
-	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
+	/// Skips original PreDraw since updates are handled in the parallel phase.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
 	[HarmonyPatch(typeof(NLFacialAnimationMasterNodeWorker))]
 	[HarmonyPatch(nameof(NLFacialAnimationMasterNodeWorker.PreDraw))]
 	internal static class FacialAnimation_NLFacialAnimationMasterNodeWorker_PreDraw

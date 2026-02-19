@@ -8,8 +8,9 @@ using YaOpt.Helpers.Trampolines;
 namespace YaOpt.Patches.Trampolines
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptLazyTextureLoad"/>
+	/// Trampoline installer for ContentFinder&lt;Texture2D&gt;.Get to enable lazy texture loading.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptLazyTextureLoad"/>
 	public abstract class Verse_ContentFinder_Get : TrampolineInstaller
 	{
 		public static Verse_ContentFinder_Get Instance;

@@ -9,8 +9,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Early
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptLazyTextureLoad"/>
+	/// Defers texture loading by creating placeholder textures that load on first access.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptLazyTextureLoad"/>
 	[HarmonyPatch(typeof(ModContentLoader<Texture2D>))]
 	[HarmonyPatch("LoadTexture")]
 	[EarlyPatch]

@@ -8,8 +8,9 @@ using static YaOpt.OtherMod.FacialAnimation.Helpers.JobAnimationHelper;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// <seealso cref="SubMod.OptFAPawnSpawn"/>
+	/// Caches animation dictionaries by race to reduce pawn spawn stuttering.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFAPawnSpawn"/>
 	[HarmonyPatch("FacialAnimation.FAHelper", "CreateAnimationDict")]
 	internal static class FacialAnimation_FAHelper_CreateAnimationDict
 	{

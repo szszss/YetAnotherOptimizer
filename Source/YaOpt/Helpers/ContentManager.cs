@@ -10,11 +10,32 @@ using Verse;
 
 namespace YaOpt.Helpers
 {
+	/// <summary>
+	/// Manages lazy loading of mod content (textures) to reduce startup time and VRAM usage.
+	/// </summary>
+	/// <seealso cref="YaOptSettings.OptLazyTextureLoad"/>
+	/// <seealso cref="YaOpt.Patches.Trampolines.Verse_ContentFinder_Get"/>
 	public static class ContentManager
 	{
+		/// <summary>
+		/// List of mods that contain texture assets.
+		/// </summary>
+		/// <remarks>Populated during <see cref="PostInit"/> for fast lookups.</remarks>
 		public static List<ModContentPack> ModsContainTexture = new List<ModContentPack>();
+
+		/// <summary>
+		/// List of mods that contain audio assets.
+		/// </summary>
 		public static List<ModContentPack> ModsContainAudio = new List<ModContentPack>();
+
+		/// <summary>
+		/// List of mods that contain string assets.
+		/// </summary>
 		public static List<ModContentPack> ModsContainString = new List<ModContentPack>();
+
+		/// <summary>
+		/// Maps content types to lists of mods containing that type.
+		/// </summary>
 		public static Dictionary<Type, List<ModContentPack>> ModsByContainType = new Dictionary<Type, List<ModContentPack>>()
 		{
 			{ typeof(Texture2D), ModsContainTexture },
@@ -44,8 +65,22 @@ namespace YaOpt.Helpers
 		private static readonly byte[] _tmpTextureDataBytes = new byte[(int)(512 * 512 * 4 * sizeof(int) * 1.34f)];
 		private static GCHandle _tmpDdsHeaderHandle;
 
+		/// <summary>
+		/// If <c>true</c>, only DDS textures are lazily loaded; other formats load immediately.
+		/// </summary>
+		/// <remarks>
+		/// DDS textures can be loaded directly into GPU memory without CPU-side processing,
+		/// making them ideal for lazy loading. Other formats require Unity's image conversion
+		/// which may cause stutter if loaded during gameplay.
+		/// </remarks>
 		public static bool OnlyLazilyLoadDds;
 
+		/// <summary>
+		/// Stores routing information for content lookups.
+		/// </summary>
+		/// <remarks>
+		/// After the first lookup, caches the source (mod, resources, or bundle) for fast subsequent loads.
+		/// </remarks>
 		private struct RouteSign
 		{
 			private ModContentHolder<Texture2D> _modTextureSource;
@@ -196,6 +231,19 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Initializes the content manager during mod loading.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Called during <see cref="YaOptMod"/> construction. At this point, ModContentPacks
+		/// are not fully initialized, so temporary data is filled. <see cref="PostInit"/> 
+		/// will replace this with accurate data.
+		/// </para>
+		/// <para>
+		/// Also detects and integrates with ImageOpt and GraphicsSettings mods for texture settings.
+		/// </para>
+		/// </remarks>
 		public static void Init()
 		{
 			_tmpDdsHeaderHandle = GCHandle.Alloc(_tmpDdsHeaderBytes, GCHandleType.Pinned);
@@ -244,6 +292,13 @@ namespace YaOpt.Helpers
 			ModsContainString.AddRange(LoadedModManager.RunningModsListForReading);
 		}
 
+		/// <summary>
+		/// Finalizes initialization after all mods are loaded.
+		/// </summary>
+		/// <remarks>
+		/// Called during StaticConstructorOnStartup phase. Replaces temporary mod lists
+		/// with accurate lists based on actual content counts.
+		/// </remarks>
 		public static void PostInit()
 		{
 			ModsContainTexture.Clear();
@@ -269,6 +324,26 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Retrieves content by type and path, using cached routes for fast lookup.
+		/// </summary>
+		/// <param name="itemType">The type of content (Texture2D, AudioClip, string, or Shader).</param>
+		/// <param name="itemPath">The path to the content item.</param>
+		/// <param name="reportFailure">If <c>true</c>, logs an error when content is not found.</param>
+		/// <returns>The loaded content, or <c>null</c> if not found.</returns>
+		/// <remarks>
+		/// <para>
+		/// Search order:
+		/// <list type="number">
+		/// <item>Active mods (highest priority mod first).</item>
+		/// <item>Unity Resources.</item>
+		/// <item>Asset bundles.</item>
+		/// </list>
+		/// </para>
+		/// <para>
+		/// For textures, this method triggers lazy loading if the texture hasn't been loaded yet.
+		/// </para>
+		/// </remarks>
 		public static object GetContent(Type itemType, string itemPath, bool reportFailure = true)
 		{
 			if (!UnityData.IsInMainThread)
@@ -302,8 +377,6 @@ namespace YaOpt.Helpers
 					routeSigns[itemPath] = routeSign;
 				}
 			}
-
-			//YaOptMod.Warning($"Try load {itemType.Name} from {itemPath} return {t.ToStringSafe()}");
 
 			if (t == null && reportFailure)
 			{
@@ -350,8 +423,6 @@ namespace YaOpt.Helpers
 
 		private static void LoadTextureDds(Texture2D texture, VirtualFile file)
 		{
-			//YaOptMod.Warning($"Actullay load dds file {file.Name}");
-
 			if (file.GetType().Name != "FilesystemFile")
 				throw new NotSupportedException("ModDdsLoader only supports FilesystemFile types.");
 

@@ -5,6 +5,13 @@ using System.Reflection;
 
 namespace YaOpt.Helpers
 {
+	/// <summary>
+	/// Caches type information from loaded assemblies for fast Harmony type lookups.
+	/// </summary>
+	/// <remarks>
+	/// Speeds up AccessTools.TypeByName calls during Harmony patch processing.
+	/// </remarks>
+	/// <seealso cref="YaOptSettings.OptRuntimeInfoCache"/>
 	internal static class RuntimeInfoCache
 	{
 		private static readonly HashSet<Assembly> _cachedAssemblies = new HashSet<Assembly>();
@@ -12,6 +19,9 @@ namespace YaOpt.Helpers
 		private static readonly Dictionary<string, Type> _typesByFullName = new Dictionary<string, Type>();
 		private static readonly Dictionary<Assembly, string> _assemblyNames = new Dictionary<Assembly, string>();
 
+		/// <summary>
+		/// Updates the cache with types from the specified assemblies.
+		/// </summary>
 		public static void TryUpdateCache(IEnumerable<Assembly> enumerable = null)
 		{
 			if (enumerable == null)
@@ -50,6 +60,9 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Gets a type by its name or full name from the cache.
+		/// </summary>
 		public static Type GetTypeByName(string name)
 		{
 			TryUpdateCache();
@@ -60,6 +73,9 @@ namespace YaOpt.Helpers
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the cached name for an assembly.
+		/// </summary>
 		public static string GetCachedAssemblyName(Assembly assembly)
 		{
 			if (_assemblyNames.TryGetValue(assembly, out var name))
@@ -67,6 +83,9 @@ namespace YaOpt.Helpers
 			return null;
 		}
 
+		/// <summary>
+		/// Sets the cached name for an assembly.
+		/// </summary>
 		public static void SetCachedAssemblyName(Assembly assembly, string name)
 		{
 			_assemblyNames[assembly] = name;

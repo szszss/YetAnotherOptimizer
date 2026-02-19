@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
 using Verse;
-using YaOpt.Helpers;
 using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches.ThreadSafe.ThreadLocal

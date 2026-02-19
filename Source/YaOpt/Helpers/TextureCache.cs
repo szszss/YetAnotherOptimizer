@@ -8,20 +8,18 @@ using Verse;
 
 namespace YaOpt.Helpers
 {
+	/// <summary>
+	/// Caches texture lookups for Graphic_Multi initialization to avoid repeated path manipulation and content lookups.
+	/// </summary>
+	/// <seealso cref="YaOptSettings.OptGraphicTextureCache"/>
 	public static class TextureCache
 	{
 		public const int TYPE_COLOR = 0;
-
 		public const int TYPE_MASK = 1;
-
 		public const int VARIANT_DEFAULT = 0;
-
 		public const int VARIANT_NORTH = 1;
-
 		public const int VARIANT_EAST = 2;
-
 		public const int VARIANT_SOUTH = 3;
-
 		public const int VARIANT_WEST = 4;
 
 
@@ -82,6 +80,9 @@ namespace YaOpt.Helpers
 			lastUsedType = -1;
 		}
 
+		/// <summary>
+		/// Retrieves a texture variant from cache or loads it if not cached.
+		/// </summary>
 		public static Texture2D Get(string pathWithoutAnyPostfix, int type, int variant)
 		{
 			CacheEntry entry;

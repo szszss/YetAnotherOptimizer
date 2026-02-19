@@ -10,8 +10,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptGraphicTextureCache"/>
+	/// Caches texture lookups for Graphic_Multi to avoid repeated path concatenation and content finder calls.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptGraphicTextureCache"/>
 	[HarmonyPatch(typeof(Graphic_Multi))]
 	[HarmonyPatch(nameof(Graphic_Multi.Init))]
 	internal static class Verse_Graphic_Multi_Init

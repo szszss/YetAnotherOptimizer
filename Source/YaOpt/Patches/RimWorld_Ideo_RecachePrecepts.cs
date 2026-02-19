@@ -5,8 +5,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptIdeoCheck"/>
+	/// Updates ideo cache when precepts are recalculated.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptIdeoCheck"/>
 	[HarmonyPatch(typeof(Ideo))]
 	[HarmonyPatch(nameof(Ideo.RecachePrecepts))]
 	internal static class RimWorld_Ideo_RecachePrecepts

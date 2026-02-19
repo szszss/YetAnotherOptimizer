@@ -5,8 +5,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Early
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptRuntimeInfoCache"/>
+	/// Caches assembly full name lookups to avoid repeated reflection calls.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptRuntimeInfoCache"/>
 	[HarmonyPatch("System.Reflection.RuntimeAssembly", "FullName", MethodType.Getter)]
 	[EarlyPatch]
 	internal static class System_Reflection_RuntimeAssembly_FullName

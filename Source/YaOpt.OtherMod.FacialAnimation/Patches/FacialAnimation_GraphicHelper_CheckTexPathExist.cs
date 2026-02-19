@@ -8,6 +8,10 @@ using YaOpt.Helpers;
 
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
+	/// <summary>
+	/// Routes texture existence checks through YaOpt's texture cache.
+	/// </summary>
+	/// <seealso cref="SubMod.OptFATextureCache"/>
 	[HarmonyPatch(typeof(GraphicHelper))]
 	[HarmonyPatch(nameof(GraphicHelper.CheckTexPathExist))]
 	internal static class FacialAnimation_GraphicHelper_CheckTexPathExist

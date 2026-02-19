@@ -10,8 +10,9 @@ using YaOpt.OtherMod.FacialAnimation.Helpers;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
+	/// Moves pawn parameter gathering to the parallel update phase.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFAParallelUpdate"/>
 	[HarmonyPatch(typeof(FacialAnimationControllerComp))]
 	[HarmonyPatch("GatherPawnParam")]
 	internal static class FacialAnimation_FacialAnimationControllerComp_GatherPawnParam

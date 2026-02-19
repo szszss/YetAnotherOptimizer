@@ -10,8 +10,9 @@ using Verse.Sound;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptMeditationTick"/>
+	/// Throttles meditation ticks to every 100 ticks with scaled effects.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptMeditationTick"/>
 	[HarmonyPatch(typeof(JobDriver_Meditate))]
 	[HarmonyPatch("MeditationTick")]
 	internal static class RimWorld_JobDriver_Meditate_MeditationTick

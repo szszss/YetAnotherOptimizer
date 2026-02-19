@@ -7,8 +7,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
+	/// Skips constant job checks when prediction indicates no need.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 	[HarmonyPatch(typeof(Pawn_JobTracker))]
 	[HarmonyPatch(nameof(Pawn_JobTracker.JobTrackerTickInterval))]
 	internal static class Verse_AI_Pawn_JobTracker_JobTrackerTickInterval

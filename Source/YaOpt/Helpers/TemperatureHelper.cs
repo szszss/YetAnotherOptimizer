@@ -4,6 +4,10 @@ using Verse;
 
 namespace YaOpt.Helpers
 {
+	/// <summary>
+	/// Caches pawn safe temperature ranges per tick to avoid repeated calculations.
+	/// </summary>
+	/// <seealso cref="YaOptSettings.OptStatCache"/>
 	internal static class TemperatureHelper
 	{
 		private struct CacheEntry
@@ -33,6 +37,9 @@ namespace YaOpt.Helpers
 			cachedSafeTemperatureRanges.Clear();
 		}
 
+		/// <summary>
+		/// Gets the safe temperature range for a pawn, cached per tick.
+		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static FloatRange GetSafeTemperatureRange(Pawn pawn)
 		{

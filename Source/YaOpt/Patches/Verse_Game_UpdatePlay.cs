@@ -9,8 +9,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="Helpers.UpdateCallbackHelper"/>
+	/// Injects pre-render and post-render callbacks into the game update loop.
 	/// </summary>
+	/// <seealso cref="Helpers.UpdateCallbackHelper"/>
 	[HarmonyPatch(typeof(Game))]
 	[HarmonyPatch(nameof(Game.UpdatePlay))]
 	internal static class Verse_Game_UpdatePlay

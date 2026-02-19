@@ -5,8 +5,10 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptMaterialGetColor"/>
+	/// Patches Material.color getter to return cached values instead of native calls.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptMaterialGetColor"/>
+	/// <seealso cref="MaterialColorCache"/>
 	[HarmonyPatch(typeof(Material))]
 	[HarmonyPatch("color", MethodType.Getter)]
 	internal static class UnityEngine_Material_GetColor

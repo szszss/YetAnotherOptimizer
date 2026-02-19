@@ -10,6 +10,10 @@ using YaOpt.OtherMod.HumanoidAlienRaces.Helpers;
 
 namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 {
+	/// <summary>
+	/// Routes texture lookups through YaOpt's texture cache for faster repeated access.
+	/// </summary>
+	/// <seealso cref="SubMod.OptHARTextureCache"/>
 	[HarmonyPatch(typeof(AlienPartGenerator.BodyAddon))]
 	[HarmonyPatch(nameof(AlienPartGenerator.BodyAddon.GetGraphic))]
 	internal static class AlienRace_AlienPartGenerator_BodyAddon_GetGraphic

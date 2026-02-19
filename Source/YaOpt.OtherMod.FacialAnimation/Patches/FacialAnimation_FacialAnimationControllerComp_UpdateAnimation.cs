@@ -10,8 +10,9 @@ using YaOpt.OtherMod.FacialAnimation.Helpers;
 namespace YaOpt.OtherMod.FacialAnimation.Patches
 {
 	/// <summary>
-	/// <seealso cref="SubMod.OptFAAnimCache"/>
+	/// Uses cached animation lists during animation updates to reduce allocations.
 	/// </summary>
+	/// <seealso cref="SubMod.OptFAAnimCache"/>
 	[HarmonyPatch(typeof(FacialAnimationControllerComp))]
 	[HarmonyPatch(nameof(FacialAnimationControllerComp.UpdateAnimation))]
 	internal static class FacialAnimation_FacialAnimationControllerComp_UpdateAnimation

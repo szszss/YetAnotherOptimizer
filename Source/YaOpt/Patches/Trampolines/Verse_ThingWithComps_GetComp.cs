@@ -7,8 +7,10 @@ using YaOpt.Helpers.Trampolines;
 namespace YaOpt.Patches.Trampolines
 {
 	/// <summary>
-	/// <seealso cref="YaOptSettings.OptThingGetComp"/>
+	/// Trampoline installer for ThingWithComps.GetComp&lt;T&gt;() to enable fast component lookup.
 	/// </summary>
+	/// <seealso cref="YaOptSettings.OptThingGetComp"/>
+	/// <seealso cref="GetCompHelper"/>
 	public abstract class Verse_ThingWithComps_GetComp : TrampolineInstaller
 	{
 		public static Verse_ThingWithComps_GetComp Instance;

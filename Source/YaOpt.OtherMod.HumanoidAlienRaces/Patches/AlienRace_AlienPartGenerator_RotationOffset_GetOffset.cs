@@ -8,6 +8,10 @@ using YaOpt.Helpers;
 
 namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 {
+	/// <summary>
+	/// Replaces LINQ-based offset lookups with simple loops to avoid GC allocations.
+	/// </summary>
+	/// <seealso cref="SubMod.OptHARDeLinq"/>
 	[HarmonyPatch(typeof(AlienPartGenerator.RotationOffset))]
 	[HarmonyPatch(nameof(AlienPartGenerator.RotationOffset.GetOffset))]
 	internal static class AlienRace_AlienPartGenerator_RotationOffset_GetOffset

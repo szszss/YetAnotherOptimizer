@@ -4,6 +4,9 @@ using YaOpt.Helpers.Trampolines;
 
 namespace YaOpt.Patches.Trampolines
 {
+	/// <summary>
+	/// Manages registration, installation, and uninstallation of native trampoline patches.
+	/// </summary>
 	internal static class TrampolinePatcher
 	{
 		private static readonly List<TrampolineInstaller> _registeredTrampolines = new List<TrampolineInstaller>();

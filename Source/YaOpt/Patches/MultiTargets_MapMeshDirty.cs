@@ -9,9 +9,10 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
+	/// Throttles map mesh updates to reduce rendering overhead during snow/dust changes.
+	/// </summary>
 	/// <seealso cref="Helpers.MapMeshUpdateThrottle"/>
 	/// <seealso cref="YaOptSettings.OptMapMeshUpdateThrottle"/>
-	/// </summary>
 	[HarmonyPatch]
 	internal static class MultiTargets_MapMeshDirty
 	{
