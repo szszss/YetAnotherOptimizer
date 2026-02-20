@@ -40,7 +40,7 @@
 	<YaOpt.Setting.Option.FastRecacheRequested.Compatibility>该优化假设所有的渲染节点都使用原版的缓存更新检查逻辑。如果在游戏启动时检测到有其他Mod重写了缓存更新检查，此优化会被自动禁用。</YaOpt.Setting.Option.FastRecacheRequested.Compatibility>
 	<YaOpt.Setting.Option.LazyTextureLoad>延迟纹理加载</YaOpt.Setting.Option.LazyTextureLoad>
 	<YaOpt.Setting.Option.LazyTextureLoad.Desc>原版游戏会在启动时将所有Mod纹理加载入显存中。这个优化会让纹理仅在被首次调用时加载，能降低启动耗时和显存占用，但会让游戏内首次载入纹理时顿卡。需要注意的是，目前尚未实现纹理卸载机制，当你一次游戏玩得足够久时，显存占用仍可能会逐渐增加至巅峰。</YaOpt.Setting.Option.LazyTextureLoad.Desc>
-	<YaOpt.Setting.Option.LazyTextureLoad.Stable>由于Harmony不支持为泛型方法打补丁，该优化通过Hook底层代码来实现，目前仅支持Windows平台。</YaOpt.Setting.Option.LazyTextureLoad.Stable>
+	<YaOpt.Setting.Option.LazyTextureLoad.Stable>会导致Graphics Settings+和ImageOpt的统计数据不准。由于Harmony不支持为泛型方法打补丁，该优化通过Hook底层代码来实现，目前仅支持Windows平台。</YaOpt.Setting.Option.LazyTextureLoad.Stable>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>仅延迟加载DDS格式</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>只对DDS格式（以及ImageOpt的Zstd压缩DDS）纹理启用延迟加载，非DDS格式图片在载入时需要花费额外时间将其转换成能被游戏引擎渲染的格式，在运行中载入时会有明显的卡顿。</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
 	<YaOpt.Setting.Option.FastPatchOperation>简化XPath</YaOpt.Setting.Option.FastPatchOperation>
