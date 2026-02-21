@@ -3,6 +3,7 @@
 	<YaOpt.CompatibilityDef>
 		<defName>Core</defName>
 		<threadLocalPatches>
+			<!-- QuestUtility -->
 			<ThreadLocalPatch>
 				<method>RimWorld.QuestUtility:GetWorkDisabledQuestPart</method>
 				<replace>tmpQuestWorkDisabled</replace>
@@ -35,6 +36,12 @@
 					<li>out int</li>
 				</parameters>
 				<replace>tmpQuestParts</replace>
+			</ThreadLocalPatch>
+			
+			<!-- AttackTargetsCache -->
+			<ThreadLocalPatch>
+				<method>Verse.AI.AttackTargetsCache:GetPotentialTargetsFor</method>
+				<replace>targets</replace>
 			</ThreadLocalPatch>
 		</threadLocalPatches>
 	</YaOpt.CompatibilityDef>

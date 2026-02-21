@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="Ancot.AncotLibrary">
+		<defName>AncotLibrary</defName>
+		<threadLocalPatches>
+			<ThreadLocalPatch>
+				<method>AncotLibrary.JobGiver_FindFallBackCellLOSAndGiveJob:GetDestination</method>
+				<replace>tmpHostileSpots</replace>
+			</ThreadLocalPatch>
+		</threadLocalPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
