@@ -32,7 +32,7 @@
 				<parameters>
 					<li>System.Action(string, RimWorld.Quest)</li>
 					<li>Verse.ISelectable</li>
-					<li>int</li>
+					<li>out int</li>
 				</parameters>
 				<replace>tmpQuestParts</replace>
 			</ThreadLocalPatch>

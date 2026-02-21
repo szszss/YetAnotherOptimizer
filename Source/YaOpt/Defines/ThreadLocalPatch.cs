@@ -101,8 +101,36 @@ namespace YaOpt.Defines
 		/// Uses parentheses for generics (instead of angle brackets for easier XML authoring).
 		/// Supports nested types: Dictionary(string, List(int[])), int[,], etc.
 		/// Also supports C# type keywords: int, string, float, etc.
+		/// Also supports out/ref modifiers: out int, ref string.
 		/// </remarks>
 		private static Type ParseType(string typeStr)
+		{
+			if (string.IsNullOrWhiteSpace(typeStr))
+				return null;
+
+			typeStr = typeStr.Trim();
+
+			// Check for out/ref modifiers
+			bool isByRef = false;
+			if (typeStr.StartsWith("out ", StringComparison.OrdinalIgnoreCase) ||
+				typeStr.StartsWith("ref ", StringComparison.OrdinalIgnoreCase))
+			{
+				isByRef = true;
+				typeStr = typeStr.Substring(4).Trim();
+			}
+
+			Type type = ParseTypeCore(typeStr);
+
+			if (isByRef && type != null)
+				type = type.MakeByRefType();
+
+			return type;
+		}
+
+		/// <summary>
+		/// Core type parsing logic without out/ref handling.
+		/// </summary>
+		private static Type ParseTypeCore(string typeStr)
 		{
 			if (string.IsNullOrWhiteSpace(typeStr))
 				return null;
@@ -113,7 +141,7 @@ namespace YaOpt.Defines
 			var arraySuffix = GetArraySuffix(typeStr, out var baseTypeStr);
 			if (arraySuffix != null)
 			{
-				var elementType = ParseType(baseTypeStr);
+				var elementType = ParseTypeCore(baseTypeStr);
 				if (elementType == null)
 					throw new Exception($"Cannot find element type for array: {baseTypeStr}");
 				return arraySuffix.Length == 0
