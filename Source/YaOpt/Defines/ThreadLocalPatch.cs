@@ -59,8 +59,12 @@ namespace YaOpt.Defines
 		}
 
 		/// <summary>
-		/// Parses a type string, supporting generic types like List&lt;int&gt;.
+		/// Parses a type string, supporting generic types like List(int) and arrays like int[].
 		/// </summary>
+		/// <remarks>
+		/// Uses parentheses for generics (instead of angle brackets for easier XML authoring).
+		/// Supports nested types: Dictionary(string, List(int[])), int[,], etc.
+		/// </remarks>
 		private static Type ParseType(string typeStr)
 		{
 			if (string.IsNullOrWhiteSpace(typeStr))
@@ -68,23 +72,35 @@ namespace YaOpt.Defines
 
 			typeStr = typeStr.Trim();
 
-			// Check if this is a generic type (contains '<' and '>')
-			var openBracket = typeStr.IndexOf('<');
-			if (openBracket < 0)
+			// Check for array suffix first (e.g., "int[]" or "List(int)[]")
+			var arraySuffix = GetArraySuffix(typeStr, out var baseTypeStr);
+			if (arraySuffix != null)
+			{
+				var elementType = ParseType(baseTypeStr);
+				if (elementType == null)
+					throw new Exception($"Cannot find element type for array: {baseTypeStr}");
+				return arraySuffix.Length == 0
+					? elementType.MakeArrayType()
+					: elementType.MakeArrayType(arraySuffix.Length + 1);
+			}
+
+			// Check if this is a generic type (contains '(' and ')')
+			var openParen = typeStr.IndexOf('(');
+			if (openParen < 0)
 			{
 				// Not a generic type, use standard lookup
 				return AccessTools.TypeByName(typeStr);
 			}
 
-			var closeBracket = typeStr.LastIndexOf('>');
-			if (closeBracket < 0 || closeBracket <= openBracket)
+			var closeParen = typeStr.LastIndexOf(')');
+			if (closeParen < 0 || closeParen <= openParen)
 				throw new Exception($"Invalid generic type syntax: {typeStr}");
 
-			// Extract the generic type definition name (e.g., "List" from "List<int>")
-			var genericDefName = typeStr.Substring(0, openBracket).Trim();
+			// Extract the generic type definition name (e.g., "List" from "List(int)")
+			var genericDefName = typeStr.Substring(0, openParen).Trim();
 
-			// Extract the type arguments (e.g., "int" from "List<int>")
-			var argsStr = typeStr.Substring(openBracket + 1, closeBracket - openBracket - 1);
+			// Extract the type arguments (e.g., "int" from "List(int)")
+			var argsStr = typeStr.Substring(openParen + 1, closeParen - openParen - 1);
 
 			// Parse type arguments (may be nested generics)
 			var typeArgs = ParseTypeArguments(argsStr);
@@ -109,6 +125,44 @@ namespace YaOpt.Defines
 		}
 
 		/// <summary>
+		/// Extracts array suffix from type string, returns null if not an array.
+		/// </summary>
+		/// <param name="typeStr">Full type string (e.g., "int[]" or "int[,,]")</param>
+		/// <param name="baseTypeStr">Output: the element type string without array suffix</param>
+		/// <returns>Array rank indicators (e.g., "" for 1D, ",," for 3D), or null if not an array</returns>
+		private static string GetArraySuffix(string typeStr, out string baseTypeStr)
+		{
+			baseTypeStr = typeStr;
+
+			// Find array brackets at the end
+			var lastBracket = typeStr.LastIndexOf(']');
+			if (lastBracket < 0)
+				return null;
+
+			// Find matching opening bracket
+			var openBracket = typeStr.LastIndexOf('[');
+			if (openBracket < 0 || openBracket >= lastBracket)
+				return null;
+
+			// Ensure the brackets are at the end
+			if (lastBracket != typeStr.Length - 1)
+				return null;
+
+			// Extract the suffix content (e.g., "" for [], ",," for [,,,])
+			var suffix = typeStr.Substring(openBracket + 1, lastBracket - openBracket - 1);
+
+			// Validate: should only contain commas
+			foreach (var c in suffix)
+			{
+				if (c != ',')
+					return null;
+			}
+
+			baseTypeStr = typeStr.Substring(0, openBracket).Trim();
+			return suffix;
+		}
+
+		/// <summary>
 		/// Parses comma-separated type arguments, handling nested generics.
 		/// </summary>
 		private static List<Type> ParseTypeArguments(string argsStr)
@@ -120,14 +174,19 @@ namespace YaOpt.Defines
 			for (var i = 0; i < argsStr.Length; i++)
 			{
 				var c = argsStr[i];
-				if (c == '<')
+				if (c == '(')
 				{
 					depth++;
 					currentArg.Append(c);
 				}
-				else if (c == '>')
+				else if (c == ')')
 				{
 					depth--;
+					currentArg.Append(c);
+				}
+				else if (c == '[' || c == ']')
+				{
+					// Allow array syntax inside type arguments
 					currentArg.Append(c);
 				}
 				else if (c == ',' && depth == 0)

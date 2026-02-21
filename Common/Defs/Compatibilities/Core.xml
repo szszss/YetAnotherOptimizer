@@ -13,14 +13,27 @@
 			</ThreadLocalPatch>
 			<ThreadLocalPatch>
 				<method>RimWorld.QuestUtility:HasExtraHomeFaction</method>
+				<parameters>
+					<li>Verse.Pawn</li>
+					<li>RimWorld.Faction</li>
+				</parameters>
 				<replace>tmpExtraFactions</replace>
 			</ThreadLocalPatch>
 			<ThreadLocalPatch>
 				<method>RimWorld.QuestUtility:HasExtraMiniFaction</method>
+				<parameters>
+					<li>Verse.Pawn</li>
+					<li>RimWorld.Faction</li>
+				</parameters>
 				<replace>tmpExtraFactions</replace>
 			</ThreadLocalPatch>
 			<ThreadLocalPatch>
 				<method>RimWorld.QuestUtility:AppendInspectStringsFromQuestParts</method>
+				<parameters>
+					<li>System.Action(string, RimWorld.Quest)</li>
+					<li>Verse.ISelectable</li>
+					<li>int</li>
+				</parameters>
 				<replace>tmpQuestParts</replace>
 			</ThreadLocalPatch>
 		</threadLocalPatches>
