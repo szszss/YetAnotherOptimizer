@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using System.Xml;
 using Verse;
 
@@ -10,6 +11,29 @@ namespace YaOpt.Defines
 {
 	public class ThreadLocalPatch
 	{
+		/// <summary>
+		/// Maps C# type keywords to their corresponding .NET primitive types.
+		/// </summary>
+		private static readonly Dictionary<string, Type> TypeMapping = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
+		{
+			{ "bool", typeof(bool) },
+			{ "byte", typeof(byte) },
+			{ "sbyte", typeof(sbyte) },
+			{ "char", typeof(char) },
+			{ "decimal", typeof(decimal) },
+			{ "double", typeof(double) },
+			{ "float", typeof(float) },
+			{ "int", typeof(int) },
+			{ "uint", typeof(uint) },
+			{ "long", typeof(long) },
+			{ "ulong", typeof(ulong) },
+			{ "short", typeof(short) },
+			{ "ushort", typeof(ushort) },
+			{ "object", typeof(object) },
+			{ "string", typeof(string) },
+			{ "void", typeof(void) },
+		};
+
 		private string _targetMethod;
 
 		private string _fieldToReplace;
@@ -52,7 +76,19 @@ namespace YaOpt.Defines
 			}
 			var method = AccessTools.Method(_targetMethod, tmpList);
 			if (method == null)
-				throw new Exception($"Cannot find method {_targetMethod}");
+			{
+				var sb = new StringBuilder("Cannot find method ").Append(_targetMethod);
+				if (tmpList != null)
+				{
+					sb.Append(" (Parameters count: ").Append(tmpList.Length);
+					foreach (var type in tmpList)
+					{
+						sb.Append(' ').Append(type.FullName);
+					}
+					sb.Append(")");
+				}
+				throw new Exception(sb.ToString());
+			}
 			if (string.IsNullOrWhiteSpace(_fieldToReplace))
 				throw new Exception($"Invalid field to replace: {_fieldToReplace}");
 			return (method, _fieldToReplace);
@@ -64,6 +100,7 @@ namespace YaOpt.Defines
 		/// <remarks>
 		/// Uses parentheses for generics (instead of angle brackets for easier XML authoring).
 		/// Supports nested types: Dictionary(string, List(int[])), int[,], etc.
+		/// Also supports C# type keywords: int, string, float, etc.
 		/// </remarks>
 		private static Type ParseType(string typeStr)
 		{
@@ -88,8 +125,8 @@ namespace YaOpt.Defines
 			var openParen = typeStr.IndexOf('(');
 			if (openParen < 0)
 			{
-				// Not a generic type, use standard lookup
-				return AccessTools.TypeByName(typeStr);
+				// Not a generic type, use standard lookup with alias resolution
+				return ResolveType(typeStr);
 			}
 
 			var closeParen = typeStr.LastIndexOf(')');
@@ -122,6 +159,16 @@ namespace YaOpt.Defines
 
 			// Construct the generic type
 			return genericDef.MakeGenericType(typeArgs.ToArray());
+		}
+
+		/// <summary>
+		/// Resolves a type name, handling C# type aliases.
+		/// </summary>
+		private static Type ResolveType(string typeName)
+		{
+			if (TypeMapping.TryGetValue(typeName, out var primitiveType))
+				return primitiveType;
+			return AccessTools.TypeByName(typeName);
 		}
 
 		/// <summary>
