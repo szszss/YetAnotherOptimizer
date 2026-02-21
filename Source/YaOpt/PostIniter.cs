@@ -1,4 +1,5 @@
 using Verse;
+using YaOpt.Defines;
 using YaOpt.Helpers;
 using YaOpt.Patches;
 
@@ -13,7 +14,7 @@ namespace YaOpt
 			DefInjectionHelper.ClearCache();
 			AccessHelper.Init();
 			ThingHelper.Init();
-			CompatibilityDef.Cache();
+			CompatibilityDefines.Load();
 			ContentManager.PostInit();
 			TypeSearcher.Init(); // Must init before patcher. Some patchers depend it.
 			Patcher.Init();

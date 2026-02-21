@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Verse;
+using YaOpt.Defines;
 
 namespace YaOpt.Helpers
 {
@@ -63,7 +64,7 @@ namespace YaOpt.Helpers
 				return;
 			if (type == typeof(MainButtonWorker_ToggleMechTab))
 				return;
-			if (CompatibilityDef.CachedIgnoredToggleTabCaching.Contains(type))
+			if (CompatibilityDefines.CachedIgnoredToggleTabCaching.Contains(type))
 				return;
 
 			if (type.GetProperty(nameof(MainButtonWorker.Disabled),

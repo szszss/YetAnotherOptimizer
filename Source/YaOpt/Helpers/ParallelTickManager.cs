@@ -178,7 +178,10 @@ namespace YaOpt.Helpers
 			{
 				// Rebuilding any dirty region.
 				map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
+				// Ensure factions lists init in main thread.
+				map.mapPawns.SpawnedPawnsInFaction(null);
 			}
+
 			_gameTick = GenTicks.TicksGame;
 			var pawnCount = _pawns.Count;
 			var jobCount = (int)(pawnCount + 6);
@@ -189,6 +192,7 @@ namespace YaOpt.Helpers
 			{
 				_jobQueue.Enqueue(i);
 			}
+			YaOptGlobal.IsParallelRunningInTick = true;
 			JobHandle handle = default;
 			_finishedJobCount = 0;
 			handle = new ManagedJobFor(new ParallelPawnJob(_jobQueue, _pawns, _gameTick))
@@ -197,6 +201,7 @@ namespace YaOpt.Helpers
 			while (_finishedJobCount != pawnCount && !handle.IsCompleted)
 			{
 			}
+			YaOptGlobal.IsParallelRunningInTick = false;
 		}
 
 		/// <summary>

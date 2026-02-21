@@ -2,7 +2,6 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using Verse.AI;
-using YaOpt.Helpers;
 
 namespace YaOpt.Patches.Debugging
 {
@@ -25,13 +24,13 @@ namespace YaOpt.Patches.Debugging
 
 		static void Prefix()
 		{
-			if (ParallelJobGiver.WorkerThreadsRunning)
+			if (YaOptGlobal.IsParallelRunningInTick)
 			{
 				YaOptMod.Error("A Reservation operation was detected during the execution of " +
-							   "the ParallelJobGiver, which is strictly prohibited. " +
+							   "ParallelJobGiver or ParallelTickManager. This is strictly prohibited. " +
 							   "You can analyze the call stack to determine which WorkerGiver " +
-							   "performed this operation. " +
-							   "Please report this compatibility issue to the developers.");
+							   "or JobPrediction performed this operation. " +
+							   "Please report this compatibility issue to YaOpt developers.");
 			}
 		}
 	}

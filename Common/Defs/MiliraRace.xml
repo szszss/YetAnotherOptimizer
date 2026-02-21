@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="Ancot.MiliraRace">
+		<defName>MiliraRace</defName>
+		<threadLocalPatches>
+			<ThreadLocalPatch>
+				<method>Milira.JobGiver_AIJumpEscapeEnemiesRandom:TryFindRelocatePosition</method>
+				<replace>tmpHostileSpots</replace>
+			</ThreadLocalPatch>
+		</threadLocalPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>

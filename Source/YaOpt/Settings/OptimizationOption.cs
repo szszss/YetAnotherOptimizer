@@ -1,5 +1,6 @@
 using System;
 using Verse;
+using YaOpt.Defines;
 
 namespace YaOpt.Settings
 {
@@ -19,7 +20,7 @@ namespace YaOpt.Settings
 					return false;
 				if (RequiredOption != null && !RequiredOption.Enabled)
 					return false;
-				if (CompatibilityDef.CachedBannedOptimizations.Contains(SettingId))
+				if (CompatibilityDefines.CachedBannedOptimizations.Contains(SettingId))
 					return false;
 				return _enabled;
 			}

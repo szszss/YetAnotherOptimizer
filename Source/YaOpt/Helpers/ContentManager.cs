@@ -247,7 +247,7 @@ namespace YaOpt.Helpers
 		public static void Init()
 		{
 			_tmpDdsHeaderHandle = GCHandle.Alloc(_tmpDdsHeaderBytes, GCHandleType.Pinned);
-			_hasImageOpt = YaOptGlobal.HasType("ImageOpt.TextureLoadPatch");
+			_hasImageOpt = YaOptGlobal.HasType("ImageOpt.ImageOpt");
 			if (_hasImageOpt)
 			{
 				try
@@ -262,7 +262,7 @@ namespace YaOpt.Helpers
 					_hasImageOpt = false;
 				}
 			}
-			_hasGraphicsSettings = YaOptGlobal.HasType("ImageOpt.TextureLoadPatch");
+			_hasGraphicsSettings = YaOptGlobal.HasType("GraphicSetter.GraphicSetter");
 			if (_hasGraphicsSettings)
 			{
 				try

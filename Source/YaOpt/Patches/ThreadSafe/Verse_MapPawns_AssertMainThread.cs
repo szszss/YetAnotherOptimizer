@@ -1,6 +1,5 @@
 using HarmonyLib;
 using Verse;
-using YaOpt.Helpers;
 
 namespace YaOpt.Patches.ThreadSafe
 {
@@ -15,7 +14,7 @@ namespace YaOpt.Patches.ThreadSafe
 
 		static bool Prefix()
 		{
-			return !ParallelJobGiver.WorkerThreadsRunning;
+			return !YaOptGlobal.IsParallelRunningInTick;
 		}
 	}
 }

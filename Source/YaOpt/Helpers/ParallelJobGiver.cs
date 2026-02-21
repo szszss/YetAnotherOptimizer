@@ -13,16 +13,15 @@ using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
 using Verse;
 using Verse.AI;
+using YaOpt.Defines;
 using YaOpt.Helpers.ThreadLocal;
-using static YaOpt.CompatibilityDef.WorkGiverCompatibility.Parallelism;
+using static YaOpt.Defines.WorkGiverCompatibility.Parallelism;
 
 namespace YaOpt.Helpers
 {
 	internal static class ParallelJobGiver
 	{
 		public static bool Running;
-
-		public static bool WorkerThreadsRunning;
 
 		private static /*volatile*/ int workingFence;
 
@@ -140,7 +139,7 @@ namespace YaOpt.Helpers
 					var workGiver = jobList[i];
 					if (pawnCanUseWorkGiver(jgw, pawn, workGiver))
 					{
-						if (CompatibilityDef.CachedWorkGiverParallelism
+						if (CompatibilityDefines.CachedWorkGiverParallelism
 							.TryGetValue(workGiver.def.defName, out var parallelism) && parallelism != Full)
 						{
 							serialTaskCount++;
@@ -170,7 +169,7 @@ namespace YaOpt.Helpers
 					}
 				}
 
-				WorkerThreadsRunning = true;
+				YaOptGlobal.IsParallelRunningInTick = true;
 				jobHandle = new ManagedJobFor(
 						new IssueJobPackageJob(pawn, jobList))
 					.ScheduleParallel(parallelTaskCount, 1);
@@ -191,7 +190,7 @@ namespace YaOpt.Helpers
 						jobHandle.CompleteWithSpinWait(); // Make sure it's finished
 					}
 				}
-				WorkerThreadsRunning = false;
+				YaOptGlobal.IsParallelRunningInTick = false;
 				if (mainThreadHasJobToDone)
 				{
 					MainThreadProcess(pawn, true);

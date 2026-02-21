@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Verse;
 using Verse.AI;
+using YaOpt.Defines;
 using Exception = System.Exception;
 
 namespace YaOpt.Helpers
@@ -354,7 +355,7 @@ namespace YaOpt.Helpers
 				var job = pawn.CurJob;
 				if (job != null)
 				{
-					if (CompatibilityDef.CachedIgnoredJobFailurePredicting.Contains(job.def))
+					if (CompatibilityDefines.CachedIgnoredJobFailurePredicting.Contains(job.def))
 						return true;
 
 					// We can't validate target queue. So we will stop predicting if a job uses target queue.

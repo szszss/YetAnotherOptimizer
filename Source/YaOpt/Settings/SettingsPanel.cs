@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using Verse;
+using YaOpt.Defines;
 
 namespace YaOpt.Settings
 {
@@ -248,7 +249,7 @@ namespace YaOpt.Settings
 				label = string.Concat(label, " <color=#DEB0D0>[C]</color>");
 			}
 			var enabled = option._enabled;
-			var disabledByDef = CompatibilityDef.CachedBannedOptimizations.Contains(option.SettingId);
+			var disabledByDef = CompatibilityDefines.CachedBannedOptimizations.Contains(option.SettingId);
 			DrawCheckboxLabeled(listing, label, enabled, disabledByDef, out var mouseOver, out var result);
 			if (mouseOver && _lastMouseOverOption != option)
 			{
@@ -303,11 +304,11 @@ namespace YaOpt.Settings
 			_lastMouseOverOption = option;
 			var sb = new StringBuilder();
 
-			if (CompatibilityDef.CachedBannedOptimizations.Contains(option.SettingId))
+			if (CompatibilityDefines.CachedBannedOptimizations.Contains(option.SettingId))
 			{
 				sb.Append("<color=#FF2020>")
 					.Append("YaOpt.Setting.Note.Banned".Translate(
-						CompatibilityDef.CachedBannedBy[option.SettingId]))
+						CompatibilityDefines.CachedBannedBy[option.SettingId]))
 					.AppendLine("</color>");
 			}
 

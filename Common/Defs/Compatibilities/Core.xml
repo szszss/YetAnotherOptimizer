@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef>
+		<defName>Core</defName>
+		<threadLocalPatches>
+			<ThreadLocalPatch>
+				<method>RimWorld.QuestUtility:GetWorkDisabledQuestPart</method>
+				<replace>tmpQuestWorkDisabled</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.QuestUtility:GetExtraFaction</method>
+				<replace>tmpExtraFactions</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.QuestUtility:HasExtraHomeFaction</method>
+				<replace>tmpExtraFactions</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.QuestUtility:HasExtraMiniFaction</method>
+				<replace>tmpExtraFactions</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.QuestUtility:AppendInspectStringsFromQuestParts</method>
+				<replace>tmpQuestParts</replace>
+			</ThreadLocalPatch>
+		</threadLocalPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>

@@ -44,7 +44,7 @@ namespace YaOpt.Helpers
 		public static FloatRange GetSafeTemperatureRange(Pawn pawn, int cacheLifespan)
 		{
 			if (!_cachedSafeTemperatureRanges.TryGetValue(pawn, out var entry) ||
-			    _currentTick - entry.CreatedTick >= cacheLifespan)
+				_currentTick - entry.CreatedTick >= cacheLifespan)
 			{
 				entry = new CacheEntry()
 				{
