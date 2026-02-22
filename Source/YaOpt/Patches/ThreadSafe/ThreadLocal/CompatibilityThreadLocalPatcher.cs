@@ -5,11 +5,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 using YaOpt.Defines;
+using YaOpt.Helpers;
 using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 {
-	internal static class CommonThreadLocalPatcher
+	[HarmonyPatch]
+	internal static class CompatibilityThreadLocalPatcher
 	{
 		static IEnumerable<MethodBase> TargetMethods()
 		{
@@ -24,6 +26,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
 			ILGenerator generator, MethodBase method)
 		{
+			YaOptMod.Debug($"Apply compatibility ThreadLocal patch for {method.FullName()}");
 			var enumerable = instructions;
 			if (!CompatibilityDefines.ThreadLocalPatches.TryGetValue(method, out var fields))
 				throw new Exception($"Cannot find fields to replace for {method.Name.ToStringSafe()}");

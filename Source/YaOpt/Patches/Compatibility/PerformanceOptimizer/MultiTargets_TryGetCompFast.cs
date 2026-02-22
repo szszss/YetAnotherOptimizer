@@ -40,7 +40,8 @@ namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 					yield return instruction;
 					yield return new CodeInstruction(OpCodes.Br_S, jumpEnd);
 					var method = AccessTools.Method(typeof(HediffUtility),
-							nameof(HediffUtility.TryGetComp)).MakeGenericMethod(originalMethod.GetGenericArguments());
+							nameof(HediffUtility.TryGetComp), new[] { typeof(Hediff) })
+						.MakeGenericMethod(originalMethod.GetGenericArguments());
 					yield return new CodeInstruction(OpCodes.Call, method).WithLabels(jumpElse);
 					yield return new CodeInstruction(OpCodes.Nop).WithLabels(jumpEnd);
 					continue;

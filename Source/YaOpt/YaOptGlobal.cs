@@ -80,7 +80,7 @@ namespace YaOpt
 											 YaOptMod.Instance.Settings.OptParallelJobGiver.Enabled;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether a parallel program is currently running in the Tick.
+		/// Gets or sets a value indicating whether a parallel program is currently running in tick update.
 		/// It only returns True when ParallelJobGiver or JobPredictor is running.
 		/// </summary>
 		/// <seealso cref="Helpers.JobPredictor"/>

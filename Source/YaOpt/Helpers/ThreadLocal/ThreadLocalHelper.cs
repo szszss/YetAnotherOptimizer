@@ -38,7 +38,7 @@ namespace YaOpt.Helpers.ThreadLocal
 				if (instruction.LoadsField(fieldName, out _, out _) &&
 					instruction.operand is FieldInfo fieldInfo)
 				{
-					type = fieldInfo.FieldType;
+					type = fieldInfo.FieldType.GenericTypeArguments[0];
 					break;
 				}
 			}
@@ -59,11 +59,14 @@ namespace YaOpt.Helpers.ThreadLocal
 			{
 				if (instruction.LoadsField(fieldName, out var isStatic, out var byAddress))
 				{
+					var labels = instruction.labels;
+					var blocks = instruction.blocks;
 					if (byAddress)
 						throw new Exception($"Doesn't support address access field {fieldName}");
 					if (!isStatic)
 						yield return new CodeInstruction(OpCodes.Pop);
-					yield return CodeInstruction.LoadLocal(local.LocalIndex);
+					yield return CodeInstruction.LoadLocal(local.LocalIndex)
+						.WithLabels(labels).WithBlocks(blocks);
 					continue;
 				}
 				yield return instruction;
