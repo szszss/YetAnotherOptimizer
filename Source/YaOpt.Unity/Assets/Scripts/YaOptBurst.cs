@@ -15,6 +15,8 @@ namespace YaOpt.Unity
 	[BurstCompile]
 	public class YaOptBurst
 	{
+		// Core
+
 		[BurstCompile]
 		public static void ComputeMatrix(ref Matrix4x4 matrix, in Vector3 offset, in Vector3 pivot, in Quaternion rotation, in Vector3 scale, bool canRotate)
 		{
@@ -102,6 +104,8 @@ namespace YaOpt.Unity
 			matrix = (Matrix4x4)m;
 		}
 
+		// Facial Animation
+
 		[BurstCompile]
 		[StructLayout(LayoutKind.Explicit)]
 		public struct FacialAnimationFrameStruct
@@ -177,6 +181,155 @@ namespace YaOpt.Unity
 			}
 			tmp.Process(FrameCount);
 			result = tmp;
+		}
+
+		// CombatExtended
+
+		[BurstCompile]
+		public static void PointsOnLineOfSight(
+			in float3 start,
+			in float3 end,
+			ref NativeArray<int3> result,
+			out int count,
+			out bool outOfBound)
+		{
+			int cx = (int)start.x;
+			var cy = (int)start.y;
+			int cz = (int)start.z;
+			int endX = (int)end.x;
+			int endZ = (int)end.z;
+
+			if (cx == endX || cz == endZ)
+			{
+				PointsOnStraightLineOfSight(start, end, ref result, out count, out outOfBound);
+				return;
+			}
+
+			outOfBound = false;
+			var capacity = result.Length;
+			var index = 0;
+
+			var dir = end - start;
+			int stepX = dir.x >= 0 ? 1 : -1;
+			int stepZ = dir.z >= 0 ? 1 : -1;
+
+			float tMaxX, tMaxZ;
+
+			if (stepX > 0)
+			{
+				tMaxX = ((cx + 1) - start.x) / dir.x;
+			}
+			else
+			{
+				tMaxX = (cx - start.x) / dir.x;
+			}
+
+			if (stepZ > 0)
+			{
+				tMaxZ = ((cz + 1) - start.z) / dir.z;
+			}
+			else
+			{
+				tMaxZ = (cz - start.z) / dir.z;
+			}
+
+			var tDeltaX = stepX / dir.x;
+			var tDeltaZ = stepZ / dir.z;
+
+			result[index++] = new int3(cx, cy, cz);
+
+			while (cx != endX || cz != endZ)
+			{
+				bool corner = math.abs(tMaxX - tMaxZ) < 0.0001f;
+
+				if (corner)
+				{
+					if (index + 3 > capacity)
+					{
+						count = index;
+						outOfBound = true;
+						return;
+					}
+					result[index++] = new int3(cx + stepX, cy, cz);
+					result[index++] = new int3(cx, cy, cz + stepZ);
+					cx += stepX;
+					cz += stepZ;
+					result[index++] = new int3(cx, cy, cz);
+					tMaxX += tDeltaX;
+					tMaxZ += tDeltaZ;
+				}
+				{
+					if (index + 1 > capacity)
+					{
+						count = index;
+						outOfBound = true;
+						return;
+					}
+					if (tMaxX < tMaxZ)
+					{
+						cx += stepX;
+						tMaxX += tDeltaX;
+						result[index++] = new int3(cx, cy, cz);
+					}
+					else
+					{
+						cz += stepZ;
+						tMaxZ += tDeltaZ;
+						result[index++] = new int3(cx, cy, cz);
+					}
+				}
+			}
+
+			count = index;
+		}
+
+		[BurstCompile]
+		private static void PointsOnStraightLineOfSight(
+			in float3 start,
+			in float3 end,
+			ref NativeArray<int3> result,
+			out int count,
+			out bool outOfBound)
+		{
+			var capacity = result.Length;
+			outOfBound = false;
+
+			var sx = (int)start.x;
+			var sy = (int)start.y;
+			var sz = (int)start.z;
+			var ex = (int)end.x;
+			var ez = (int)end.z;
+
+			if (sx == ex)
+			{
+				// Vertical line
+				var step = sz <= ez ? 1 : -1;
+				count = math.abs(ez - sz) + 1;
+				if (count > capacity)
+				{
+					count = capacity;
+					outOfBound = true;
+				}
+				for (var i = 0; i < count; i++)
+				{
+					result[i] = new int3(sx, sy, sz + i * step);
+				}
+			}
+			else
+			{
+				// Horizontal line
+				var step = sx <= ex ? 1 : -1;
+				count = math.abs(ex - sx) + 1;
+				if (count > capacity)
+				{
+					count = capacity;
+					outOfBound = true;
+				}
+				for (var i = 0; i < count; i++)
+				{
+					result[i] = new int3(sx + i * step, sy, sz);
+				}
+			}
 		}
 	}
 }

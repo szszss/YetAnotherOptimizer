@@ -3,7 +3,6 @@ using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using Verse;
 
 namespace YaOpt.Patches.ThreadSafe.Locked
 {

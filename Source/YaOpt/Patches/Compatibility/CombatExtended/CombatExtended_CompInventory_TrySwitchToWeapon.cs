@@ -1,10 +1,8 @@
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using HarmonyLib;
-using Verse;
-using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches.Compatibility.CombatExtended
 {
