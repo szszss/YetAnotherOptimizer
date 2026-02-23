@@ -258,6 +258,7 @@ namespace YaOpt.Unity
 					tMaxX += tDeltaX;
 					tMaxZ += tDeltaZ;
 				}
+				else
 				{
 					if (index + 1 > capacity)
 					{

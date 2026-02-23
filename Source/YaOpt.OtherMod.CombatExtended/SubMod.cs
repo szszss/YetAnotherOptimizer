@@ -1,4 +1,3 @@
-using CombatExtended;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
@@ -29,7 +28,7 @@ namespace YaOpt.OtherMod.CombatExtended
 
 		public override bool OnPatch(Harmony harmony)
 		{
-#if DEBUG
+#if false && DEBUG
 			AccessTools.Field(typeof(global::CombatExtended.Settings), "debuggingMode")
 				.SetValue(Controller.settings, true);
 			AccessTools.Field(typeof(global::CombatExtended.Settings), "debugDrawPartialLoSChecks")
