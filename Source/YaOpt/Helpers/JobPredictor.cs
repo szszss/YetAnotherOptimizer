@@ -24,7 +24,7 @@ namespace YaOpt.Helpers
 	/// </list>
 	/// </para>
 	/// </remarks>
-	/// <seealso cref="ParallelTickManager"/>
+	/// <seealso cref="ParallelPawnTickManager"/>
 	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 	public static class JobPredictor
 	{
@@ -290,7 +290,7 @@ namespace YaOpt.Helpers
 		/// <item><see cref="JobPrediction.ShouldDoConstantJob"/> - Whether constant job check is needed.</item>
 		/// </list>
 		/// </remarks>
-		/// <seealso cref="ParallelTickManager.ParellellyTickPawns"/>
+		/// <seealso cref="ParallelPawnTickManagerParallelPawnTickManagerrellellyTickPawns"/>
 		public static void ProcessPawn(Pawn pawn, int gameTick)
 		{
 			JobPrediction prediction = null;

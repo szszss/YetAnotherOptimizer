@@ -25,8 +25,8 @@ namespace YaOpt.Patches
 		{
 			if (___tickType == TickerType.Normal)
 			{
-				ParallelTickManager.AddThings(___thingsToRegister);
-				ParallelTickManager.RemoveThings(___thingsToDeregister);
+				ParallelPawnTickManager.AddThings(___thingsToRegister);
+				ParallelPawnTickManager.RemoveThings(___thingsToDeregister);
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace YaOpt.Patches
 			{
 				if (___thingLists.Count > 1)
 				{
-					ParallelTickManager.ParellellyTickPawns();
+					ParallelPawnTickManager.ParellellyTickPawns();
 					foreach (var thing in ___thingLists[1])
 					{
 						if (thing.Destroyed)

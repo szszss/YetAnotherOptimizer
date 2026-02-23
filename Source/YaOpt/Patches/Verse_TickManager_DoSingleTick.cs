@@ -35,21 +35,21 @@ namespace YaOpt.Patches
 			{
 				yield return instruction;
 
-				// Call ParallelTickManager.ParellellyPreTickMaps
+				// Call ParallelPawnTickManager.ParellellyPreTickMaps
 				if (ppt && instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo1 &&
 					methodInfo1.Name == "get_Maps")
 				{
 					yield return new CodeInstruction(OpCodes.Dup);
 					yield return CodeInstruction.Call(
-						typeof(ParallelTickManager), nameof(ParallelTickManager.ParellellyPreTickMaps));
+						typeof(ParallelMapTickManager), nameof(ParallelMapTickManager.ParellellyPreTickMaps));
 				}
 
-				// Call ParallelTickManager.ParellellyPostTickMaps
+				// Call ParallelPawnTickManager.ParellellyPostTickMaps
 				if (ppmt && instruction.opcode == OpCodes.Callvirt && instruction.operand is MethodInfo methodInfo2 &&
 					methodInfo2.Name == "WorldPostTick")
 				{
 					yield return CodeInstruction.Call(
-						typeof(ParallelTickManager), nameof(ParallelTickManager.ParellellyPostTickMaps));
+						typeof(ParallelMapTickManager), nameof(ParallelMapTickManager.ParellellyPostTickMaps));
 				}
 			}
 		}

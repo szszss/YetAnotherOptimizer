@@ -27,7 +27,7 @@ namespace YaOpt.Patches.Debugging
 			if (YaOptGlobal.IsParallelRunningInTick)
 			{
 				YaOptMod.Error("A Reservation operation was detected during the execution of " +
-							   "ParallelJobGiver or ParallelTickManager. This is strictly prohibited. " +
+							   "ParallelJobGiver or ParallelPawnTickManager. This is strictly prohibited. " +
 							   "You can analyze the call stack to determine which WorkerGiver " +
 							   "or JobPrediction performed this operation. " +
 							   "Please report this compatibility issue to YaOpt developers.");

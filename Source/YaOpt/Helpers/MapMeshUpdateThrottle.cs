@@ -47,7 +47,7 @@ namespace YaOpt.Helpers
 
 		public static void CheckUpdate(int _)
 		{
-			ParallelTickManager.FinishPostMapTick(_);
+			ParallelMapTickManager.FinishPostMapTick(_);
 			currentTime = Environment.TickCount;
 			if (nextUpdateDict.Count > 0)
 			{
