@@ -374,14 +374,24 @@ namespace YaOpt
 		/// Optimizes plant sway effect updates.
 		/// Vanilla updates wind strength parameters for all plant materials every logic tick, which is unnecessary.
 		/// This optimization restricts these updates to render frames only.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_DrawDynamicThings"/>
 		/// <seealso cref="Patches.Verse_WindManager_WindManagerTick"/>
-		/// </summary>
 		public OptimizationOption OptWindUpdate { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.WindUpdate",
 			Desc = "YaOpt.Setting.Option.WindUpdate.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <seealso cref="Patches.Verse_ListerThings_Add"/>
+		public OptimizationOption OptFastListerRemove { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.FastListerRemove",
+			Desc = "YaOpt.Setting.Option.FastListerRemove.Desc",
 			Category = OptimizationCategory.Tps,
 		};
 
