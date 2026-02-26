@@ -1,8 +1,7 @@
 using HarmonyLib;
+using RimWorld;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using RimWorld;
 using Verse;
 using YaOpt.Helpers;
 using static YaOpt.Helpers.ListerThingsIndexer;
@@ -57,6 +56,13 @@ namespace YaOpt.Patches
 						typeof(ListerThingsIndexer),
 						nameof(ListerThingsIndexer.GetThingRecord));
 					yield return CodeInstruction.StoreLocal(localRecord.LocalIndex);
+					// indexer.Remove(thing, use);
+					yield return CodeInstruction.LoadLocal(localIndexer.LocalIndex);
+					yield return CodeInstruction.LoadArgument(1);
+					yield return CodeInstruction.LoadLocal(localUse.LocalIndex);
+					yield return CodeInstruction.Call(
+						typeof(ListerThingsIndexer),
+						nameof(ListerThingsIndexer.Remove));
 				}
 				else if (instruction.Calls(methodListRemoveThing))
 				{
@@ -137,7 +143,7 @@ namespace YaOpt.Patches
 					return true;
 				}
 				YaOptMod.Error($"Thing does not match its index: {index} for thing {thing}. " +
-				               "Fallback to the original path.");
+							   "Fallback to the original path.");
 				list.Remove(thing);
 				return true;
 			}
@@ -184,7 +190,7 @@ namespace YaOpt.Patches
 					return true;
 				}
 				YaOptMod.Error($"Thing does not match its index: {index} for thing {haul}. " +
-				               "Fallback to the original path.");
+							   "Fallback to the original path.");
 				list.Remove(haul);
 				return true;
 			}

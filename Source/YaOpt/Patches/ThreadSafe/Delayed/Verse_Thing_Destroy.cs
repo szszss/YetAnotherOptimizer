@@ -9,8 +9,8 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 	[HarmonyPriority(Priority.VeryHigh)]
 	internal static class Verse_Thing_Destroy
 	{
-		private static readonly ConcurrentQueue<(Thing, DestroyMode)> _delayedThingDestroy =
-			new ConcurrentQueue<(Thing, DestroyMode)>();
+		private static readonly ConcurrentQueue<(Thing, DestroyMode, bool)> _delayedThingDestroy =
+			new ConcurrentQueue<(Thing, DestroyMode, bool)>();
 
 		static bool Prepare()
 		{
@@ -21,7 +21,7 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 		{
 			if (YaOptGlobal.IsInMainThread)
 				return true;
-			_delayedThingDestroy.Enqueue((__instance, mode));
+			_delayedThingDestroy.Enqueue((__instance, mode, Thing.allowDestroyNonDestroyable));
 			return false;
 		}
 
@@ -31,7 +31,10 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 			{
 				while (_delayedThingDestroy.TryDequeue(out var result))
 				{
+					var oldValue = Thing.allowDestroyNonDestroyable;
+					Thing.allowDestroyNonDestroyable = result.Item3;
 					result.Item1.Destroy(result.Item2);
+					Thing.allowDestroyNonDestroyable = oldValue;
 				}
 			}
 		}

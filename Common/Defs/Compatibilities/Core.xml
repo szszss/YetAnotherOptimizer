@@ -43,6 +43,16 @@
 				<method>Verse.AI.AttackTargetsCache:GetPotentialTargetsFor</method>
 				<replace>targets</replace>
 			</ThreadLocalPatch>
+			
+			<!-- AttackTargetsCache -->
+			<ThreadLocalPatch>
+				<method>RimWorld.Pawn_MeleeVerbs:GetUpdatedAvailableVerbsList</method>
+				<replace>meleeVerbs</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.Pawn_MeleeVerbs:GetUpdatedAvailableVerbsList</method>
+				<replace>verbsToAdd</replace>
+			</ThreadLocalPatch>
 		</threadLocalPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>

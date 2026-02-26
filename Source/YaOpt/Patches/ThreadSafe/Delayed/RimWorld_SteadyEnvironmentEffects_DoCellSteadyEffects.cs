@@ -1,4 +1,3 @@
-using System;
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
@@ -32,8 +31,8 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 			if (targetIndex > 0)
 			{
 				if (list[targetIndex - 1].opcode == OpCodes.Ldfld &&
-				    list[targetIndex - 2].opcode == OpCodes.Ldarg_0 &&
-				    list[targetIndex - 3].opcode == OpCodes.Ldarg_1)
+					list[targetIndex - 2].opcode == OpCodes.Ldarg_0 &&
+					list[targetIndex - 3].opcode == OpCodes.Ldarg_1)
 				{
 					list.RemoveRange(targetIndex - 3, 4);
 				}
@@ -55,11 +54,11 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 			if (targetIndex > 0)
 			{
 				if (list[targetIndex - 1].opcode == OpCodes.Ldfld &&
-				    list[targetIndex - 2].opcode == OpCodes.Ldarg_0 &&
-				    list[targetIndex - 3].opcode == OpCodes.Ldarg_1 &&
-				    list[targetIndex - 4].opcode == OpCodes.Ldfld &&
-				    list[targetIndex - 5].opcode == OpCodes.Ldfld &&
-				    list[targetIndex - 6].opcode == OpCodes.Ldarg_0)
+					list[targetIndex - 2].opcode == OpCodes.Ldarg_0 &&
+					list[targetIndex - 3].opcode == OpCodes.Ldarg_1 &&
+					list[targetIndex - 4].opcode == OpCodes.Ldfld &&
+					list[targetIndex - 5].opcode == OpCodes.Ldfld &&
+					list[targetIndex - 6].opcode == OpCodes.Ldarg_0)
 				{
 					list.RemoveRange(targetIndex - 5, 6);
 					list[targetIndex - 6].opcode = OpCodes.Nop;
@@ -74,7 +73,7 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 			else
 			{
 				YaOptMod.Warning("Cannot find GameConditionManager.DoSteadyEffects. " +
-				                 "This could be a bug, or it could be that another patch has removed it.");
+								 "This could be a bug, or it could be that another patch has removed it.");
 			}
 
 			return list;
