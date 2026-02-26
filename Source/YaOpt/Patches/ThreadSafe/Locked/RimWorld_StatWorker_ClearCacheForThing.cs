@@ -1,6 +1,5 @@
 using HarmonyLib;
 using RimWorld;
-using System.Threading;
 
 namespace YaOpt.Patches.ThreadSafe.Locked
 {
@@ -13,16 +12,17 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 			return YaOptGlobal.NeedThreadSafe;
 		}
 
-		static void Prefix(StatWorker __instance, out ReaderWriterLockSlim __state)
+		static void Prefix(StatWorker __instance, out int __state)
 		{
-			__state = RimWorld_StatWorker_GetValue.GetLock(__instance);
-			__state.EnterWriteLock();
+			__state = -1;
+			__state = RimWorld_StatWorker_GetValue.GetLockPartition(__instance);
+			RimWorld_StatWorker_GetValue.StatLocks[__state].EnterWriteLock();
 		}
 
-		static void Finalizer(ReaderWriterLockSlim __state)
+		static void Finalizer(int __state)
 		{
-			if (__state != null)
-				__state.ExitWriteLock();
+			if (__state >= 0)
+				RimWorld_StatWorker_GetValue.StatLocks[__state].ExitWriteLock();
 		}
 	}
 }
