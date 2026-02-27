@@ -45,6 +45,10 @@ namespace YaOpt.Settings
 
 		public string NoteCompatibility { get; set; } = string.Empty;
 
+		public string NotePlatform { get; set; } = string.Empty;
+
+		public string NoteMultiThread { get; set; } = string.Empty;
+
 		public string RequiredMod { get; set; } = string.Empty;
 
 		public string SubCategory { get; set; } = string.Empty;

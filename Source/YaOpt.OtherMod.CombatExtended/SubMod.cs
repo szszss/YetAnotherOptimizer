@@ -15,6 +15,7 @@ namespace YaOpt.OtherMod.CombatExtended
 		{
 			Name = "YaOpt.Setting.Option.CELineOfSightBurst",
 			Desc = "YaOpt.Setting.Option.CELineOfSightBurst.Desc",
+			NotePlatform = "YaOpt.Setting.Option.CELineOfSightBurst.Platform",
 			SettingId = "OptCELineOfSightBurst",
 			RequiredMod = "CETeam.CombatExtended",
 			SubCategory = "YaOpt.Setting.SubCategory.CombatExtended",

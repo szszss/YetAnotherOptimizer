@@ -236,17 +236,19 @@ namespace YaOpt.Settings
 			var label = option.Name.Translate().ToString();
 			var hasNoteS = !string.IsNullOrWhiteSpace(option.NoteStability);
 			var hasNoteC = !string.IsNullOrWhiteSpace(option.NoteCompatibility);
-			if (hasNoteS && hasNoteC)
+			var hasNoteP = !string.IsNullOrWhiteSpace(option.NotePlatform);
+			var hasNoteMT = !string.IsNullOrWhiteSpace(option.NoteMultiThread);
+			if (hasNoteS || hasNoteC || hasNoteP || hasNoteMT)
 			{
-				label = string.Concat(label, " <color=#FF4040>[S]</color><color=#DEB0D0>[C]</color>");
-			}
-			else if (hasNoteS)
-			{
-				label = string.Concat(label, " <color=#FF4040>[S]</color>");
-			}
-			else if (hasNoteC)
-			{
-				label = string.Concat(label, " <color=#DEB0D0>[C]</color>");
+				var sb = new StringBuilder(label).Append(' ');
+				if (hasNoteS)
+					sb.Append("<color=#FF4040>[S]</color>");
+				if (hasNoteC)
+					sb.Append("<color=#DEB0D0>[C]</color>");
+				if (hasNoteP)
+					sb.Append("<color=#88F0F0>[P]</color>");
+				if (hasNoteMT)
+					sb.Append("<color=#0044FF>[MT]</color>");
 			}
 			var enabled = option._enabled;
 			var disabledByDef = CompatibilityDefines.CachedBannedOptimizations.Contains(option.SettingId);
@@ -324,6 +326,18 @@ namespace YaOpt.Settings
 			{
 				sb.Append("\n\n").Append("<color=#DEB0D0>").Append("YaOpt.Setting.Note.Compatibility".Translate()).Append("\n")
 					.Append(option.NoteCompatibility.Translate()).Append("</color>");
+			}
+
+			if (!string.IsNullOrWhiteSpace(option.NotePlatform))
+			{
+				sb.Append("\n\n").Append("<color=#88F0F0>").Append("YaOpt.Setting.Note.Stability".Translate()).Append("\n")
+					.Append(option.NotePlatform.Translate()).Append("</color>");
+			}
+
+			if (!string.IsNullOrWhiteSpace(option.NoteMultiThread))
+			{
+				sb.Append("\n\n").Append("<color=#0044FF>").Append("YaOpt.Setting.Note.Stability".Translate()).Append("\n")
+					.Append(option.NoteMultiThread.Translate()).Append("</color>");
 			}
 			_showingDesc = sb.ToString();
 		}

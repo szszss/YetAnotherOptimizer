@@ -234,7 +234,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.ComputeMatrixBurst",
 			Desc = "YaOpt.Setting.Option.ComputeMatrixBurst.Desc",
-			NoteStability = "YaOpt.Setting.Option.ComputeMatrixBurst.Stable",
+			NotePlatform = "YaOpt.Setting.Option.ComputeMatrixBurst.Platform",
 			Category = OptimizationCategory.Fps,
 			Flags = OptimizationFlags.RequireWin64 | OptimizationFlags.RequireBurst,
 		};
@@ -252,7 +252,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.ThingGetComp",
 			Desc = "YaOpt.Setting.Option.ThingGetComp.Desc",
-			NoteStability = "YaOpt.Setting.Option.ThingGetComp.Stable",
+			NotePlatform = "YaOpt.Setting.Option.ThingGetComp.Platform",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.RequireWin64,
 		};
@@ -313,6 +313,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.ParallelPawnTick.Desc",
 			NoteStability = "YaOpt.Setting.Option.ParallelPawnTick.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelPawnTick.Compatibility",
+			NoteMultiThread = "YaOpt.Setting.Option.ParallelPawnTick.MultiThread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};
@@ -334,6 +335,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.ParallelJobGiver.Desc",
 			NoteStability = "YaOpt.Setting.Option.ParallelJobGiver.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelJobGiver.Compatibility",
+			NoteMultiThread = "YaOpt.Setting.Option.ParallelJobGiver.MultiThread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};
@@ -349,6 +351,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.ParallelPostMapTick",
 			Desc = "YaOpt.Setting.Option.ParallelPostMapTick.Desc",
+			NoteMultiThread = "YaOpt.Setting.Option.ParallelPostMapTick.MultiThread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};
@@ -411,7 +414,8 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.LazyTextureLoad",
 			Desc = "YaOpt.Setting.Option.LazyTextureLoad.Desc",
-			NoteStability = "YaOpt.Setting.Option.LazyTextureLoad.Stable",
+			NoteCompatibility = "YaOpt.Setting.Option.LazyTextureLoad.Compatibility",
+			NotePlatform = "YaOpt.Setting.Option.LazyTextureLoad.Platform",
 			Category = OptimizationCategory.Misc,
 			Flags = OptimizationFlags.RequireWin64,
 			FuncPostDraw = SettingsPanel.LazyTextureLoadPostDraw,
@@ -476,9 +480,13 @@ namespace YaOpt
 		};
 
 		/// <summary>
-		/// 
-		/// </summary>
+		/// Fixes a vanilla bug where texture atlases smaller than 512x512 have Mipmaps enabled but not populated.
+		/// This causes visual corruption (colored stripes) when zooming out on objects using these atlases.
+		/// The issue often affects scatterable items (e.g., pebbles) from high-res texture mods.
+		/// Vanilla avoids this by using known-good built-in atlases, and large modlists avoid it by filling the atlas to >512x512.
+		/// The bug only manifests in intermediate-sized modlists where the atlas size falls into the problematic range.
 		/// <seealso cref="Patches.Early.MultiTargets_CalcRectsForAtlas"/>
+		/// </summary>
 		public OptimizationOption OptFixTextureAtlas { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FixTextureAtlas",
