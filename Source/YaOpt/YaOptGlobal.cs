@@ -67,7 +67,12 @@ namespace YaOpt
 		/// Gets a value indicating whether the current thread is the Unity main thread.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// It's similar to UnityData.IsInMainThread, but faster because it doesn't need to read the thread ID.
+		/// </para>
+		/// <para>
+		/// Note that it returns <c>false</c> when loading a save because loading is done in a background thread.
+		/// </para>
 		/// </remarks>
 		public static bool IsInMainThread => _isInMainThread;
 

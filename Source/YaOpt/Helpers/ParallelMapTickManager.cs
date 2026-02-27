@@ -21,6 +21,11 @@ namespace YaOpt.Helpers
 		/// </summary>
 		private static NativeArray<JobHandle> _tmpJobHandles = default;
 
+		/// <summary>
+		/// Indicate whether thread safety patches should check the current thread.
+		/// </summary>
+		public static bool ShouldCheckThread { get; private set; }
+
 		static ParallelMapTickManager()
 		{
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
@@ -60,6 +65,7 @@ namespace YaOpt.Helpers
 				_tmpJobHandles = new NativeArray<JobHandle>(maps.Count * 2, Allocator.Persistent);
 			}
 			var i = 0;
+			ShouldCheckThread = true;
 			foreach (var map in maps)
 			{
 				// Rebuilding any dirty region.
@@ -87,6 +93,7 @@ namespace YaOpt.Helpers
 				YaOptMod.Error("Delayed operations must be playbacked in the main thread.");
 				return;
 			}
+			ShouldCheckThread = false;
 			RimWorld_SteadyEnvironmentEffects_SteadyEnvironmentEffectsTick.Playback();
 			RimWorld_SteadyEnvironmentEffects_DoDeteriorationDamage.Playback();
 			Verse_Thing_Destroy.Playback();

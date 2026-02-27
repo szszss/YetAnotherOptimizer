@@ -1,7 +1,9 @@
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Concurrent;
+using Unity.Jobs.LowLevel.Unsafe;
 using Verse;
+using YaOpt.Helpers;
 
 namespace YaOpt.Patches.ThreadSafe.Delayed
 {
@@ -20,7 +22,7 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 
 		static bool Prefix(IntVec3 c, Map map, float fireSize, Thing instigator, SimpleCurve flammabilityChanceCurve)
 		{
-			if (YaOptGlobal.IsInMainThread)
+			if (!ParallelMapTickManager.ShouldCheckThread || !JobsUtility.IsExecutingJob)
 				return true;
 			_delayedStartFire.Enqueue((c, map, fireSize, instigator, flammabilityChanceCurve));
 			return false;

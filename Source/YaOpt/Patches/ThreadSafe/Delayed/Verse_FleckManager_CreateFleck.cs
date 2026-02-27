@@ -1,6 +1,8 @@
 using HarmonyLib;
 using System.Collections.Concurrent;
+using Unity.Jobs.LowLevel.Unsafe;
 using Verse;
+using YaOpt.Helpers;
 
 namespace YaOpt.Patches.ThreadSafe.Delayed
 {
@@ -19,7 +21,7 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 
 		static bool Prefix(FleckManager __instance, in FleckCreationData __0)
 		{
-			if (YaOptGlobal.IsInMainThread)
+			if (!ParallelMapTickManager.ShouldCheckThread || !JobsUtility.IsExecutingJob)
 				return true;
 			_delayedFleckCreation.Enqueue((__instance, __0));
 			return false;
