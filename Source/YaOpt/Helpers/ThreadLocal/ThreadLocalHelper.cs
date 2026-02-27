@@ -10,6 +10,32 @@ namespace YaOpt.Helpers.ThreadLocal
 {
 	public static class ThreadLocalHelper
 	{
+		private class StubType0<T> where T : class
+		{
+		}
+
+		private class StubType1<T> where T : class
+		{
+		}
+
+		private class StubType2<T> where T : class
+		{
+		}
+
+		private class StubType3<T> where T : class
+		{
+		}
+
+		private static readonly Type[] _stubTypes = new[]
+		{
+			typeof(StubType0<>),
+			typeof(StubType1<>),
+			typeof(StubType2<>),
+			typeof(StubType3<>)
+		};
+
+		private static readonly Dictionary<Type, int> _threadLocalUsed = new Dictionary<Type, int>();
+
 		public static List<T> NewList<T>() => new List<T>();
 
 		public static Dictionary<K, V> NewDictionary<K, V>() => new Dictionary<K, V>();
@@ -19,6 +45,36 @@ namespace YaOpt.Helpers.ThreadLocal
 		public static HashSet<Thing> NewThingSet() => new HashSet<Thing>();
 
 		public static List<Pawn> NewPawnList() => new List<Pawn>();
+
+		public static void Clear()
+		{
+			_threadLocalUsed.Clear();
+		}
+
+		private static Type AllocateThreadLocalTmpList(Type holderType, Type tmpListType)
+		{
+			if (holderType.IsStatic())
+				throw new Exception("Can't allocate ThreadLocalTmpList for non-instanced type.");
+			if (_threadLocalUsed.TryGetValue(holderType, out var used))
+			{
+				if (used >= _stubTypes.Length)
+				{
+					throw new IndexOutOfRangeException(
+						$"Type {holderType} used too many StubTypes (>{_stubTypes.Length}) " +
+						"when allocating ThreadLocalTmpList.");
+				}
+				_threadLocalUsed[holderType] = used + 1;
+				var stubType = _stubTypes[used].MakeGenericType(holderType);
+				if (YaOptGlobal.IsDebug)
+				{
+					YaOptMod.Debug($"Use StubType{used} to allocate ThreadLocalTmpList " +
+					               $"for {holderType}");
+				}
+				return typeof(ThreadLocalTmpList<,>).MakeGenericType(stubType, tmpListType);
+			}
+			_threadLocalUsed[holderType] = 0;
+			return typeof(ThreadLocalTmpList<,>).MakeGenericType(holderType, tmpListType);
+		}
 
 		public static IEnumerable<CodeInstruction> TmpListTranspiler<K, V>(
 			IEnumerable<CodeInstruction> instructions, ILGenerator generator,
@@ -52,8 +108,8 @@ namespace YaOpt.Helpers.ThreadLocal
 			string fieldName, Type holderType, Type tmpListType)
 		{
 			var local = generator.DeclareLocal(typeof(List<>).MakeGenericType(tmpListType));
-			yield return CodeInstruction.Call(
-				typeof(ThreadLocalTmpList<,>).MakeGenericType(holderType, tmpListType), "Get");
+			var type = AllocateThreadLocalTmpList(holderType, tmpListType);
+			yield return CodeInstruction.Call(type, "Get");
 			yield return CodeInstruction.StoreLocal(local.LocalIndex);
 			foreach (var instruction in instructions)
 			{

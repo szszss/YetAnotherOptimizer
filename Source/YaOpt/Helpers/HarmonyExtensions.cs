@@ -3,6 +3,8 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using Verse;
+using YaOpt.Patches;
 using YaOpt.Patches.Early;
 
 namespace YaOpt.Helpers
@@ -15,16 +17,37 @@ namespace YaOpt.Helpers
 			foreach (var type in AccessTools.GetTypesFromAssembly(assembly))
 			{
 				var isEarlyPatch = type.GetCustomAttribute<EarlyPatchAttribute>() != null;
-				if (isEarlyPatch == earlyPatch && type.HasHarmonyAttribute())
+				if (isEarlyPatch == earlyPatch)
 				{
-					try
+					if (type.HasHarmonyAttribute())
 					{
-						harmony.CreateClassProcessor(type).Patch();
+						try
+						{
+							harmony.CreateClassProcessor(type).Patch();
+						}
+						catch (Exception ex)
+						{
+							noError = false;
+							YaOptMod.Error(ex.ToString());
+						}
 					}
-					catch (Exception ex)
+					else if (type.HasAttribute<ManualPatchAttribute>())
 					{
-						noError = false;
-						YaOptMod.Error(ex.ToString());
+						try
+						{
+							var method = type.GetMethod("Patch",
+								BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+							if (method == null)
+								throw new MissingMethodException(type.FullName, "Patch");
+							var returnValue = method.Invoke(null, new object[] { harmony });
+							if (returnValue is bool returnBool)
+								noError &= returnBool;
+						}
+						catch (Exception ex)
+						{
+							noError = false;
+							YaOptMod.Error(ex.ToString());
+						}
 					}
 				}
 			}

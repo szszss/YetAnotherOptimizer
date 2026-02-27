@@ -53,6 +53,16 @@
 				<method>RimWorld.Pawn_MeleeVerbs:GetUpdatedAvailableVerbsList</method>
 				<replace>verbsToAdd</replace>
 			</ThreadLocalPatch>
+
+			<!-- Verb -->
+			<ThreadLocalPatch>
+				<method>Verse.Verb:TryFindShootLineFromTo</method>
+				<replace>tempLeanShootSources</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>Verse.Verb:CanHitFromCellIgnoringRange</method>
+				<replace>tempDestList</replace>
+			</ThreadLocalPatch>
 		</threadLocalPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>

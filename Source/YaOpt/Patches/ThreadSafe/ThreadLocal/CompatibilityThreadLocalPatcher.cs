@@ -10,17 +10,29 @@ using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 {
-	[HarmonyPatch]
+	[ManualPatch]
 	internal static class CompatibilityThreadLocalPatcher
 	{
-		static IEnumerable<MethodBase> TargetMethods()
+		static bool Patch(Harmony harmony)
 		{
-			return CompatibilityDefines.ThreadLocalPatches.Keys;
-		}
+			if (!YaOptGlobal.NeedThreadSafe || CompatibilityDefines.ThreadLocalPatches.Count == 0)
+				return true;
 
-		static bool Prepare()
-		{
-			return YaOptGlobal.NeedThreadSafe && CompatibilityDefines.ThreadLocalPatches.Count > 0;
+			var noError = true;
+			var transpiler = AccessTools.Method(typeof(CompatibilityThreadLocalPatcher), nameof(Transpiler));
+			foreach (var method in CompatibilityDefines.ThreadLocalPatches.Keys)
+			{
+				try
+				{
+					harmony.Patch(method, null, null, transpiler);
+				}
+				catch (Exception ex)
+				{
+					noError = false;
+					YaOptMod.Error(ex.ToString());
+				}
+			}
+			return noError;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="CETeam.CombatExtended">
+		<defName>CombatExtended</defName>
+		<threadLocalPatches>
+			<ThreadLocalPatch>
+				<method>CombatExtended.Verb_LaunchProjectileCE:TryFindCEShootLineFromTo</method>
+				<replace>tempLeanShootSources</replace>
+				<parameters>
+					<li>IntVec3</li>
+					<li>LocalTargetInfo</li>
+					<li>out ShootLine</li>
+					<li>out Vector3</li>
+				</parameters>
+			</ThreadLocalPatch>
+		</threadLocalPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>

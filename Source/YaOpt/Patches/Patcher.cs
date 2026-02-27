@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using Verse;
 using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadLocal;
 using YaOpt.Patches.Compatibility;
 using YaOpt.Patches.Trampolines;
 
@@ -70,6 +71,7 @@ namespace YaOpt.Patches
 				if (_hasPatched)
 				{
 					YaOptMod.Debug("Uninstalling exist patches...");
+					ThreadLocalHelper.Clear();
 					harmony.UnpatchAll(harmony.Id);
 					TrampolinePatcher.UninstallAll();
 					YaOptSubMod.UnpatchAll(YaOptGlobal.SubMods, harmony);
