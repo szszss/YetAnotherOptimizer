@@ -475,6 +475,17 @@ namespace YaOpt
 			Category = OptimizationCategory.Misc
 		};
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <seealso cref="Patches.Early.MultiTargets_CalcRectsForAtlas"/>
+		public OptimizationOption OptFixTextureAtlas { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.FixTextureAtlas",
+			Desc = "YaOpt.Setting.Option.FixTextureAtlas.Desc",
+			Category = OptimizationCategory.Misc
+		};
+
 		[Unsaved]
 		private readonly List<OptimizationOption> _allOptimizations;
 
