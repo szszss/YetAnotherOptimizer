@@ -26,7 +26,7 @@ namespace YaOpt
 		/// Unity <see cref="Material.color"/> involves a managed-to-native transition,
 		/// which creates significant overhead when called frequently.
 		/// This option patchs the setter of <see cref="Material.color"/> to update the cache and
-		///  the getter of <see cref="Material.GetColor(string)"/> to retrieve the value from cache.
+		/// the getter of <see cref="Material.GetColor(string)"/> to retrieve the value from cache.
 		/// <br/>
 		/// <seealso cref="Patches.UnityEngine_Material_GetColor"/>
 		/// <seealso cref="Patches.UnityEngine_Material_SetColor"/>
@@ -388,7 +388,11 @@ namespace YaOpt
 		};
 
 		/// <summary>
-		/// 
+		/// Optimizes the performance of removing things from the game.
+		/// Vanilla maintains various lists (ListerThings) for object classification. Removing an object requires a linear search (O(N)) in each list.
+		/// This optimization adds an index record to each object to track its position.
+		/// Removal uses this index to directly access the object, swaps it with the last element (swap-remove), and updates the index of the moved element.
+		/// This reduces complexity to O(1) at the cost of a negligible increase in memory usage.
 		/// </summary>
 		/// <seealso cref="Patches.Verse_ListerThings_Add"/>
 		public OptimizationOption OptFastListerRemove { get; } = new OptimizationOption

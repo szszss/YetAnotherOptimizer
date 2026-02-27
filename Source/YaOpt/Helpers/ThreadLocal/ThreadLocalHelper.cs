@@ -68,7 +68,7 @@ namespace YaOpt.Helpers.ThreadLocal
 				if (YaOptGlobal.IsDebug)
 				{
 					YaOptMod.Debug($"Use StubType{used} to allocate ThreadLocalTmpList " +
-					               $"for {holderType}");
+								   $"for {holderType}");
 				}
 				return typeof(ThreadLocalTmpList<,>).MakeGenericType(stubType, tmpListType);
 			}

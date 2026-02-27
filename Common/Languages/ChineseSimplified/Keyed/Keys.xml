@@ -87,6 +87,8 @@
 	<YaOpt.Setting.Option.IdeoCheck.Desc>游戏在检查文化是否允许做某事时，会遍历其下所有的戒律。此优化会在戒律每次更新时，为它创建缓存，记录那些涉及到禁令的戒律，然后在检查文化是否允许做某事时，只遍历那些有禁令的戒律。</YaOpt.Setting.Option.IdeoCheck.Desc>
 	<YaOpt.Setting.Option.WindUpdate>植物摇曳效果优化</YaOpt.Setting.Option.WindUpdate>
 	<YaOpt.Setting.Option.WindUpdate.Desc>游戏会在每一个逻辑帧中为所有植物材质更新风力强度参数，这是没必要的。优化后将仅在渲染帧中更新风力强度。</YaOpt.Setting.Option.WindUpdate.Desc>
+	<YaOpt.Setting.Option.FastListerRemove>物体移除优化</YaOpt.Setting.Option.FastListerRemove>
+	<YaOpt.Setting.Option.FastListerRemove.Desc>优化从游戏中移除物体时的效率。原版游戏在移除物体时，需要在多个检索列表中进行线性搜索以找到并删除物体。此优化为每个物体添加了索引记录，移除时可直接定位并使用“交换移除”策略（将末尾物体移至空位）。</YaOpt.Setting.Option.FastListerRemove.Desc>
 	<YaOpt.Setting.Option.MeditationTick>冥想更新节流</YaOpt.Setting.Option.MeditationTick>
 	<YaOpt.Setting.Option.MeditationTick.Desc>将冥想时的逻辑帧更新频率降低为每100帧一次，每次更新提供100倍效果。冥想更新相当消耗性能，特别是部落灵能者每帧都会扫描全图灵草。注：此优化会对游玩产生轻微影响，角色退出冥想时会损失未结算的冥想收益（平均每次提前中断冥想时损失50帧/0.83秒的冥想收益）。</YaOpt.Setting.Option.MeditationTick.Desc>
 	<YaOpt.Setting.Option.MeditationTick.Compatibility>兼容原版灵能扩展（Vanilla Psycasts Expanded）,但可能会与其他大幅修改冥想机制的Mod产生冲突。</YaOpt.Setting.Option.MeditationTick.Compatibility>

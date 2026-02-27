@@ -57,7 +57,7 @@ namespace YaOpt.OtherMod.FacialAnimation
 		{
 			Name = "YaOpt.Setting.Option.FADeLinqBurst",
 			Desc = "YaOpt.Setting.Option.FADeLinqBurst.Desc",
-			NoteStability = "YaOpt.Setting.Option.OptFADeLinqBurst.Stable",
+			NoteStability = "YaOpt.Setting.Option.FADeLinqBurst.Stable",
 			SettingId = "OptFADeLinqBurst",
 			RequiredMod = "Nals.FacialAnimation",
 			SubCategory = "YaOpt.Setting.SubCategory.FacialAnimation",
