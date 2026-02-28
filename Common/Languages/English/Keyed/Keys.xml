@@ -22,6 +22,8 @@
 	<YaOpt.Setting.Note.Banned>Disabled by {0}</YaOpt.Setting.Note.Banned>
 	<YaOpt.Setting.Note.Stability>[Stability Note]</YaOpt.Setting.Note.Stability>
 	<YaOpt.Setting.Note.Compatibility>[Mod Compatibility Note]</YaOpt.Setting.Note.Compatibility>
+	<YaOpt.Setting.Note.Platform>[Platform Limited]</YaOpt.Setting.Note.Platform>
+	<YaOpt.Setting.Note.MultiThread>[Multithreaded]</YaOpt.Setting.Note.MultiThread>
 	<YaOpt.Setting.Option.DebugOutput>Debug Output</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>Output debug info to the console. Enabling this may slightly reduce game speed, as the game records the entire stack trace for each console message, which is an expensive operation.</YaOpt.Setting.Option.DebugOutput.Desc>
 	<YaOpt.Setting.Option.MaterialGetColor>Material Color Cache</YaOpt.Setting.Option.MaterialGetColor>

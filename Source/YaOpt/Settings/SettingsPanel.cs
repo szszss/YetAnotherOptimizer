@@ -184,12 +184,12 @@ namespace YaOpt.Settings
 			}
 
 			Rect drawRect;
-#if DEBUG
+#if false && DEBUG
 			rightRect.SplitHorizontally(rightRect.height - 35f, out rightRect, out drawRect);
 			Widgets.ButtonText(drawRect.ContractedBy(30, 2.5f), "YaOpt.Setting.Button.ShowDebugMenu".Translate());
+#endif
 			string btnTextDisable;
 			string btnTextEnable;
-#endif
 			OptimizationCategory category;
 			switch (_selectedTab)
 			{
@@ -330,13 +330,13 @@ namespace YaOpt.Settings
 
 			if (!string.IsNullOrWhiteSpace(option.NotePlatform))
 			{
-				sb.Append("\n\n").Append("<color=#88F0F0>").Append("YaOpt.Setting.Note.Stability".Translate()).Append("\n")
+				sb.Append("\n\n").Append("<color=#88F0F0>").Append("YaOpt.Setting.Note.Platform".Translate()).Append("\n")
 					.Append(option.NotePlatform.Translate()).Append("</color>");
 			}
 
 			if (!string.IsNullOrWhiteSpace(option.NoteMultiThread))
 			{
-				sb.Append("\n\n").Append("<color=#0044FF>").Append("YaOpt.Setting.Note.Stability".Translate()).Append("\n")
+				sb.Append("\n\n").Append("<color=#0044FF>").Append("YaOpt.Setting.Note.MultiThread".Translate()).Append("\n")
 					.Append(option.NoteMultiThread.Translate()).Append("</color>");
 			}
 			_showingDesc = sb.ToString();

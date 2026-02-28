@@ -11,6 +11,14 @@ namespace YaOpt.OtherMod.CombatExtended
 	/// </summary>
 	internal class SubMod : YaOptSubMod
 	{
+		/// <summary>
+		/// Fixes a vanilla bug where texture atlases smaller than 512x512 have Mipmaps enabled but not populated.
+		/// This causes visual corruption (colored stripes) when zooming out on objects using these atlases.
+		/// The issue often affects scatterable items (e.g., pebbles) from high-res texture mods.
+		/// Vanilla avoids this by using known-good built-in atlases, and large modlists avoid it by filling the atlas to >512x512.
+		/// The bug only manifests in intermediate-sized modlists where the atlas size falls into the problematic range.
+		/// </summary>
+		/// <seealso cref="CombatExtended.Patches.CombatExtended_GenSightCE_PointsOnLineOfSight"/>
 		public static OptimizationOption OptCELineOfSightBurst { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.CELineOfSightBurst",

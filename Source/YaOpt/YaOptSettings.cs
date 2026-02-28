@@ -27,10 +27,9 @@ namespace YaOpt
 		/// which creates significant overhead when called frequently.
 		/// This option patchs the setter of <see cref="Material.color"/> to update the cache and
 		/// the getter of <see cref="Material.GetColor(string)"/> to retrieve the value from cache.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.UnityEngine_Material_GetColor"/>
 		/// <seealso cref="Patches.UnityEngine_Material_SetColor"/>
-		/// </summary>
 		public OptimizationOption OptMaterialGetColor { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.MaterialGetColor",
@@ -42,9 +41,8 @@ namespace YaOpt
 		/// Optimizes <see cref="ColoredText.Resolve(TaggedString)"/> and <see cref="ColoredText.StripTags(string)"/>.
 		/// Replaces <see cref="string.IndexOf(string)"/> (culture-sensitive) with <see cref="string.IndexOf(string, StringComparison)"/>
 		/// using <see cref="StringComparison.Ordinal"/> to avoid unnecessary overhead during text tagging.
-		/// <br/>
-		/// <seealso cref="Patches.MultiTargets_ColoredText"/>
 		/// </summary>
+		/// <seealso cref="Patches.MultiTargets_ColoredText"/>
 		public OptimizationOption OptColoredText { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ColoredText",
@@ -64,13 +62,12 @@ namespace YaOpt
 		/// <item>Moves initialization and parallel preparation to <c>DrawMapMesh</c>
 		///		(which allows the main thread to render the static map mesh while worker threads prepare dynamic things).</item>
 		/// </list>
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_ComputeCulledThings"/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_DrawDynamicThings"/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
 		/// <seealso cref="Patches.Verse_MapDrawer_DrawMapMesh"/>
 		/// <seealso cref="Patches.Verse_MapDrawer_MapMeshDrawerUpdate_First"/>
-		/// </summary>
 		public OptimizationOption OptEarlyRenderPrepare { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.EarlyRenderPrepare",
@@ -86,9 +83,8 @@ namespace YaOpt
 		/// and objects are often clustered (e.g., raids).
 		/// This can lead to thread imbalance where some threads finish early while others are stuck with heavy batches.
 		/// This optimization reduces the batch size, allowing the work-stealing algorithm to distribute the load more evenly.
-		/// <br/>
-		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
 		/// </summary>
+		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
 		public OptimizationOption OptPrepareBatchCount { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.PrepareBatchCount",
@@ -102,11 +98,10 @@ namespace YaOpt
 		/// Vanilla performs these updates on the main thread, but they are generally thread-safe.
 		/// If a mod overrides the update logic in a way that might not be thread-safe,
 		/// YaOpt will detect this and falls back to the main thread for those specific objects.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Verse_PawnRenderNodeWorker_GetMaterialPropertyBlock"/>
 		/// <seealso cref="Patches.Verse_PawnRenderNodeWorker_PreDraw"/>
 		/// <seealso cref="Patches.Verse_PawnRenderTree_ParallelPreDraw"/>
-		/// </summary>
 		public OptimizationOption OptParallelMaterialUpdate { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ParallelMaterialUpdate",
@@ -120,10 +115,9 @@ namespace YaOpt
 		/// Since 97% of render trees are shallow (less than or equal to 4 layers),
 		/// this optimization inlines the check for the first 4 layers into a single function,
 		/// avoiding virtual function call overhead.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Verse_PawnRenderNode_EnsureInitialized"/>
 		/// <seealso cref="Patches.Verse_PawnRenderTree_ParallelPreDraw"/>
-		/// </summary>
 		public OptimizationOption OptFastRecacheRequested { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FastRecacheRequested",
@@ -138,9 +132,8 @@ namespace YaOpt
 		/// In vanilla, any change in snow or dust thickness triggers an immediate mesh update in the rendering frame,
 		/// consuming significant resources during frequent changes (e.g., snowfall or melting).
 		/// This optimization imposes a minimum real-time interval between updates.
-		/// <br/>
-		/// <seealso cref="Patches.MultiTargets_MapMeshDirty"/>
 		/// </summary>
+		/// <seealso cref="Patches.MultiTargets_MapMeshDirty"/>
 		public OptimizationOption OptMapMeshUpdateThrottle { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.MapMeshUpdateThrottle",
@@ -164,9 +157,8 @@ namespace YaOpt
 		/// <summary>
 		/// Fixes a bug where <see cref="PawnRenderNodeProperties.Worker"/>
 		/// cache was not being used, causing slow initialization.
-		/// <br/>
-		/// <seealso cref="Patches.Verse_PawnRenderNodeProperties_Worker"/>
 		/// </summary>
+		/// <seealso cref="Patches.Verse_PawnRenderNodeProperties_Worker"/>
 		public OptimizationOption OptPRNRWorker { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.PRNRWorker",
@@ -181,9 +173,8 @@ namespace YaOpt
 		/// and performs a content lookup for every new graphic instance.
 		/// This optimization caches the resolved textures based on the base path,
 		/// eliminating the overhead of string manipulation and repeated asset lookups.
-		/// <br/>
-		/// <seealso cref="Patches.Verse_Graphic_Multi_Init"/>
 		/// </summary>
+		/// <seealso cref="Patches.Verse_Graphic_Multi_Init"/>
 		public OptimizationOption OptGraphicTextureCache { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.GraphicTextureCache",
@@ -196,10 +187,9 @@ namespace YaOpt
 		/// Vanilla uses a struct as a dictionary key for silhouette caching but fails to implement <see cref="IEquatable{T}"/>.
 		/// This forces the runtime to use <see cref="ValueType.Equals(object)"/>, causing boxing and reflection overhead for every lookup.
 		/// This optimization replaces the cache key with a custom implementation that properly implements <see cref="IEquatable{T}"/> to eliminate this overhead.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Verse_SilhouetteUtility_GetCachedSilhouetteData"/>
 		/// <seealso cref="Patches.Verse_SilhouetteUtility_NotifyGraphicDirty"/>
-		/// </summary>
 		public OptimizationOption OptSilhouette { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.Silhouette",
@@ -213,9 +203,8 @@ namespace YaOpt
 		/// While vanilla tabs cache this check, some modded tabs perform complex queries every frame without caching.
 		/// This optimization implements an upper-level cache that throttles visibility updates to once every 500ms (real-time).
 		/// The cache is forcibly refreshed when pausing/unpausing or switching maps.
-		/// <br/>
-		/// <seealso cref="Patches.MultiTargets_ToggleTab"/>
 		/// </summary>
+		/// <seealso cref="Patches.MultiTargets_ToggleTab"/>
 		public OptimizationOption OptToggleTabCheck { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ToggleTabCheck",
@@ -227,9 +216,8 @@ namespace YaOpt
 		/// Accelerates the matrix computation step in render preparation using Burst.
 		/// Vanilla intended to use Burst for this computationally expensive step but failed due to an implementation oversight.
 		/// This optimization rewrites the Burst implementation to make it functional.
-		/// <br/>
-		/// <seealso cref="Patches.Verse_PawnRenderTree_TryGetMatrix"/>
 		/// </summary>
+		/// <seealso cref="Patches.Verse_PawnRenderTree_TryGetMatrix"/>
 		public OptimizationOption OptComputeMatrixBurst { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ComputeMatrixBurst",
@@ -245,9 +233,8 @@ namespace YaOpt
 		/// as it iterates through the entire component list.
 		/// Unfortunately, checking if a component exists requires calling GetComp and waiting for a null result.
 		/// This optimization rewrites the lookup mechanism to ensure fast failure for missing components.
-		/// <br/>
-		/// <seealso cref="Patches.Trampolines.Verse_ThingWithComps_GetComp"/>
 		/// </summary>
+		/// <seealso cref="Patches.Trampolines.Verse_ThingWithComps_GetComp"/>
 		public OptimizationOption OptThingGetComp { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ThingGetComp",
@@ -264,9 +251,8 @@ namespace YaOpt
 		/// especially for tribal psykers scanning for Anima grass every frame.
 		/// Note: This has a minor gameplay impact. When a pawn stops meditating,
 		/// any accrued progress between the 100-tick intervals is lost.
-		/// <br/>
-		/// <seealso cref="Patches.RimWorld_JobDriver_Meditate_MeditationTick"/>
 		/// </summary>
+		/// <seealso cref="Patches.RimWorld_JobDriver_Meditate_MeditationTick"/>
 		public OptimizationOption OptMeditationTick { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.MeditationTick",
@@ -280,11 +266,10 @@ namespace YaOpt
 		/// <see cref="StatDefOf.ComfyTemperatureMax"/>, and <see cref="StatDefOf.FilthRate"/>.
 		/// Comfortable Temperature is updated every 20 ticks (and invalidated on apparel changes).
 		/// Filth Rate is updated every 60 ticks.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.MultiTargets_ComfortableTemperature"/>
 		/// <seealso cref="Patches.MultiTargets_FilthRate"/>
 		/// <seealso cref="Patches.RimWorld_Pawn_ApparelTracker_Notify_ApparelChanged"/>
-		/// </summary>
 		public OptimizationOption OptStatCache { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.StatCache",
@@ -298,7 +283,7 @@ namespace YaOpt
 		/// might fail or be interrupted by emergency jobs (e.g. fleeing enemies) in the current frame.
 		/// If the prediction passes (no interruption), the main thread skips the redundant check.
 		/// Otherwise, the main thread performs the standard check.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
 		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
 		/// <seealso cref="Patches.Verse_TickList_BucketOf"/>
@@ -306,7 +291,6 @@ namespace YaOpt
 		/// <seealso cref="Patches.Verse_TickList_Tick"/>
 		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
 		/// <seealso cref="YaOptGlobal.NeedThreadSafe"/>
-		/// </summary>
 		public OptimizationOption OptParallelPawnTick { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ParallelPawnTick",
@@ -325,10 +309,9 @@ namespace YaOpt
 		/// When a thread finds a valid job, it truncates the list (discarding lower priority jobs)
 		/// and waits for threads checking higher priority jobs to finish.
 		/// Finally, the valid job with the highest priority is selected.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.RimWorld_JobGiver_Work_TryIssueJobPackage"/>
 		/// <seealso cref="YaOptGlobal.NeedThreadSafe"/>
-		/// </summary>
 		public OptimizationOption OptParallelJobGiver { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ParallelJobGiver",
@@ -343,10 +326,9 @@ namespace YaOpt
 		/// <summary>
 		/// Optimizes map post-tick processing by running independent updates in parallel.
 		/// Supports steady environment effects and gas updates.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Verse_Map_MapPostTick"/>
 		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
-		/// </summary>
 		public OptimizationOption OptParallelPostMapTick { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ParallelPostMapTick",
@@ -361,11 +343,10 @@ namespace YaOpt
 		/// Vanilla iterates through all precepts to make this determination.
 		/// This optimization creates a cache of precepts that impose restrictions whenever precepts are updated.
 		/// When checking permissions, it only iterates through these cached restrictive precepts, ignoring irrelevant ones.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.RimWorld_Ideo_IdeoTick"/>
 		/// <seealso cref="Patches.RimWorld_Ideo_MemberWillingToDo"/>
 		/// <seealso cref="Patches.RimWorld_Ideo_RecachePrecepts"/>
-		/// </summary>
 		public OptimizationOption OptIdeoCheck { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.IdeoCheck",
@@ -389,9 +370,11 @@ namespace YaOpt
 
 		/// <summary>
 		/// Optimizes the performance of removing things from the game.
-		/// Vanilla maintains various lists (ListerThings) for object classification. Removing an object requires a linear search (O(N)) in each list.
+		/// Vanilla maintains various lists (ListerThings) for object classification.
+		/// Removing an object requires a linear search (O(N)) in each list.
 		/// This optimization adds an index record to each object to track its position.
-		/// Removal uses this index to directly access the object, swaps it with the last element (swap-remove), and updates the index of the moved element.
+		/// Removal uses this index to directly access the object, swaps it with the last element (swap-remove),
+		/// and updates the index of the moved element.
 		/// This reduces complexity to O(1) at the cost of a negligible increase in memory usage.
 		/// </summary>
 		/// <seealso cref="Patches.Verse_ListerThings_Add"/>
@@ -408,12 +391,11 @@ namespace YaOpt
 		/// This optimization reduces startup time and initial VRAM usage,
 		/// but may cause stutters when textures are loaded during gameplay.
 		/// Note: Texture unloading is not implemented, so VRAM usage may increase over time.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Trampolines.Verse_ContentFinder_Get"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
 		/// <seealso cref="Patches.Early.Verse_ModContentLoader_LoadTexture"/>
-		/// </summary>
 		public OptimizationOption OptLazyTextureLoad { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.LazyTextureLoad",
@@ -439,11 +421,10 @@ namespace YaOpt
 		/// If an XPath expression follows a simple pattern like <c>Defs/DefType[defName="DefName"]</c>,
 		/// this optimization replaces the complex XPath evaluation with a faster, direct node lookup.
 		/// This significantly improves game startup time, especially with many mods.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
 		/// <seealso cref="Patches.Early.Verse_LoadedModManager_ApplyPatches"/>
-		/// </summary>
 		public OptimizationOption OptFastPatchOperation { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FastPatchOperation",
@@ -457,10 +438,9 @@ namespace YaOpt
 		/// Vanilla uses an O(N^2) nested loop for this check, which is very slow with large numbers of Defs.
 		/// This optimization replaces the inner loop with a hash lookup, reducing the complexity to O(N).
 		/// This speeds up game startup, especially for non-English languages.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_InjectIntoDefs"/>
 		/// <seealso cref="Patches.Early.Verse_DefInjectionPackage_SetDefFieldAtPath"/>
-		/// </summary>
 		public OptimizationOption OptFastTranslationInjection { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FastTranslationInjection",
@@ -472,10 +452,9 @@ namespace YaOpt
 		/// Caches type information at startup to accelerate Harmony type retrieval.
 		/// This speeds up Harmony patch processing for some mods, improving game startup time in modded environments.
 		/// It has no effect in a vanilla environment.
-		/// <br/>
+		/// </summary>
 		/// <seealso cref="Patches.Early.HarmonyLib_AccessTools_TypeByName"/>
 		/// <seealso cref="Patches.Early.System_Reflection_RuntimeAssembly_FullName"/>
-		/// </summary>
 		public OptimizationOption OptRuntimeInfoCache { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.RuntimeInfoCache",
@@ -489,8 +468,8 @@ namespace YaOpt
 		/// The issue often affects scatterable items (e.g., pebbles) from high-res texture mods.
 		/// Vanilla avoids this by using known-good built-in atlases, and large modlists avoid it by filling the atlas to >512x512.
 		/// The bug only manifests in intermediate-sized modlists where the atlas size falls into the problematic range.
-		/// <seealso cref="Patches.Early.MultiTargets_CalcRectsForAtlas"/>
 		/// </summary>
+		/// <seealso cref="Patches.Early.MultiTargets_CalcRectsForAtlas"/>
 		public OptimizationOption OptFixTextureAtlas { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FixTextureAtlas",

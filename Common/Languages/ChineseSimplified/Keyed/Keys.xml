@@ -22,6 +22,8 @@
 	<YaOpt.Setting.Note.Banned>被{0}禁用</YaOpt.Setting.Note.Banned>
 	<YaOpt.Setting.Note.Stability>【稳定性说明】</YaOpt.Setting.Note.Stability>
 	<YaOpt.Setting.Note.Compatibility>【Mod兼容性说明】</YaOpt.Setting.Note.Compatibility>
+	<YaOpt.Setting.Note.Platform>【平台限定】</YaOpt.Setting.Note.Platform>
+	<YaOpt.Setting.Note.MultiThread>【多线程】</YaOpt.Setting.Note.MultiThread>
 	<YaOpt.Setting.Option.DebugOutput>调试输出</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>在控制台中输出调试信息，启用这个选项可能会略微降低游戏速度，因为游戏会在每次输出控制台信息时记录整个调用栈，这是一个开销很大的操作。</YaOpt.Setting.Option.DebugOutput.Desc>
 	<YaOpt.Setting.Option.MaterialGetColor>材质颜色缓存</YaOpt.Setting.Option.MaterialGetColor>
