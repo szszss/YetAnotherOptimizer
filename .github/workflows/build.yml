@@ -1,0 +1,193 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+jobs:
+  # 检测 Unity 代码是否有变化，决定是否需要重新构建
+  check-unity-changes:
+    name: Check Unity Changes
+    runs-on: ubuntu-latest
+    outputs:
+      unity-changed: ${{ steps.filter.outputs.unity }}
+      unity-hash: ${{ steps.hash.outputs.hash }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Check for Unity changes
+        uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            unity:
+              - 'Source/YaOpt.Unity/Assets/**'
+              - 'Source/YaOpt.Unity/Packages/**'
+              - 'Source/YaOpt.Unity/ProjectSettings/**'
+
+      - name: Generate Unity source hash
+        id: hash
+        run: |
+          HASH=$(find Source/YaOpt.Unity -type f \( -name "*.cs" -o -name "*.asmdef" -o -name "*.json" -o -name "*.asset" \) -exec sha256sum {} \; 2>/dev/null | sha256sum | cut -d' ' -f1 | cut -c1-16)
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+          echo "Unity source hash: $HASH"
+
+  # Unity 构建 - 仅在代码变化时执行
+  build-unity:
+    name: Build Unity (${{ matrix.targetPlatform }})
+    needs: check-unity-changes
+    if: needs.check-unity-changes.outputs.unity-changed == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64
+          - StandaloneLinux64
+          - StandaloneOSX
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Unity Library
+        uses: actions/cache@v3
+        with:
+          path: Source/YaOpt.Unity/Library
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('Source/YaOpt.Unity/Packages/manifest.json') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-
+            Library-
+
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: Source/YaOpt.Unity
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: BuildCommand.PerformBuild
+          customParameters: -nographics
+          versioning: None
+
+      - name: Upload Unity Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-artifacts-${{ matrix.targetPlatform }}
+          path: Source/YaOpt.Unity/Builds/Artifacts/${{ matrix.targetPlatform }}
+          retention-days: 1
+
+      - name: Cache Unity Build Output
+        uses: actions/cache/save@v3
+        with:
+          path: Source/YaOpt.Unity/Builds/Artifacts
+          key: unity-build-${{ needs.check-unity-changes.outputs.unity-hash }}-${{ matrix.targetPlatform }}
+
+  # 恢复缓存的 Unity Artifacts（代码无变化时）
+  restore-unity-cache:
+    name: Restore Unity Cache (${{ matrix.targetPlatform }})
+    needs: check-unity-changes
+    if: needs.check-unity-changes.outputs.unity-changed == 'false'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64
+          - StandaloneLinux64
+          - StandaloneOSX
+    steps:
+      - name: Restore Unity Build Cache
+        id: cache
+        uses: actions/cache/restore@v3
+        with:
+          path: Source/YaOpt.Unity/Builds/Artifacts
+          key: unity-build-${{ needs.check-unity-changes.outputs.unity-hash }}-${{ matrix.targetPlatform }}
+
+      - name: Upload Unity Artifacts
+        if: steps.cache.outputs.cache-hit == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-artifacts-${{ matrix.targetPlatform }}
+          path: Source/YaOpt.Unity/Builds/Artifacts/${{ matrix.targetPlatform }}
+          retention-days: 1
+
+      - name: Cache miss warning
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          echo "::warning::Unity cache miss - this should not happen if code hasn't changed"
+          echo "Consider triggering a manual rebuild with workflow_dispatch"
+          exit 1
+
+  # 主项目构建
+  build-main:
+    name: Build Main Project
+    needs: [build-unity, restore-unity-cache]
+    if: always() && (needs.build-unity.result == 'success' || needs.restore-unity-cache.result == 'success')
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
+
+      - name: Create Output Directories
+        shell: bash
+        run: mkdir -p 1.6/Assemblies 1.6/Burst
+
+      - name: Download Unity Artifacts (Windows)
+        uses: actions/download-artifact@v4
+        with:
+          name: unity-artifacts-StandaloneWindows64
+          path: temp/windows
+
+      - name: Download Unity Artifacts (Linux)
+        uses: actions/download-artifact@v4
+        with:
+          name: unity-artifacts-StandaloneLinux64
+          path: temp/linux
+
+      - name: Download Unity Artifacts (macOS)
+        uses: actions/download-artifact@v4
+        with:
+          name: unity-artifacts-StandaloneOSX
+          path: temp/macos
+
+      - name: Organize Artifacts
+        shell: cmd
+        run: |
+          copy temp\windows\lib_burst_generated.dll 1.6\Burst\
+          copy temp\linux\lib_burst_generated.so 1.6\Burst\
+          xcopy /E /I /Y temp\macos\lib_burst_generated.bundle 1.6\Burst\lib_burst_generated.bundle
+          copy temp\windows\YaOpt.Unity.dll 1.6\Assemblies\
+
+      - name: Restore NuGet Packages
+        run: nuget restore Source/YaOpt.sln
+
+      - name: Build Main Project
+        run: msbuild Source/YaOpt.sln /p:Configuration=Release /p:Platform=AnyCPU
+
+      - name: Upload Final Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: YetAnotherOptimizer-1.6
+          path: 1.6/
