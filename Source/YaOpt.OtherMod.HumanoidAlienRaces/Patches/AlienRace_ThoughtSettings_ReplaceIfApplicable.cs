@@ -19,7 +19,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 		{
 			if (original != null)
 			{
-				MiscHelper.CheckHash(original, Hash128.Parse("31a4b85d5b8c2aabea2703fb8dc0acf6"));
+				MiscHelper.CheckHash(original, Hash128.Parse("88827cef00e729ebfc95c3096db32561"));
 			}
 			return SubMod.OptHARDeLinq.Enabled;
 		}

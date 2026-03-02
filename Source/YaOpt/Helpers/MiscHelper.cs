@@ -1,3 +1,4 @@
+using HarmonyLib;
 using System;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -21,13 +22,25 @@ namespace YaOpt.Helpers
 
 		public static Hash128 GetMethodBodyHash(MethodBase method)
 		{
-			var ilBytes = method.GetMethodBody()?.GetILAsByteArray();
-			if (ilBytes == null)
-				throw new MethodAccessException($"Cannot get the IL code of method {method.FullName()}");
+			var instructions = PatchProcessor.GetOriginalInstructions(method);
+			if (instructions == null)
+				throw new MethodAccessException($"Cannot get the parsed IL instructions of method {method.FullName()}");
 
 			using (var hasher = SHA1.Create())
+			using (var ms = new System.IO.MemoryStream())
 			{
-				var hash = Hash128.Compute(hasher.ComputeHash(ilBytes));
+				foreach (var inst in instructions)
+				{
+					var opValue = inst.opcode.Value;
+					ms.WriteByte((byte)(opValue & 0xFF));
+					if (inst.opcode.Size == 2)
+					{
+						ms.WriteByte((byte)((opValue >> 8) & 0xFF));
+					}
+				}
+
+				ms.Position = 0;
+				var hash = Hash128.Compute(hasher.ComputeHash(ms));
 				YaOptMod.Debug($"MethodBody Hash: {method.FullName()} - {hash}");
 				return hash;
 			}

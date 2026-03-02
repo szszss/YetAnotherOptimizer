@@ -25,7 +25,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 		{
 			if (original != null)
 			{
-				MiscHelper.CheckHash(original, Hash128.Parse("ddae71ac2f720bf9ee276dbe5c7dee56"));
+				MiscHelper.CheckHash(original, Hash128.Parse("1fdfc0629d32cb742ae6e94e06e2a9ef"));
 			}
 			useBurst = SubMod.OptFADeLinqBurst.Enabled;
 			return SubMod.OptFADeLinq.Enabled;

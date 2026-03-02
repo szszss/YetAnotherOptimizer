@@ -20,7 +20,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 		{
 			if (original != null)
 			{
-				MiscHelper.CheckHash(original, Hash128.Parse("5bf437837e400811cb18de523ef7c082"));
+				MiscHelper.CheckHash(original, Hash128.Parse("c630cb069c919c1c6fe84c79f633afa6"));
 			}
 			return SubMod.OptHARTextureCache.Enabled;
 		}

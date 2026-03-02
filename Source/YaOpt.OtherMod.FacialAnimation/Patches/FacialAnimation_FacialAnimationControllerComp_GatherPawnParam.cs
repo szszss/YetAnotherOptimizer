@@ -21,7 +21,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 		{
 			if (original != null)
 			{
-				MiscHelper.CheckHash(original, Hash128.Parse("391a7cf07b711f5dc30e09017a237260"));
+				MiscHelper.CheckHash(original, Hash128.Parse("1705dc87a227b6a1cb89f953c46ca46e"));
 			}
 			return SubMod.OptFAParallelUpdate.Enabled;
 		}

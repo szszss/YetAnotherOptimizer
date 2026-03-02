@@ -20,7 +20,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 		{
 			if (original != null)
 			{
-				MiscHelper.CheckHash(original, Hash128.Parse("8befcfd39526a6759a696b863c11651d"));
+				MiscHelper.CheckHash(original, Hash128.Parse("94c869222db7faabb88f9fedef73862a"));
 			}
 			return SubMod.OptFATextureCache.Enabled;
 		}
