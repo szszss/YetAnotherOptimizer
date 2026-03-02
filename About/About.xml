@@ -2,6 +2,7 @@
 <ModMetaData>
 	<name>Yet another Optimizer</name>
 	<author>szszss</author>
+	<modVersion IgnoreIfNoMatchingField="True">1.0.0</modVersion>
 	<supportedVersions>
 		<li>1.6</li>
 	</supportedVersions>
@@ -19,7 +20,8 @@
 		<li>brrainz.harmony</li>
 		<li>Nals.FacialAnimation</li>
 	</loadAfter>
-	<description>				
-Man what can I say?
+	<description>
+YetAnotherOptimizer is a high-performance optimization mod for RimWorld.
+It is designed to significantly increase game frame rates (both FPS and TPS) and make the late-game colonies run smoother.
 	</description>
 </ModMetaData>
