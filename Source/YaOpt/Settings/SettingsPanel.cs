@@ -157,7 +157,7 @@ namespace YaOpt.Settings
 						if (!string.IsNullOrWhiteSpace(cateText))
 						{
 							Text.Font = GameFont.Medium;
-							listing.Label(cateText);
+							listing.Label($"<b>{cateText}</b>");
 							Text.Font = GameFont.Small;
 						}
 					}
@@ -170,7 +170,7 @@ namespace YaOpt.Settings
 						lastSubCategory = subCateText;
 						if (!string.IsNullOrWhiteSpace(subCateText))
 						{
-							listing.Label($"<b><i>{subCateText}</i></b>");
+							listing.Label($"<i>  {subCateText}</i>");
 						}
 					}
 					DrawOption(listing, option);
@@ -245,6 +245,7 @@ namespace YaOpt.Settings
 					sb.Append("<color=#88F0F0>[P]</color>");
 				if (hasNoteMT)
 					sb.Append("<color=#0044FF>[MT]</color>");
+				label = sb.ToString();
 			}
 			var enabled = option._enabled;
 			var disabledByDef = CompatibilityDefines.CachedBannedOptimizations.Contains(option.SettingId);
