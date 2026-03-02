@@ -184,10 +184,6 @@ namespace YaOpt.Settings
 			}
 
 			Rect drawRect;
-#if false && DEBUG
-			rightRect.SplitHorizontally(rightRect.height - 35f, out rightRect, out drawRect);
-			Widgets.ButtonText(drawRect.ContractedBy(30, 2.5f), "YaOpt.Setting.Button.ShowDebugMenu".Translate());
-#endif
 			string btnTextDisable;
 			string btnTextEnable;
 			OptimizationCategory category;

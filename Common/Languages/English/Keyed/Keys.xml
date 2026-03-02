@@ -11,7 +11,6 @@
 	<YaOpt.Setting.Button.EnableAllTps>Enable All TPS Optimizations</YaOpt.Setting.Button.EnableAllTps>
 	<YaOpt.Setting.Button.DisableAllMisc>Disable All Misc Optimizations</YaOpt.Setting.Button.DisableAllMisc>
 	<YaOpt.Setting.Button.EnableAllMisc>Enable All Misc Optimizations</YaOpt.Setting.Button.EnableAllMisc>
-	<YaOpt.Setting.Button.ShowDebugMenu>Open Debug Menu</YaOpt.Setting.Button.ShowDebugMenu>
 	<YaOpt.Setting.Category.Fps>FPS Optimizations</YaOpt.Setting.Category.Fps>
 	<YaOpt.Setting.Category.Tps>TPS Optimizations</YaOpt.Setting.Category.Tps>
 	<YaOpt.Setting.Category.Misc>Other Optimizations</YaOpt.Setting.Category.Misc>
