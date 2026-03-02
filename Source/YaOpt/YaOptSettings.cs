@@ -248,7 +248,7 @@ namespace YaOpt
 		/// Throttles pawn meditation ticks from every tick to once every 100 ticks.
 		/// Each throttled tick provides 100x the effect.
 		/// Meditation can be performance-intensive,
-		/// especially for tribal psykers scanning for Anima grass every frame.
+		/// especially for tribal psycasters scanning for Anima grass every frame.
 		/// Note: This has a minor gameplay impact. When a pawn stops meditating,
 		/// any accrued progress between the 100-tick intervals is lost.
 		/// </summary>
@@ -259,6 +259,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.MeditationTick.Desc",
 			NoteCompatibility = "YaOpt.Setting.Option.MeditationTick.Compatibility",
 			Category = OptimizationCategory.Tps,
+			FuncShow = settings => !YaOptGlobal.HasMod("Arkymn.PerformanceEsmolas")
 		};
 
 		/// <summary>

@@ -92,7 +92,7 @@
 	<YaOpt.Setting.Option.FastListerRemove.Desc>优化从游戏中移除物体时的效率。原版游戏在移除物体时，需要在多个检索列表中进行线性搜索以找到并删除物体。此优化为每个物体添加了索引记录，移除时可直接定位并使用“交换移除”策略（将末尾物体移至空位）。</YaOpt.Setting.Option.FastListerRemove.Desc>
 	<YaOpt.Setting.Option.MeditationTick>冥想更新节流</YaOpt.Setting.Option.MeditationTick>
 	<YaOpt.Setting.Option.MeditationTick.Desc>将冥想时的逻辑帧更新频率降低为每100帧一次，每次更新提供100倍效果。冥想更新相当消耗性能，特别是部落灵能者每帧都会扫描全图灵草。注：此优化会对游玩产生轻微影响，角色退出冥想时会损失未结算的冥想收益（平均每次提前中断冥想时损失50帧/0.83秒的冥想收益）。</YaOpt.Setting.Option.MeditationTick.Desc>
-	<YaOpt.Setting.Option.MeditationTick.Compatibility>兼容原版灵能扩展（Vanilla Psycasts Expanded）,但可能会与其他大幅修改冥想机制的Mod产生冲突。</YaOpt.Setting.Option.MeditationTick.Compatibility>
+	<YaOpt.Setting.Option.MeditationTick.Compatibility>兼容原版灵能扩展（Vanilla Psycasts Expanded）,但可能会与其他大幅修改冥想机制的Mod产生冲突。与Performance Esmolas的功能重复，如果同时安装了Performance Esmolas，此功能会被强制禁用并隐藏。</YaOpt.Setting.Option.MeditationTick.Compatibility>
 	<YaOpt.Setting.Option.StatCache>更多属性缓存</YaOpt.Setting.Option.StatCache>
 	<YaOpt.Setting.Option.StatCache.Desc>将角色的舒适温度和污垢率加入原版的属性缓存系统。舒适温度改为每20帧更新一次（装备变动时强制刷新），污垢率每60帧更新一次。这能减少频繁访问这些高开销属性时的性能损耗。</YaOpt.Setting.Option.StatCache.Desc>
 	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>

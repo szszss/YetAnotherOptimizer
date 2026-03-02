@@ -21,7 +21,7 @@ namespace YaOpt.Patches
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptMeditationTick.Enabled;
+			return YaOptGlobal.Settings.OptMeditationTick.Enabled && !YaOptGlobal.HasMod("Arkymn.PerformanceEsmolas");
 		}
 
 		static bool Prefix(JobDriver_Meditate __instance, Sustainer ___sustainer)
