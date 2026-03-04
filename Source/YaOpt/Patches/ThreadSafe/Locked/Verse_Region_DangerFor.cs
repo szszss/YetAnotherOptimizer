@@ -23,8 +23,8 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 			var skip = false;
 			var counter = 0;
 			Label targetLabel = default;
-			// var isMainThread = UnityData.IsInMainThread;
-			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
+			// var isMainThread = YaOptGlobal.IsInMainThread;
+			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return CodeInstruction.StoreLocal(localIsMainThread.LocalIndex);
 			foreach (var instruction in instructions)
 			{
@@ -70,8 +70,6 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 						// floatRange = TemperatureHelper.GetSafeTemperatureRange(pawn);
 						// skip other code
 						yield return CodeInstruction.LoadArgument(1);
-						yield return new CodeInstruction(OpCodes.Ldc_I4,
-							YaOptGlobal.Settings.OptStatCache.Enabled ? 20 : 1);
 						yield return CodeInstruction.Call(
 							typeof(RegionDangerHelper),
 							nameof(RegionDangerHelper.GetSafeTemperatureRange));

@@ -124,8 +124,8 @@ namespace YaOpt.Helpers
 					pawn.Map?.mapPawns.SpawnedPawnsInFaction(null);
 
 					// Almost all WorkGiver_Scanners use the ComfyTemperatureMin/Max stat.
-					// So we cache them here to avoid lock in worker threads.
-					pawn.ComfortableTemperatureRange();
+					// So we re-cache them here to avoid lock in worker threads.
+					RegionDangerHelper.GetSafeTemperatureRange(pawn);
 				}
 				catch (Exception ex)
 				{
