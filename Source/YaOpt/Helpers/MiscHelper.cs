@@ -15,9 +15,20 @@ namespace YaOpt.Helpers
 			return type != null ? type.FullName : string.Empty;
 		}
 
+		public static string DeclaringTypeName(this FieldInfo field)
+		{
+			var type = field.DeclaringType;
+			return type != null ? type.FullName : string.Empty;
+		}
+
 		public static string FullName(this MethodBase method)
 		{
 			return $"{method.DeclaringTypeName()}:{method.Name}";
+		}
+
+		public static string FullName(this FieldInfo field)
+		{
+			return $"{field.DeclaringTypeName()}:{field.Name}";
 		}
 
 		public static Hash128 GetMethodBodyHash(MethodBase method)

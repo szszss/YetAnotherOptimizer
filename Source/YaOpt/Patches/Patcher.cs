@@ -71,7 +71,6 @@ namespace YaOpt.Patches
 				if (_hasPatched)
 				{
 					YaOptMod.Debug("Uninstalling exist patches...");
-					ThreadLocalHelper.Clear();
 					harmony.UnpatchAll(harmony.Id);
 					TrampolinePatcher.UninstallAll();
 					YaOptSubMod.UnpatchAll(YaOptGlobal.SubMods, harmony);

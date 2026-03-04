@@ -18,7 +18,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
-			return ThreadLocalHelper.TmpListTranspiler<Room, Region>(instructions, generator, "tmpRegions");
+			return ThreadLocalHelper.ThreadLocalTranspiler(instructions, generator, "tmpRegions");
 		}
 	}
 }

@@ -42,12 +42,9 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			var enumerable = instructions;
 			if (!CompatibilityDefines.ThreadLocalPatches.TryGetValue(method, out var fields))
 				throw new Exception($"Cannot find fields to replace for {method.Name.ToStringSafe()}");
-			var holderType = method.DeclaringType;
-			if (holderType == null || holderType.IsStatic())
-				holderType = typeof(object);
-			foreach (var field in fields)
+			foreach (var fieldName in fields)
 			{
-				enumerable = ThreadLocalHelper.TmpListTranspiler(enumerable, generator, field, holderType);
+				enumerable = ThreadLocalHelper.ThreadLocalTranspiler(enumerable, generator, fieldName);
 			}
 			return enumerable;
 		}
