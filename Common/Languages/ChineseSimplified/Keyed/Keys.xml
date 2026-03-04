@@ -60,9 +60,9 @@
 	<YaOpt.Setting.Option.PRNRWorker>修复PawnRenderNodeProperties缓存</YaOpt.Setting.Option.PRNRWorker>
 	<YaOpt.Setting.Option.PRNRWorker.Desc>PawnRenderNodeProperties的Worker在初始化时很慢。虽然游戏为它准备了缓存，但由于设计疏忽，缓存永远不会被读取。此优化修复了该Bug，使其能正确使用缓存。</YaOpt.Setting.Option.PRNRWorker.Desc>
 	<YaOpt.Setting.Option.GraphicTextureCache>纹理索引缓存</YaOpt.Setting.Option.GraphicTextureCache>
-	<YaOpt.Setting.Option.GraphicTextureCache.Desc>缓存Graphic_Multi初始化所需的纹理。原版游戏每次初始化时都需要通过字符串拼接构建东西南北四个朝向的纹理路径并进行资源查找。此优化缓存了这些纹理，消除了重复的字符串拼接和资源查找开销。本优化最初为外星人框架（HAR）开发，现已整合入本体，供任何频繁重建Graphic_Multi的物体受益。注：这个优化可能会导致开发者选项中的纹理热重载失效。</YaOpt.Setting.Option.GraphicTextureCache.Desc>
+	<YaOpt.Setting.Option.GraphicTextureCache.Desc>缓存Graphic_Multi初始化所需的纹理。原版游戏每次初始化时都需要通过字符串拼接构建东西南北四个朝向的纹理路径并进行资源查找。此优化缓存了这些纹理，消除了重复的字符串拼接和资源查找开销。本优化最初为外星人框架开发，现已整合入本体，供任何频繁重建Graphic_Multi的物体受益。注：这个优化可能会导致开发者选项中的纹理热重载失效。</YaOpt.Setting.Option.GraphicTextureCache.Desc>
 	<YaOpt.Setting.Option.Silhouette>剪影缓存优化</YaOpt.Setting.Option.Silhouette>
-	<YaOpt.Setting.Option.Silhouette.Desc>优化剪影（屏幕边缘小图标）缓存的查找性能。原版游戏使用的查找键存在缺陷，导致每次查找都需要进行缓慢的反射比较。此优化修复了索引比较机制，消除了额外开销。</YaOpt.Setting.Option.Silhouette.Desc>
+	<YaOpt.Setting.Option.Silhouette.Desc>优化剪影（屏幕边缘小图标）缓存的查找性能。</YaOpt.Setting.Option.Silhouette.Desc>
 	<YaOpt.Setting.Option.ToggleTabCheck>标签页检查节流</YaOpt.Setting.Option.ToggleTabCheck>
 	<YaOpt.Setting.Option.ToggleTabCheck.Desc>限制可隐藏标签页（如机械体页面）的可见性检查频率。部分Mod的标签页未实现缓存机制，导致每帧都进行复杂的可见性查询。此优化引入了一套上层缓存，将可见性检查限制为每500毫秒一次。当游戏暂停、解除暂停或切换地图时会强制刷新。</YaOpt.Setting.Option.ToggleTabCheck.Desc>
 	<YaOpt.Setting.Option.ComputeMatrixBurst>ComputeMatrix Burst加速</YaOpt.Setting.Option.ComputeMatrixBurst>
