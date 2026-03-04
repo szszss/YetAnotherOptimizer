@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Analyzer>
-    <YetAnotherOptimizer>
-        <Types>
-        </Types>
-        <Methods>
-        </Methods>
-        <NestedTypes>
-        </NestedTypes>
-    </YetAnotherOptimizer>
+	<YetAnotherOptimizer>
+		<Types>
+		</Types>
+		<Methods>
+			<li>YaOpt.Helpers.ParallelJobGiver:ParellellyIssueJobPackage</li>
+			<li>YaOpt.Helpers.ParallelMapTickManager:ParellellyPostTickMaps</li>
+			<li>YaOpt.Helpers.ParallelMapTickManager:FinishPostMapTick</li>
+			<li>YaOpt.Helpers.ParallelPawnTickManager:ParellellyTickPawns</li>
+			<li>YaOpt.Helpers.ParallelPreDrawHelper:WaitUntilCullJobComplete</li>
+			<li>YaOpt.Helpers.ParallelPreDrawHelper:WaitUntilPreDrawJobComplete</li>
+		</Methods>
+		<NestedTypes>
+		</NestedTypes>
+	</YetAnotherOptimizer>
 </Analyzer>
