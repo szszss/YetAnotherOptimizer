@@ -38,7 +38,8 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 			{
 				return AccessTools.Method(
 					AccessTools.TypeByName("WhileYoureUp.Mod")
-						.GetNestedType("StoreUtility__TryFindBestBetterStoreCellFor_Patch"),
+						.GetNestedType("StoreUtility__TryFindBestBetterStoreCellFor_Patch",
+							BindingFlags.Static | BindingFlags.NonPublic),
 					"DetourAware_TryFindStore");
 			}
 
