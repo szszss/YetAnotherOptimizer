@@ -10,7 +10,8 @@ using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 {
-	[HarmonyPatch]
+	//[HarmonyPatch]
+	[Obsolete]
 	internal static class WhileYoureUp_BeforeSupplyDetour_Job
 	{
 		static MethodBase TargetMethod()

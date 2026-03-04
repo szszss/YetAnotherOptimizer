@@ -1,3 +1,4 @@
+using System;
 using HarmonyLib;
 using System.Threading;
 using Verse;
@@ -5,7 +6,10 @@ using YaOpt.Patches.Compatibility.WhileYouAreUp;
 
 namespace YaOpt.Patches.Compatibility.PickUpAndHaul
 {
-	[HarmonyPatch("PickUpAndHaul.WorkGiver_HaulToInventory", "JobOnThing")]
+	//[HarmonyPatch("PickUpAndHaul.WorkGiver_HaulToInventory", "JobOnThing")]
+	//[HarmonyPatch(typeof(WorkGiver_Scanner))]
+	//[HarmonyPatch(nameof(WorkGiver_Scanner.HasJobOnThing))]
+	[Obsolete]
 	internal static class PickUpAndHaul_WorkGiver_HaulToInventory_JobOnThing
 	{
 		static bool Prepare()
@@ -27,7 +31,7 @@ namespace YaOpt.Patches.Compatibility.PickUpAndHaul
 		{
 			if (__state)
 			{
-				WhileYouAreUpAccess.ClearTempDetour(pawn);
+				//WhileYouAreUpAccess.ClearTempDetour(pawn);
 				Monitor.Exit(WhileYouAreUpAccess.GlobalLock);
 			}
 		}

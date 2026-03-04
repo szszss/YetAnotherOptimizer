@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<!-- While you're up 1.6 -->
+	<YaOpt.CompatibilityDef MayRequire="zsbk.patch16.whileyoureup">
+		<defName>WhileYoureUp</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>RimWorld.WorkGiver_ConstructDeliverResources</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+	
+	<!-- While you're up 1.5 -->
+	<YaOpt.CompatibilityDef MayRequire="CodeOptimist.JobsOfOpportunity">
+		<defName>WhileYoureUp</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>RimWorld.WorkGiver_ConstructDeliverResources</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+
+	<!-- While you're up + Pick up and haul 1.6 -->
+	<YaOpt.CompatibilityDef MayRequire="zsbk.patch16.whileyoureup,Mehni.PickUpAndHaul">
+		<defName>WhileYoureUp_PickUpAndHaul</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>PickUpAndHaul.WorkGiver_HaulToInventory</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+	
+	<!-- While you're up + Pick up and haul 1.5 -->
+	<YaOpt.CompatibilityDef MayRequire="CodeOptimist.JobsOfOpportunity,Mehni.PickUpAndHaul">
+		<defName>WhileYoureUp_PickUpAndHaul</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>PickUpAndHaul.WorkGiver_HaulToInventory</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+</Defs>

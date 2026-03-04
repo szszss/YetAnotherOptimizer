@@ -1,3 +1,4 @@
+using System;
 using HarmonyLib;
 using RimWorld;
 using System.Threading;
@@ -14,21 +15,10 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled && YaOptGlobal.HasType("WhileYoureUp.Mod");
 		}
 
-		[HarmonyPriority(Priority.High)]
-		static void Prefix(out bool __state)
+		static void Postfix(Pawn pawn)
 		{
-			__state = false;
-			Monitor.Enter(WhileYouAreUpAccess.GlobalLock, ref __state);
-		}
-
-		[HarmonyPriority(Priority.LowerThanNormal)]
-		static void Finalizer(bool __state, Pawn pawn)
-		{
-			if (__state)
-			{
+			if (YaOptGlobal.IsInMainThread)
 				WhileYouAreUpAccess.ClearTempDetour(pawn);
-				Monitor.Exit(WhileYouAreUpAccess.GlobalLock);
-			}
 		}
 	}
 }
