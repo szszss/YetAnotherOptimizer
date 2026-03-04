@@ -170,7 +170,7 @@ namespace YaOpt.Settings
 						lastSubCategory = subCateText;
 						if (!string.IsNullOrWhiteSpace(subCateText))
 						{
-							listing.Label($"<i>  {subCateText}</i>");
+							listing.Label($"<b>{subCateText}</b>");
 						}
 					}
 					DrawOption(listing, option);
@@ -236,15 +236,15 @@ namespace YaOpt.Settings
 			var hasNoteMT = !string.IsNullOrWhiteSpace(option.NoteMultiThread);
 			if (hasNoteS || hasNoteC || hasNoteP || hasNoteMT)
 			{
-				var sb = new StringBuilder(label).Append(' ');
+				var sb = new StringBuilder(label);
 				if (hasNoteS)
-					sb.Append("<color=#FF4040>[S]</color>");
+					sb.Append(" <color=#FF4040>[S]</color>");
 				if (hasNoteC)
-					sb.Append("<color=#DEB0D0>[C]</color>");
+					sb.Append(" <color=#DEB0D0>[C]</color>");
 				if (hasNoteP)
-					sb.Append("<color=#88F0F0>[P]</color>");
+					sb.Append(" <color=#88F0F0>[P]</color>");
 				if (hasNoteMT)
-					sb.Append("<color=#0044FF>[MT]</color>");
+					sb.Append(" <color=#0044FF>[MT]</color>");
 				label = sb.ToString();
 			}
 			var enabled = option._enabled;
