@@ -6,8 +6,9 @@ using Verse;
 
 namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 {
-	[HarmonyPatch(typeof(WorkGiver_Haul))]
-	[HarmonyPatch(nameof(WorkGiver_Haul.JobOnThing))]
+	//[HarmonyPatch(typeof(WorkGiver_Haul))]
+	//[HarmonyPatch(nameof(WorkGiver_Haul.JobOnThing))]
+	[Obsolete]
 	internal static class RimWorld_WorkGiver_Haul_JobOnThing
 	{
 		static bool Prepare()
