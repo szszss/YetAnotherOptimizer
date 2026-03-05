@@ -19,7 +19,7 @@ namespace YaOpt.Helpers
 		/// </summary>
 		// TODO: remove this from release
 		[TweakValue("exampleCategory", 1f, 16f)]
-		private static float _parellellyTickPawnsWorkerCount = 5f;
+		private static float _parellellyTickPawnsWorkerCount = 8f;
 
 		/// <summary>
 		/// Thread-safe queue distributing pawn indices to worker threads.
