@@ -14,8 +14,6 @@ namespace YaOpt.Helpers
 
 		public static List<Material> PlantMaterials = new List<Material>();
 
-		public static float PlantSwayHead;
-
 		static WindHelper()
 		{
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
@@ -48,7 +46,7 @@ namespace YaOpt.Helpers
 			{
 				for (var i = 0; i < PlantMaterials.Count; i++)
 				{
-					PlantMaterials[i].SetFloat(ShaderPropertyIDs.SwayHead, PlantSwayHead);
+					PlantMaterials[i].SetFloat(ShaderPropertyIDs.SwayHead, LastWind);
 				}
 			}
 		}
