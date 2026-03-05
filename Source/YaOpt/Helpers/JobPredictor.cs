@@ -359,7 +359,7 @@ namespace YaOpt.Helpers
 						return true;
 
 					// We can't validate target queue. So we will stop predicting if a job uses target queue.
-					if (job.targetQueueA != null || job.targetQueueB != null)
+					if (job.targetQueueA?.Count > 0 || job.targetQueueB?.Count > 0)
 					{
 						return true;
 					}
