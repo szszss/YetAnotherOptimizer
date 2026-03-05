@@ -63,6 +63,16 @@
 				<method>Verse.Verb:CanHitFromCellIgnoringRange</method>
 				<replace>tempDestList</replace>
 			</ThreadLocalPatch>
+			
+			<!-- StorageGroup -->
+			<ThreadLocalPatch>
+				<method>RimWorld.StorageGroup:get_CellsList</method>
+				<replace>tmpCellsList</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.StorageGroup:get_HaulSourcesList</method>
+				<replace>tmpHaulSourceList</replace>
+			</ThreadLocalPatch>
 		</threadLocalPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>
