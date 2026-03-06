@@ -47,7 +47,7 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static void AddDelayedCellSteadyEffects(Map map, int cycleIndex, int count)
 		{
-			_delayedCellSteadyEffects.AddItem((map, cycleIndex, count));
+			_delayedCellSteadyEffects.Enqueue((map, cycleIndex, count));
 		}
 
 		public static void Playback()
