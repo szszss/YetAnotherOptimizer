@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using Verse;
+using YaOpt.Helpers;
 
 namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 {
-	[HarmonyPatch]
+	[ManualPatch]
 	internal static class MultiTargets_CachedResults
 	{
 		// I was too lazy to prepare a separate lock for each patched method,
@@ -16,52 +17,53 @@ namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 		private const int PARTITION_COUNT = 16;
 		private static readonly object[] _partitionLockObjs = new object[PARTITION_COUNT];
 
-		static IEnumerable<MethodBase> TargetMethods()
+		private class DummyClass1
 		{
-			// Optimization_PawnUtility_IsInvisible
-			yield return AccessTools.Method(typeof(InvisibilityUtility),
-				nameof(InvisibilityUtility.IsPsychologicallyInvisible));
-
-			// Optimization_HediffDef_PossibleToDevelopImmunityNaturally
-			yield return AccessTools.Method(typeof(HediffSet),
-				nameof(HediffSet.HasImmunizableNotImmuneHediff));
-
-			// Optimization_QuestUtility_IsQuestLodger
-			yield return AccessTools.Method(typeof(QuestUtility),
-				nameof(QuestUtility.IsQuestLodger));
-
-			// Don't patch Optimization_JobGiver_ConfigurableHostilityResponse
-			// Because it's already been unpatched
-			// yield return AccessTools.Method(typeof(JobGiver_ConfigurableHostilityResponse), "TryGiveJob");
 		}
 
-		static MultiTargets_CachedResults()
+		private class DummyClass2
 		{
-			for (var i = 0; i < _partitionLockObjs.Length; i++)
+		}
+
+		private class DummyClass3
+		{
+		}
+
+		static void Patch(Harmony harmony)
+		{
+			if (YaOptGlobal.NeedThreadSafe && YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer"))
 			{
-				_partitionLockObjs[i] = new object();
+				// Optimization_HediffDef_PossibleToDevelopImmunityNaturally
+				var poType = AccessTools.TypeByName(
+					"PerformanceOptimizer.Optimization_HediffDef_PossibleToDevelopImmunityNaturally");
+				var helperType = typeof(LockBoilerplate.UnfairReadWrite<DummyClass1>);
+				harmony.Patch(AccessTools.Method(poType, "Prefix"),
+					new HarmonyMethod(helperType, LockBoilerplate.ENTER_READ),
+					new HarmonyMethod(helperType, LockBoilerplate.EXIT_READ));
+				harmony.Patch(AccessTools.Method(poType, "Postfix"),
+					new HarmonyMethod(helperType, LockBoilerplate.ENTER_WRITE),
+					new HarmonyMethod(helperType, LockBoilerplate.EXIT_WRITE));
+
+				// Optimization_PawnUtility_IsInvisible
+				poType = AccessTools.TypeByName(
+					"PerformanceOptimizer.Optimization_PawnUtility_IsInvisible");
+				helperType = typeof(LockBoilerplate.Spin<DummyClass2>);
+				harmony.Patch(AccessTools.Method(poType, "Prefix"),
+					new HarmonyMethod(helperType, LockBoilerplate.ENTER),
+					new HarmonyMethod(helperType, LockBoilerplate.EXIT));
+
+				// Optimization_QuestUtility_IsQuestLodger
+				poType = AccessTools.TypeByName(
+					"PerformanceOptimizer.Optimization_QuestUtility_IsQuestLodger");
+				helperType = typeof(LockBoilerplate.Spin<DummyClass3>);
+				harmony.Patch(AccessTools.Method(poType, "Prefix"),
+					new HarmonyMethod(helperType, LockBoilerplate.ENTER),
+					new HarmonyMethod(helperType, LockBoilerplate.EXIT));
+
+				// Don't patch Optimization_JobGiver_ConfigurableHostilityResponse
+				// Because it's already been unpatched
+				// yield return AccessTools.Method(typeof(JobGiver_ConfigurableHostilityResponse), "TryGiveJob");
 			}
-		}
-
-		static bool Prepare()
-		{
-			return YaOptGlobal.NeedThreadSafe && YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer");
-		}
-
-		[HarmonyBefore("PerformanceOptimizer.Main")]
-		static void Prefix(MethodBase __originalMethod, out bool __state)
-		{
-			var lockObj = _partitionLockObjs[Math.Abs(__originalMethod.GetHashCode()) % PARTITION_COUNT];
-			__state = false;
-			Monitor.Enter(lockObj, ref __state);
-		}
-
-		[HarmonyAfter("PerformanceOptimizer.Main")]
-		static void Finalizer(MethodBase __originalMethod, bool __state)
-		{
-			var lockObj = _partitionLockObjs[Math.Abs(__originalMethod.GetHashCode()) % PARTITION_COUNT];
-			if (__state)
-				Monitor.Exit(lockObj);
 		}
 	}
 }

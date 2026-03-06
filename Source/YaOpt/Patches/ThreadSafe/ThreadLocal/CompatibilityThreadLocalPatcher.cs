@@ -19,7 +19,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 				return true;
 
 			var noError = true;
-			var transpiler = AccessTools.Method(typeof(CompatibilityThreadLocalPatcher), nameof(Transpiler));
+			var transpiler = new HarmonyMethod(typeof(CompatibilityThreadLocalPatcher), nameof(Transpiler));
 			foreach (var method in CompatibilityDefines.ThreadLocalPatches.Keys)
 			{
 				try
