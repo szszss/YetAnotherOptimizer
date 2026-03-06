@@ -368,8 +368,9 @@ namespace YaOpt.Helpers
 				var jobDriver = pawn.jobs.curDriver;
 				if (jobDriver.globalFailConditions != null)
 				{
-					foreach (var action in jobDriver.globalFailConditions)
+					for (var index = 0; index < jobDriver.globalFailConditions.Count; index++)
 					{
+						var action = jobDriver.globalFailConditions[index];
 						if (action() != JobCondition.Ongoing)
 						{
 							if (pawn.jobs.debugLog)
@@ -387,8 +388,9 @@ namespace YaOpt.Helpers
 				var toil = ThingHelper.GetCurToil(jobDriver);
 				if (toil?.endConditions != null)
 				{
-					foreach (var action in toil.endConditions)
+					for (var index = 0; index < toil.endConditions.Count; index++)
 					{
+						var action = toil.endConditions[index];
 						if (action() != JobCondition.Ongoing)
 						{
 							if (pawn.jobs.debugLog)

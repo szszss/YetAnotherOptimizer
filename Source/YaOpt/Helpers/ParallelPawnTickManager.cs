@@ -1,9 +1,12 @@
+using System;
 using Gilzoide.ManagedJobs;
 using LudeonTK;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Unity.Jobs;
+using UnityEngine;
 using Verse;
 
 namespace YaOpt.Helpers
@@ -49,6 +52,22 @@ namespace YaOpt.Helpers
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
 		}
 
+#if DEBUG
+		private static Stopwatch _stopwatch;
+
+		private static ConcurrentQueue<string> _debugOutputs;
+
+		private static bool _debugLog = false;
+
+		[DebugAction("YaOpt", "Record next job prediction",
+			actionType = DebugActionType.Action,
+			allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		public static void RecordNextRun()
+		{
+			_debugLog = true;
+		}
+#endif
+
 		/// <summary>
 		/// Adds pawns to the parallel tick processing list.
 		/// </summary>
@@ -85,17 +104,42 @@ namespace YaOpt.Helpers
 		/// <seealso cref="JobPredictor.ProcessPawn"/>
 		public static void ParellellyTickPawns()
 		{
+#if DEBUG
+			if (_debugLog)
+			{
+				_stopwatch = new Stopwatch();
+				_stopwatch.Start();
+				_debugOutputs = new ConcurrentQueue<string>();
+				_debugOutputs.Enqueue("Begin ParellellyTickPawns");
+			}
+#endif
+
 			foreach (var map in Find.Maps)
 			{
 				// Rebuilding any dirty region.
 				map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
+#if DEBUG
+				if (_debugLog)
+				{
+					_debugOutputs.Enqueue("Finish rebuilding dirty regions for map " +
+					                      $"{map.uniqueID} at {_stopwatch.GetElapsedMicrosecondLong()} μs");
+				}
+#endif
 				// Ensure factions lists init in main thread.
 				map.mapPawns.SpawnedPawnsInFaction(null);
+
+#if DEBUG
+				if (_debugLog)
+				{
+					_debugOutputs.Enqueue("Finish factions lists init for map " +
+					                      $"{map.uniqueID} at {_stopwatch.GetElapsedMicrosecondLong()} μs");
+				}
+#endif
 			}
 
 			_gameTick = GenTicks.TicksGame;
 			var pawnCount = _pawns.Count;
-			var jobCount = (int)(pawnCount + 6);
+			var jobCount = Math.Clamp(Mathf.FloorToInt(_parellellyTickPawnsWorkerCount), 1, 16);
 			while (_jobQueue.TryDequeue(out _))
 			{
 			}
@@ -103,15 +147,50 @@ namespace YaOpt.Helpers
 			{
 				_jobQueue.Enqueue(i);
 			}
+
+#if DEBUG
+			if (_debugLog)
+			{
+				_debugOutputs.Enqueue($"Job queue populated at {_stopwatch.GetElapsedMicrosecondLong()} μs");
+			}
+#endif
+
 			YaOptGlobal.IsParallelRunningInTick = true;
 			JobHandle handle = default;
 			_finishedJobCount = 0;
-			handle = new ManagedJobFor(new ParallelPawnJob(_jobQueue, _pawns, _gameTick))
-				.ScheduleParallel(jobCount, jobCount / (int)_parellellyTickPawnsWorkerCount);
+			for (var i = 0; i < jobCount; i++)
+			{
+				new ManagedJob(new ParallelPawnJob()).Schedule();
+			}
+#if DEBUG
+			if (_debugLog)
+			{
+				_debugOutputs.Enqueue($"{jobCount} works started at {_stopwatch.GetElapsedMicrosecondLong()} μs");
+			}
+#endif
 			JobHandle.ScheduleBatchedJobs();
-			while (_finishedJobCount != pawnCount && !handle.IsCompleted)
+#if DEBUG
+			if (_debugLog)
+			{
+				_debugOutputs.Enqueue($"Batched jobs scheduled at {_stopwatch.GetElapsedMicrosecondLong()} μs");
+			}
+#endif
+			while (_finishedJobCount != pawnCount)
 			{
 			}
+
+#if DEBUG
+			if (_debugLog)
+			{
+				_debugLog = false;
+				_debugOutputs.Enqueue($"All jobs were finished at {_stopwatch.GetElapsedMicrosecondLong()} μs.");
+				while (_debugOutputs.TryDequeue(out var str))
+				{
+					YaOptMod.Log(str);
+				}
+			}
+#endif
+			//handle.Complete();
 			YaOptGlobal.IsParallelRunningInTick = false;
 		}
 
@@ -131,24 +210,40 @@ namespace YaOpt.Helpers
 		/// Each job instance repeatedly dequeues pawn indices from the shared queue
 		/// until no work remains. This allows automatic load balancing across threads.
 		/// </remarks>
-		private readonly struct ParallelPawnJob : IJobFor
+		private readonly struct ParallelPawnJob : IJob
 		{
-			private readonly ConcurrentQueue<int> _jobQueue;
-			private readonly List<Pawn> _pawns;
-			private readonly int _gameTick;
-
-			public ParallelPawnJob(ConcurrentQueue<int> jobQueue, List<Pawn> pawns, int gameTick)
+			public void Execute()
 			{
-				_jobQueue = jobQueue;
-				_pawns = pawns;
-				_gameTick = gameTick;
-			}
-
-			public void Execute(int _)
-			{
-				if (_jobQueue.TryDequeue(out var jobIndex))
+#if DEBUG
+				var threadName = 0;
+				if (_debugLog)
 				{
+					threadName = Thread.CurrentThread.ManagedThreadId;
+					_debugOutputs.Enqueue($"Thread {threadName} woke at " +
+					                      $"{_stopwatch.GetElapsedMicrosecondLong()} μs.");
+				}
+#endif
+				while (_jobQueue.TryDequeue(out var jobIndex))
+				{
+#if DEBUG
+					if (_debugLog)
+					{
+						var str = $"Thread {threadName} dequeue {_pawns[jobIndex]} (Job {jobIndex}) at " +
+						          $"{_stopwatch.GetElapsedMicrosecondLong()} μs.";
+						_debugOutputs.Enqueue(str);
+					}
+#endif
+
 					JobPredictor.ProcessPawn(_pawns[jobIndex], _gameTick);
+
+#if DEBUG
+					if (_debugLog)
+					{
+						var str = $"Thread {threadName} finished {_pawns[jobIndex]} at " +
+						          $"{_stopwatch.GetElapsedMicrosecondLong()} μs.";
+						_debugOutputs.Enqueue(str);
+					}
+#endif
 					Interlocked.Increment(ref _finishedJobCount);
 				}
 			}

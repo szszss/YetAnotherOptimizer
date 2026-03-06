@@ -1,6 +1,8 @@
 using HarmonyLib;
 using System;
+using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Unity.Jobs;
 using UnityEngine;
@@ -98,6 +100,18 @@ namespace YaOpt.Helpers
 			while (!jobHandle.IsCompleted)
 			{
 			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static long GetElapsedMicrosecondLong(this Stopwatch stopwatch)
+		{
+			return (long)GetElapsedMicrosecond(stopwatch);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double GetElapsedMicrosecond(this Stopwatch stopwatch)
+		{
+			return (double)stopwatch.ElapsedTicks * 1000000 / Stopwatch.Frequency;
 		}
 
 		// Not useful. No performance improvement
