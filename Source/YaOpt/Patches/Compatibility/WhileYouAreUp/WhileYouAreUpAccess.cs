@@ -6,8 +6,6 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 {
 	internal static class WhileYouAreUpAccess
 	{
-		public static readonly object GlobalLock = new object();
-
 		private delegate void ClearTempDetourDelegate(Pawn pawn);
 
 		private static readonly ClearTempDetourDelegate clearTempDetourDelegate =

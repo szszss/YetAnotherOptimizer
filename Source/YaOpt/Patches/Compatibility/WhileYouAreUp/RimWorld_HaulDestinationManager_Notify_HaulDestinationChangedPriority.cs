@@ -16,6 +16,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 	/// causing allHaulSourcesInOrder to be reordered.
 	/// During this process, any code that iterates over allHaulSourcesInOrder
 	/// will encounter System.InvalidOperationException: Collection was modified.
+	/// </summary>
 	/// <remarks>
 	/// This patch changes the Notify_HaulDestinationChangedPriority update to
 	/// a copy-on-write operation. To reduce GC pressure, it uses a circular queue to
@@ -23,7 +24,6 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 	/// WhileYoureUp only calls Notify_HaulDestinationChangedPriority twice per job giving.
 	/// While this isn't a robust fix, it JustWorks.
 	/// </remarks>
-	/// </summary>
 	[HarmonyPatch(typeof(HaulDestinationManager))]
 	[HarmonyPatch(nameof(HaulDestinationManager.Notify_HaulDestinationChangedPriority))]
 	internal static class RimWorld_HaulDestinationManager_Notify_HaulDestinationChangedPriority
