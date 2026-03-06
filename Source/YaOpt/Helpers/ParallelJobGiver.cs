@@ -27,6 +27,8 @@ namespace YaOpt.Helpers
 
 		private static int jobIssueErrorAfter;
 
+		private static JobGiver_Work _jobGiverWork;
+
 		private static readonly ConcurrentBag<JobResult> jobResults = new ConcurrentBag<JobResult>();
 
 		private static readonly ConcurrentQueue<int> jobIndexQueue = new ConcurrentQueue<int>();
@@ -95,6 +97,7 @@ namespace YaOpt.Helpers
 				workingFence = int.MaxValue;
 				jobIssueErrorAfter = int.MaxValue;
 				workGiverMainThreadBarrier = int.MaxValue;
+				_jobGiverWork = jgw;
 				var thinkResult = ThinkResult.NoJob;
 				var JOBDEBUG = pawn.jobs.debugLog;
 
@@ -137,23 +140,20 @@ namespace YaOpt.Helpers
 				for (var i = 0; i < jobList.Count; i++)
 				{
 					var workGiver = jobList[i];
-					if (pawnCanUseWorkGiver(jgw, pawn, workGiver))
+					if (CompatibilityDefines.CachedWorkGiverParallelism
+						    .TryGetValue(workGiver.def.defName, out var parallelism) && parallelism != Full)
 					{
-						if (CompatibilityDefines.CachedWorkGiverParallelism
-							.TryGetValue(workGiver.def.defName, out var parallelism) && parallelism != Full)
+						serialTaskCount++;
+						workGiversProcessedByMainThread.Enqueue((workGiver, i));
+						if (parallelism == MainThreadedDelayed && workGiverMainThreadBarrier > i)
 						{
-							serialTaskCount++;
-							workGiversProcessedByMainThread.Enqueue((workGiver, i));
-							if (parallelism == MainThreadedDelayed && workGiverMainThreadBarrier > i)
-							{
-								workGiverMainThreadBarrier = i;
-							}
+							workGiverMainThreadBarrier = i;
 						}
-						else
-						{
-							parallelTaskCount++;
-							jobIndexQueue.Enqueue(i);
-						}
+					}
+					else
+					{
+						parallelTaskCount++;
+						jobIndexQueue.Enqueue(i);
 					}
 				}
 
@@ -480,6 +480,8 @@ namespace YaOpt.Helpers
 			Job job = null;
 			try
 			{
+				if (!pawnCanUseWorkGiver(_jobGiverWork, pawn, workGiver))
+					return;
 				job = workGiver.NonScanJob(pawn);
 				if (job != null)
 				{
