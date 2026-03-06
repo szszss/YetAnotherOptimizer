@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Verse;
@@ -31,8 +31,8 @@ namespace YaOpt.Helpers
 		/// <summary>
 		/// Thread-safe map from pawn to its prediction data.
 		/// </summary>
-		private static readonly ConcurrentDictionary<Pawn, JobPrediction> _jobPredictionMap =
-			new ConcurrentDictionary<Pawn, JobPrediction>();
+		private static readonly Dictionary<int, JobPrediction> _jobPredictionMap =
+			new Dictionary<int, JobPrediction>();
 
 		/// <summary>
 		/// Flags representing the expected state of a target (actor or job target).
@@ -261,7 +261,7 @@ namespace YaOpt.Helpers
 		/// </summary>
 		public static void AddPawn(Pawn pawn)
 		{
-			if (!_jobPredictionMap.TryAdd(pawn, new JobPrediction()))
+			if (!_jobPredictionMap.TryAdd(pawn.thingIDNumber, new JobPrediction()))
 			{
 				return; //todo: error
 			}
@@ -272,7 +272,7 @@ namespace YaOpt.Helpers
 		/// </summary>
 		public static void RemovePawn(Pawn pawn)
 		{
-			if (!_jobPredictionMap.TryRemove(pawn, out _))
+			if (!_jobPredictionMap.Remove(pawn.thingIDNumber, out _))
 			{
 				return; //todo: error
 			}
@@ -296,10 +296,9 @@ namespace YaOpt.Helpers
 			JobPrediction prediction = null;
 			try
 			{
-				if (!_jobPredictionMap.TryGetValue(pawn, out prediction))
+				if (!_jobPredictionMap.TryGetValue(pawn.thingIDNumber, out prediction))
 				{
-					prediction = new JobPrediction();
-					_jobPredictionMap[pawn] = prediction;
+					return;
 				}
 				prediction.MayFail = PredictFail(pawn);
 				if (!prediction.MayFail)
@@ -348,7 +347,8 @@ namespace YaOpt.Helpers
 		/// <seealso cref="Verse.AI.JobDriver.CheckCurrentToilEndOrFail"/>
 		public static bool PredictFail(Pawn pawn)
 		{
-			if (pawn.jobs == null || pawn.jobs.curDriver == null)
+			var jobDriver = pawn.jobs?.curDriver;
+			if (jobDriver == null)
 				return true;
 			try
 			{
@@ -365,12 +365,12 @@ namespace YaOpt.Helpers
 					}
 				}
 
-				var jobDriver = pawn.jobs.curDriver;
-				if (jobDriver.globalFailConditions != null)
+				var globalFailConditions = jobDriver.globalFailConditions;
+				if (globalFailConditions != null)
 				{
-					for (var index = 0; index < jobDriver.globalFailConditions.Count; index++)
+					for (int index = 0, count = globalFailConditions.Count; index < count; index++)
 					{
-						var action = jobDriver.globalFailConditions[index];
+						var action = globalFailConditions[index];
 						if (action() != JobCondition.Ongoing)
 						{
 							if (pawn.jobs.debugLog)
@@ -386,11 +386,12 @@ namespace YaOpt.Helpers
 				}
 
 				var toil = ThingHelper.GetCurToil(jobDriver);
-				if (toil?.endConditions != null)
+				var endConditions = toil?.endConditions;
+				if (endConditions != null)
 				{
-					for (var index = 0; index < toil.endConditions.Count; index++)
+					for (int index = 0, count = endConditions.Count; index < count; index++)
 					{
-						var action = toil.endConditions[index];
+						var action = endConditions[index];
 						if (action() != JobCondition.Ongoing)
 						{
 							if (pawn.jobs.debugLog)
@@ -475,7 +476,7 @@ namespace YaOpt.Helpers
 		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
 		public static bool ShouldCheckJobFail(Pawn pawn)
 		{
-			if (_jobPredictionMap.TryGetValue(pawn, out var prediction))
+			if (_jobPredictionMap.TryGetValue(pawn.thingIDNumber, out var prediction))
 			{
 				if (Find.TickManager.TicksGame == prediction.UpdateTick)
 				{
@@ -504,7 +505,7 @@ namespace YaOpt.Helpers
 		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
 		public static bool ShouldCheckConstantJob(Pawn pawn)
 		{
-			if (_jobPredictionMap.TryGetValue(pawn, out var prediction))
+			if (_jobPredictionMap.TryGetValue(pawn.thingIDNumber, out var prediction))
 			{
 				if (Find.TickManager.TicksGame == prediction.UpdateTick)
 				{

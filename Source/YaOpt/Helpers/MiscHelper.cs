@@ -114,6 +114,17 @@ namespace YaOpt.Helpers
 			return (double)stopwatch.ElapsedTicks * 1000000 / Stopwatch.Frequency;
 		}
 
+		public static int GetGCD(int a, int b)
+		{
+			while (b != 0)
+			{
+				var temp = b;
+				b = a % b;
+				a = temp;
+			}
+			return a;
+		}
+
 		// Not useful. No performance improvement
 		/*[StructLayout(LayoutKind.Explicit)]
 		private struct SignalArgsView
