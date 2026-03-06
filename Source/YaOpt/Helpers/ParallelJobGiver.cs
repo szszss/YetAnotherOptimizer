@@ -141,7 +141,7 @@ namespace YaOpt.Helpers
 				{
 					var workGiver = jobList[i];
 					if (CompatibilityDefines.CachedWorkGiverParallelism
-						    .TryGetValue(workGiver.def.defName, out var parallelism) && parallelism != Full)
+							.TryGetValue(workGiver.def.defName, out var parallelism) && parallelism != Full)
 					{
 						serialTaskCount++;
 						workGiversProcessedByMainThread.Enqueue((workGiver, i));

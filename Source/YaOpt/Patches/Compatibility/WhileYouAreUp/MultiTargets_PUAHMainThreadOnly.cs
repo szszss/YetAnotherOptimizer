@@ -70,8 +70,8 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 			static bool Prepare()
 			{
 				var shouldDo = YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
-				               YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
-				               YaOptGlobal.HasType("WhileYoureUp.Mod");
+							   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
+							   YaOptGlobal.HasType("WhileYoureUp.Mod");
 				if (shouldDo && _thingsInReducedPriorityStoreFieldRef == null)
 				{
 					_thingsInReducedPriorityStoreFieldRef =

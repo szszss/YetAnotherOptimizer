@@ -1,5 +1,4 @@
 using System.Threading;
-using HarmonyLib;
 using YaOpt.Helpers.ThirdParty;
 // ReSharper disable StaticMemberInGenericType
 

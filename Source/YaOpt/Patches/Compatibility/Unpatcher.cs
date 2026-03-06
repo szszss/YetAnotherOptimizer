@@ -2,7 +2,6 @@ using HarmonyLib;
 using RimWorld;
 using System;
 using Verse;
-using YaOpt.Patches.Compatibility.PickUpAndHaul;
 
 namespace YaOpt.Patches.Compatibility
 {
@@ -95,7 +94,7 @@ namespace YaOpt.Patches.Compatibility
 						harmony.Patch(AccessTools.Method(typeof(WorkGiver_Scanner), "HasJobOnThing"),
 							null, new HarmonyMethod(AccessTools.Method(
 								AccessTools.TypeByName("WhileYoureUp.Mod/" +
-								                       "WorkGiver_Scanner__HasJobOnThing_Patch"),
+													   "WorkGiver_Scanner__HasJobOnThing_Patch"),
 								"ClearTempDetour"
 							)));
 
@@ -103,7 +102,7 @@ namespace YaOpt.Patches.Compatibility
 								nameof(ListerHaulables.ThingsPotentiallyNeedingHauling)),
 							null, new HarmonyMethod(AccessTools.Method(
 								AccessTools.TypeByName("WhileYoureUp.Mod/" +
-								                       "Puah_ListerHaulables_ThingsPotentiallyNeedingHauling_Patch"),
+													   "Puah_ListerHaulables_ThingsPotentiallyNeedingHauling_Patch"),
 								"IncludeThingsInReducedPriorityStore"
 							)));
 					}

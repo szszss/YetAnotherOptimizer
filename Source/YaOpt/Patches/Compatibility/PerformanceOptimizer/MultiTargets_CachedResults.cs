@@ -1,10 +1,4 @@
 using HarmonyLib;
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-using Verse;
 using YaOpt.Helpers;
 
 namespace YaOpt.Patches.Compatibility.PerformanceOptimizer

@@ -1,8 +1,6 @@
 using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
 using Verse;
@@ -67,8 +65,8 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 		static bool Prepare()
 		{
 			var result = YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
-			             YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
-			             YaOptGlobal.HasType("WhileYoureUp.Mod");
+						 YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
+						 YaOptGlobal.HasType("WhileYoureUp.Mod");
 			if (result && _allHaulDestinationsInOrderQueue.Count == 0)
 			{
 				_allHaulDestinationsInOrderQueue.Enqueue(new List<IHaulDestination>());
