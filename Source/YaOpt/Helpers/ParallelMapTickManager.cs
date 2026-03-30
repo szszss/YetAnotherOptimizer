@@ -9,6 +9,15 @@ using YaOpt.Patches.ThreadSafe.Delayed;
 
 namespace YaOpt.Helpers
 {
+	// The class constructor must be called manually.
+	// Otherwise, an exception will occur due to the following call chain.
+	//
+	// UpdateCallbackHelper.PreRender ->
+	// MapMeshUpdateThrottle.CheckUpdate ->
+	// ParallelMapTickManager.cctor ->
+	// UpdateCallbackHelper.RegisterPreRenderCallback ->
+	// InvalidOperationException: Collection was modified
+	[StaticConstructorOnStartup]
 	public class ParallelMapTickManager
 	{
 		/// <summary>

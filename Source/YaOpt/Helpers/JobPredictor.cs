@@ -307,14 +307,15 @@ namespace YaOpt.Helpers
 					prediction.DistanceValidation = TargetDistanceValidation.CreateValidation(pawn, job);
 					prediction.StatusValidation = TargetStatusValidation.CreateValidation(pawn, job);
 				}
-				if (ThingHelper.ShouldTickInterval(pawn, out var tickDeltaPlusOne))
+				prediction.ShouldDoConstantJob = true;
+				/*if (ThingHelper.ShouldTickInterval(pawn, out var tickDeltaPlusOne))
 				{
 					prediction.ShouldDoConstantJob = PredictDoConstantJob(pawn, tickDeltaPlusOne);
 				}
 				else
 				{
 					prediction.ShouldDoConstantJob = true;
-				}
+				}*/
 				prediction.UpdateTick = gameTick;
 			}
 			catch (Exception ex)

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
-using YaOpt.Helpers;
 
 namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 {
@@ -17,6 +16,7 @@ namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 			yield return AccessTools.Method(typeof(HediffUtility), nameof(HediffUtility.IsTended));
 			yield return AccessTools.Method(typeof(HediffUtility), nameof(HediffUtility.IsPermanent));
 			yield return AccessTools.Method(typeof(HediffUtility), nameof(HediffUtility.FullyImmune));
+			yield return AccessTools.Method(typeof(HediffDef), nameof(HediffDef.PossibleToDevelopImmunityNaturally));
 		}
 
 		static bool Prepare()
@@ -28,9 +28,9 @@ namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 		{
 			foreach (var instruction in instructions)
 			{
-				if (instruction.Calls("TryGetHediffCompFast"))
+				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo originalMethod &&
+					(originalMethod.Name == "TryGetHediffCompFast" || originalMethod.Name == "GetHediffDefPropsFast"))
 				{
-					var originalMethod = (MethodInfo)instruction.operand;
 					var jumpElse = generator.DefineLabel();
 					var jumpEnd = generator.DefineLabel();
 					yield return new CodeInstruction(OpCodes.Call,
@@ -39,10 +39,20 @@ namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 					yield return new CodeInstruction(OpCodes.Beq_S, jumpElse);
 					yield return instruction;
 					yield return new CodeInstruction(OpCodes.Br_S, jumpEnd);
-					var method = AccessTools.Method(typeof(HediffUtility),
-							nameof(HediffUtility.TryGetComp), new[] { typeof(Hediff) })
-						.MakeGenericMethod(originalMethod.GetGenericArguments());
-					yield return new CodeInstruction(OpCodes.Call, method).WithLabels(jumpElse);
+					if (originalMethod.Name == "TryGetHediffCompFast")
+					{
+						var method = AccessTools.Method(typeof(HediffUtility),
+								nameof(HediffUtility.TryGetComp), new[] { typeof(Hediff) })
+							.MakeGenericMethod(originalMethod.GetGenericArguments());
+						yield return new CodeInstruction(OpCodes.Call, method).WithLabels(jumpElse);
+					}
+					else if (originalMethod.Name == "GetHediffDefPropsFast")
+					{
+						var method = AccessTools.Method(typeof(HediffDef),
+								nameof(HediffDef.CompProps))
+							.MakeGenericMethod(originalMethod.GetGenericArguments());
+						yield return new CodeInstruction(OpCodes.Call, method).WithLabels(jumpElse);
+					}
 					yield return new CodeInstruction(OpCodes.Nop).WithLabels(jumpEnd);
 					continue;
 				}

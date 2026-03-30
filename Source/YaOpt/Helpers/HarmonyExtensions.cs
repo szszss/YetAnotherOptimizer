@@ -11,13 +11,15 @@ namespace YaOpt.Helpers
 {
 	public static class HarmonyExtensions
 	{
-		public static bool TryPatchAll(this Harmony harmony, Assembly assembly, bool earlyPatch = false)
+		public static bool TryPatchAll(this Harmony harmony, Assembly assembly,
+			bool earlyPatch = false, bool permanentPatch = false)
 		{
 			var noError = true;
 			foreach (var type in AccessTools.GetTypesFromAssembly(assembly))
 			{
 				var isEarlyPatch = type.GetCustomAttribute<EarlyPatchAttribute>() != null;
-				if (isEarlyPatch == earlyPatch)
+				var isPermanentPatch = type.GetCustomAttribute<PermanentPatchAttribute>() != null;
+				if (isEarlyPatch == earlyPatch && isPermanentPatch == permanentPatch)
 				{
 					if (type.HasHarmonyAttribute())
 					{

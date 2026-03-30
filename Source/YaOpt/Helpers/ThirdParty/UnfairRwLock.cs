@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -25,27 +26,31 @@ namespace YaOpt.Helpers.ThirdParty
 
 			Interlocked.Decrement(ref _state);
 
-			var spinWait = new SpinWait();
+			var spinCount = 0;
 			while (true)
 			{
-				spinWait.SpinOnce();
+				var waitTime = 4 << spinCount;
+				Thread.SpinWait(waitTime);
 				value = Interlocked.Increment(ref _state);
 				if (value > 0)
 					return;
 				Interlocked.Decrement(ref _state);
+				spinCount = Math.Min(10, spinCount + 1);
 			}
 		}
 
 		public void EnterWriteLock()
 		{
-			var spinWait = new SpinWait();
+			var spinCount = 0;
 			while (true)
 			{
 				long current = Volatile.Read(ref _state);
 
 				if (current < 0)
 				{
-					spinWait.SpinOnce();
+					var waitTime = 4 << spinCount;
+					Thread.SpinWait(waitTime);
+					spinCount = Math.Min(10, spinCount + 1);
 					continue;
 				}
 
@@ -53,7 +58,11 @@ namespace YaOpt.Helpers.ThirdParty
 				{
 					// Wait for pre-existing readers to drain
 					while (Volatile.Read(ref _state) != long.MinValue)
-						spinWait.SpinOnce();
+					{
+						var waitTime = 4 << spinCount;
+						Thread.SpinWait(waitTime);
+						spinCount = Math.Min(10, spinCount + 1);
+					}
 					return;
 				}
 			}

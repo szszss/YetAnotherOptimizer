@@ -4,13 +4,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 {
 	[ManualPatch]
+	[PermanentPatch]
 	internal static class MultiTargets_CachedResults
 	{
-		// I was too lazy to prepare a separate lock for each patched method,
-		// so I choose partition locks.
-		private const int PARTITION_COUNT = 16;
-		private static readonly object[] _partitionLockObjs = new object[PARTITION_COUNT];
-
 		private class DummyClass1
 		{
 		}

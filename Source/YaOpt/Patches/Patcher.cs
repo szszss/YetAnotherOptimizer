@@ -64,7 +64,8 @@ namespace YaOpt.Patches
 			{
 				YaOptMod.Debug("Preparing to run patcher");
 				var assembly = Assembly.GetExecutingAssembly();
-				var harmony = YaOptGlobal.Harmony;
+				var harmony = YaOptMod.Instance.Harmony;
+				var harmonyPermanent = YaOptMod.Instance.PermanentHarmony;
 
 				// Uninstall existing patches if already patched.
 				if (_hasPatched)
@@ -78,7 +79,8 @@ namespace YaOpt.Patches
 
 				// Apply Harmony patches from the current assembly.
 				YaOptMod.Debug("Patching...");
-				noError &= harmony.TryPatchAll(assembly);
+				noError &= harmony.TryPatchAll(assembly, permanentPatch: false);
+				noError &= harmonyPermanent.TryPatchAll(assembly, permanentPatch: true);
 				// Install trampoline patches for generic methods.
 				TrampolinePatcher.InstallAll();
 				// Apply submod patches.

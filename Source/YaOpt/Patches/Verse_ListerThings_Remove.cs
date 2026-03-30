@@ -109,13 +109,19 @@ namespace YaOpt.Patches
 		static bool RemoveFromThingList(List<Thing> list, Thing thing,
 			ListerThingsIndexer indexer, ThingRecord record, ListerThingsUse use, int indexType)
 		{
+			int index;
+
 			if (use != ListerThingsUse.Global)
 			{
-				list.Remove(thing);
+				// For the ListerThings of a Region, we use a reverse search.
+				// The existence time of things in the ListerThings of a Region is polarized.
+				// They either exist for a long time or will be removed soon.
+				// The latter are usually located at the end of the array.
+				index = list.LastIndexOf(thing);
+				if (index >= 0)
+					list.RemoveAt(index);
 				return true;
 			}
-
-			int index;
 
 			if (indexType == INDEX_TYPE_DEF)
 			{
@@ -166,13 +172,17 @@ namespace YaOpt.Patches
 		static bool RemoveFromHaulList(List<IHaulSource> list, IHaulSource haul,
 			ListerThingsIndexer indexer, ThingRecord record, ListerThingsUse use)
 		{
+			int index;
+
 			if (use != ListerThingsUse.Global)
 			{
-				list.Remove(haul);
+				index = list.LastIndexOf(haul);
+				if (index >= 0)
+					list.RemoveAt(index);
 				return true;
 			}
 
-			var index = record.HaulIndex;
+			index = record.HaulIndex;
 			record.HaulIndex = -1;
 			var listCount = list.Count;
 

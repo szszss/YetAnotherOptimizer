@@ -18,24 +18,16 @@ namespace YaOpt.Helpers
 	public static class ParallelPawnTickManager
 	{
 		[TweakValue("YaOpt", 1f, 128f)]
-		private static float _parellellyTickPawnsBatchSize = 4f;
+		private static float _parellellyTickPawnsBatchSize = 8f;
 
-		/// <summary>
-		/// List of all pawns that need parallel tick processing.
-		/// </summary>
-		/// <remarks>
-		/// Not thread-safe for writes; only modify from main thread via <see cref="AddThings"/> and <see cref="RemoveThings"/>.
-		/// </remarks>
-		private static readonly List<Pawn> _pawns = new List<Pawn>();
+		private static readonly List<Pawn> _humanPawns = new List<Pawn>();
+
+		private static readonly List<Pawn> _nonhumanPawns = new List<Pawn>();
 
 		/// <summary>
 		/// Current game tick, cached to avoid race conditions during parallel processing.
 		/// </summary>
 		private static int _gameTick;
-
-		private static int _stride;
-
-		private static int _lastCount = -1;
 
 		static ParallelPawnTickManager()
 		{
@@ -67,7 +59,10 @@ namespace YaOpt.Helpers
 			{
 				if (thing is Pawn pawn)
 				{
-					_pawns.Add(pawn);
+					if (pawn.RaceProps.ToolUser)
+						_humanPawns.Add(pawn);
+					else
+						_nonhumanPawns.Add(pawn);
 					JobPredictor.AddPawn(pawn);
 				}
 			}
@@ -82,7 +77,10 @@ namespace YaOpt.Helpers
 			{
 				if (thing is Pawn pawn)
 				{
-					_pawns.Remove(pawn);
+					if (pawn.RaceProps.ToolUser)
+						_humanPawns.Remove(pawn);
+					else
+						_nonhumanPawns.Remove(pawn);
 					JobPredictor.RemovePawn(pawn);
 				}
 			}
@@ -128,17 +126,7 @@ namespace YaOpt.Helpers
 			}
 
 			_gameTick = GenTicks.TicksGame;
-			var pawnCount = _pawns.Count;
 			var batchSize = Math.Clamp(Mathf.FloorToInt(_parellellyTickPawnsBatchSize), 1, 16);
-			if (_lastCount != pawnCount)
-			{
-				_lastCount = pawnCount;
-				_stride = batchSize + 1;
-				while (MiscHelper.GetGCD(_stride, pawnCount) != 1)
-				{
-					_stride++;
-				}
-			}
 
 #if DEBUG
 			if (_debugLog)
@@ -148,7 +136,11 @@ namespace YaOpt.Helpers
 #endif
 
 			YaOptGlobal.IsParallelRunningInTick = true;
-			JobHandle handle = new ManagedJobFor(new ParallelPawnJob()).ScheduleParallel(pawnCount, batchSize);
+			JobHandle handle = JobHandle.CombineDependencies(
+				new ManagedJobFor(new ParallelPawnJob(_humanPawns))
+					.ScheduleParallel(_humanPawns.Count, 1),
+				new ManagedJobFor(new ParallelPawnJob(_nonhumanPawns, _humanPawns.Count))
+					.ScheduleParallel(_nonhumanPawns.Count, batchSize));
 
 #if DEBUG
 			if (_debugLog)
@@ -176,7 +168,8 @@ namespace YaOpt.Helpers
 		/// </summary>
 		private static void ClearCache()
 		{
-			_pawns.Clear();
+			_humanPawns.Clear();
+			_nonhumanPawns.Clear();
 			JobPredictor.CleanCache();
 		}
 
@@ -185,6 +178,15 @@ namespace YaOpt.Helpers
 		/// </summary>
 		private readonly struct ParallelPawnJob : IJobFor
 		{
+			private readonly List<Pawn> _list;
+			private readonly int _debugJobIndexOffset;
+
+			public ParallelPawnJob(List<Pawn> list, int debugJobIndexOffset = 0)
+			{
+				_list = list;
+				_debugJobIndexOffset = debugJobIndexOffset;
+			}
+
 			public void Execute(int index)
 			{
 #if DEBUG
@@ -194,14 +196,13 @@ namespace YaOpt.Helpers
 					time = _stopwatch.GetElapsedMicrosecondLong();
 				}
 #endif
-				index = (int)((_stride * index) % _pawns.Count);
-				JobPredictor.ProcessPawn(_pawns[index], _gameTick);
+				JobPredictor.ProcessPawn(_list[index], _gameTick);
 #if DEBUG
 				if (_debugLog)
 				{
 					var current = _stopwatch.GetElapsedMicrosecondLong();
 					var str = $"Thread {Thread.CurrentThread.ManagedThreadId} " +
-							  $"finished {_pawns[index]} (Job {index}) at " +
+							  $"finished {_list[index]} (Job {index + _debugJobIndexOffset}) at " +
 							  $"{current} μs. Cost: {current - time}μs.";
 					_debugOutputs.Enqueue(str);
 				}

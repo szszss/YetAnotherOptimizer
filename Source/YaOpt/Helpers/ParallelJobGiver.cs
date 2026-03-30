@@ -40,6 +40,12 @@ namespace YaOpt.Helpers
 
 		private static int workGiverMainThreadBarrier;
 
+		[ThreadStatic]
+		private static int threadWorkGiverIndex;
+
+		[ThreadStatic]
+		private static string threadDebugWorkGiverName;
+
 		private static JobHandle jobHandle = default;
 
 		private static Stopwatch debugStopwatch;
@@ -115,6 +121,11 @@ namespace YaOpt.Helpers
 					else
 						debugStopwatch.Restart();
 				}
+
+				if (debugStopwatch == null)
+					debugStopwatch = Stopwatch.StartNew();
+				else
+					debugStopwatch.Restart();
 
 				try
 				{
@@ -259,6 +270,22 @@ namespace YaOpt.Helpers
 					debugStopwatch.Stop();
 				}
 
+				if (debugStopwatch.ElapsedMilliseconds > 10)
+				{
+					var sb = new StringBuilder();
+					sb.Append("WorkGiving took too long time: ").Append(debugStopwatch.ElapsedMilliseconds).Append("ms");
+					sb.AppendInNewLine("Work fence: ").Append(workingFence);
+					sb.AppendInNewLine("Best index: ").Append(bestIndex);
+					sb.AppendInNewLine("Count: ").Append(jobList.Count);
+					for (var index = 0; index < jobList.Count; index++)
+					{
+						var workGiver = jobList[index];
+						sb.AppendInNewLine("Job ").Append(index).Append(" - ").Append(workGiver.def.defName);
+					}
+					YaOptMod.Warning(sb.ToString());
+				}
+				debugStopwatch.Stop();
+
 				return thinkResult;
 			}
 			finally
@@ -339,6 +366,28 @@ namespace YaOpt.Helpers
 			}
 
 			return sb.ToString();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static int ClosestThingGlobalFastEscape(int arrayCount)
+		{
+			if (Running && threadWorkGiverIndex > workingFence)
+			{
+				//YaOptMod.Warning($"Fast escape: {threadWorkGiverIndex} > {workingFence} - {threadDebugWorkGiverName} ({arrayCount})");
+				return 0;
+			}
+			return arrayCount;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static bool ClosestThingGlobalFastEscape(bool hasNext)
+		{
+			if (Running && threadWorkGiverIndex > workingFence)
+			{
+				//YaOptMod.Warning($"Fast escape: {threadWorkGiverIndex} > {workingFence} - {threadDebugWorkGiverName}");
+				return false;
+			}
+			return hasNext;
 		}
 
 		private readonly struct ScanThingsClosure
@@ -482,6 +531,8 @@ namespace YaOpt.Helpers
 			{
 				if (!pawnCanUseWorkGiver(_jobGiverWork, pawn, workGiver))
 					return;
+				threadWorkGiverIndex = workGiverIndex;
+				threadDebugWorkGiverName = $"{workGiver.def.defName} + ({workGiver.GetType().FullName})";
 				job = workGiver.NonScanJob(pawn);
 				if (job != null)
 				{
@@ -609,9 +660,9 @@ namespace YaOpt.Helpers
 					{
 						if (ShouldStop(workGiverIndex))
 							return;
-						job = bestTargetOfLastPriority.HasThing ?
-							scannerWhoProvidedTarget.JobOnThing(pawn, bestTargetOfLastPriority.Thing) :
-							scannerWhoProvidedTarget.JobOnCell(pawn, bestTargetOfLastPriority.Cell);
+						job = bestTargetOfLastPriority.HasThing
+							? scannerWhoProvidedTarget.JobOnThing(pawn, bestTargetOfLastPriority.Thing)
+							: scannerWhoProvidedTarget.JobOnCell(pawn, bestTargetOfLastPriority.Cell);
 						if (job != null)
 						{
 							UpdateProgress(workGiverIndex);
@@ -656,6 +707,10 @@ namespace YaOpt.Helpers
 					Giver = workGiver,
 					Index = workGiverIndex,
 				});
+			}
+			finally
+			{
+				threadWorkGiverIndex = 0;
 			}
 		}
 
