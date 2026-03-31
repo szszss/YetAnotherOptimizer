@@ -28,15 +28,6 @@ namespace YaOpt
 		public Harmony Harmony { get; } = new Harmony("YetAnotherOptimizer");
 
 		/// <summary>
-		/// Gets the permanent Harmony instance used for patching.
-		/// </summary>
-		/// <remarks>
-		/// This Harmony instance has ID "YetAnotherOptimizer.Permanent" and it works like the main one,
-		/// but the patches it installs will not be uninstalled.
-		/// </remarks>
-		public Harmony PermanentHarmony { get; } = new Harmony("YetAnotherOptimizer.Permanent");
-
-		/// <summary>
 		/// Gets the Harmony instance for early patches that must be applied before other mods load.
 		/// </summary>
 		/// <remarks>
