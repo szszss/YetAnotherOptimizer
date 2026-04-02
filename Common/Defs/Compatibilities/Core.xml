@@ -73,6 +73,12 @@
 				<method>RimWorld.StorageGroup:get_HaulSourcesList</method>
 				<replace>tmpHaulSourceList</replace>
 			</ThreadLocalPatch>
+			
+			<!-- World -->
+			<ThreadLocalPatch>
+				<method>RimWorld.Planet.World:NaturalRockTypesIn</method>
+				<replace>tmpNaturalRockDefs</replace>
+			</ThreadLocalPatch>
 		</threadLocalPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>

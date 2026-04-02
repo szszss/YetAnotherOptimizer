@@ -18,7 +18,7 @@ namespace YaOpt.Patches
 			return YaOptGlobal.Settings.OptParallelMaterialUpdate.Enabled;
 		}
 
-		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
 			/*
 			 * return nothing
