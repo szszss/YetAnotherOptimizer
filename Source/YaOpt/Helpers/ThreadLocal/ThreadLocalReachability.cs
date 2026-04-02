@@ -24,7 +24,7 @@ namespace YaOpt.Helpers.ThreadLocal
 		public static ThreadLocal<ThreadLocalReachability> Reachabilities =
 			new ThreadLocal<ThreadLocalReachability>(() => new ThreadLocalReachability());
 
-		private static SpinLock spinLock = new SpinLock();
+		private static GreedySpinLock _spinLock = new GreedySpinLock();
 
 		public Queue<Region> OpenQueue = new Queue<Region>();
 
@@ -60,14 +60,15 @@ namespace YaOpt.Helpers.ThreadLocal
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void EnterLock(ref bool lockTaken)
 		{
-			spinLock.Enter(ref lockTaken);
+			lockTaken = true;
+			_spinLock.Enter();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void ExitLock(bool lockTaken)
 		{
 			if (lockTaken)
-				spinLock.Exit();
+				_spinLock.Exit();
 		}
 
 		public void Clear()

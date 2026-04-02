@@ -11,6 +11,7 @@ namespace YaOpt.Patches.Compatibility.RocketMan
 	[HarmonyBefore("Krkr.RocketMan")]
 	internal static class RimWorld_StatWorker_GetValue
 	{
+		// This lock must be reentrant, so it cannot be replaced with a spin lock.
 		private static readonly object _lockObj = new object();
 
 		static bool Prepare()

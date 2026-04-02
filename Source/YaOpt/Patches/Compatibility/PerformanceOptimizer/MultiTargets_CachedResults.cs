@@ -1,5 +1,5 @@
 using HarmonyLib;
-using System.Threading;
+using YaOpt.Helpers;
 using YaOpt.Helpers.ThirdParty;
 
 namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
@@ -9,9 +9,9 @@ namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 	{
 		private static UnfairRwLock _rwLockIsImmunityNaturally = new UnfairRwLock();
 
-		private static SpinLock _spinLockIsInvisible = new SpinLock();
+		private static GreedySpinLock _spinLockIsInvisible = new GreedySpinLock();
 
-		private static SpinLock _spinLockIsQuestLodger = new SpinLock();
+		private static GreedySpinLock _spinLockIsQuestLodger = new GreedySpinLock();
 
 		static void Patch(Harmony harmony)
 		{

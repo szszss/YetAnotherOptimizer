@@ -2,7 +2,7 @@ using HarmonyLib;
 using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
+using YaOpt.Helpers;
 
 namespace YaOpt.Patches.ThreadSafe.Locked
 {
@@ -12,7 +12,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 	[HarmonyPatch]
 	internal static class MultiTargets_TileTemperaturesComp
 	{
-		private static SpinLock _spinLock = new SpinLock();
+		private static GreedySpinLock _spinLock = new GreedySpinLock();
 
 		static IEnumerable<MethodBase> TargetMethods()
 		{

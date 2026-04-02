@@ -1,6 +1,6 @@
 using HarmonyLib;
 using RimWorld;
-using System.Threading;
+using YaOpt.Helpers;
 
 namespace YaOpt.Patches.ThreadSafe.Locked
 {
@@ -8,7 +8,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 	[HarmonyPatch(nameof(WorkGiver_TakeToPen.JobOnThing))]
 	internal static class RimWorld_WorkGiver_TakeToPen_JobOnThing
 	{
-		private static readonly object lockObj = new object();
+		private static GreedySpinLock _spinLock = new GreedySpinLock();
 
 		static bool Prepare()
 		{
@@ -18,13 +18,13 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 		static void Prefix(out bool __state)
 		{
 			__state = false;
-			Monitor.Enter(lockObj, ref __state);
+			_spinLock.Enter(ref __state);
 		}
 
 		static void Finalizer(bool __state)
 		{
 			if (__state)
-				Monitor.Exit(lockObj);
+				_spinLock.Exit();
 		}
 	}
 }
