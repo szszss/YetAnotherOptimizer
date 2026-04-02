@@ -30,11 +30,11 @@ namespace YaOpt.Patches
 						yield return new CodeInstruction(OpCodes.Pop);
 						continue;
 					}
-					/*if (methodInfo.Name == "Tick" && "TempTerrainManager" == methodInfo.DeclaringType?.Name)
+					if (methodInfo.Name == "Tick" && "TempTerrainManager" == methodInfo.DeclaringType?.Name)
 					{
 						yield return new CodeInstruction(OpCodes.Pop);
 						continue;
-					}*/
+					}
 					if (methodInfo.Name == "Tick" && "GasGrid" == methodInfo.DeclaringType?.Name)
 					{
 						yield return new CodeInstruction(OpCodes.Pop);

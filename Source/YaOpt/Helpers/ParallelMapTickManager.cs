@@ -68,10 +68,10 @@ namespace YaOpt.Helpers
 		{
 			var maps = Find.Maps;
 			_postMapTickJobHandle = default;
-			if (!_tmpJobHandles.IsCreated || _tmpJobHandles.Length != maps.Count * 2)
+			if (!_tmpJobHandles.IsCreated || _tmpJobHandles.Length != maps.Count * 3)
 			{
 				_tmpJobHandles.Dispose();
-				_tmpJobHandles = new NativeArray<JobHandle>(maps.Count * 2, Allocator.Persistent);
+				_tmpJobHandles = new NativeArray<JobHandle>(maps.Count * 3, Allocator.Persistent);
 			}
 			var i = 0;
 			ShouldCheckThread = true;
@@ -80,7 +80,7 @@ namespace YaOpt.Helpers
 				// Rebuilding any dirty region.
 				map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
 				_tmpJobHandles[i++] = new ManagedJob(new SteadyEnvironmentEffectsJob(map.steadyEnvironmentEffects)).Schedule();
-				//_tmpJobHandles[i++] = new ManagedJob(new TempTerrainManagerJob(map.tempTerrain)).Schedule();
+				_tmpJobHandles[i++] = new ManagedJob(new TempTerrainManagerJob(map.tempTerrain)).Schedule();
 				_tmpJobHandles[i++] = new ManagedJob(new GasGridJob(map.gasGrid)).Schedule();
 			}
 			_postMapTickJobHandle = JobHandle.CombineDependencies(_tmpJobHandles);
@@ -108,6 +108,9 @@ namespace YaOpt.Helpers
 			Verse_Thing_Destroy.Playback();
 			RimWorld_FireUtility_TryStartFireIn.Playback();
 			Verse_FleckManager_CreateFleck.Playback();
+			Verse_FreezeManager_DoWaterFreezing.Playback();
+			Verse_FreezeManager_DoIceMelting.Playback();
+			RimWorld_TempTerrainManager_Tick.Playback();
 		}
 
 		/// <summary>
@@ -122,6 +125,9 @@ namespace YaOpt.Helpers
 			Verse_Thing_Destroy.Clear();
 			RimWorld_FireUtility_TryStartFireIn.Clear();
 			Verse_FleckManager_CreateFleck.Clear();
+			Verse_FreezeManager_DoWaterFreezing.Clear();
+			Verse_FreezeManager_DoIceMelting.Clear();
+			RimWorld_TempTerrainManager_Tick.Clear();
 		}
 
 		/// <summary>
@@ -152,10 +158,6 @@ namespace YaOpt.Helpers
 		/// <summary>
 		/// Unity Job that runs <see cref="TempTerrainManager.Tick"/> on a worker thread.
 		/// </summary>
-		/// <remarks>
-		/// <b>Obsolete:</b> Has a race condition with FishShadowComponent which modifies WaterBody concurrently.
-		/// </remarks>
-		[Obsolete]
 		private readonly struct TempTerrainManagerJob : IJob
 		{
 			private readonly TempTerrainManager _tempTerrainManager;
