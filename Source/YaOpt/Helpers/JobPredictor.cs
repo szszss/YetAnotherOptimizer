@@ -290,8 +290,8 @@ namespace YaOpt.Helpers
 		/// <item><see cref="JobPrediction.ShouldDoConstantJob"/> - Whether constant job check is needed.</item>
 		/// </list>
 		/// </remarks>
-		/// <seealso cref="ParallelPawnTickManagerParallelPawnTickManagerrellellyTickPawns"/>
-		public static void ProcessPawn(Pawn pawn, int gameTick)
+		public static void ProcessPawn(Pawn pawn, int gameTick, int tickDeltaPlusOne,
+			bool predictJobFailure, bool predictConstantJob)
 		{
 			JobPrediction prediction = null;
 			try
@@ -300,22 +300,30 @@ namespace YaOpt.Helpers
 				{
 					return;
 				}
-				prediction.MayFail = PredictFail(pawn);
-				if (!prediction.MayFail)
+
+				if (predictJobFailure)
 				{
-					var job = pawn.CurJob;
-					prediction.DistanceValidation = TargetDistanceValidation.CreateValidation(pawn, job);
-					prediction.StatusValidation = TargetStatusValidation.CreateValidation(pawn, job);
+					prediction.MayFail = PredictFail(pawn);
+					if (!prediction.MayFail)
+					{
+						var job = pawn.CurJob;
+						prediction.DistanceValidation = TargetDistanceValidation.CreateValidation(pawn, job);
+						prediction.StatusValidation = TargetStatusValidation.CreateValidation(pawn, job);
+					}
 				}
-				prediction.ShouldDoConstantJob = true;
-				/*if (ThingHelper.ShouldTickInterval(pawn, out var tickDeltaPlusOne))
+				else
+				{
+					prediction.MayFail = true;
+				}
+
+				if (predictConstantJob)
 				{
 					prediction.ShouldDoConstantJob = PredictDoConstantJob(pawn, tickDeltaPlusOne);
 				}
 				else
 				{
 					prediction.ShouldDoConstantJob = true;
-				}*/
+				}
 				prediction.UpdateTick = gameTick;
 			}
 			catch (Exception ex)

@@ -401,6 +401,66 @@ namespace YaOpt.Settings
 			}
 		}
 
+		public static void ParallelPawnTickPostDraw(SettingsPanel panel,
+			Listing_Standard listing, OptimizationOption option)
+		{
+			if (option.Enabled)
+			{
+				listing.Indent();
+
+				{
+					listing.Gap(listing.verticalSpacing);
+					var check = panel._settings.ParallelPawnJobFailurePrediction;
+					DrawCheckboxLabeled(listing,
+						"YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction".Translate(),
+						check, false, out var mouseOver, out var result, -12);
+					if (mouseOver)
+					{
+						panel._lastMouseOverOption = null;
+						panel._showingDesc =
+							"YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc".Translate();
+					}
+					if (check != result)
+						panel._settings.ParallelPawnJobFailurePrediction = result;
+				}
+
+				{
+					listing.Gap(listing.verticalSpacing);
+					var check = panel._settings.ParallelPawnConstantJobPrediction;
+					DrawCheckboxLabeled(listing,
+						"YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction".Translate(),
+						check, false, out var mouseOver, out var result, -12);
+					if (mouseOver)
+					{
+						panel._lastMouseOverOption = null;
+						panel._showingDesc =
+							"YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc".Translate();
+					}
+					if (check != result)
+						panel._settings.ParallelPawnConstantJobPrediction = result;
+				}
+
+				{
+					listing.Gap(listing.verticalSpacing);
+					var check = panel._settings.ParallelPawnMoodUpdate;
+					DrawCheckboxLabeled(listing,
+						"YaOpt.Setting.Option.ParallelPawnTick.MoodUpdate".Translate(),
+						check, false, out var mouseOver, out var result, -12);
+					if (mouseOver)
+					{
+						panel._lastMouseOverOption = null;
+						panel._showingDesc =
+							"YaOpt.Setting.Option.ParallelPawnTick.MoodUpdate.Desc".Translate();
+					}
+					if (check != result)
+						panel._settings.ParallelPawnMoodUpdate = result;
+				}
+
+				listing.Outdent();
+				listing.Gap(listing.verticalSpacing);
+			}
+		}
+
 		public static void LazyTextureLoadPostDraw(SettingsPanel panel,
 			Listing_Standard listing, OptimizationOption option)
 		{

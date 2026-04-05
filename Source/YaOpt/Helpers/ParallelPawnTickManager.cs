@@ -24,6 +24,8 @@ namespace YaOpt.Helpers
 
 		private static readonly List<Pawn> _nonhumanPawns = new List<Pawn>();
 
+		public static List<int> PawnsWhoShouldSkipMoodUpdate { get; private set; } = new List<int>();
+
 		/// <summary>
 		/// Current game tick, cached to avoid race conditions during parallel processing.
 		/// </summary>
@@ -31,6 +33,7 @@ namespace YaOpt.Helpers
 
 		static ParallelPawnTickManager()
 		{
+			UpdateCallbackHelper.RegisterPreTickCallback(PreTick);
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
 		}
 
@@ -127,6 +130,9 @@ namespace YaOpt.Helpers
 
 			_gameTick = GenTicks.TicksGame;
 			var batchSize = Math.Clamp(Mathf.FloorToInt(_parellellyTickPawnsBatchSize), 1, 16);
+			var predictJobFailure = YaOptGlobal.Settings.ParallelPawnJobFailurePrediction;
+			var predictConstantJob = YaOptGlobal.Settings.ParallelPawnConstantJobPrediction;
+			var moodUpdate = YaOptGlobal.Settings.ParallelPawnMoodUpdate;
 
 #if DEBUG
 			if (_debugLog)
@@ -137,9 +143,11 @@ namespace YaOpt.Helpers
 
 			YaOptGlobal.IsParallelRunningInTick = true;
 			JobHandle handle = JobHandle.CombineDependencies(
-				new ManagedJobFor(new ParallelPawnJob(_humanPawns))
+				new ManagedJobFor(new ParallelPawnJob(_humanPawns,
+						predictJobFailure, predictConstantJob, moodUpdate))
 					.ScheduleParallel(_humanPawns.Count, 1),
-				new ManagedJobFor(new ParallelPawnJob(_nonhumanPawns, _humanPawns.Count))
+				new ManagedJobFor(new ParallelPawnJob(_nonhumanPawns,
+						predictJobFailure, predictConstantJob, moodUpdate, _humanPawns.Count))
 					.ScheduleParallel(_nonhumanPawns.Count, batchSize));
 
 #if DEBUG
@@ -164,12 +172,21 @@ namespace YaOpt.Helpers
 		}
 
 		/// <summary>
+		/// Clears the skipping list before new tick.
+		/// </summary>
+		private static void PreTick(int _)
+		{
+			PawnsWhoShouldSkipMoodUpdate.Clear();
+		}
+
+		/// <summary>
 		/// Clears all cached data and resets state.
 		/// </summary>
 		private static void ClearCache()
 		{
 			_humanPawns.Clear();
 			_nonhumanPawns.Clear();
+			PawnsWhoShouldSkipMoodUpdate.Clear();
 			JobPredictor.CleanCache();
 		}
 
@@ -180,10 +197,18 @@ namespace YaOpt.Helpers
 		{
 			private readonly List<Pawn> _list;
 			private readonly int _debugJobIndexOffset;
+			private readonly bool _predictJobFailure;
+			private readonly bool _predictConstantJob;
+			private readonly bool _moodUpdate;
 
-			public ParallelPawnJob(List<Pawn> list, int debugJobIndexOffset = 0)
+			public ParallelPawnJob(List<Pawn> list,
+				bool predictJobFailure, bool predictConstantJob, bool moodUpdate,
+				int debugJobIndexOffset = 0)
 			{
 				_list = list;
+				_predictJobFailure = predictJobFailure;
+				_predictConstantJob = predictConstantJob;
+				_moodUpdate = moodUpdate;
 				_debugJobIndexOffset = debugJobIndexOffset;
 			}
 
@@ -196,17 +221,46 @@ namespace YaOpt.Helpers
 					time = _stopwatch.GetElapsedMicrosecondLong();
 				}
 #endif
-				JobPredictor.ProcessPawn(_list[index], _gameTick);
+				var pawn = _list[index];
+				var suspended = pawn.Suspended;
+				var shouldTickInterval = false;
+				var tickDeltaPlusOne = -1;
+				if (_predictConstantJob || _moodUpdate)
+				{
+					shouldTickInterval = ThingHelper.ShouldTickInterval(pawn, out tickDeltaPlusOne);
+				}
+				if (!suspended)
+				{
+					JobPredictor.ProcessPawn(pawn, _gameTick, tickDeltaPlusOne,
+						_predictJobFailure, _predictConstantJob && shouldTickInterval);
+				}
+				if (_moodUpdate && !pawn.Dead && pawn.IsHashIntervalTick(150, tickDeltaPlusOne))
+				{
+					UpdateMood(pawn);
+				}
 #if DEBUG
 				if (_debugLog)
 				{
 					var current = _stopwatch.GetElapsedMicrosecondLong();
 					var str = $"Thread {Thread.CurrentThread.ManagedThreadId} " +
-							  $"finished {_list[index]} (Job {index + _debugJobIndexOffset}) at " +
+							  $"finished {pawn} (Job {index + _debugJobIndexOffset}) at " +
 							  $"{current} μs. Cost: {current - time}μs.";
 					_debugOutputs.Enqueue(str);
 				}
 #endif
+			}
+
+			private static void UpdateMood(Pawn pawn)
+			{
+				var mood = pawn.needs?.mood;
+				if (mood == null)
+					return;
+				pawn.needs.mood.NeedInterval();
+				var id = pawn.thingIDNumber;
+				lock (PawnsWhoShouldSkipMoodUpdate)
+				{
+					PawnsWhoShouldSkipMoodUpdate.Add(id);
+				}
 			}
 		}
 	}

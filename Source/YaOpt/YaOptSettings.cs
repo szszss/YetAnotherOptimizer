@@ -258,8 +258,7 @@ namespace YaOpt
 			Name = "YaOpt.Setting.Option.MeditationTick",
 			Desc = "YaOpt.Setting.Option.MeditationTick.Desc",
 			NoteCompatibility = "YaOpt.Setting.Option.MeditationTick.Compatibility",
-			Category = OptimizationCategory.Tps,
-			FuncShow = settings => !YaOptGlobal.HasMod("Arkymn.PerformanceEsmolas")
+			Category = OptimizationCategory.Tps
 		};
 
 		/// <summary>
@@ -285,6 +284,7 @@ namespace YaOpt
 		/// If the prediction passes (no interruption), the main thread skips the redundant check.
 		/// Otherwise, the main thread performs the standard check.
 		/// </summary>
+		/// <seealso cref="Patches.RimWorld_Need_Mood_NeedInterval"/>
 		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
 		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
 		/// <seealso cref="Patches.Verse_TickList_BucketOf"/>
@@ -301,7 +301,29 @@ namespace YaOpt
 			NoteMultiThread = "YaOpt.Setting.Option.ParallelPawnTick.MultiThread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
+			FuncPostDraw = SettingsPanel.ParallelPawnTickPostDraw,
+			FuncExposeData = (settings) =>
+			{
+				var jobFailurePrediction = settings.ParallelPawnJobFailurePrediction;
+				var constantJobPrediction = settings.ParallelPawnConstantJobPrediction;
+				var moodUpdate = settings.ParallelPawnMoodUpdate;
+				Scribe_Values.Look(ref jobFailurePrediction, "OptLazyTextureLoad_JobFailurePrediction", true);
+				Scribe_Values.Look(ref constantJobPrediction, "OptLazyTextureLoad_ConstantJobPrediction", true);
+				Scribe_Values.Look(ref moodUpdate, "OptLazyTextureLoad_MoodUpdate", true);
+				settings.ParallelPawnJobFailurePrediction = jobFailurePrediction;
+				settings.ParallelPawnConstantJobPrediction = constantJobPrediction;
+				settings.ParallelPawnMoodUpdate = moodUpdate;
+			}
 		};
+
+		[field: Unsaved]
+		public bool ParallelPawnJobFailurePrediction { get; set; } = true;
+
+		[field: Unsaved]
+		public bool ParallelPawnConstantJobPrediction { get; set; } = true;
+
+		[field: Unsaved]
+		public bool ParallelPawnMoodUpdate { get; set; } = true;
 
 		/// <summary>
 		/// Optimizes job giving by checking job priorities in parallel.
@@ -326,7 +348,7 @@ namespace YaOpt
 
 		/// <summary>
 		/// Optimizes map post-tick processing by running independent updates in parallel.
-		/// Supports steady environment effects and gas updates.
+		/// Supports steady environment effects, temp terrain and gas updates.
 		/// </summary>
 		/// <seealso cref="Patches.Verse_Map_MapPostTick"/>
 		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
@@ -334,6 +356,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.ParallelPostMapTick",
 			Desc = "YaOpt.Setting.Option.ParallelPostMapTick.Desc",
+			NoteStability = "YaOpt.Setting.Option.ParallelPostMapTick.Stable",
 			NoteMultiThread = "YaOpt.Setting.Option.ParallelPostMapTick.MultiThread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
