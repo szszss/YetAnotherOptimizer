@@ -225,7 +225,7 @@ namespace YaOpt.Helpers
 				var suspended = pawn.Suspended;
 				var shouldTickInterval = false;
 				var tickDeltaPlusOne = -1;
-				if (_predictConstantJob || _moodUpdate)
+				if (_predictConstantJob)
 				{
 					shouldTickInterval = ThingHelper.ShouldTickInterval(pawn, out tickDeltaPlusOne);
 				}
@@ -233,10 +233,6 @@ namespace YaOpt.Helpers
 				{
 					JobPredictor.ProcessPawn(pawn, _gameTick, tickDeltaPlusOne,
 						_predictJobFailure, _predictConstantJob && shouldTickInterval);
-				}
-				if (_moodUpdate && !pawn.Dead && pawn.IsHashIntervalTick(150, tickDeltaPlusOne))
-				{
-					UpdateMood(pawn);
 				}
 #if DEBUG
 				if (_debugLog)
@@ -248,19 +244,6 @@ namespace YaOpt.Helpers
 					_debugOutputs.Enqueue(str);
 				}
 #endif
-			}
-
-			private static void UpdateMood(Pawn pawn)
-			{
-				var mood = pawn.needs?.mood;
-				if (mood == null)
-					return;
-				pawn.needs.mood.NeedInterval();
-				var id = pawn.thingIDNumber;
-				lock (PawnsWhoShouldSkipMoodUpdate)
-				{
-					PawnsWhoShouldSkipMoodUpdate.Add(id);
-				}
 			}
 		}
 	}

@@ -2,7 +2,6 @@ using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using Verse;
 using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches.ThreadSafe.ThreadLocal
@@ -14,7 +13,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptParallelPawnTick.Enabled &&
-			       YaOptGlobal.Settings.ParallelPawnMoodUpdate;
+				   YaOptGlobal.Settings.ParallelPawnMoodUpdate;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

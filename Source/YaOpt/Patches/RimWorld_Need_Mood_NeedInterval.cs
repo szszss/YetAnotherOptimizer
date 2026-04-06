@@ -1,33 +1,33 @@
 using HarmonyLib;
 using RimWorld;
-using RimWorld.Planet;
-using Verse;
+using System.Collections.Generic;
 using YaOpt.Helpers;
 
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// Skip the regular mood update if it has already been completed.
+	/// 
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
-	[HarmonyPatch(typeof(Need_Mood))]
-	[HarmonyPatch(nameof(Need_Mood.NeedInterval))]
-	[HarmonyPriority(Priority.VeryHigh)]
-	internal static class RimWorld_Need_Mood_NeedInterval
+	[HarmonyPatch(typeof(SituationalThoughtHandler))]
+	[HarmonyPatch("UpdateAllMoodThoughts")]
+	[HarmonyPriority(Priority.VeryLow)]
+	internal static class RimWorld_SituationalThoughtHandler_UpdateAllMoodThoughts
 	{
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptParallelPawnTick.Enabled &&
-			       YaOptGlobal.Settings.ParallelPawnMoodUpdate;
+				   YaOptGlobal.Settings.ParallelPawnMoodUpdate;
 		}
 
-		static bool Prefix(Pawn ___pawn)
+		static bool Prefix(SituationalThoughtHandler __instance, bool __runOriginal,
+			List<Thought_Situational> ___cachedThoughts, ref bool ___thoughtsDirty)
 		{
-			var id = ___pawn.thingIDNumber;
-			lock (ParallelPawnTickManager.PawnsWhoShouldSkipMoodUpdate)
-			{
-				return !ParallelPawnTickManager.PawnsWhoShouldSkipMoodUpdate.Contains(id);
-			}
+			if (!__runOriginal)
+				return false;
+			___thoughtsDirty = false;
+			ParallelThoughtUpdater.Update(__instance, ___cachedThoughts);
+			return false;
 		}
 	}
 }

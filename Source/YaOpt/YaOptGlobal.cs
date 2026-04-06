@@ -86,10 +86,11 @@ namespace YaOpt
 
 		/// <summary>
 		/// Gets or sets a value indicating whether a parallel program is currently running in tick update.
-		/// It only returns True when ParallelJobGiver or JobPredictor is running.
+		/// It only returns True when ParallelJobGiver, ParallelThoughtUpdater or JobPredictor is running.
 		/// </summary>
 		/// <seealso cref="Helpers.JobPredictor"/>
 		/// <seealso cref="Helpers.ParallelJobGiver"/>
+		/// <seealso cref="Helpers.ParallelThoughtUpdater"/>
 		public static bool IsParallelRunningInTick { get; set; }
 
 		/// <summary>

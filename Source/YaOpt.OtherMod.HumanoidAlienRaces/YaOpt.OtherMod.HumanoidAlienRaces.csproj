@@ -5,7 +5,7 @@
 	<ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>true</ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>
   </PropertyGroup>
   
-  <Import Project="..\Settings.props"/>
+  <Import Project="..\Settings.props" />
   <Import Project="..\UserSettings.props" Condition="exists('..\UserSettings.props')" />
   
   <ItemGroup>

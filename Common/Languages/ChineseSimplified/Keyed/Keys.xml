@@ -56,7 +56,7 @@
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle>地形更新限流</YaOpt.Setting.Option.MapMeshUpdateThrottle>
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>限制地图网格（地形渲染）的更新频率。原版游戏中，雪或沙尘厚度的任何变化都会在渲染帧立即触发网格更新，在变化频繁时（如降雪或融化）会消耗大量资源。此优化设置了更新之间的最短现实时间间隔。当游戏暂停时会强制更新。</YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>最短更新间隔: {0}毫秒</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>
-	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>调整两次更新间最短的现实时间间隔，需要注意的是，由于游戏对地形采用增量更新，这个选项是有边界效应的，将间隔设为1000毫秒并不能将更新开销降低为100毫秒的十分之一，因为单次更新需要处理的地块也多了。推荐值为300或500，如果你不在乎视觉效果，调成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>调整两次更新间最短的现实时间间隔，需要注意的是，由于游戏对地形采用增量更新，这个选项是有边际效应的，将间隔设为1000毫秒并不能将更新开销降低为100毫秒的十分之一，因为单次更新需要处理的地块也多了。推荐值为300或500，如果你不在乎视觉效果，调成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
 	<YaOpt.Setting.Option.PRNRWorker>修复PawnRenderNodeProperties缓存</YaOpt.Setting.Option.PRNRWorker>
 	<YaOpt.Setting.Option.PRNRWorker.Desc>PawnRenderNodeProperties的Worker在初始化时很慢。虽然游戏为它准备了缓存，但由于设计疏忽，缓存永远不会被读取。此优化修复了该Bug，使其能正确使用缓存。</YaOpt.Setting.Option.PRNRWorker.Desc>
 	<YaOpt.Setting.Option.GraphicTextureCache>纹理索引缓存</YaOpt.Setting.Option.GraphicTextureCache>
