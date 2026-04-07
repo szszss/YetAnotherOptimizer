@@ -15,8 +15,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches.ThreadSafe
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelPawnTick.Enabled &&
-				   YaOptGlobal.Settings.ParallelPawnMoodUpdate;
+			return YaOptGlobal.Settings.OptParallelThoughtUpdate.Enabled;
 		}
 
 		static bool Prefix(ThoughtDef def, ThingDef race,

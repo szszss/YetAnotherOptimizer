@@ -284,7 +284,6 @@ namespace YaOpt
 		/// If the prediction passes (no interruption), the main thread skips the redundant check.
 		/// Otherwise, the main thread performs the standard check.
 		/// </summary>
-		/// <seealso cref="Patches.RimWorld_Need_Mood_NeedInterval"/>
 		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
 		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
 		/// <seealso cref="Patches.Verse_TickList_BucketOf"/>
@@ -306,13 +305,10 @@ namespace YaOpt
 			{
 				var jobFailurePrediction = settings.ParallelPawnJobFailurePrediction;
 				var constantJobPrediction = settings.ParallelPawnConstantJobPrediction;
-				var moodUpdate = settings.ParallelPawnMoodUpdate;
 				Scribe_Values.Look(ref jobFailurePrediction, "OptLazyTextureLoad_JobFailurePrediction", true);
 				Scribe_Values.Look(ref constantJobPrediction, "OptLazyTextureLoad_ConstantJobPrediction", true);
-				Scribe_Values.Look(ref moodUpdate, "OptLazyTextureLoad_MoodUpdate", true);
 				settings.ParallelPawnJobFailurePrediction = jobFailurePrediction;
 				settings.ParallelPawnConstantJobPrediction = constantJobPrediction;
-				settings.ParallelPawnMoodUpdate = moodUpdate;
 			}
 		};
 
@@ -321,9 +317,6 @@ namespace YaOpt
 
 		[field: Unsaved]
 		public bool ParallelPawnConstantJobPrediction { get; set; } = true;
-
-		[field: Unsaved]
-		public bool ParallelPawnMoodUpdate { get; set; } = true;
 
 		/// <summary>
 		/// Optimizes job giving by checking job priorities in parallel.
@@ -342,6 +335,21 @@ namespace YaOpt
 			NoteStability = "YaOpt.Setting.Option.ParallelJobGiver.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelJobGiver.Compatibility",
 			NoteMultiThread = "YaOpt.Setting.Option.ParallelJobGiver.MultiThread",
+			Category = OptimizationCategory.Tps,
+			Flags = OptimizationFlags.MultiplayerIncompatible,
+		};
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <seealso cref="Patches.RimWorld_SituationalThoughtHandler_UpdateAllMoodThoughts"/>
+		public OptimizationOption OptParallelThoughtUpdate { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ParallelThoughtUpdate",
+			Desc = "YaOpt.Setting.Option.ParallelThoughtUpdate.Desc",
+			NoteStability = "YaOpt.Setting.Option.ParallelThoughtUpdate.Stable",
+			NoteCompatibility = "YaOpt.Setting.Option.ParallelThoughtUpdate.Compatibility",
+			NoteMultiThread = "YaOpt.Setting.Option.ParallelThoughtUpdate.MultiThread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};
@@ -409,6 +417,14 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.FastListerRemove",
 			Desc = "YaOpt.Setting.Option.FastListerRemove.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <seealso cref="Patches.Verse_GenTicks_GetCameraUpdateRate"/>
+		public OptimizationOption OptCameraUpdateRate { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.CameraUpdateRate",
+			Desc = "YaOpt.Setting.Option.CameraUpdateRate.Desc",
 			Category = OptimizationCategory.Tps,
 		};
 

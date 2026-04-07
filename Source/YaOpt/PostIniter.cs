@@ -12,8 +12,6 @@ namespace YaOpt
 		{
 			YaOptGlobal.MarkAsMainThread();
 			DefInjectionHelper.ClearCache();
-			AccessHelper.Init();
-			ThingHelper.Init();
 			CompatibilityDefines.Load();
 			ContentManager.PostInit();
 			TypeSearcher.Init(); // Must init before patcher. Some patchers depend it.

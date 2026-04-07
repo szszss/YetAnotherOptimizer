@@ -8,7 +8,7 @@ namespace YaOpt.Patches
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
+	/// <seealso cref="YaOptSettings.OptParallelThoughtUpdate"/>
 	[HarmonyPatch(typeof(SituationalThoughtHandler))]
 	[HarmonyPatch("UpdateAllMoodThoughts")]
 	[HarmonyPriority(Priority.VeryLow)]
@@ -16,8 +16,7 @@ namespace YaOpt.Patches
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelPawnTick.Enabled &&
-				   YaOptGlobal.Settings.ParallelPawnMoodUpdate;
+			return YaOptGlobal.Settings.OptParallelThoughtUpdate.Enabled;
 		}
 
 		static bool Prefix(SituationalThoughtHandler __instance, bool __runOriginal,

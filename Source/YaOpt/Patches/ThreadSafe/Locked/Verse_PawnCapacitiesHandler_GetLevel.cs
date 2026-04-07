@@ -10,8 +10,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelPawnTick.Enabled &&
-				   YaOptGlobal.Settings.ParallelPawnMoodUpdate;
+			return YaOptGlobal.Settings.OptParallelThoughtUpdate.Enabled;
 		}
 
 		static void Prefix(PawnCapacitiesHandler __instance, out bool __state)

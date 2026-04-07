@@ -12,8 +12,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelPawnTick.Enabled &&
-				   YaOptGlobal.Settings.ParallelPawnMoodUpdate;
+			return YaOptGlobal.Settings.OptParallelThoughtUpdate.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

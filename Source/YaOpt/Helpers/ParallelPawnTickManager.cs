@@ -132,7 +132,6 @@ namespace YaOpt.Helpers
 			var batchSize = Math.Clamp(Mathf.FloorToInt(_parellellyTickPawnsBatchSize), 1, 16);
 			var predictJobFailure = YaOptGlobal.Settings.ParallelPawnJobFailurePrediction;
 			var predictConstantJob = YaOptGlobal.Settings.ParallelPawnConstantJobPrediction;
-			var moodUpdate = YaOptGlobal.Settings.ParallelPawnMoodUpdate;
 
 #if DEBUG
 			if (_debugLog)
@@ -144,10 +143,10 @@ namespace YaOpt.Helpers
 			YaOptGlobal.IsParallelRunningInTick = true;
 			JobHandle handle = JobHandle.CombineDependencies(
 				new ManagedJobFor(new ParallelPawnJob(_humanPawns,
-						predictJobFailure, predictConstantJob, moodUpdate))
+						predictJobFailure, predictConstantJob))
 					.ScheduleParallel(_humanPawns.Count, 1),
 				new ManagedJobFor(new ParallelPawnJob(_nonhumanPawns,
-						predictJobFailure, predictConstantJob, moodUpdate, _humanPawns.Count))
+						predictJobFailure, false, _humanPawns.Count))
 					.ScheduleParallel(_nonhumanPawns.Count, batchSize));
 
 #if DEBUG
@@ -199,16 +198,14 @@ namespace YaOpt.Helpers
 			private readonly int _debugJobIndexOffset;
 			private readonly bool _predictJobFailure;
 			private readonly bool _predictConstantJob;
-			private readonly bool _moodUpdate;
 
 			public ParallelPawnJob(List<Pawn> list,
-				bool predictJobFailure, bool predictConstantJob, bool moodUpdate,
+				bool predictJobFailure, bool predictConstantJob,
 				int debugJobIndexOffset = 0)
 			{
 				_list = list;
 				_predictJobFailure = predictJobFailure;
 				_predictConstantJob = predictConstantJob;
-				_moodUpdate = moodUpdate;
 				_debugJobIndexOffset = debugJobIndexOffset;
 			}
 
@@ -232,7 +229,7 @@ namespace YaOpt.Helpers
 				if (!suspended)
 				{
 					JobPredictor.ProcessPawn(pawn, _gameTick, tickDeltaPlusOne,
-						_predictJobFailure, _predictConstantJob && shouldTickInterval);
+						_predictJobFailure, shouldTickInterval);
 				}
 #if DEBUG
 				if (_debugLog)

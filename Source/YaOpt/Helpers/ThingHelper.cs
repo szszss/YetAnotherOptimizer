@@ -12,31 +12,47 @@ namespace YaOpt.Helpers
 	internal static class ThingHelper
 	{
 		private delegate Toil GetCurToilDelegate(JobDriver jobDriver);
+
 		private delegate bool ShouldStartJobFromThinkTreeDelegate(Pawn_JobTracker jobTracker, ThinkResult thinkResult);
 
-		private static GetCurToilDelegate getCurToil;
-		private static ShouldStartJobFromThinkTreeDelegate shouldStartJobFromThinkTree;
+		private delegate int MinTickIntervalRateDelegate(Thing thing);
 
-		/// <summary>
-		/// Initializes delegate caches for reflection-based access.
-		/// </summary>
-		public static void Init()
-		{
-			getCurToil = AccessTools.MethodDelegate<GetCurToilDelegate>(
+		private delegate int MaxTickIntervalRateDelegate(Thing thing);
+
+		private delegate int UpdateRateTickOffsetDelegate(Thing thing);
+
+		private static readonly GetCurToilDelegate getCurToil =
+			AccessTools.MethodDelegate<GetCurToilDelegate>(
 				AccessTools.PropertyGetter(typeof(JobDriver), "CurToil"), null, false, null);
 
-			shouldStartJobFromThinkTree = AccessTools.MethodDelegate<ShouldStartJobFromThinkTreeDelegate>(
+		private static readonly ShouldStartJobFromThinkTreeDelegate shouldStartJobFromThinkTree =
+			AccessTools.MethodDelegate<ShouldStartJobFromThinkTreeDelegate>(
 				AccessTools.Method(typeof(Pawn_JobTracker), "ShouldStartJobFromThinkTree"), null, false, null);
-		}
+
+		private static readonly MinTickIntervalRateDelegate _minTickIntervalRate =
+			AccessTools.MethodDelegate<MinTickIntervalRateDelegate>(
+				AccessTools.PropertyGetter(typeof(Thing), "MinTickIntervalRate"));
+
+		private static readonly MaxTickIntervalRateDelegate _maxTickIntervalRate =
+			AccessTools.MethodDelegate<MaxTickIntervalRateDelegate>(
+				AccessTools.PropertyGetter(typeof(Thing), "MaxTickIntervalRate"));
+
+		private static readonly UpdateRateTickOffsetDelegate _updateRateTickOffset =
+			AccessTools.MethodDelegate<UpdateRateTickOffsetDelegate>(
+				AccessTools.PropertyGetter(typeof(Thing), "UpdateRateTickOffset"));
+
+		private static readonly AccessTools.FieldRef<Thing, int> _tickDelta =
+			AccessTools.FieldRefAccess<int>(typeof(Thing), "tickDelta");
 
 		/// <summary>
 		/// Checks if a thing should tick at the current interval based on its update rate.
 		/// </summary>
 		public static bool ShouldTickInterval(Thing thing, out int tickDeltaPlusOne)
 		{
-			AccessHelper.Thing_TickDeltaAndIntervalRate(thing,
-				out tickDeltaPlusOne, out var minTickIntervalRate, out var maxTickIntervalRate, out var updateRateTickOffset);
-			tickDeltaPlusOne++;
+			tickDeltaPlusOne = _tickDelta(thing) + 1;
+			var minTickIntervalRate = _minTickIntervalRate(thing);
+			var maxTickIntervalRate = _maxTickIntervalRate(thing);
+			var updateRateTickOffset = _updateRateTickOffset(thing);
 			int num = Mathf.Min(Mathf.Max(thing.UpdateRateTicks, minTickIntervalRate), maxTickIntervalRate);
 			return tickDeltaPlusOne >= num || GenTicks.IsTickInterval(updateRateTickOffset, num);
 		}
