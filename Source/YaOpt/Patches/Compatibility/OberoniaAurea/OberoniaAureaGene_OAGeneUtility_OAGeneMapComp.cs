@@ -19,8 +19,8 @@ namespace YaOpt.Patches.Compatibility.OberoniaAurea
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptParallelThoughtUpdate.Enabled &&
-			       YaOptGlobal.HasType("OberoniaAureaGene.OAGeneUtility") &&
-			       YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer");
+				   YaOptGlobal.HasType("OberoniaAureaGene.OAGeneUtility") &&
+				   YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer");
 		}
 
 		static void Prefix(out bool __state)

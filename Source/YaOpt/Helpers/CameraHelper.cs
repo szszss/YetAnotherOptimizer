@@ -1,6 +1,5 @@
 using RimWorld.Planet;
 using System;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;

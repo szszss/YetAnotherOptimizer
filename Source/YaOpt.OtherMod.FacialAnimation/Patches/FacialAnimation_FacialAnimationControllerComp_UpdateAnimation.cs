@@ -36,7 +36,6 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 					{
 						instruction.operand = AccessTools.Method(
 							typeof(JobAnimationHelper), nameof(JobAnimationHelper.ChangeAnimationListWithReset));
-						YaOptMod.Log("FacialAnimationControllerComp_UpdateAnimation:ChangeAnimationListWithReset");
 						yield return CodeInstruction.LoadArgument(0);
 						yield return CodeInstruction.LoadField(typeof(FacialAnimationControllerComp),
 							"currentJobAnimationList");
@@ -45,7 +44,6 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 					{
 						instruction.operand = AccessTools.Method(
 							typeof(JobAnimationHelper), nameof(JobAnimationHelper.FilterAnimationListWithCurrentStatus));
-						YaOptMod.Log("FacialAnimationControllerComp_UpdateAnimation:FilterAnimationListWithCurrentStatus");
 						yield return CodeInstruction.LoadArgument(0);
 						yield return CodeInstruction.LoadField(typeof(FacialAnimationControllerComp),
 							"currentJobAnimationList");

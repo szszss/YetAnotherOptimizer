@@ -413,6 +413,7 @@ namespace YaOpt
 		/// <seealso cref="Patches.Verse_ListerThings_Contains"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Remove"/>
 		/// <seealso cref="Patches.Verse_ThingDef_HasAssignableCompFrom"/>
+		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
 		public OptimizationOption OptFastListerRemove { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FastListerRemove",
@@ -425,6 +426,17 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.CameraUpdateRate",
 			Desc = "YaOpt.Setting.Option.CameraUpdateRate.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <seealso cref="Patches.RimWorld_GenHostility_HostileTo"/>
+		/// <seealso cref="Patches.Verse_AI_AttackTargetFinder_BestAttackTarget"/>
+		/// <seealso cref="Patches.Verse_AI_AttackTargetFinder_FriendlyFireConeTargetScoreOffset"/>
+		/// <seealso cref="Patches.Verse_IntVec3_AngleFlat"/>
+		public OptimizationOption OptAttackTargetFinder { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.AttackTargetFinder",
+			Desc = "YaOpt.Setting.Option.AttackTargetFinder.Desc",
 			Category = OptimizationCategory.Tps,
 		};
 

@@ -1,6 +1,5 @@
 using HarmonyLib;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Verse;
@@ -9,6 +8,7 @@ using YaOpt.Helpers;
 
 namespace YaOpt.Patches
 {
+	/// <seealso cref="YaOptSettings.OptAttackTargetFinder"/>
 	internal static class Verse_AI_AttackTargetFinder_BestAttackTarget
 	{
 		private static readonly Dictionary<int, bool> _validationCache = new Dictionary<int, bool>();
@@ -45,6 +45,11 @@ namespace YaOpt.Patches
 		[HarmonyPatch(nameof(AttackTargetFinder.BestAttackTarget))]
 		private static class MainPart
 		{
+			static bool Prepare()
+			{
+				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled;
+			}
+
 			static void Prefix()
 			{
 				_validationCache.Clear();
@@ -81,10 +86,10 @@ namespace YaOpt.Patches
 			{
 				MethodInfo method = null;
 				foreach (var nestedType in typeof(AttackTargetFinder).GetNestedTypes(
-					         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+							 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 				{
 					if (nestedType.GetField("searcher",
-						    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public) == null)
+							BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public) == null)
 						continue;
 
 					method = nestedType.GetMethod("<BestAttackTarget>b__1",
@@ -92,16 +97,21 @@ namespace YaOpt.Patches
 					if (method != null)
 					{
 						YaOptMod.Debug("Verse_AI_AttackTargetFinder_BestAttackTarget " +
-						               $"found a method from BestAttackTarget: {method.FullName()}");
+									   $"found a method from BestAttackTarget: {method.FullName()}");
 						break;
 					}
 				}
 				if (method == null)
 				{
 					throw new MissingMethodException("Cannot find closure method for " +
-					                                 "AttackTargetFinder.BestAttackTarget");
+													 "AttackTargetFinder.BestAttackTarget");
 				}
 				return method;
+			}
+
+			static bool Prepare()
+			{
+				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled;
 			}
 
 			static bool Prefix(IAttackTarget __0, ref bool __result)

@@ -81,8 +81,12 @@ namespace YaOpt
 		/// </summary>
 		/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
 		/// <seealso cref="YaOptSettings.OptParallelJobGiver"/>
+		/// <seealso cref="YaOptSettings.OptParallelThoughtUpdate"/>
+		/// <seealso cref="YaOptSettings.OptParallelPostMapTick"/>
 		public static bool NeedThreadSafe => YaOptMod.Instance.Settings.OptParallelPawnTick.Enabled ||
-											 YaOptMod.Instance.Settings.OptParallelJobGiver.Enabled;
+											 YaOptMod.Instance.Settings.OptParallelJobGiver.Enabled ||
+											 YaOptMod.Instance.Settings.OptParallelThoughtUpdate.Enabled ||
+											 YaOptMod.Instance.Settings.OptParallelPostMapTick.Enabled;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether a parallel program is currently running in tick update.

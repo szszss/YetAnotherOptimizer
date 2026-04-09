@@ -1,22 +1,25 @@
 using HarmonyLib;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using UnityEngine;
 using Verse;
 using Verse.AI;
-using Verse.Noise;
 using YaOpt.Helpers;
 
 namespace YaOpt.Patches
 {
+	/// <seealso cref="YaOptSettings.OptAttackTargetFinder"/>
 	[HarmonyPatch(typeof(AttackTargetFinder))]
 	[HarmonyPatch("FriendlyFireConeTargetScoreOffset")]
 	internal static class Verse_AI_AttackTargetFinder_FriendlyFireConeTargetScoreOffset
 	{
 		private static readonly HashSet<IntVec3> _cells = new HashSet<IntVec3>();
+
+		static bool Prepare()
+		{
+			return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled;
+		}
 
 		static IEnumerable<IntVec3> GetCellsWhereBulletFlyThrough(
 			Pawn shooter, in ShotReport report, float radius)
@@ -36,9 +39,13 @@ namespace YaOpt.Patches
 						shouldBreak = true;
 						break;
 					}
-					_cells.Add(pos);
+					if (pos.GetThingList(map).Count > 0)
+					{
+						_cells.Add(pos);
+					}
 				}
-				if (!shouldBreak && shootLine.Dest.CanBeSeenOverFast(map))
+				if (!shouldBreak && shootLine.Dest.CanBeSeenOverFast(map)
+								 && shootLine.Dest.GetThingList(map).Count > 0)
 				{
 					_cells.Add(shootLine.Dest);
 				}
@@ -75,7 +82,7 @@ namespace YaOpt.Patches
 
 					if (fieldHitReport == null)
 						throw new MissingFieldException("Cannot find HitReport field for " +
-						                                "FriendlyFireConeTargetScoreOffset");
+														"FriendlyFireConeTargetScoreOffset");
 
 					yield return CodeInstruction.LoadLocal(LOCAL_PAWN);
 					yield return CodeInstruction.LoadLocal(LOCAL_CLOSURE);

@@ -117,9 +117,7 @@ namespace YaOpt.Patches
 				// The existence time of things in the ListerThings of a Region is polarized.
 				// They either exist for a long time or will be removed soon.
 				// The latter are usually located at the end of the array.
-				index = list.LastIndexOf(thing);
-				if (index >= 0)
-					list.RemoveAt(index);
+				list.ReverseRemove(thing);
 				return true;
 			}
 

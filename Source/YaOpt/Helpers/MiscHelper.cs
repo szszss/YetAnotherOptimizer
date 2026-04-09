@@ -1,5 +1,6 @@
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -89,6 +90,17 @@ namespace YaOpt.Helpers
 					YaOptMod.Warning($"Cannot get the IL code of method {method.FullName()}");
 				if (throwException)
 					throw;
+			}
+			return false;
+		}
+
+		public static bool ReverseRemove<T>(this List<T> list, T t)
+		{
+			var index = list.LastIndexOf(t);
+			if (index >= 0)
+			{
+				list.RemoveAt(index);
+				return true;
 			}
 			return false;
 		}
