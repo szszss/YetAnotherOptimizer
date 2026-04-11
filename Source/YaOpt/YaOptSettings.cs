@@ -440,6 +440,14 @@ namespace YaOpt
 			Category = OptimizationCategory.Tps,
 		};
 
+		/// <seealso cref="Patches.Verse_ThingOwnerUtility_GetAllThingsRecursively"/>
+		public OptimizationOption OptGetMapPawns { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.GetMapPawns",
+			Desc = "YaOpt.Setting.Option.GetMapPawns.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
 		/// <summary>
 		/// Delays texture loading until they are first requested.
 		/// Vanilla loads all mod textures into VRAM at startup.
