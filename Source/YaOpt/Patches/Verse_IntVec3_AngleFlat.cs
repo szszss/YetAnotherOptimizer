@@ -21,8 +21,9 @@ namespace YaOpt.Patches
 				__result = 0;
 				return false;
 			}
-			int x = __instance.x;
-			int y = __instance.z;
+			// Fix the difference in coordinate systems
+			int x = __instance.z;
+			int y = __instance.x;
 			float absX = Math.Abs(x);
 			float absY = Math.Abs(y);
 			float a = Math.Min(absX, absY) / Math.Max(absX, absY);

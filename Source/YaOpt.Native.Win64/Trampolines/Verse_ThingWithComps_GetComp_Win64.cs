@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using YaOpt.Patches.Trampolines;
 
 namespace YaOpt.Native.Win64.Trampolines
 {

@@ -84,7 +84,6 @@ namespace YaOpt.Helpers.ThreadLocal
 					}
 				}
 			}
-			YaOptMod.Warning($"GetAllThingsRecursively: There are {outThings.Count} outThings and {tmpMapChildHolders.Count} holders.");
 			tmpThings.Clear();
 			tmpMapChildHolders.Clear();
 		}
@@ -121,7 +120,6 @@ namespace YaOpt.Helpers.ThreadLocal
 					}
 				}
 			}
-			YaOptMod.Warning($"GetAllThingsRecursivelyGeneric: There are {outThings.Count} outThings and {tmpMapChildHolders.Count} holders.");
 			tmpThings.Clear();
 			tmpMapChildHolders.Clear();
 		}

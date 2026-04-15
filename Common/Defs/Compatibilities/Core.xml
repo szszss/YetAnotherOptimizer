@@ -79,6 +79,12 @@
 				<method>RimWorld.Planet.World:NaturalRockTypesIn</method>
 				<replace>tmpNaturalRockDefs</replace>
 			</ThreadLocalPatch>
+			
+			<!-- GenAdj -->
+			<ThreadLocalPatch>
+				<method>Verse.GenAdj:AdjacentCells8WayRandomized</method>
+				<replace>adjRandomOrderList</replace>
+			</ThreadLocalPatch>
 		</threadLocalPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>

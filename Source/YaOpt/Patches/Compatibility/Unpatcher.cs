@@ -13,20 +13,14 @@ namespace YaOpt.Patches.Compatibility
 
 		private static bool unpatchedWyau;
 
-		private static bool shouldRecoverPo;
-
-		private static bool shouldRecoverSm;
-
 		private static bool shouldRecoverWyau;
 
 		public static void Unpatch()
 		{
-			shouldRecoverPo = true;
 			if ((YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled) &&
 				YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer"))
 			{
 				unpatchedPo = true;
-				shouldRecoverPo = false;
 				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
 						typeof(JobGiver_ConfigurableHostilityResponse),
 						"TryGiveJob"),
@@ -38,12 +32,10 @@ namespace YaOpt.Patches.Compatibility
 					HarmonyPatchType.All, "PerformanceOptimizer.Main");
 			}
 
-			shouldRecoverSm = true;
 			if (YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
 				YaOptGlobal.HasType("SmartMedicine.UseTempSleepSpot"))
 			{
 				unpatchedSm = true;
-				shouldRecoverSm = false;
 				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
 						typeof(JobGiver_PatientGoToBed),
 						"TryGiveJob"),
@@ -67,14 +59,9 @@ namespace YaOpt.Patches.Compatibility
 						typeof(ListerHaulables),
 						nameof(ListerHaulables.ThingsPotentiallyNeedingHauling)),
 					HarmonyPatchType.Postfix, "CodeOptimist.WhileYoureUp");
-
-				/*var fieldInfo = AccessTools.Field(
-					AccessTools.TypeByName("WhileYoureUp.Mod"),
-					"PuahField_WorkGiver_HaulToInventory_SkipCells");
-				fieldInfo.SetValue(null, AccessTools.Field(
-					typeof(MultiTargets_WorkGiverHaulToInventory),
-					"SkipCells"));*/
 			}
+
+
 		}
 
 		public static void PatchAgain()
@@ -84,8 +71,8 @@ namespace YaOpt.Patches.Compatibility
 				// For now we can only recover WhileYoureUp unpatching
 				if (unpatchedWyau && shouldRecoverWyau)
 				{
-					unpatchedPo = false;
-					shouldRecoverPo = false;
+					unpatchedWyau = false;
+					shouldRecoverWyau = false;
 
 					if (AccessTools.Field(
 							AccessTools.TypeByName("WhileYoureUp.Mod"),
@@ -106,13 +93,6 @@ namespace YaOpt.Patches.Compatibility
 								"IncludeThingsInReducedPriorityStore"
 							)));
 					}
-
-					/*var fieldInfo = AccessTools.Field(
-						AccessTools.TypeByName("WhileYoureUp.Mod"),
-						"PuahField_WorkGiver_HaulToInventory_SkipCells");
-					fieldInfo.SetValue(null, AccessTools.Field(
-						AccessTools.TypeByName("PickUpAndHaul.WorkGiver_HaulToInventory"),
-						"skipCells"));*/
 				}
 			}
 			catch (Exception ex)

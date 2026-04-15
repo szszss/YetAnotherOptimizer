@@ -16,7 +16,8 @@ namespace YaOpt.Patches.Compatibility.RocketMan
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.NeedThreadSafe && YaOptGlobal.HasMod("Krkr.RocketMan");
+			return YaOptGlobal.NeedThreadSafe &&
+				   YaOptGlobal.HasType("RocketMan.Optimizations.StatWorker_Patch");
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
