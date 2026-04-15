@@ -11,10 +11,12 @@ The project consists of four core modules, each handling optimization at a diffe
 - **Key Components**:
   - `Patches/`: Harmony patches organized by target namespace.
   - `Helpers/`: Contains `ParallelTickManager` (parallel Tick management), `MaterialColorCache` (rendering cache), etc.
+  - `YaOptMod.cs`: Handles initialization, settings loading, early patching.
+  - `YaOptGlobal.cs`: Provides centralized access to mod state, settings, platform capabilities.
   - `YaOptSettings.cs`: Mod settings management.
 
 ### 1.2 `Source/YaOpt.Unity` (Burst Module)
-- **Purpose**: Utilizes Unity's **Burst Compiler** and **Job System** for high-performance mathematical operations and data processing.
+- **Purpose**: Utilizes Unity's **Burst Compiler** for high-performance mathematical operations and data processing.
 - **Features**:
   - For reference only. It is not a complete C# project. It needs to be imported into a Unity project for compilation.
   - Uses `Unity.Mathematics` (`float4`, `float3`) instead of standard `Vector3` to leverage SIMD instructions.
@@ -39,6 +41,9 @@ Root
 ├── 1.6/                    # Release directory
 │   ├── Assemblies/         # Compiled managed DLLs
 │   └── Burst/              # Compiled Burst native libraries
+├── Common/
+│   ├── Defs/               # Definition files
+│   └── Languages/          # Language files
 ├── Source/
 │   ├── YaOpt/              # Core C# project
 │   ├── YaOpt.Unity/        # Unity Burst project
