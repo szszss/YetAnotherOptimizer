@@ -440,6 +440,10 @@ namespace YaOpt
 			Category = OptimizationCategory.Tps,
 		};
 
+		/// <seealso cref="Patches.RimWorld_ChildcareUtility_FindAutofeedBaby"/>
+		/// <seealso cref="Patches.RimWorld_ColonistBar_CheckRecacheEntries"/>
+		/// <seealso cref="Patches.RimWorld_PawnsFinder_AllAlive_FreeColonistsAndPrisoners"/>
+		/// <seealso cref="Patches.Verse_MapPawns_FreeColonistsAndPrisoners"/>
 		/// <seealso cref="Patches.Verse_ThingOwnerUtility_GetAllThingsRecursively"/>
 		public OptimizationOption OptGetMapPawns { get; } = new OptimizationOption
 		{

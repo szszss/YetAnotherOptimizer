@@ -1,15 +1,15 @@
 using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
-using Verse;
 using YaOpt.Helpers;
 
 namespace YaOpt.Patches
 {
 	/// <seealso cref="YaOptSettings.OptGetMapPawns"/>
-	[HarmonyPatch(typeof(ColonistBar))]
-	[HarmonyPatch("CheckRecacheEntries")]
-	internal static class RimWorld_ColonistBar_CheckRecacheEntries
+	[HarmonyPatch(typeof(PawnsFinder))]
+	[HarmonyPatch(nameof(PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_FreeColonistsAndPrisoners), MethodType.Getter)]
+	internal static class RimWorld_PawnsFinder_AllAlive_FreeColonistsAndPrisoners
 	{
 		static bool Prepare()
 		{
@@ -20,19 +20,19 @@ namespace YaOpt.Patches
 		{
 			foreach (var instruction in instructions)
 			{
-				if (instruction.Calls("get_FreeColonists"))
+				if (instruction.Calls("get_AllMapsCaravansAndTravellingTransporters_Alive_FreeColonists"))
 				{
 					yield return CodeInstruction.Call(
 						typeof(MapPawnsHelper),
-						nameof(MapPawnsHelper.FreeColonistsAndSubhumansControllable));
+						nameof(MapPawnsHelper.AllMapsCaravansAndTravellingTransporters_Alive_FreeColonistsAndPrisoners));
 					continue;
 				}
-				else if (instruction.Calls("get_ColonySubhumansControllable"))
+				else if (instruction.Calls("get_AllMapsCaravansAndTravellingTransporters_Alive_PrisonersOfColony"))
 				{
 					yield return CodeInstruction.Call(
 						typeof(MapPawnsHelper),
 						nameof(MapPawnsHelper.Nothing),
-						new[] { typeof(MapPawns) });
+						Type.EmptyTypes);
 					continue;
 				}
 				yield return instruction;

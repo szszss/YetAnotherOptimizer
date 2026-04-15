@@ -1,5 +1,4 @@
 using HarmonyLib;
-using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using YaOpt.Helpers;
@@ -7,9 +6,9 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <seealso cref="YaOptSettings.OptGetMapPawns"/>
-	[HarmonyPatch(typeof(ColonistBar))]
-	[HarmonyPatch("CheckRecacheEntries")]
-	internal static class RimWorld_ColonistBar_CheckRecacheEntries
+	[HarmonyPatch(typeof(MapPawns))]
+	[HarmonyPatch(nameof(MapPawns.FreeColonistsAndPrisoners), MethodType.Getter)]
+	internal static class Verse_MapPawns_FreeColonistsAndPrisoners
 	{
 		static bool Prepare()
 		{
@@ -24,10 +23,10 @@ namespace YaOpt.Patches
 				{
 					yield return CodeInstruction.Call(
 						typeof(MapPawnsHelper),
-						nameof(MapPawnsHelper.FreeColonistsAndSubhumansControllable));
+						nameof(MapPawnsHelper.FreeColonistsAndPrisoners));
 					continue;
 				}
-				else if (instruction.Calls("get_ColonySubhumansControllable"))
+				else if (instruction.Calls("get_PrisonersOfColony"))
 				{
 					yield return CodeInstruction.Call(
 						typeof(MapPawnsHelper),

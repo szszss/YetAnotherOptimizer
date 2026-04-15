@@ -19,6 +19,7 @@ namespace YaOpt.Helpers
 		{
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
 			UpdateCallbackHelper.RegisterPostTickCallback(PostTick);
+			UpdateCallbackHelper.RegisterPreRenderCallback(PreRender);
 		}
 
 		private static void ClearCache()
@@ -29,6 +30,29 @@ namespace YaOpt.Helpers
 		private static void PostTick(int _)
 		{
 			FinishRemovalJob();
+		}
+
+		/// <summary>
+		/// The resurrection of corpses caused by deadlife dust is calculated in PostMapTick,
+		/// and this resurrection triggers a DeRegisterDrawable.
+		/// Therefore, we must recheck for any unprocessed DeRegisterDrawable requests before rendering begins.
+		/// </summary>
+		private static void PreRender(int _)
+		{
+			ParallelMapTickManager.FinishPostMapTick(_);
+			if (!_thingToDeRegisterDrawable.IsEmpty)
+			{
+#if DEBUG
+				YaOptMod.Debug("DrawableRemovalHelper.PreRender found unprocessed DeRegisterDrawable requests.");
+#endif
+				while (_thingToDeRegisterDrawable.TryDequeue(out var result))
+				{
+#if DEBUG
+					YaOptMod.Debug($"Unprocessed request: {result.Item2.ToStringSafe()}");
+#endif
+					result.Item1.ReverseRemove(result.Item2);
+				}
+			}
 		}
 
 		public static bool DeRegisterDrawable(List<Thing> list, Thing thing)

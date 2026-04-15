@@ -14,13 +14,18 @@ namespace YaOpt.Helpers
 		public static bool IsFreeHumanlike(Pawn pawn, Faction faction)
 		{
 			return (!ModsConfig.AnomalyActive || !pawn.IsSubhuman) && pawn.Faction == faction &&
-			       (pawn.HostFaction == null || pawn.IsSlave) && pawn.RaceProps.Humanlike;
+				   (pawn.HostFaction == null || pawn.IsSlave) && pawn.RaceProps.Humanlike;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsColonySubhumanControllable(Pawn pawn, Faction faction)
 		{
 			return pawn.Faction == faction && pawn.IsColonySubhuman && pawn.mutant.Def.canBeDrafted;
+		}
+
+		public static List<Pawn> Nothing()
+		{
+			return _emptyList;
 		}
 
 		public static List<Pawn> Nothing(MapPawns _)
