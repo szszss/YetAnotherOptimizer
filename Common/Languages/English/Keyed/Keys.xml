@@ -2,6 +2,7 @@
 <LanguageData>
 	<YaOpt.Loading.SearchingTypes>YaOpt: Initializing type database</YaOpt.Loading.SearchingTypes>
 	<YaOpt.Loading.Patching>YaOpt: Re-applying settings</YaOpt.Loading.Patching>
+	<YaOpt.Message.ButterCompatibilityNotEnabled>You have both YaOpt and Butter++ installed. The compatibility mode of Butter++ must be enabled.</YaOpt.Message.ButterCompatibilityNotEnabled>
 	<YaOpt.Message.ErrorWhilePatching>YaOpt encountered an error while applying settings. The game may not function correctly. Check the console for details.</YaOpt.Message.ErrorWhilePatching>
 	<YaOpt.Setting.Button.DisableAll>Disable All Optimizations</YaOpt.Setting.Button.DisableAll>
 	<YaOpt.Setting.Button.EnableAll>Enable All Optimizations</YaOpt.Setting.Button.EnableAll>

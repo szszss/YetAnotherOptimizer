@@ -1,3 +1,4 @@
+using HarmonyLib;
 using RimWorld;
 using System;
 using System.Reflection;
@@ -34,6 +35,7 @@ namespace YaOpt.Patches
 		private static void PatchOnStartup()
 		{
 			TryPatch(true, false);
+			CheckButterPlusPlus();
 		}
 
 		/// <summary>
@@ -43,6 +45,7 @@ namespace YaOpt.Patches
 		public static void CheckAndRePatchOnLoadGame()
 		{
 			TryPatch(false, true);
+			CheckButterPlusPlus();
 		}
 
 		/// <summary>
@@ -103,6 +106,32 @@ namespace YaOpt.Patches
 
 			if (updateOptionSnapshot)
 				YaOptGlobal.CreateOptionSnapshot();
+		}
+
+		private static void CheckButterPlusPlus()
+		{
+			if (!YaOptGlobal.HasMod("olli.butterplusplus"))
+				return;
+			try
+			{
+				var typeMod = AccessTools.TypeByName("ButterPlusPlus.ButterPlusPlusMod");
+				var typeSettings = AccessTools.TypeByName("ButterPlusPlus.Settings");
+				var getterSettings = AccessTools.PropertyGetter(typeMod, "Settings");
+				var fieldCompatibilityMode = AccessTools.Field(typeSettings, "compatibilityMode");
+				var objSettings = getterSettings.Invoke(null, Array.Empty<object>());
+				var cm = (bool)fieldCompatibilityMode.GetValue(objSettings);
+				if (!cm)
+				{
+					var str = "YaOpt.Message.ButterCompatibilityNotEnabled".Translate().ToString();
+					YaOptMod.Error(str);
+					Messages.Message(str, null, MessageTypeDefOf.CautionInput, false);
+				}
+			}
+			catch (Exception e)
+			{
+				YaOptMod.Error("Butter++ was detected but failed to get the compatibility field: " +
+							   e.ToStringSafe());
+			}
 		}
 	}
 }
