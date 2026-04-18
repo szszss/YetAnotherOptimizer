@@ -1,6 +1,6 @@
 using HarmonyLib;
-using System.Threading;
 using Verse;
+using YaOpt.Helpers.ThreadSafe;
 
 namespace YaOpt.Patches.ThreadSafe.Locked
 {
@@ -23,13 +23,13 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 		static void Prefix(Zone __instance, out bool __state)
 		{
 			__state = false;
-			Monitor.Enter(__instance, ref __state);
+			GreedyMonitor.Enter(__instance, ref __state);
 		}
 
 		static void Finalizer(Zone __instance, bool __state)
 		{
 			if (__state)
-				Monitor.Exit(__instance);
+				GreedyMonitor.Exit(__instance);
 		}
 	}
 }

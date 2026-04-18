@@ -1,6 +1,6 @@
 using HarmonyLib;
 using System.Reflection;
-using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadSafe;
 
 namespace YaOpt.Patches.Compatibility.OberoniaAurea
 {

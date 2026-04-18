@@ -2,7 +2,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using YaOpt.Patches.ThreadSafe.ThreadLocal;
+using YaOpt.Patches.ThreadSafe.ThreadStatic;
 
 namespace YaOpt.Patches.Compatibility.ReGrowth
 {

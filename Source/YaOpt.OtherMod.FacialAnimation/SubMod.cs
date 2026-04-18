@@ -24,6 +24,8 @@ namespace YaOpt.OtherMod.FacialAnimation
 		/// <seealso cref="FacialAnimation.Patches.RimWorld_PortraitsCache_SetDirty"/>
 		/// <seealso cref="FacialAnimation.Patches.Verse_Corpse_DynamicDrawPhaseAt"/>
 		/// <seealso cref="FacialAnimation.Patches.Verse_Pawn_DynamicDrawPhaseAt"/>
+		/// <seealso cref="FacialAnimation.Patches.ThreadSafe.FacialAnimation_FaceAnimationDef_GetCachedAnimationFrames"/>
+		/// <seealso cref="FacialAnimation.Patches.ThreadSafe.FacialAnimation_FaceAnimationDef_GetSequentialAnimationFrames"/>
 		public static OptimizationOption OptFAParallelUpdate { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.FAParallelUpdate",

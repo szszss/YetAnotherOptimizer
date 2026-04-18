@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Verse;
 using Verse.AI;
+using YaOpt.Helpers.ThreadSafe;
 
 namespace YaOpt.Helpers.ThreadLocal
 {

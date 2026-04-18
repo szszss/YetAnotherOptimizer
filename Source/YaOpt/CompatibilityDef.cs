@@ -33,6 +33,11 @@ namespace YaOpt
 			get => threadLocalPatches; set => threadLocalPatches = value;
 		}
 
+		public List<LockPatch> LockPatches
+		{
+			get => lockPatches; set => lockPatches = value;
+		}
+
 		[NoTranslate]
 		private List<string> bannedOptimizations;
 
@@ -45,6 +50,8 @@ namespace YaOpt
 		private List<WorkGiverCompatibility> workGiverCompatibilities;
 
 		private List<ThreadLocalPatch> threadLocalPatches;
+
+		private List<LockPatch> lockPatches;
 
 		public void Cache()
 		{

@@ -24,7 +24,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			{
 				try
 				{
-					harmony.Patch(method, null, null, transpiler);
+					harmony.Patch(method, transpiler: transpiler);
 				}
 				catch (Exception ex)
 				{

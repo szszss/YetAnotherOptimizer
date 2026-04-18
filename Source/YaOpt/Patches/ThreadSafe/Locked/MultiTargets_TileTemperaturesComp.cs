@@ -2,7 +2,7 @@ using HarmonyLib;
 using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Reflection;
-using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadSafe;
 
 namespace YaOpt.Patches.ThreadSafe.Locked
 {

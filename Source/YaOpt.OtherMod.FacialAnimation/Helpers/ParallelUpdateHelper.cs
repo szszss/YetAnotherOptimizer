@@ -65,7 +65,8 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 				_jobRunning = false;
 				_pendingPawns.Clear();
 			}
-			_updatedPawns.Clear();
+			if (!_updatedPawns.IsEmpty)
+				_updatedPawns.Clear();
 		}
 
 		private static bool ShouldPawnUpdate(Pawn pawn)

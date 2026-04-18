@@ -55,7 +55,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 
 		private static void CacheRaceAnimations(Dictionary<string, List<FaceAnimationCache>> dict, string raceName)
 		{
-			YaOptMod.Log("Cache animation for " + raceName);
+			YaOptMod.Debug("Cache animation for " + raceName);
 			foreach (var animationDef in DefDatabase<FaceAnimationDef>.AllDefs)
 			{
 				if (animationDef.raceName == raceName)

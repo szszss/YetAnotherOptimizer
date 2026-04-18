@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using Verse;
 using YaOpt.Helpers;
 
-namespace YaOpt.Patches.ThreadSafe.ThreadLocal
+namespace YaOpt.Patches.ThreadSafe.ThreadStatic
 {
 	[HarmonyPatch]
 	internal static class MultiTargets_WorkGiverGrower

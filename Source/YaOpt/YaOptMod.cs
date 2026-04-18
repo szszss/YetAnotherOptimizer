@@ -179,5 +179,20 @@ namespace YaOpt
 		{
 			Verse.Log.ErrorOnce("[YaOpt] " + message, key);
 		}
+
+		/// <summary>
+		/// Handles critical errors by logging the error, pausing the game, and forcing the log window to open.
+		/// </summary>
+		internal static void Panic(string message)
+		{
+			Verse.Log.Error("[YaOpt Critical!!] " + message);
+
+			if (Current.ProgramState == ProgramState.Playing)
+			{
+				Find.TickManager.Pause();
+			}
+
+			LudeonTK.EditWindow_Log.wantsToOpen = true;
+		}
 	}
 }

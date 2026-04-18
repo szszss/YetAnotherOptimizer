@@ -1,7 +1,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
-using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadSafe;
 
 namespace YaOpt.Patches.ThreadSafe.Locked
 {

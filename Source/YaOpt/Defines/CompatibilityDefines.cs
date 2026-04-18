@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Verse;
+using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadSafe;
 
 namespace YaOpt.Defines
 {
@@ -20,7 +22,10 @@ namespace YaOpt.Defines
 			new Dictionary<string, WorkGiverCompatibility.Parallelism>();
 
 		public static readonly Dictionary<MethodBase, List<string>> ThreadLocalPatches =
-			new Dictionary<MethodBase,List<string>>();
+			new Dictionary<MethodBase, List<string>>();
+
+		public static readonly Dictionary<MethodBase, LockPatchManager.PatchRequest> LockPatches =
+			new Dictionary<MethodBase, LockPatchManager.PatchRequest>();
 
 		public static void Load()
 		{
@@ -78,6 +83,35 @@ namespace YaOpt.Defines
 						catch (Exception e)
 						{
 							YaOptMod.Error("Error when parsing ThreadLocalPatches of CompatibilityDef " +
+										   $"{def.defName} from {owner}. {e.ToStringSafe()}");
+						}
+					}
+				}
+
+				if (def.LockPatches != null)
+				{
+					foreach (var lockPatch in def.LockPatches)
+					{
+						try
+						{
+							var result = lockPatch.Read(owner);
+							if (LockPatches.TryGetValue(result.TargetMethod, out var existValue))
+							{
+								if (existValue == result)
+								{
+									YaOptMod.Warning(
+										$"Duplicated defined the lock for {result.TargetMethod.FullName()}.");
+									continue;
+								}
+								YaOptMod.Error(
+									$"Duplicated defined the lock for {result.TargetMethod.FullName()} " +
+									$"with different parameters. Exist:{existValue} New:{result}");
+							}
+							LockPatches[result.TargetMethod] = result;
+						}
+						catch (Exception e)
+						{
+							YaOptMod.Error("Error when parsing LockPatches of CompatibilityDef " +
 										   $"{def.defName} from {owner}. {e.ToStringSafe()}");
 						}
 					}

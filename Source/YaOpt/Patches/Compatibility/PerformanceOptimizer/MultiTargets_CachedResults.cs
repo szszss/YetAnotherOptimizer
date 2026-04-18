@@ -1,6 +1,6 @@
 using HarmonyLib;
-using YaOpt.Helpers;
 using YaOpt.Helpers.ThirdParty;
+using YaOpt.Helpers.ThreadSafe;
 
 namespace YaOpt.Patches.Compatibility.PerformanceOptimizer
 {

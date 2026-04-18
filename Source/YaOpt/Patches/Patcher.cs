@@ -99,7 +99,7 @@ namespace YaOpt.Patches
 			}
 			if (!noError)
 			{
-				YaOptMod.Error("Error(s) happened while patching. The game may not run properly.");
+				YaOptMod.Panic("Error(s) happened while patching. The game may not run properly.");
 				Messages.Message("YaOpt.Message.ErrorWhilePatching".Translate().ToString(),
 					null, MessageTypeDefOf.CautionInput, false);
 			}

@@ -80,11 +80,149 @@
 				<replace>tmpNaturalRockDefs</replace>
 			</ThreadLocalPatch>
 			
-			<!-- GenAdj -->
+			<!-- CellFinder -->
 			<ThreadLocalPatch>
-				<method>Verse.GenAdj:AdjacentCells8WayRandomized</method>
-				<replace>adjRandomOrderList</replace>
+				<method>Verse.CellFinder:TryFindRandomCell</method>
+				<replace>workingCells</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>Verse.CellFinder:TryFindRandomCellInRegion</method>
+				<replace>workingCells</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>Verse.CellFinder:TryFindRandomCellNear</method>
+				<replace>workingListX</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>Verse.CellFinder:TryFindRandomCellNear</method>
+				<replace>workingListZ</replace>
+			</ThreadLocalPatch>
+			
+			<!-- RCellFinder -->
+			<ThreadLocalPatch>
+				<method>RimWorld.RCellFinder:RandomWanderDestFor</method>
+				<replace>regions</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.RCellFinder:FindBestAngleAvoidingSpots</method>
+				<replace>tmpSpotsToAvoid</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.RCellFinder:TryFindRandomSpotNearAvoidingHostilePawns</method>
+				<replace>tmpSpotsToAvoid</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.RCellFinder:TryFindEdgeCellWithPathToPositionAvoidingColony</method>
+				<replace>tmpSpotsToAvoid</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.RCellFinder:TryFindEdgeCellFromPositionAvoidingColony</method>
+				<replace>tmpSpotsToAvoid</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.RCellFinder:TryFindEdgeCellFromPositionAvoidingColony</method>
+				<replace>tmpEdgeCells</replace>
 			</ThreadLocalPatch>
 		</threadLocalPatches>
+		<lockPatches>
+			<!-- CastPositionFinder -->
+			<LockPatch>
+				<method>Verse.AI.CastPositionFinder:TryFindCastPosition</method>
+			</LockPatch>
+		
+			<!-- AutoSlaughterManager -->
+			<LockPatch>
+				<method>Verse.AutoSlaughterManager:get_AnimalsToSlaughter</method>
+			</LockPatch>
+			
+			<!-- CellFinder -->
+			<LockPatch>
+				<method>Verse.CellFinder:TryFindRandomAdjacentCell</method>
+			</LockPatch>
+			<LockPatch>
+				<method>Verse.CellFinder:TryFindRandomEdgeCellWith</method>
+				<parameters>
+					<li>System.Predicate(Verse.IntVec3)</li>
+					<li>Verse.Map</li>
+					<li>Verse.Rot4</li>
+					<li>float</li>
+					<li>out Verse.IntVec3</li>
+				</parameters>
+			</LockPatch>
+			<LockPatch>
+				<method>Verse.CellFinder:FindNoWipeSpawnLocNear</method>
+			</LockPatch>
+			<LockPatch>
+				<method>Verse.CellFinder:TryFindBestPawnStandCell</method>
+			</LockPatch>
+			<LockPatch>
+				<method>Verse.CellFinder:TryFindRandomCellInsideWith</method>
+			</LockPatch>
+			
+			<!-- RCellFinder -->
+			<LockPatch>
+				<method>RimWorld.RCellFinder:TryFindRandomSpotJustOutsideColony</method>
+				<parameters>
+					<li>Verse.IntVec3</li>
+					<li>Verse.Map</li>
+					<li>Verse.Pawn</li>
+					<li>out Verse.IntVec3</li>
+					<li>System.Predicate(Verse.IntVec3)</li>
+				</parameters>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.RCellFinder:TryFindGatheringSpot</method>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.RCellFinder:TryFindAllowedUnroofedSpotOutsideColony</method>
+			</LockPatch>
+			
+			<!-- District -->
+			<LockPatch>
+				<method>Verse.District:OpenRoofCountStopAt</method>
+			</LockPatch>
+			
+			<!-- FloodFiller -->
+			<LockPatch>
+				<method>Verse.FloodFiller:FloodFill</method>
+				<parameters>
+					<li>Verse.IntVec3</li>
+					<li>System.Predicate(Verse.IntVec3)</li>
+					<li>System.Func(Verse.IntVec3, int, bool)</li>
+					<li>int</li>
+					<li>bool</li>
+					<li>System.Collections.Generic.IEnumerable(Verse.IntVec3)</li>
+				</parameters>
+			</LockPatch>
+			
+			<!-- GenAdj -->
+			<LockPatch>
+				<method>Verse.GenAdj:TryFindRandomAdjacentCell8WayWithRoom</method>
+				<parameters>
+					<li>Verse.IntVec3</li>
+					<li>Verse.Rot4</li>
+					<li>Verse.IntVec2</li>
+					<li>Verse.Map</li>
+					<li>out Verse.IntVec3</li>
+				</parameters>
+			</LockPatch>
+			
+			<!-- GrammarResolverSimple -->
+			<LockPatch>
+				<method>Verse.GrammarResolverSimple:Formatted</method>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			
+			<!-- PawnCapacitiesHandler -->
+			<LockPatch>
+				<method>Verse.PawnCapacitiesHandler:GetLevel</method>
+				<scope>Instance</scope> <!-- Test! -->
+			</LockPatch>
+			
+			<!-- RegionTraverser -->
+			<LockPatch>
+				<method>Verse.RegionTraverser:MarkRegionsBFS</method>
+			</LockPatch>
+		</lockPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>
