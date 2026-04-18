@@ -21,6 +21,11 @@ namespace YaOpt.Helpers
 	public class ParallelMapTickManager
 	{
 		/// <summary>
+		/// Handle for the parallel map post-tick job.
+		/// </summary>
+		private static JobHandle _postMapTickJobHandle = default;
+
+		/// <summary>
 		/// Reusable array for job handles when processing multiple maps.
 		/// </summary>
 		private static NativeArray<JobHandle> _tmpJobHandles = default;
@@ -67,6 +72,7 @@ namespace YaOpt.Helpers
 		public static void ParellellyPostTickMaps()
 		{
 			var maps = Find.Maps;
+			_postMapTickJobHandle = default;
 			if (!_tmpJobHandles.IsCreated || _tmpJobHandles.Length != maps.Count * 3)
 			{
 				_tmpJobHandles.Dispose();
@@ -82,6 +88,7 @@ namespace YaOpt.Helpers
 				_tmpJobHandles[i++] = new ManagedJob(new TempTerrainManagerJob(map.tempTerrain)).Schedule();
 				_tmpJobHandles[i++] = new ManagedJob(new GasGridJob(map.gasGrid)).Schedule();
 			}
+			_postMapTickJobHandle = JobHandle.CombineDependencies(_tmpJobHandles);
 			_jobRunning = true;
 		}
 
@@ -93,12 +100,9 @@ namespace YaOpt.Helpers
 		/// </remarks>
 		public static void FinishPostMapTick(int tick)
 		{
-			if (_jobRunning && _tmpJobHandles.IsCreated)
+			if (_jobRunning)
 			{
-				for (int i = 0, j = _tmpJobHandles.Length; i < j; i++)
-				{
-					_tmpJobHandles[i].Complete();
-				}
+				_postMapTickJobHandle.Complete();
 				_jobRunning = false;
 			}
 
@@ -126,6 +130,7 @@ namespace YaOpt.Helpers
 		/// </summary>
 		private static void ClearCache()
 		{
+			_postMapTickJobHandle = default;
 			_jobRunning = false;
 			ShouldCheckThread = false;
 			_tmpJobHandles.Dispose();

@@ -58,7 +58,6 @@ namespace YaOpt.Helpers
 		{
 			if (type != typeof(Precept) && type.IsMethodOverriden(nameof(Precept.Tick)))
 			{
-				YaOptMod.Warning($"Add Precept type {type.FullName}");
 				preceptsWithOverridenTick.Add(type);
 			}
 		}
@@ -67,7 +66,6 @@ namespace YaOpt.Helpers
 		{
 			if (type != typeof(PreceptComp) && type.IsMethodOverriden(nameof(PreceptComp.MemberWillingToDo)))
 			{
-				YaOptMod.Warning($"Add type {type.FullName}");
 				preceptCompsWithOverridenMemberWillingToDo.Add(type);
 			}
 		}

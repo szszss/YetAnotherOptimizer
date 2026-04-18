@@ -52,7 +52,6 @@ namespace YaOpt.Patches
 						typeof(YaOptBurst),
 						nameof(YaOptBurst.ComputeMatrix));
 					popUnused = true;
-					YaOptMod.Log("ComputeMatrix Patched");
 				}
 				yield return instruction;
 				if (popUnused)
