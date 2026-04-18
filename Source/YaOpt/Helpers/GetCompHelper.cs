@@ -2,7 +2,6 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Threading;
 using Verse;
 
@@ -10,7 +9,11 @@ namespace YaOpt.Helpers
 {
 	internal static class GetCompHelper
 	{
-		public const int DONT_CHECK_VERSION = -1;
+		public const int VERSION_MAGICNUMBER_HAS_THINGHOLDER = 0x7F000000;
+
+		public const int VERSION_MAGICNUMBER_NO_THINGHOLDER = 0x7E000000;
+
+		public const int VERSION_MAGICNUMBER_MASK = 0x7F000000;
 
 		private static readonly Type _thingCompType = typeof(ThingComp);
 
@@ -20,8 +23,8 @@ namespace YaOpt.Helpers
 		private static readonly AccessTools.FieldRef<Dictionary<Type, ThingComp[]>, int> _dictVersionFieldRef =
 			AccessTools.FieldRefAccess<int>(typeof(Dictionary<Type, ThingComp[]>), "_version");
 
-		private static readonly FieldInfo _dictVersionField =
-			AccessTools.Field(typeof(Dictionary<Type, ThingComp[]>), "_version");
+		private static readonly AccessTools.FieldRef<ThingWithComps, Dictionary<Type, ThingComp[]>> _thingCompsByTypeFieldRef =
+			AccessTools.FieldRefAccess<Dictionary<Type, ThingComp[]>>(typeof(ThingWithComps), "compsByType");
 
 		private static readonly Dictionary<Type, List<ThingComp>> _tmpCompsByType =
 			new Dictionary<Type, List<ThingComp>>();
@@ -36,11 +39,12 @@ namespace YaOpt.Helpers
 		}
 
 		public static void RecreateCompsByType(
-			Dictionary<Type, ThingComp[]> compsByType, List<ThingComp> comps, bool synchronizeVersion = true)
+			Dictionary<Type, ThingComp[]> compsByType, List<ThingComp> comps)
 		{
 			lock (_tmpCompsByType)
 			{
 				var objType = typeof(object);
+				var hasThingHolder = false;
 				_tmpCompsByType.Clear();
 				foreach (var comp in comps)
 				{
@@ -51,6 +55,20 @@ namespace YaOpt.Helpers
 						_tmpCompsByType[type] = list;
 					}
 					list.Add(comp);
+				}
+				var interfaceThingHolder = typeof(IThingHolder);
+				foreach (var comp in comps)
+				{
+					if (comp is IThingHolder)
+					{
+						hasThingHolder = true;
+						if (!_tmpCompsByType.TryGetValue(interfaceThingHolder, out var list))
+						{
+							list = SimplePool<List<ThingComp>>.Get();
+							_tmpCompsByType[interfaceThingHolder] = list;
+						}
+						list.Add(comp);
+					}
 				}
 				foreach (var comp in comps)
 				{
@@ -81,11 +99,9 @@ namespace YaOpt.Helpers
 					}
 				}
 				_tmpCompsByType.Clear();
-				if (synchronizeVersion)
-				{
-					var version = _listVersionFieldRef(comps);
-					_dictVersionField.SetValue(compsByType, version);
-				}
+				_listVersionFieldRef(comps) = hasThingHolder
+						? VERSION_MAGICNUMBER_HAS_THINGHOLDER
+						: VERSION_MAGICNUMBER_NO_THINGHOLDER;
 			}
 		}
 
@@ -153,14 +169,14 @@ namespace YaOpt.Helpers
 			if (compsByType == null)
 				return GetCompBySlowPath(compType, compList);
 
-			var expectVersion = _dictVersionFieldRef(compsByType);
-			if (version != expectVersion)
+			if ((version & VERSION_MAGICNUMBER_MASK) != version)
 			{
 				lock (compsByType)
 				{
 					Interlocked.MemoryBarrier();
-					expectVersion = _dictVersionFieldRef(compsByType);
-					if (version != expectVersion)
+					version = _listVersionFieldRef(compList);
+					if (version != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
+					    version != VERSION_MAGICNUMBER_NO_THINGHOLDER)
 					{
 						RecreateCompsByType(compsByType, compList);
 					}
@@ -182,6 +198,36 @@ namespace YaOpt.Helpers
 					return comp;
 			}
 			return null;
+		}
+
+		[SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
+		public static ThingComp[] GetThingHolderComps(ThingWithComps thing)
+		{
+			var list = thing.AllComps;
+			if (list.Count == 0)
+				return Array.Empty<ThingComp>();
+			var listVersion = _listVersionFieldRef(list);
+			if (listVersion == VERSION_MAGICNUMBER_NO_THINGHOLDER)
+				return Array.Empty<ThingComp>();
+
+			var compsByType = _thingCompsByTypeFieldRef(thing);
+			if (listVersion != VERSION_MAGICNUMBER_HAS_THINGHOLDER)
+			{
+				lock (compsByType)
+				{
+					Interlocked.MemoryBarrier();
+					listVersion = _listVersionFieldRef(list);
+					if (listVersion != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
+					    listVersion != VERSION_MAGICNUMBER_NO_THINGHOLDER)
+					{
+						RecreateCompsByType(compsByType, list);
+					}
+					Interlocked.MemoryBarrier();
+				}
+			}
+			if (compsByType.TryGetValue(typeof(IThingHolder), out var result))
+				return result;
+			return Array.Empty<ThingComp>();
 		}
 	}
 }

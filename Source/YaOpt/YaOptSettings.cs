@@ -452,6 +452,14 @@ namespace YaOpt
 			Category = OptimizationCategory.Tps,
 		};
 
+		/// <seealso cref="Patches.Verse_ThingOwnerUtility_AppendThingHoldersFromThings"/>
+		public OptimizationOption OptAppendThingHolders { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.AppendThingHolders",
+			Desc = "YaOpt.Setting.Option.AppendThingHolders.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
 		/// <summary>
 		/// Delays texture loading until they are first requested.
 		/// Vanilla loads all mod textures into VRAM at startup.
