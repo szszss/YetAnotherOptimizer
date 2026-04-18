@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using UnityEngine;
 using Verse;
 
@@ -51,17 +50,7 @@ namespace YaOpt.Helpers
 				byte[] buffer = new byte[512];
 				Marshal.Copy(ptr, buffer, 0, 512);
 
-				StringBuilder sb = new StringBuilder();
-				for (int i = 0; i < buffer.Length; i++)
-				{
-					sb.Append(buffer[i].ToString("X2"));
-					if (i < buffer.Length - 1)
-					{
-						sb.Append(" ");
-					}
-				}
-
-				YaOptMod.Warning($"{methodName} bytes: {sb}");
+				YaOptMod.Warning($"{methodName} bytes: {buffer.PrintBytesInHex()}");
 			}
 			catch (Exception ex)
 			{

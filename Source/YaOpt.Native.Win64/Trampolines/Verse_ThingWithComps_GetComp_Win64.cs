@@ -1,5 +1,8 @@
+using SharpDisasm;
+using SharpDisasm.Udis86;
 using System;
 using System.Runtime.InteropServices;
+using YaOpt.Helpers;
 using YaOpt.Patches.Trampolines;
 
 namespace YaOpt.Native.Win64.Trampolines
@@ -136,28 +139,68 @@ namespace YaOpt.Native.Win64.Trampolines
 		{
 			var funcPtr = SourceMethod.MethodHandle.GetFunctionPointer();
 			var codes = new byte[0x400];
-			var genericTypeGetterAddress = new byte[8];
 			Marshal.Copy(funcPtr, codes, 0, codes.Length);
-			var foundCompsByType = 0;
-			var foundAddress = false;
-			for (int i = 0, j = codes.Length - 10; i < j; i++)
+			const int offsetCompsByType = 0xC0;
+			var disasm = new Disassembler(codes, ArchitectureMode.x86_64);
+			var offsetMRGCTX = 0;
+			var addressGetter = 0L;
+			var stage = 0;
+			// find the typeof(T) of "if (this.compsByType.TryGetValue(typeof(T), out array))"
+			foreach (var instruction in disasm.Disassemble())
 			{
-				// Search 0xC0 0x00 0x00 0x00, which is the address of compsByType
-				// First one is null check. We need the second one.
-				if (foundCompsByType < 2 && codes[i] == 0xC0 && codes[i + 1] == 0 && codes[i + 2] == 0 && codes[i + 3] == 0)
+				// find the offset from "MOV  QWORD PTR [rbp-offset],r10", where r10 stores the MRGCTX
+				if (stage == 0 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
+					instruction.Operands.Length == 2 &&
+					instruction.Operands[0].Type == ud_type.UD_OP_MEM &&
+					instruction.Operands[0].Base == ud_type.UD_R_RBP &&
+					instruction.Operands[1].Type == ud_type.UD_OP_REG &&
+					instruction.Operands[1].Base == ud_type.UD_R_R10)
 				{
-					foundCompsByType++;
+					offsetMRGCTX = instruction.Operands[0].LvalSDWord;
+					stage++;
 				}
-				// Search 0x49 0xBB, which is movabs r11
-				if (foundCompsByType > 1 && codes[i] == 0x49 && codes[i + 1] == 0xBB)
+				// find "MOV  rax,QWORD PTR [rsi+offsetCompsByType]"
+				else if (stage == 1 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
+					instruction.Operands.Length == 2 &&
+					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
+					instruction.Operands[0].Base == ud_type.UD_R_RAX &&
+					instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
+					instruction.Operands[1].Base == ud_type.UD_R_RSI &&
+					instruction.Operands[1].LvalSDWord == offsetCompsByType)
 				{
-					Array.Copy(codes, i + 2, genericTypeGetterAddress, 0, 8);
-					foundAddress = true;
+					stage++;
+				}
+				// find "MOV  rcx,QWORD PTR [rbp-offset]", which loads the MRGCTX to rcx
+				else if (stage == 2 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
+					instruction.Operands.Length == 2 &&
+					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
+					instruction.Operands[0].Base == ud_type.UD_R_RCX &&
+					instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
+					instruction.Operands[1].Base == ud_type.UD_R_RBP &&
+					instruction.Operands[1].LvalSDWord == offsetMRGCTX)
+				{
+					stage++;
+				}
+				// find the nearest "MOVABS  r11,address" where address is the getter
+				else if (stage == 3 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
+					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
+					instruction.Operands[0].Base == ud_type.UD_R_R11 &&
+					instruction.Operands[1].Type == ud_type.UD_OP_IMM)
+				{
+					addressGetter = instruction.Operands[1].Value;
+					stage++;
 					break;
 				}
 			}
-			if (!foundAddress)
-				throw new Exception($"Cannot find the address of generic type getter. Current OS:{Environment.OSVersion}");
+
+			if (stage != 4)
+			{
+				throw new Exception("Cannot find the address of generic type getter for ThingWithComps.GetComp. " +
+									$"Current OS:{Environment.OSVersion} " +
+									$"Codes: {codes.PrintBytesInHex()}");
+			}
+
+			var genericTypeGetterAddress = BitConverter.GetBytes(addressGetter);
 			codes = new byte[PRECODE.Length];
 			PRECODE.CopyTo(codes, 0);
 			for (int i = 0, j = codes.Length - 8; i < j; i++)

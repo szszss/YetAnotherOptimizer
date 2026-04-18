@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Verse;
 
 namespace YaOpt.Helpers

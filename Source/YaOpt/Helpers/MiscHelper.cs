@@ -390,5 +390,26 @@ namespace YaOpt.Helpers
 		{
 			return (double)stopwatch.ElapsedTicks * 1000000 / Stopwatch.Frequency;
 		}
+
+		public static string PrintBytesInHex(this byte[] bytes, bool has0xPrefix = true)
+		{
+			if (bytes.Length == 0)
+				return string.Empty;
+
+			var sb = new StringBuilder();
+			if (has0xPrefix)
+				sb.Append("0x");
+			sb.Append(bytes[0].ToString("X2"));
+
+			for (var i = 1; i < bytes.Length; i++)
+			{
+				sb.Append(' ');
+				if (has0xPrefix)
+					sb.Append("0x");
+				sb.Append(bytes[i].ToString("X2"));
+			}
+
+			return sb.ToString();
+		}
 	}
 }

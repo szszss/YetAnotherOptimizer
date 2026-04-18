@@ -176,7 +176,7 @@ namespace YaOpt.Helpers
 					Interlocked.MemoryBarrier();
 					version = _listVersionFieldRef(compList);
 					if (version != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
-					    version != VERSION_MAGICNUMBER_NO_THINGHOLDER)
+						version != VERSION_MAGICNUMBER_NO_THINGHOLDER)
 					{
 						RecreateCompsByType(compsByType, compList);
 					}
@@ -218,7 +218,7 @@ namespace YaOpt.Helpers
 					Interlocked.MemoryBarrier();
 					listVersion = _listVersionFieldRef(list);
 					if (listVersion != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
-					    listVersion != VERSION_MAGICNUMBER_NO_THINGHOLDER)
+						listVersion != VERSION_MAGICNUMBER_NO_THINGHOLDER)
 					{
 						RecreateCompsByType(compsByType, list);
 					}
