@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <Import Project="..\Settings.props" />
+  <Import Project="..\UserSettings.props" Condition="exists('..\UserSettings.props')" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\YaOpt\YaOpt.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
+	<PackageReference Include="SharpDisasm" Version="1.1.11" />
+  </ItemGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Assemblies\&quot; /i /y" />
+	<Exec Command="xcopy &quot;$(TargetDir)SharpDisasm.dll&quot; &quot;$(SolutionDir)..\1.6\Assemblies\&quot; /i /y" />
+  </Target>
+</Project>

@@ -5,38 +5,13 @@ using System.Runtime.InteropServices;
 using YaOpt.Helpers;
 using YaOpt.Patches.Trampolines;
 
-namespace YaOpt.Native.Win64.Trampolines
+namespace YaOpt.Native.Unix64.Trampolines
 {
 	/// <summary>
-	/// Windows x64 trampoline installer for <c>ThingWithComps.GetComp&lt;T&gt;()</c>.
+	/// Unix x64 trampoline installer for <c>ThingWithComps.GetComp&lt;T&gt;()</c>.
 	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// <b>Target Method:</b> <c>Verse.ThingWithComps.GetComp&lt;T&gt;()</c>
-	/// </para>
-	/// <para>
-	/// <b>Purpose:</b> Optimizes component lookup by caching the result for fast failure
-	/// when a component doesn't exist, avoiding expensive list iteration.
-	/// </para>
-	/// <para>
-	/// <b>x64 Machine Code:</b>
-	/// This trampoline generates custom x64 assembly that:
-	/// <list type="number">
-	/// <item>Performs an early null check on the comps list (fast path).</item>
-	/// <item>Captures the comps list version for change detection.</item>
-	/// <item>Retrieves the generic type from MRGCTX.</item>
-	/// <item>Passes additional context (comps version, compsByType cache) to the arguments.</item>
-	/// <item>Restores registers and jumps to the patch method.</item>
-	/// </list>
-	/// </para>
-	/// <para>
-	/// <b>Safety:</b> The machine code includes null checks and version tracking
-	/// to ensure cache validity across component modifications.
-	/// </para>
-	/// </remarks>
-	/// <seealso cref="Verse_ThingWithComps_GetComp"/>
-	/// <seealso cref="YaOptSettings.OptThingGetComp"/>
-	internal class Verse_ThingWithComps_GetComp_Win64 : Verse_ThingWithComps_GetComp
+	/// <seealso cref="Verse_ThingWithComps_GetComp_Win64"/>
+	internal class Verse_ThingWithComps_GetComp_Unix64 : Verse_ThingWithComps_GetComp
 	{
 		/// <summary>
 		/// Pre-assembled x64 machine code for the trampoline prefix.
@@ -134,46 +109,44 @@ namespace YaOpt.Native.Win64.Trampolines
 			// find the typeof(T) of "if (this.compsByType.TryGetValue(typeof(T), out array))"
 			foreach (var instruction in disasm.Disassemble())
 			{
-				// find the offset from "MOV  QWORD PTR [rbp-offset],r10", where r10 stores the MRGCTX
+				// find the offset from "MOV  QWORD PTR [rsp+offset],r10", where r10 stores the MRGCTX
 				if (stage == 0 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
-					instruction.Operands.Length == 2 &&
-					instruction.Operands[0].Type == ud_type.UD_OP_MEM &&
-					instruction.Operands[0].Base == ud_type.UD_R_RBP &&
-					instruction.Operands[1].Type == ud_type.UD_OP_REG &&
-					instruction.Operands[1].Base == ud_type.UD_R_R10)
+				    instruction.Operands.Length == 2 &&
+				    instruction.Operands[0].Type == ud_type.UD_OP_MEM &&
+				    instruction.Operands[0].Base == ud_type.UD_R_RSP &&
+				    instruction.Operands[1].Type == ud_type.UD_OP_REG &&
+				    instruction.Operands[1].Base == ud_type.UD_R_R10)
 				{
 					offsetMRGCTX = instruction.Operands[0].LvalSDWord;
 					stage++;
 				}
-				// find "MOV  rax,QWORD PTR [rsi+offsetCompsByType]"
+				// find "MOV  rax,QWORD PTR [r15+offsetCompsByType]"
 				else if (stage == 1 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
-					instruction.Operands.Length == 2 &&
-					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
-					instruction.Operands[0].Base == ud_type.UD_R_RAX &&
-					instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
-					instruction.Operands[1].Base == ud_type.UD_R_RSI &&
-					instruction.Operands[1].LvalSDWord == offsetCompsByType)
+				         instruction.Operands.Length == 2 &&
+				         instruction.Operands[0].Type == ud_type.UD_OP_REG &&
+				         instruction.Operands[0].Base == ud_type.UD_R_RAX &&
+				         instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
+				         instruction.Operands[1].Base == ud_type.UD_R_R15 &&
+				         instruction.Operands[1].LvalSDWord == offsetCompsByType)
 				{
 					stage++;
 				}
-				// find "MOV  rcx,QWORD PTR [rbp-offset]", which loads the MRGCTX to rcx
+				// find "MOV  rdi,QWORD PTR [rsp+offset]", which loads the MRGCTX to rcx
 				else if (stage == 2 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
-					instruction.Operands.Length == 2 &&
-					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
-					instruction.Operands[0].Base == ud_type.UD_R_RCX &&
-					instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
-					instruction.Operands[1].Base == ud_type.UD_R_RBP &&
-					instruction.Operands[1].LvalSDWord == offsetMRGCTX)
+				         instruction.Operands.Length == 2 &&
+				         instruction.Operands[0].Type == ud_type.UD_OP_REG &&
+				         instruction.Operands[0].Base == ud_type.UD_R_RDI &&
+				         instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
+				         instruction.Operands[1].Base == ud_type.UD_R_RSP &&
+				         instruction.Operands[1].LvalSDWord == offsetMRGCTX)
 				{
 					stage++;
 				}
-				// find the nearest "MOVABS  r11,address" where address is the getter
-				else if (stage == 3 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
-					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
-					instruction.Operands[0].Base == ud_type.UD_R_R11 &&
-					instruction.Operands[1].Type == ud_type.UD_OP_IMM)
+				// find the nearest "CALL  address" where address is the getter
+				else if (stage == 3 && instruction.Mnemonic == ud_mnemonic_code.UD_Icall &&
+				         instruction.Operands[0].Type == ud_type.UD_OP_IMM)
 				{
-					addressGetter = instruction.Operands[1].Value;
+					addressGetter = instruction.Operands[0].Value;
 					stage++;
 					break;
 				}
