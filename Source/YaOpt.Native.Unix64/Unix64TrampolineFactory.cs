@@ -35,7 +35,7 @@ namespace YaOpt.Native.Unix64
 			{
 				var srcPtr = SourceMethod.MethodHandle.GetFunctionPointer();
 				var codeLength = codeBytes.Length;
-				
+
 				long startAddress = srcPtr.ToInt64();
 				long pageStart = startAddress & ~(PAGE_SIZE - 1);
 				long endAddress = startAddress + codeLength;
@@ -70,7 +70,7 @@ namespace YaOpt.Native.Unix64
 				throw new MissingMethodException("Cannot get the function pointer of " + srcMethod.Name);
 			if (targetPtr == IntPtr.Zero)
 				throw new MissingMethodException("Cannot get the function pointer of " + targetMethod.Name);
-			
+
 			var trampolineCode = (prefixCode ?? Array.Empty<byte>())
 				.Append((byte)0x48)
 				.Append((byte)0xB8)
@@ -78,7 +78,7 @@ namespace YaOpt.Native.Unix64
 				.Append((byte)0xFF)
 				.Append((byte)0xE0)
 				.ToArray();
-				
+
 			var originalCode = new byte[trampolineCode.Length];
 			Marshal.Copy(srcPtr, originalCode, 0, originalCode.Length);
 

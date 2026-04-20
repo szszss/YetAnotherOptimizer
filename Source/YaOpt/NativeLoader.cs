@@ -31,6 +31,8 @@ namespace YaOpt
 				}
 				else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 				{
+					nativeDllName = "YaOpt.Native.Unix64.dll";
+					initerName = "YaOpt.Native.Unix64.Initer";
 					burstDllName = "yaopt_burst_linux64.so";
 				}
 				else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -47,7 +49,7 @@ namespace YaOpt
 			}
 			else
 			{
-				YaOptMod.Warning($"Some functions only work on Windows. Current OS: {Environment.OSVersion}");
+				YaOptMod.Warning($"Some functions only work on Windows and Linux. Current OS: {Environment.OSVersion}");
 			}
 			if (burstDllName != null)
 			{
@@ -82,7 +84,7 @@ namespace YaOpt
 		{
 			try
 			{
-				var dllPath = Path.GetFullPath(Path.Combine(directory, "..\\Burst", dllName));
+				var dllPath = Path.GetFullPath(Path.Combine(directory, "..", "Burst", dllName));
 				if (!File.Exists(dllPath))
 				{
 					throw new FileNotFoundException("Cannot find Burst library", dllPath);

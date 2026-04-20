@@ -35,59 +35,50 @@ namespace YaOpt.Native.Unix64.Trampolines
 		/// </remarks>
 		private static readonly byte[] PRECODE =
 		{
-			/* 
-			 * mov    rax,QWORD PTR [rcx+0xb8]
+			/*
+			 * mov    rax,QWORD PTR [rdi+0xb8]  // 0xB8 is the offset of comps
 			 * test   rax,rax
 			 * jnz    not_null
-			 * ret	// Return if comps is null
-			 * nop	// Align
+			 * ret	                            // Return if comps is null
+			 * nop	                            // Align
 			 * nop
 			 * nop
 			 * not_null:
-			 * push	rbp
-			 * mov	rbp,rsp
-			 * sub	rsp,0x50
-			 * mov	QWORD PTR [rbp-0x8],rbx
-			 * mov	QWORD PTR [rbp-0x10],rsi
-			 * mov	QWORD PTR [rbp-0x18],rdi
-			 * mov	QWORD PTR [rbp-0x20],r12
-			 * mov	QWORD PTR [rbp-0x28],r13
-			 * mov	QWORD PTR [rbp-0x30],r14
-			 * mov	QWORD PTR [rbp-0x38],r15
-			 * mov	QWORD PTR [rbp-0x40],r10
-			 * mov	rsi,rcx
-			 * mov	r12,QWORD PTR [rsi+0xb8]	// Read the version of comps
+			 * sub	rsp,0x48                    // Stack alignment for System V AMD64 ABI calling convention
+			 * mov	QWORD PTR [rsp+0x8],rbx
+			 * mov	QWORD PTR [rsp+0x10],r12
+			 * mov	QWORD PTR [rsp+0x18],r13
+			 * mov	QWORD PTR [rsp+0x20],r14
+			 * mov	QWORD PTR [rsp+0x28],r15
+			 * mov	QWORD PTR [rsp+0x30],r10
+			 * mov	rbx,rdi						// Use RBX to save 'this' across call
+			 * mov	r12,QWORD PTR [rbx+0xb8]	// Read the version of comps
 			 * mov	eax,DWORD PTR [r12+0x1c]	// 0x1C is the offset of _version field of List
-			 * mov	QWORD PTR [rbp-0x48],rax
-			 * mov	rcx, r10
+			 * mov	QWORD PTR [rsp+0x38],rax
+			 * mov	rdi, r10
 			 * movabs	r11, 0xFFFFFFFFFFFFFFFF	// Placeholder for Generics Getter of MRGCTX
 			 * call	r11							// Read the generic Type from MRGCTX
-			 * mov	rcx, rsi					// Load the ThingWithComp instance into parameter 1
-			 * mov	rdx, rax					// Load the generic Type into parameter 2
-			 * mov	r8, QWORD PTR [rbp-0x48]	// Load the version of comps list into parameter 3
-			 * mov	r9, QWORD PTR [rsi+0xc0]	// Load compsByType into parameter 4
-			 * xor	r15d,r15d
+			 * mov	rdi, rbx					// Load the ThingWithComp instance into parameter 1
+			 * mov	rsi, rax					// Load the generic Type into parameter 2
+			 * mov	rdx, QWORD PTR [rsp+0x38]	// Load the version of comps list into parameter 3
+			 * mov	rcx, QWORD PTR [rbx+0xc0]	// Load compsByType into parameter 4
 			 * xor	eax,eax
-			 * mov	rbx,QWORD PTR [rbp-0x8]
-			 * mov	rsi,QWORD PTR [rbp-0x10]
-			 * mov	rdi,QWORD PTR [rbp-0x18]
-			 * mov	r12,QWORD PTR [rbp-0x20]
-			 * mov	r13,QWORD PTR [rbp-0x28]
-			 * mov	r14,QWORD PTR [rbp-0x30]
-			 * mov	r15,QWORD PTR [rbp-0x38]
-			 * mov	r10,QWORD PTR [rbp-0x40]
-			 * lea	rsp,[rbp+0x0]
-			 * pop	rbp
+			 * mov	r10,QWORD PTR [rsp+0x30]
+			 * mov	r15,QWORD PTR [rsp+0x28]
+			 * mov	r14,QWORD PTR [rsp+0x20]
+			 * mov	r13,QWORD PTR [rsp+0x18]
+			 * mov	r12,QWORD PTR [rsp+0x10]
+			 * mov	rbx,QWORD PTR [rsp+0x8]
+			 * add	rsp,0x48
 			 */
-			0x48, 0x8B, 0x81, 0xB8, 0x00, 0x00, 0x00, 0x48, 0x85, 0xC0, 0x75, 0x04, 0xC3, 0x90, 0x90, 0x90, 0x55, 0x48,
-			0x89, 0xE5, 0x48, 0x83, 0xEC, 0x50, 0x48, 0x89, 0x5D, 0xF8, 0x48, 0x89, 0x75, 0xF0, 0x48, 0x89, 0x7D, 0xE8,
-			0x4C, 0x89, 0x65, 0xE0, 0x4C, 0x89, 0x6D, 0xD8, 0x4C, 0x89, 0x75, 0xD0, 0x4C, 0x89, 0x7D, 0xC8, 0x4C, 0x89,
-			0x55, 0xC0, 0x48, 0x89, 0xCE, 0x4C, 0x8B, 0xA6, 0xB8, 0x00, 0x00, 0x00, 0x41, 0x8B, 0x44, 0x24, 0x1C, 0x48,
-			0x89, 0x45, 0xB8, 0x4C, 0x89, 0xD1, 0x49, 0xBB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x41, 0xFF,
-			0xD3, 0x48, 0x89, 0xF1, 0x48, 0x89, 0xC2, 0x4C, 0x8B, 0x45, 0xB8, 0x4C, 0x8B, 0x8E, 0xC0, 0x00, 0x00, 0x00,
-			0x45, 0x31, 0xFF, 0x31, 0xC0, 0x48, 0x8B, 0x5D, 0xF8, 0x48, 0x8B, 0x75, 0xF0, 0x48, 0x8B, 0x7D, 0xE8, 0x4C,
-			0x8B, 0x65, 0xE0, 0x4C, 0x8B, 0x6D, 0xD8, 0x4C, 0x8B, 0x75, 0xD0, 0x4C, 0x8B, 0x7D, 0xC8, 0x4C, 0x8B, 0x55,
-			0xC0, 0x48, 0x8D, 0x65, 0x00, 0x5D
+			0x48, 0x8B, 0x87, 0xB8, 0x00, 0x00, 0x00, 0x48, 0x85, 0xC0, 0x75, 0x04, 0xC3, 0x90, 0x90, 0x90, 0x48, 0x83,
+			0xEC, 0x48, 0x48, 0x89, 0x5C, 0x24, 0x08, 0x4C, 0x89, 0x64, 0x24, 0x10, 0x4C, 0x89, 0x6C, 0x24, 0x18, 0x4C,
+			0x89, 0x74, 0x24, 0x20, 0x4C, 0x89, 0x7C, 0x24, 0x28, 0x4C, 0x89, 0x54, 0x24, 0x30, 0x48, 0x89, 0xFB, 0x4C,
+			0x8B, 0xA3, 0xB8, 0x00, 0x00, 0x00, 0x41, 0x8B, 0x44, 0x24, 0x1C, 0x48, 0x89, 0x44, 0x24, 0x38, 0x4C, 0x89,
+			0xD7, 0x49, 0xBB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x41, 0xFF, 0xD3, 0x48, 0x89, 0xDF, 0x48,
+			0x89, 0xC6, 0x48, 0x8B, 0x54, 0x24, 0x38, 0x48, 0x8B, 0x8B, 0xC0, 0x00, 0x00, 0x00, 0x31, 0xC0, 0x4C, 0x8B,
+			0x54, 0x24, 0x30, 0x4C, 0x8B, 0x7C, 0x24, 0x28, 0x4C, 0x8B, 0x74, 0x24, 0x20, 0x4C, 0x8B, 0x6C, 0x24, 0x18,
+			0x4C, 0x8B, 0x64, 0x24, 0x10, 0x48, 0x8B, 0x5C, 0x24, 0x08, 0x48, 0x83, 0xC4, 0x48
 		};
 
 		/// <summary>
@@ -111,42 +102,43 @@ namespace YaOpt.Native.Unix64.Trampolines
 			{
 				// find the offset from "MOV  QWORD PTR [rsp+offset],r10", where r10 stores the MRGCTX
 				if (stage == 0 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
-				    instruction.Operands.Length == 2 &&
-				    instruction.Operands[0].Type == ud_type.UD_OP_MEM &&
-				    instruction.Operands[0].Base == ud_type.UD_R_RSP &&
-				    instruction.Operands[1].Type == ud_type.UD_OP_REG &&
-				    instruction.Operands[1].Base == ud_type.UD_R_R10)
+					instruction.Operands.Length == 2 &&
+					instruction.Operands[0].Type == ud_type.UD_OP_MEM &&
+					instruction.Operands[0].Base == ud_type.UD_R_RSP &&
+					instruction.Operands[1].Type == ud_type.UD_OP_REG &&
+					instruction.Operands[1].Base == ud_type.UD_R_R10)
 				{
 					offsetMRGCTX = instruction.Operands[0].LvalSDWord;
 					stage++;
 				}
 				// find "MOV  rax,QWORD PTR [r15+offsetCompsByType]"
 				else if (stage == 1 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
-				         instruction.Operands.Length == 2 &&
-				         instruction.Operands[0].Type == ud_type.UD_OP_REG &&
-				         instruction.Operands[0].Base == ud_type.UD_R_RAX &&
-				         instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
-				         instruction.Operands[1].Base == ud_type.UD_R_R15 &&
-				         instruction.Operands[1].LvalSDWord == offsetCompsByType)
+					instruction.Operands.Length == 2 &&
+					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
+					instruction.Operands[0].Base == ud_type.UD_R_RAX &&
+					instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
+					instruction.Operands[1].Base == ud_type.UD_R_R15 &&
+					instruction.Operands[1].LvalSDWord == offsetCompsByType)
 				{
 					stage++;
 				}
 				// find "MOV  rdi,QWORD PTR [rsp+offset]", which loads the MRGCTX to rcx
 				else if (stage == 2 && instruction.Mnemonic == ud_mnemonic_code.UD_Imov &&
-				         instruction.Operands.Length == 2 &&
-				         instruction.Operands[0].Type == ud_type.UD_OP_REG &&
-				         instruction.Operands[0].Base == ud_type.UD_R_RDI &&
-				         instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
-				         instruction.Operands[1].Base == ud_type.UD_R_RSP &&
-				         instruction.Operands[1].LvalSDWord == offsetMRGCTX)
+					instruction.Operands.Length == 2 &&
+					instruction.Operands[0].Type == ud_type.UD_OP_REG &&
+					instruction.Operands[0].Base == ud_type.UD_R_RDI &&
+					instruction.Operands[1].Type == ud_type.UD_OP_MEM &&
+					instruction.Operands[1].Base == ud_type.UD_R_RSP &&
+					instruction.Operands[1].LvalSDWord == offsetMRGCTX)
 				{
 					stage++;
 				}
 				// find the nearest "CALL  address" where address is the getter
 				else if (stage == 3 && instruction.Mnemonic == ud_mnemonic_code.UD_Icall &&
-				         instruction.Operands[0].Type == ud_type.UD_OP_IMM)
+						 instruction.Operands[0].Type == ud_type.UD_OP_JIMM)
 				{
-					addressGetter = instruction.Operands[0].Value;
+					var offset = instruction.Operands[0].LvalSDWord;
+					addressGetter = (long)instruction.Offset + 5 + offset + funcPtr.ToInt64();
 					stage++;
 					break;
 				}
