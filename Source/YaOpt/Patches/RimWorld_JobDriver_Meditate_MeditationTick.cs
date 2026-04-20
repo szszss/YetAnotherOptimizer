@@ -44,7 +44,6 @@ namespace YaOpt.Patches
 					&& Mathf.Approximately(Convert.ToSingle(instruction.operand), 0.018f))
 				{
 					instruction.operand = 0.018f * RATIO;
-					YaOptMod.Log("YaOpt Meditation Patched1");
 				}
 				// change GainComfortFromCellIfPossible(1, false) to GainComfortFromCellIfPossible(100, false)
 				// change JoyTickCheckEnd(this.pawn, 1, ... to JoyTickCheckEnd(this.pawn, 100
@@ -53,7 +52,6 @@ namespace YaOpt.Patches
 				{
 					if (lastCode != null && lastCode.opcode == OpCodes.Ldfld)
 					{
-						YaOptMod.Log("YaOpt Meditation Patched2");
 						yield return new CodeInstruction(OpCodes.Ldc_I4, RATIO);
 						continue;
 					}

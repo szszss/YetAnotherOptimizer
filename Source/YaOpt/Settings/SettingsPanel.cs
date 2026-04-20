@@ -233,7 +233,7 @@ namespace YaOpt.Settings
 			var hasNoteS = !string.IsNullOrWhiteSpace(option.NoteStability);
 			var hasNoteC = !string.IsNullOrWhiteSpace(option.NoteCompatibility);
 			var hasNoteP = !string.IsNullOrWhiteSpace(option.NotePlatform);
-			var hasNoteMT = !string.IsNullOrWhiteSpace(option.NoteMultiThread);
+			var hasNoteMT = !string.IsNullOrWhiteSpace(option.NoteMultithread);
 			if (hasNoteS || hasNoteC || hasNoteP || hasNoteMT)
 			{
 				var sb = new StringBuilder(label);
@@ -331,10 +331,10 @@ namespace YaOpt.Settings
 					.Append(option.NotePlatform.Translate()).Append("</color>");
 			}
 
-			if (!string.IsNullOrWhiteSpace(option.NoteMultiThread))
+			if (!string.IsNullOrWhiteSpace(option.NoteMultithread))
 			{
-				sb.Append("\n\n").Append("<color=#0044FF>").Append("YaOpt.Setting.Note.MultiThread".Translate()).Append("\n")
-					.Append(option.NoteMultiThread.Translate()).Append("</color>");
+				sb.Append("\n\n").Append("<color=#0044FF>").Append("YaOpt.Setting.Note.Multithread".Translate()).Append("\n")
+					.Append(option.NoteMultithread.Translate()).Append("</color>");
 			}
 			_showingDesc = sb.ToString();
 		}

@@ -47,7 +47,7 @@ namespace YaOpt.Settings
 
 		public string NotePlatform { get; set; } = string.Empty;
 
-		public string NoteMultiThread { get; set; } = string.Empty;
+		public string NoteMultithread { get; set; } = string.Empty;
 
 		public string RequiredMod { get; set; } = string.Empty;
 
@@ -74,23 +74,21 @@ namespace YaOpt.Settings
 			// Validator doesn't validate multiplay and mod requirements. They are validated in the getter of Enabled
 			message = string.Empty;
 			var error = false;
-			if (_enabled && (Flags & OptimizationFlags.RequireWin64) > 0 && !YaOptGlobal.IsNativeAvailable)
+			if (_enabled && (Flags & OptimizationFlags.RequireNative) > 0 && !YaOptGlobal.IsNativeAvailable)
 			{
 				if (!dryRun)
 					_enabled = false;
 				error = true;
-				if (!silent) // Don't translate text on the very early stage since there is not active language
-					message = "YaOpt.Setting.InvalidOption.RequireWin64".Translate().ToString();
+				message = "YaOpt.Setting.InvalidOption.RequireNative".Translate().ToString();
 			}
 			if (_enabled && (Flags & OptimizationFlags.RequireBurst) > 0 && !YaOptGlobal.IsBurstAvailable)
 			{
 				if (!dryRun)
 					_enabled = false;
 				error = true;
-				if (!silent)
-					message = "YaOpt.Setting.InvalidOption.RequireBurst".Translate().ToString();
+				message = "YaOpt.Setting.InvalidOption.RequireBurst".Translate().ToString();
 			}
-			if (!silent && message != string.Empty)
+			if (!silent && error)
 			{
 				YaOptMod.Error($"Optimization {Name.Translate()} has been disabled because {message}");
 			}

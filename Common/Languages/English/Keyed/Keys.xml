@@ -16,14 +16,14 @@
 	<YaOpt.Setting.Category.Tps>TPS Optimizations</YaOpt.Setting.Category.Tps>
 	<YaOpt.Setting.Category.Misc>Other Optimizations</YaOpt.Setting.Category.Misc>
 	<YaOpt.Setting.InvalidOption>Cannot enable optimization: </YaOpt.Setting.InvalidOption>
-	<YaOpt.Setting.InvalidOption.RequireWin64>Requires 64-bit Windows OS.</YaOpt.Setting.InvalidOption.RequireWin64>
+	<YaOpt.Setting.InvalidOption.RequireNative>Requires 64-bit Windows or Linux OS.</YaOpt.Setting.InvalidOption.RequireNative>
 	<YaOpt.Setting.InvalidOption.RequireBurst>Requires loaded Burst library.</YaOpt.Setting.InvalidOption.RequireBurst>
 	<YaOpt.Setting.Message.RequireReload>Changed settings will take effect after loading a save or restarting the game.</YaOpt.Setting.Message.RequireReload>
 	<YaOpt.Setting.Note.Banned>Disabled by {0}</YaOpt.Setting.Note.Banned>
 	<YaOpt.Setting.Note.Stability>[Stability Note]</YaOpt.Setting.Note.Stability>
 	<YaOpt.Setting.Note.Compatibility>[Mod Compatibility Note]</YaOpt.Setting.Note.Compatibility>
-	<YaOpt.Setting.Note.Platform>[Platform Limited]</YaOpt.Setting.Note.Platform>
-	<YaOpt.Setting.Note.MultiThread>[Multithreaded]</YaOpt.Setting.Note.MultiThread>
+	<YaOpt.Setting.Note.Platform>[Platform Limitation]</YaOpt.Setting.Note.Platform>
+	<YaOpt.Setting.Note.Multithread>[Multithread]</YaOpt.Setting.Note.Multithread>
 	<YaOpt.Setting.Option.DebugOutput>Debug Output</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>Output debug info to the console. Enabling this may slightly reduce game speed, as the game records the entire stack trace for each console message, which is an expensive operation.</YaOpt.Setting.Option.DebugOutput.Desc>
 	<YaOpt.Setting.Option.MaterialGetColor>Material Color Cache</YaOpt.Setting.Option.MaterialGetColor>

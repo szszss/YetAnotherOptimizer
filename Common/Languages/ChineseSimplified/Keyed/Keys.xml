@@ -16,14 +16,14 @@
 	<YaOpt.Setting.Category.Tps>TPS优化</YaOpt.Setting.Category.Tps>
 	<YaOpt.Setting.Category.Misc>其他优化</YaOpt.Setting.Category.Misc>
 	<YaOpt.Setting.InvalidOption>无法启用该优化：</YaOpt.Setting.InvalidOption>
-	<YaOpt.Setting.InvalidOption.RequireWin64>需要64位Windows操作系统。</YaOpt.Setting.InvalidOption.RequireWin64>
+	<YaOpt.Setting.InvalidOption.RequireNative>需要64位Windows或Linux操作系统。</YaOpt.Setting.InvalidOption.RequireNative>
 	<YaOpt.Setting.InvalidOption.RequireBurst>需要正常加载的Burst库。</YaOpt.Setting.InvalidOption.RequireBurst>
 	<YaOpt.Setting.Message.RequireReload>更改的设置将在加载存档或重启游戏后生效。</YaOpt.Setting.Message.RequireReload>
 	<YaOpt.Setting.Note.Banned>被{0}禁用</YaOpt.Setting.Note.Banned>
 	<YaOpt.Setting.Note.Stability>【稳定性说明】</YaOpt.Setting.Note.Stability>
 	<YaOpt.Setting.Note.Compatibility>【Mod兼容性说明】</YaOpt.Setting.Note.Compatibility>
 	<YaOpt.Setting.Note.Platform>【平台限定】</YaOpt.Setting.Note.Platform>
-	<YaOpt.Setting.Note.MultiThread>【多线程】</YaOpt.Setting.Note.MultiThread>
+	<YaOpt.Setting.Note.Multithread>【多线程】</YaOpt.Setting.Note.Multithread>
 	<YaOpt.Setting.Option.DebugOutput>调试输出</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>在控制台中输出调试信息，启用这个选项可能会略微降低游戏速度，因为游戏会在每次输出控制台信息时记录整个调用栈，这是一个开销很大的操作。</YaOpt.Setting.Option.DebugOutput.Desc>
 	<YaOpt.Setting.Option.MaterialGetColor>材质颜色缓存</YaOpt.Setting.Option.MaterialGetColor>

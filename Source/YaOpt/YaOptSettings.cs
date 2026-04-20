@@ -224,7 +224,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.ComputeMatrixBurst.Desc",
 			NotePlatform = "YaOpt.Setting.Option.ComputeMatrixBurst.Platform",
 			Category = OptimizationCategory.Fps,
-			Flags = OptimizationFlags.RequireWin64 | OptimizationFlags.RequireBurst,
+			Flags = OptimizationFlags.RequireBurst,
 		};
 
 		/// <summary>
@@ -241,7 +241,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.ThingGetComp.Desc",
 			NotePlatform = "YaOpt.Setting.Option.ThingGetComp.Platform",
 			Category = OptimizationCategory.Tps,
-			Flags = OptimizationFlags.RequireWin64,
+			Flags = OptimizationFlags.RequireNative,
 		};
 
 		/// <summary>
@@ -297,7 +297,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.ParallelPawnTick.Desc",
 			NoteStability = "YaOpt.Setting.Option.ParallelPawnTick.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelPawnTick.Compatibility",
-			NoteMultiThread = "YaOpt.Setting.Option.ParallelPawnTick.MultiThread",
+			NoteMultithread = "YaOpt.Setting.Option.ParallelPawnTick.Multithread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 			FuncPostDraw = SettingsPanel.ParallelPawnTickPostDraw,
@@ -334,7 +334,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.ParallelJobGiver.Desc",
 			NoteStability = "YaOpt.Setting.Option.ParallelJobGiver.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelJobGiver.Compatibility",
-			NoteMultiThread = "YaOpt.Setting.Option.ParallelJobGiver.MultiThread",
+			NoteMultithread = "YaOpt.Setting.Option.ParallelJobGiver.Multithread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};
@@ -349,7 +349,7 @@ namespace YaOpt
 			Desc = "YaOpt.Setting.Option.ParallelThoughtUpdate.Desc",
 			NoteStability = "YaOpt.Setting.Option.ParallelThoughtUpdate.Stable",
 			NoteCompatibility = "YaOpt.Setting.Option.ParallelThoughtUpdate.Compatibility",
-			NoteMultiThread = "YaOpt.Setting.Option.ParallelThoughtUpdate.MultiThread",
+			NoteMultithread = "YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};
@@ -365,7 +365,7 @@ namespace YaOpt
 			Name = "YaOpt.Setting.Option.ParallelPostMapTick",
 			Desc = "YaOpt.Setting.Option.ParallelPostMapTick.Desc",
 			NoteStability = "YaOpt.Setting.Option.ParallelPostMapTick.Stable",
-			NoteMultiThread = "YaOpt.Setting.Option.ParallelPostMapTick.MultiThread",
+			NoteMultithread = "YaOpt.Setting.Option.ParallelPostMapTick.Multithread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};
@@ -478,7 +478,7 @@ namespace YaOpt
 			NoteCompatibility = "YaOpt.Setting.Option.LazyTextureLoad.Compatibility",
 			NotePlatform = "YaOpt.Setting.Option.LazyTextureLoad.Platform",
 			Category = OptimizationCategory.Misc,
-			Flags = OptimizationFlags.RequireWin64,
+			Flags = OptimizationFlags.RequireNative,
 			FuncPostDraw = SettingsPanel.LazyTextureLoadPostDraw,
 			FuncExposeData = (settings) =>
 			{
@@ -625,10 +625,7 @@ namespace YaOpt
 			base.ExposeData();
 			if (YaOptGlobal.IsLibraryLoaded && Scribe.mode == LoadSaveMode.Saving)
 			{
-				foreach (var option in _allOptimizations)
-				{
-					option.Validate(false, false, out _);
-				}
+				ValidateOptions(false);
 			}
 			foreach (var option in _allOptimizations)
 			{
@@ -641,10 +638,7 @@ namespace YaOpt
 			}
 			if (YaOptGlobal.IsLibraryLoaded && Scribe.mode == LoadSaveMode.LoadingVars)
 			{
-				foreach (var option in _allOptimizations)
-				{
-					option.Validate(false, false, out _);
-				}
+				ValidateOptions(false);
 			}
 		}
 
