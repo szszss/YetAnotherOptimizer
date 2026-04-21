@@ -17,6 +17,8 @@ namespace YaOpt.Helpers
 	/// <seealso cref="YaOpt.Patches.Trampolines.Verse_ContentFinder_Get"/>
 	public static class ContentManager
 	{
+		public const int MAX_ATLAS_SIZE = 512;
+
 		/// <summary>
 		/// List of mods that contain texture assets.
 		/// </summary>
@@ -50,6 +52,32 @@ namespace YaOpt.Helpers
 
 		private static readonly Dictionary<int, VirtualFile> _texturesNotLoaded = new Dictionary<int, VirtualFile>();
 
+		private struct OptimizedTextureInfo
+		{
+			public VirtualFile File;
+			public int OriginalWidth;
+			public int OriginalHeight;
+			public int SkipLevels;
+		}
+
+		/// <summary>
+		/// Keeps track of textures that were downsampled during load (Mipmap skipping) to save VRAM 
+		/// when loading textures for StaticTextureAtlas.
+		/// </summary>
+		private static readonly Dictionary<int, OptimizedTextureInfo> _optimizedTextures =
+			new Dictionary<int, OptimizedTextureInfo>();
+
+		/// <summary>
+		/// Keeps track of ThingDefs whose graphics were downsampled. Used during pawn or thing spawning 
+		/// to quickly check if we need to restore their high-res textures.
+		/// </summary>
+		private static readonly HashSet<ThingDef> _optimizedThingDefs = new HashSet<ThingDef>();
+
+		private static readonly Dictionary<ThingDef, List<Texture2D>> _thingDefToTexturesMapping =
+			new Dictionary<ThingDef, List<Texture2D>>();
+
+		private static bool _isGameStarting = true;
+
 		private static bool _hasImageOpt;
 		private static bool _hasGraphicsSettings;
 		private static object _imageOptSettings;
@@ -58,7 +86,9 @@ namespace YaOpt.Helpers
 		private static AccessTools.FieldRef<object, float> _imageOptMipmapBias;
 		private static AccessTools.FieldRef<object, float> _gsMipmapBias;
 
-		public delegate bool LoadZstdDdsTextureDelegate(Texture2D texture, string zstdFilePath);
+		public delegate bool LoadZstdDdsTextureDelegate(Texture2D texture,
+			VirtualFile originalFile, string zstdFilePath);
+
 		public static LoadZstdDdsTextureDelegate LoadZstdDdsTexture;
 
 		private static readonly byte[] _tmpDdsHeaderBytes = new byte[128];
@@ -301,6 +331,7 @@ namespace YaOpt.Helpers
 		/// </remarks>
 		public static void PostInit()
 		{
+			_isGameStarting = false;
 			ModsContainTexture.Clear();
 			ModsContainAudio.Clear();
 			ModsContainString.Clear();
@@ -397,28 +428,158 @@ namespace YaOpt.Helpers
 			if (texture is null)
 				return;
 			var id = texture.GetInstanceID();
-			if (_texturesNotLoaded.TryGetValue(id, out var file))
+			if (_texturesNotLoaded.Remove(id, out var file))
 			{
-				_texturesNotLoaded.Remove(id);
+				LoadTexture(texture, file);
+			}
+		}
 
-				if (LoadZstdDdsTexture != null && file.FullPath != null)
+		public static void LoadTexture(Texture2D texture, VirtualFile file)
+		{
+			if (LoadZstdDdsTexture != null && file.FullPath != null)
+			{
+				var zstdFile = Path.ChangeExtension(file.FullPath, ".dds.zstd");
+				if (File.Exists(zstdFile))
 				{
-					var zstdFile = Path.ChangeExtension(file.FullPath, ".dds.zstd");
-					if (File.Exists(zstdFile))
-					{
-						if (LoadZstdDdsTexture(texture, zstdFile))
-							return;
-					}
+					if (LoadZstdDdsTexture(texture, file, zstdFile))
+						return;
 				}
+			}
 
-				if (!file.Exists)
+			if (!file.Exists)
+				return;
+
+			if (file.Name.EndsWith(".dds", StringComparison.OrdinalIgnoreCase))
+				LoadTextureDds(texture, file);
+			else
+				LoadTextureViaImageConversion(texture, file);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int GetMipmapDataSize(int width, int height, in DdsPixelFormat format)
+		{
+			if (format.IsCompressed)
+			{
+				int blockSize = format.IsDxt1 ? 8 : 16;
+				return Math.Max(1, (width + 3) / 4) * Math.Max(1, (height + 3) / 4) * blockSize;
+			}
+			else
+			{
+				return width * height * (int)(format.RGBBitCount / 8);
+			}
+		}
+
+		public static bool MayInsertIntoAtlas(Texture2D texture)
+		{
+			if (_optimizedTextures.TryGetValue(texture.GetInstanceID(), out var info))
+			{
+				return info.OriginalWidth <= MAX_ATLAS_SIZE && info.OriginalHeight <= MAX_ATLAS_SIZE;
+			}
+			return true;
+		}
+
+		public static void LoadFullResolutionTexture(Thing thing)
+		{
+			if (_optimizedThingDefs.Count == 0)
+				return;
+
+			var def = thing.def;
+			if (def == null || def.graphicData == null)
+				return;
+
+			if (_optimizedThingDefs.Remove(def))
+			{
+				var graphic = thing.Graphic;
+				if (graphic == null)
 					return;
 
-				if (file.Name.EndsWith(".dds", StringComparison.OrdinalIgnoreCase))
-					LoadTextureDds(texture, file);
-				else
-					LoadTextureViaImageConversion(texture, file);
+				if (_thingDefToTexturesMapping.TryGetValue(def, out var list))
+				{
+					for (var i = 0; i < list.Count; i++)
+					{
+						var tex = list[i];
+						CheckAndRestoreTexture(tex);
+					}
+					_thingDefToTexturesMapping.Remove(def);
+				}
 			}
+		}
+
+		private static void CheckAndRestoreTexture(Texture2D tex)
+		{
+			if (tex != null && _optimizedTextures.Remove(tex.GetInstanceID(), out var info))
+			{
+				LoadTexture(tex, info.File);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool CanDownsampleNow()
+		{
+			return _isGameStarting && ContentFinderRequester.requester != null;
+		}
+
+		/// <summary>
+		/// Analyzes the DDS header and determines if the texture should be downsampled during initial load.
+		/// </summary>
+		/// <remarks>
+		/// RimWorld aggressively pre-loads HD textures for ThingDefs (like buildings) during startup just to bake them into StaticTextureAtlas.
+		/// This consumes massive amounts of VRAM and RAM. 
+		/// Since DDS files contain pre-computed mipmaps, we can skip the high-res mip levels and only read a smaller mipmap (e.g. 256x256),
+		/// effectively tricking the game into loading a low-res version. We record the original sizes so we can restore them later when spawned.
+		/// </remarks>
+		public static bool TryCalculateDownsampleOffset(Texture2D texture, in DdsHeader ddsHeader,
+			out ThingDef owner, out int skipLevels, out long offsetBytes)
+		{
+			owner = null;
+			skipLevels = 0;
+			offsetBytes = 0;
+
+			owner = ContentFinderRequester.requester as ThingDef;
+			if (owner == null)
+				return false;
+
+			if (ddsHeader.Width <= MAX_ATLAS_SIZE && ddsHeader.Height <= MAX_ATLAS_SIZE)
+				return false;
+
+			int w = (int)ddsHeader.Width;
+			int h = (int)ddsHeader.Height;
+			int maxSkip = (int)ddsHeader.MipMapCount - 1;
+
+			while ((w >= MAX_ATLAS_SIZE || h >= MAX_ATLAS_SIZE) && skipLevels < maxSkip)
+			{
+				offsetBytes += GetMipmapDataSize(w, h, ddsHeader.PixelFormat);
+				w = Math.Max(1, w / 2);
+				h = Math.Max(1, h / 2);
+				skipLevels++;
+			}
+
+			if (skipLevels > 0)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		public static void RegisterDownsampledTexture(ThingDef ownerDef, Texture2D texture, VirtualFile file, int originalWidth,
+			int originalHeight, int skipLevels)
+		{
+			_optimizedTextures[texture.GetInstanceID()] = new OptimizedTextureInfo
+			{
+				File = file,
+				OriginalWidth = originalWidth,
+				OriginalHeight = originalHeight,
+				SkipLevels = skipLevels
+			};
+			_optimizedThingDefs.Add(ownerDef);
+
+			if (!_thingDefToTexturesMapping.TryGetValue(ownerDef, out var list))
+			{
+				list = new List<Texture2D>(1);
+				_thingDefToTexturesMapping[ownerDef] = list;
+			}
+			list.Add(texture);
 		}
 
 		private static void LoadTextureDds(Texture2D texture, VirtualFile file)
@@ -433,10 +594,21 @@ namespace YaOpt.Helpers
 					throw new InvalidDataException("Invalid DDS file");
 				}
 				var ddsHeader = Marshal.PtrToStructure<DdsHeader>(_tmpDdsHeaderHandle.AddrOfPinnedObject());
-				CheckDdsHeader(ddsHeader);
+				AssertDdsHeader(ddsHeader);
 				if (ddsHeader.PixelFormat.IsBc7) // Actually it checks if the texture has Dx10 extension 
 				{
 					fs.Seek(20, SeekOrigin.Current);
+				}
+
+				ThingDef owner = null;
+				int skipLevels = 0;
+				long offset = 0;
+				var downsampled = CanDownsampleNow() && TryCalculateDownsampleOffset(texture, ddsHeader,
+					                  out owner, out skipLevels, out offset);
+
+				if (downsampled)
+				{
+					fs.Seek(offset, SeekOrigin.Current);
 				}
 
 				var dataSizeLong = fs.Length - fs.Position;
@@ -469,7 +641,12 @@ namespace YaOpt.Helpers
 				var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
 				try
 				{
-					LoadTextureDdsData(texture, ddsHeader, handle.AddrOfPinnedObject(), data.Length);
+					UploadTextureDdsData(texture, ddsHeader, handle.AddrOfPinnedObject(), data.Length, skipLevels);
+					if (downsampled)
+					{
+						RegisterDownsampledTexture(owner, texture, file,
+							(int)ddsHeader.Width, (int)ddsHeader.Height, skipLevels);
+					}
 				}
 				finally
 				{
@@ -478,30 +655,22 @@ namespace YaOpt.Helpers
 			}
 		}
 
-		public static void CheckDdsHeader(in DdsHeader ddsHeader)
+		/// <summary>
+		/// Upload the texture data with dds format to a texture.
+		/// </summary>
+		public static void UploadTextureDdsData(Texture2D texture, in DdsHeader ddsHeader, IntPtr dataPtr, int dataSize, int skipLevels = 0)
 		{
-			if (ddsHeader.Magic != DdsHeader.RequiredMagic)
+			var currentWidth = (int)ddsHeader.Width;
+			var currentHeight = (int)ddsHeader.Height;
+			for (int i = 0; i < skipLevels; i++)
 			{
-				throw new InvalidDataException(
-					$"Invalid DDS magic number: {ddsHeader.Magic:X8}. Expected: {DdsHeader.RequiredMagic:X8}");
+				currentWidth = Math.Max(1, currentWidth / 2);
+				currentHeight = Math.Max(1, currentHeight / 2);
 			}
-			if (ddsHeader.Size != DdsHeader.RequiredSize)
-			{
-				throw new InvalidDataException(
-					$"Invalid DDS header size: {ddsHeader.Size}. Expected: {DdsHeader.RequiredSize}");
-			}
-			if (ddsHeader.PixelFormat.Size != DdsPixelFormat.RequiredSize)
-			{
-				throw new InvalidDataException(
-					$"Invalid DDS pixel format size: {ddsHeader.PixelFormat.Size}. Expected: {DdsPixelFormat.RequiredSize}");
-			}
-		}
 
-		public static void LoadTextureDdsData(Texture2D texture, in DdsHeader ddsHeader, IntPtr dataPtr, int dataSize)
-		{
-			var hasMipMap = (ddsHeader.Flags & DdsHeaderFlags.MipMapCount) != 0 && ddsHeader.MipMapCount > 1;
+			var hasMipMap = (ddsHeader.Flags & DdsHeaderFlags.MipMapCount) != 0 && ddsHeader.MipMapCount > 1 + skipLevels;
 			var pixelFormat = ddsHeader.PixelFormat;
-			texture.Reinitialize((int)ddsHeader.Width, (int)ddsHeader.Height, pixelFormat.ToTextureFormat(), hasMipMap);
+			texture.Reinitialize(currentWidth, currentHeight, pixelFormat.ToTextureFormat(), hasMipMap);
 			texture.LoadRawTextureData(dataPtr, dataSize);
 			texture.filterMode = FilterMode.Trilinear;
 			texture.anisoLevel = GetAnisoLevel();
@@ -509,6 +678,9 @@ namespace YaOpt.Helpers
 			texture.Apply(true, true);
 		}
 
+		/// <summary>
+		/// Load a non-dds image and upload the data.
+		/// </summary>
 		private static void LoadTextureViaImageConversion(Texture2D texture, VirtualFile file)
 		{
 			var anisoLevel = GetAnisoLevel();
@@ -562,6 +734,26 @@ namespace YaOpt.Helpers
 				texture.anisoLevel = anisoLevel;
 				texture.mipMapBias = mipmapBias;
 				texture.Apply(true, true);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void AssertDdsHeader(in DdsHeader ddsHeader)
+		{
+			if (ddsHeader.Magic != DdsHeader.RequiredMagic)
+			{
+				throw new InvalidDataException(
+					$"Invalid DDS magic number: {ddsHeader.Magic:X8}. Expected: {DdsHeader.RequiredMagic:X8}");
+			}
+			if (ddsHeader.Size != DdsHeader.RequiredSize)
+			{
+				throw new InvalidDataException(
+					$"Invalid DDS header size: {ddsHeader.Size}. Expected: {DdsHeader.RequiredSize}");
+			}
+			if (ddsHeader.PixelFormat.Size != DdsPixelFormat.RequiredSize)
+			{
+				throw new InvalidDataException(
+					$"Invalid DDS pixel format size: {ddsHeader.PixelFormat.Size}. Expected: {DdsPixelFormat.RequiredSize}");
 			}
 		}
 

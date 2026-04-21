@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using RimWorld.IO;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
@@ -17,7 +18,8 @@ namespace YaOpt.OtherMod.ImageOpt
 			ContentManager.LoadZstdDdsTexture = LoadZstdDdsTexture;
 		}
 
-		private static unsafe bool LoadZstdDdsTexture(Texture2D texture, string zstdFilePath)
+		private static unsafe bool LoadZstdDdsTexture(Texture2D texture,
+			VirtualFile originalFile, string zstdFilePath)
 		{
 			try
 			{
@@ -33,10 +35,23 @@ namespace YaOpt.OtherMod.ImageOpt
 					{
 						ddsHeader = *((DdsHeader*)ddsHeaderPtr);
 					}
-					ContentManager.CheckDdsHeader(ddsHeader);
+					ContentManager.AssertDdsHeader(ddsHeader);
 					var offset = 128;
 					if (ddsHeader.PixelFormat.IsBc7) // Actually it checks if the texture has Dx10 extension 
 						offset += 20;
+
+					ThingDef owner = null;
+					int skipLevels = 0;
+					long additionalOffset = 0;
+					var downsampled = ContentManager.CanDownsampleNow() &&
+					                  ContentManager.TryCalculateDownsampleOffset(texture, ddsHeader,
+						                  out owner, out skipLevels, out additionalOffset);
+
+					if (downsampled)
+					{
+						offset += (int)additionalOffset;
+					}
+
 					var data = ddsBytes.Slice(offset);
 					if (ddsHeader.PixelFormat.IsBgr888 && !ddsHeader.PixelFormat.IsCompressed)
 					{
@@ -48,7 +63,13 @@ namespace YaOpt.OtherMod.ImageOpt
 					}
 					fixed (void* ptr = data)
 					{
-						ContentManager.LoadTextureDdsData(texture, ddsHeader, new IntPtr(ptr), data.Length);
+						ContentManager.UploadTextureDdsData(texture, ddsHeader, new IntPtr(ptr), data.Length, skipLevels);
+					}
+
+					if (downsampled)
+					{
+						ContentManager.RegisterDownsampledTexture(owner, texture, originalFile,
+							(int)ddsHeader.Width, (int)ddsHeader.Height, skipLevels);
 					}
 				}
 			}
