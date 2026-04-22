@@ -484,7 +484,7 @@ namespace YaOpt.Helpers
 		{
 			if (_optimizedTextures.TryGetValue(texture.GetInstanceID(), out var info))
 			{
-				return info.OriginalWidth <= MAX_ATLAS_SIZE && info.OriginalHeight <= MAX_ATLAS_SIZE;
+				return info.OriginalWidth < MAX_ATLAS_SIZE && info.OriginalHeight < MAX_ATLAS_SIZE;
 			}
 			return true;
 		}
@@ -551,7 +551,7 @@ namespace YaOpt.Helpers
 			if (owner == null)
 				return false;
 
-			if (ddsHeader.Width <= MAX_ATLAS_SIZE && ddsHeader.Height <= MAX_ATLAS_SIZE)
+			if (ddsHeader.Width < MAX_ATLAS_SIZE && ddsHeader.Height < MAX_ATLAS_SIZE)
 				return false;
 
 			int w = (int)ddsHeader.Width;
@@ -696,7 +696,7 @@ namespace YaOpt.Helpers
 			texture.filterMode = FilterMode.Trilinear;
 			texture.anisoLevel = GetAnisoLevel();
 			texture.mipMapBias = GetMipmapBias();
-			texture.Apply(true, true);
+			texture.Apply(true, skipLevels == 0);
 		}
 
 		/// <summary>
