@@ -14,65 +14,20 @@ namespace YaOpt.Patches
 	{
 		private static readonly Dictionary<int, bool> _validationCache = new Dictionary<int, bool>();
 
-		private readonly struct Comparer : IComparer<IAttackTarget>
-		{
-			private readonly IntVec3 _shooterPosition;
-
-			public Comparer(IntVec3 shooterPosition)
-			{
-				_shooterPosition = shooterPosition;
-			}
-
-			public int Compare(IAttackTarget a, IAttackTarget b)
-			{
-				if (a == null || b == null)
-					return 0;
-				var lenA = (a.Thing.Position - _shooterPosition).LengthManhattan;
-				var lenB = (b.Thing.Position - _shooterPosition).LengthManhattan;
-				return lenA.CompareTo(lenB);
-			}
-		}
-
-		private static int SortTargetList(List<IAttackTarget> targets,
-			Predicate<IAttackTarget> predicate, IAttackTargetSearcher searcher)
-		{
-			var num = targets.RemoveAll(predicate);
-			var comparer = new Comparer(searcher.Thing.Position);
-			targets.Sort(comparer);
-			return num;
-		}
-
 		[HarmonyPatch(typeof(AttackTargetFinder))]
 		[HarmonyPatch(nameof(AttackTargetFinder.BestAttackTarget))]
 		private static class MainPart
 		{
 			static bool Prepare()
 			{
-				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled;
+				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled &&
+				       !YaOptGlobal.HasMod("Vortex.Kingfisher");
 			}
 
 			static void Prefix()
 			{
 				_validationCache.Clear();
 			}
-
-			/*static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-			{
-				var firstRemoveAll = true;
-				foreach (var instruction in instructions)
-				{
-					if (instruction.Calls("RemoveAll") && firstRemoveAll)
-					{
-						firstRemoveAll = false;
-						yield return CodeInstruction.LoadArgument(0);
-						yield return CodeInstruction.Call(
-							typeof(Verse_AI_AttackTargetFinder_BestAttackTarget),
-							nameof(SortTargetList));
-						continue;
-					}
-					yield return instruction;
-				}
-			}*/
 
 			static void Postfix()
 			{
@@ -115,7 +70,8 @@ namespace YaOpt.Patches
 
 			static bool Prepare()
 			{
-				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled;
+				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled &&
+				       !YaOptGlobal.HasMod("Vortex.Kingfisher");
 			}
 
 			static bool Prefix(IAttackTarget __0, ref bool __result)

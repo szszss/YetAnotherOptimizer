@@ -1,6 +1,7 @@
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 using YaOpt.Helpers;
@@ -11,11 +12,24 @@ namespace YaOpt.Patches
 	/// <summary>
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptFastListerRemove"/>
-	[HarmonyPatch(typeof(ListerThings))]
-	[HarmonyPatch(nameof(ListerThings.Remove))]
+	[HarmonyPatch]
 	internal static class Verse_ListerThings_Remove
 	{
 		private const int INDEX_TYPE_DEF = -1;
+
+		static MethodBase TargetMethod()
+		{
+			if (YaOptGlobal.HasMod("Vortex.Kingfisher"))
+			{
+				return AccessTools.Method(
+					AccessTools.TypeByName("Kingfisher.Features.Things.ListerThingsRewrite"),
+					"Remove");
+			}
+			else
+			{
+				return AccessTools.Method(typeof(ListerThings), nameof(ListerThings.Remove));
+			}
+		}
 
 		static bool Prepare()
 		{
@@ -24,14 +38,13 @@ namespace YaOpt.Patches
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
-			const int localThingRequestGroup = 4;
 			var count = 0;
 			var inited = false;
+			var hasKingfisher = YaOptGlobal.HasMod("Vortex.Kingfisher");
+			var localThingRequestGroup = hasKingfisher ? 6 : 4;
 			var localUse = generator.DeclareLocal(typeof(ListerThingsUse));
 			var localIndexer = generator.DeclareLocal(typeof(ListerThingsIndexer));
 			var localRecord = generator.DeclareLocal(typeof(ThingRecord));
-			var methodListRemoveThing = AccessTools.Method(typeof(List<Thing>), "Remove");
-			var methodListRemoveHaul = AccessTools.Method(typeof(List<IHaulSource>), "Remove");
 
 			foreach (var instruction in instructions)
 			{
@@ -64,7 +77,7 @@ namespace YaOpt.Patches
 						typeof(ListerThingsIndexer),
 						nameof(ListerThingsIndexer.Remove));
 				}
-				else if (instruction.Calls(methodListRemoveThing))
+				else if (IsRemove<Thing>(instruction))
 				{
 					// Replace
 					// list.Remove(thing);
@@ -85,10 +98,13 @@ namespace YaOpt.Patches
 					}
 					yield return CodeInstruction.Call(
 						typeof(Verse_ListerThings_Remove), nameof(RemoveFromThingList));
+					if (hasKingfisher)
+						yield return new CodeInstruction(OpCodes.Pop);
+
 					count++;
 					continue;
 				}
-				else if (instruction.Calls(methodListRemoveHaul))
+				else if (IsRemove<IHaulSource>(instruction))
 				{
 					// Replace
 					// list.Remove(haulSources);
@@ -99,11 +115,30 @@ namespace YaOpt.Patches
 					yield return CodeInstruction.LoadLocal(localUse.LocalIndex);
 					yield return CodeInstruction.Call(
 						typeof(Verse_ListerThings_Remove), nameof(RemoveFromHaulList));
+					if (hasKingfisher)
+						yield return new CodeInstruction(OpCodes.Pop);
 					continue;
 				}
 
 				yield return instruction;
 			}
+		}
+
+		private static bool IsRemove<T>(CodeInstruction instruction)
+		{
+			if (instruction.operand is MethodInfo methodInfo)
+			{
+				if (methodInfo.Name == "Remove")
+				{
+					return methodInfo.DeclaringType == typeof(List<T>);
+				}
+				// Compatible with Kingfisher
+				if (methodInfo.Name == "RemoveFromTail")
+				{
+					return methodInfo.IsGenericMethod && methodInfo.GetGenericArguments()[0] == typeof(T);
+				}
+			}
+			return false;
 		}
 
 		static bool RemoveFromThingList(List<Thing> list, Thing thing,
