@@ -1,10 +1,12 @@
 using HarmonyLib;
+using RimWorld;
 using RimWorld.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using UnityEngine;
 using Verse;
 
@@ -75,6 +77,8 @@ namespace YaOpt.Helpers
 
 		private static readonly Dictionary<ThingDef, List<Texture2D>> _thingDefToTexturesMapping =
 			new Dictionary<ThingDef, List<Texture2D>>();
+
+		private static Queue<ThingDef> _thingDefReloadTextureQueue = new Queue<ThingDef>();
 
 		private static bool _isGameStarting = true;
 
@@ -286,6 +290,8 @@ namespace YaOpt.Helpers
 		/// </remarks>
 		public static void Init()
 		{
+			UpdateCallbackHelper.RegisterPreRenderCallback(PreRender);
+
 			_tmpDdsHeaderHandle = GCHandle.Alloc(_tmpDdsHeaderBytes, GCHandleType.Pinned);
 			_hasImageOpt = YaOptGlobal.HasType("ImageOpt.ImageOpt");
 			if (_hasImageOpt)
@@ -330,6 +336,18 @@ namespace YaOpt.Helpers
 			ModsContainTexture.AddRange(LoadedModManager.RunningModsListForReading);
 			ModsContainAudio.AddRange(LoadedModManager.RunningModsListForReading);
 			ModsContainString.AddRange(LoadedModManager.RunningModsListForReading);
+		}
+
+		private static void PreRender(int _)
+		{
+			if (!EnableDownsampling)
+				return;
+
+			while (_thingDefReloadTextureQueue.Count > 0)
+			{
+				var thingDef = _thingDefReloadTextureQueue.Dequeue();
+				LoadFullResolutionTextureDo(thingDef);
+			}
 		}
 
 		/// <summary>
@@ -495,24 +513,26 @@ namespace YaOpt.Helpers
 				return;
 
 			var def = thing.def;
-			if (def == null || def.graphicData == null)
+			if (def == null)
 				return;
 
 			if (_optimizedThingDefs.Remove(def))
 			{
-				var graphic = thing.Graphic;
-				if (graphic == null)
-					return;
+				_thingDefReloadTextureQueue.Enqueue(def);
+				
+			}
+		}
 
-				if (_thingDefToTexturesMapping.TryGetValue(def, out var list))
+		private static void LoadFullResolutionTextureDo(ThingDef thingDef)
+		{
+			if (_thingDefToTexturesMapping.TryGetValue(thingDef, out var list))
+			{
+				for (var i = 0; i < list.Count; i++)
 				{
-					for (var i = 0; i < list.Count; i++)
-					{
-						var tex = list[i];
-						CheckAndRestoreTexture(tex);
-					}
-					_thingDefToTexturesMapping.Remove(def);
+					var tex = list[i];
+					CheckAndRestoreTexture(tex);
 				}
+				_thingDefToTexturesMapping.Remove(thingDef);
 			}
 		}
 
