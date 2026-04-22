@@ -1,22 +1,20 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using HarmonyLib;
 using Unity.Burst;
+using Verse;
 
 namespace YaOpt
 {
 	public static class NativeLoader
 	{
-		public static void LoadLibraries(Assembly modAssembly)
-		{
-			var dllDirectory = Path.GetDirectoryName(modAssembly.Location);
-			if (string.IsNullOrEmpty(dllDirectory))
-			{
-				YaOptMod.Error("Cannot get the location of mod dll. Some functions will not work.");
-				return;
-			}
+		public const string LOAD_FOLDER = "1.6";
 
+		public static void LoadLibraries(ModContentPack content)
+		{
 			string nativeDllName = null;
 			string initerName = null;
 			string burstDllName = null;
@@ -39,13 +37,11 @@ namespace YaOpt
 				{
 					burstDllName = "yaopt_burst_osx64.bundle";
 				}
-				// Future: Add Linux/Mac support here
-				// else if (Environment.OSVersion.Platform == PlatformID.Unix) { ... }
 			}
 
 			if (nativeDllName != null)
 			{
-				LoadNativeLibrary(dllDirectory, nativeDllName, initerName);
+				LoadNativeLibrary(content, nativeDllName, initerName);
 			}
 			else
 			{
@@ -53,25 +49,41 @@ namespace YaOpt
 			}
 			if (burstDllName != null)
 			{
-				LoadBurstLibrary(dllDirectory, burstDllName);
+				LoadBurstLibrary(content, burstDllName);
 			}
 			else
 			{
 				YaOptMod.Warning($"This system doesn't support Burst. Current OS: {Environment.OSVersion}");
 			}
-
 		}
 
-		private static void LoadNativeLibrary(string directory, string dllName, string initerType)
+		private static string GetFileFromFolders(List<string> folders, string filename)
+		{
+			foreach (var folder in folders)
+			{
+				var path = Path.Combine(folder, filename);
+				if (File.Exists(path))
+					return path;
+			}
+			return null;
+		}
+
+		private static void LoadNativeLibrary(ModContentPack content, string dllName, string initerType)
 		{
 			try
 			{
-				var dllPath = Path.GetFullPath(Path.Combine(directory, dllName));
+				var dllPath = GetFileFromFolders(content.foldersToLoadDescendingOrder,
+					Path.Combine("Assemblies", dllName));
+				if (string.IsNullOrEmpty(dllPath))
+				{
+					throw new FileNotFoundException("Cannot find native library", dllPath);
+				}
 				YaOptMod.Debug($"Load Native library from {dllPath}");
-				var dll = Assembly.LoadFile(dllPath);
-				var type = dll.GetType(initerType, true);
+				//var dll = Assembly.LoadFile(dllPath);
+				//var type = dll.GetType(initerType, true);
 				// ReSharper disable once PossibleNullReferenceException
-				type.GetMethod("Init").Invoke(null, null);
+				//type.GetMethod("Init").Invoke(null, null);
+				AccessTools.Method(AccessTools.TypeByName(initerType), "Init").Invoke(null, null);
 				YaOptGlobal.IsNativeAvailable = true;
 			}
 			catch (Exception e)
@@ -80,12 +92,13 @@ namespace YaOpt
 			}
 		}
 
-		private static void LoadBurstLibrary(string directory, string dllName)
+		private static void LoadBurstLibrary(ModContentPack content, string dllName)
 		{
 			try
 			{
-				var dllPath = Path.GetFullPath(Path.Combine(directory, "..", "Burst", dllName));
-				if (!File.Exists(dllPath))
+				var dllPath = GetFileFromFolders(content.foldersToLoadDescendingOrder,
+					Path.Combine("Burst", dllName));
+				if (string.IsNullOrEmpty(dllPath))
 				{
 					throw new FileNotFoundException("Cannot find Burst library", dllPath);
 				}
@@ -101,7 +114,8 @@ namespace YaOpt
 			}
 			catch (Exception e)
 			{
-				YaOptMod.Error($"Error when load Burst library.\n {e}");
+				YaOptMod.Error($"Error when load Burst library. " +
+				               $"Any features that require Burst will not work.\n {e}");
 			}
 		}
 	}

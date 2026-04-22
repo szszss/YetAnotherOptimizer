@@ -257,7 +257,7 @@ namespace YaOpt.Settings
 			if (result != enabled && !disabledByDef)
 			{
 				option._enabled = result;
-				if (!option.Validate(false, true, out var reason))
+				if (!option.Validate(false, false, true, out var reason))
 				{
 					Messages.Message("YaOpt.Setting.InvalidOption".Translate().ToString() + reason,
 						null, MessageTypeDefOf.RejectInput, false);
@@ -452,16 +452,33 @@ namespace YaOpt.Settings
 			{
 				listing.Gap(listing.verticalSpacing);
 				listing.Indent();
-				var ddsOnly = panel._settings.LazyTextureLoadDdsOnly;
-				DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.LazyTextureLoad.DdsOnly".Translate(),
-					ddsOnly, false, out var mouseOver, out var result, -12);
-				if (mouseOver)
+
 				{
-					panel._lastMouseOverOption = null;
-					panel._showingDesc = "YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc".Translate();
+					var ddsOnly = panel._settings.LazyTextureLoadDdsOnly;
+					DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.LazyTextureLoad.DdsOnly".Translate(),
+						ddsOnly, false, out var mouseOver, out var result, -12);
+					if (mouseOver)
+					{
+						panel._lastMouseOverOption = null;
+						panel._showingDesc = "YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc".Translate();
+					}
+					if (ddsOnly != result)
+						panel._settings.LazyTextureLoadDdsOnly = result;
 				}
-				if (ddsOnly != result)
-					panel._settings.LazyTextureLoadDdsOnly = result;
+
+				{
+					var radical = panel._settings.LazyTextureLoadRadical;
+					DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.LazyTextureLoad.Radical".Translate(),
+						radical, false, out var mouseOver, out var result, -12);
+					if (mouseOver)
+					{
+						panel._lastMouseOverOption = null;
+						panel._showingDesc = "YaOpt.Setting.Option.LazyTextureLoad.Radical.Desc".Translate();
+					}
+					if (radical != result)
+						panel._settings.LazyTextureLoadRadical = result;
+				}
+
 				listing.Outdent();
 				listing.Gap(listing.verticalSpacing);
 			}

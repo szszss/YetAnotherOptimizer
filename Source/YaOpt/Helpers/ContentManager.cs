@@ -106,6 +106,16 @@ namespace YaOpt.Helpers
 		public static bool OnlyLazilyLoadDds;
 
 		/// <summary>
+		/// If <c>true</c>, downsampling preloading will be enabled.
+		/// </summary>
+		/// <remarks>
+		/// Some textures in the game are forcibly loaded during startup to fill the texture atlas.
+		/// With downsampling enabled, textures larger than 512 pixels will be downsampled to 512 pixels.
+		/// The full-size texture will only be loaded when it is actually used in the game.
+		/// </remarks>
+		public static bool EnableDownsampling;
+
+		/// <summary>
 		/// Stores routing information for content lookups.
 		/// </summary>
 		/// <remarks>
@@ -469,6 +479,7 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool MayInsertIntoAtlas(Texture2D texture)
 		{
 			if (_optimizedTextures.TryGetValue(texture.GetInstanceID(), out var info))
@@ -480,7 +491,7 @@ namespace YaOpt.Helpers
 
 		public static void LoadFullResolutionTexture(Thing thing)
 		{
-			if (_optimizedThingDefs.Count == 0)
+			if (!EnableDownsampling || _optimizedThingDefs.Count == 0)
 				return;
 
 			var def = thing.def;
@@ -505,6 +516,7 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static void CheckAndRestoreTexture(Texture2D tex)
 		{
 			if (tex != null && _optimizedTextures.Remove(tex.GetInstanceID(), out var info))
@@ -516,7 +528,7 @@ namespace YaOpt.Helpers
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool CanDownsampleNow()
 		{
-			return _isGameStarting && ContentFinderRequester.requester != null;
+			return EnableDownsampling && _isGameStarting && ContentFinderRequester.requester != null;
 		}
 
 		/// <summary>
@@ -548,9 +560,18 @@ namespace YaOpt.Helpers
 
 			while ((w >= MAX_ATLAS_SIZE || h >= MAX_ATLAS_SIZE) && skipLevels < maxSkip)
 			{
+				var nextW = Math.Max(1, w / 2);
+				var nextH = Math.Max(1, h / 2);
+
+				// Fix "Compressed TextureFormat RGB(A) Compressed BC7 requires a texture size that is a multiple of 4"
+				if (ddsHeader.PixelFormat.IsCompressed && (nextW % 4 != 0 || nextH % 4 != 0))
+				{
+					break;
+				}
+
 				offsetBytes += GetMipmapDataSize(w, h, ddsHeader.PixelFormat);
-				w = Math.Max(1, w / 2);
-				h = Math.Max(1, h / 2);
+				w = nextW;
+				h = nextH;
 				skipLevels++;
 			}
 

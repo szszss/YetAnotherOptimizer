@@ -64,7 +64,7 @@ namespace YaOpt
 			Log("Now loading...");
 
 			// Load native libraries and burst libraries.
-			NativeLoader.LoadLibraries(Assembly.GetExecutingAssembly());
+			NativeLoader.LoadLibraries(content);
 			YaOptGlobal.IsLibraryLoaded = true;
 
 			// Apply settings and early Harmony patches.
@@ -83,7 +83,7 @@ namespace YaOpt
 		/// </summary>
 		private void ApplySettings()
 		{
-			Settings.ValidateOptions(true);
+			Settings.ValidateOptions(true, false);
 			YaOptSubMod.InitAll(SubMods);
 
 #if false && DEBUG
@@ -105,6 +105,7 @@ namespace YaOpt
 			{
 				ContentManager.Init();
 				ContentManager.OnlyLazilyLoadDds = Settings.LazyTextureLoadDdsOnly;
+				ContentManager.EnableDownsampling = Settings.LazyTextureLoadRadical;
 			}
 			TrampolinePatcher.RegisterTrampolineInstallers();
 			TrampolinePatcher.EarlyInit();

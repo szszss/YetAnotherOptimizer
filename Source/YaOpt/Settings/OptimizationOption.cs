@@ -69,7 +69,7 @@ namespace YaOpt.Settings
 
 		public bool MultiplayerCompatibility => (Flags & OptimizationFlags.MultiplayerIncompatible) == 0;
 
-		public bool Validate(bool dryRun, bool silent, out string message)
+		public bool Validate(bool dryRun, bool printError, bool translateMessage, out string message)
 		{
 			// Validator doesn't validate multiplay and mod requirements. They are validated in the getter of Enabled
 			message = string.Empty;
@@ -79,18 +79,25 @@ namespace YaOpt.Settings
 				if (!dryRun)
 					_enabled = false;
 				error = true;
-				message = "YaOpt.Setting.InvalidOption.RequireNative".Translate().ToString();
+				message = "YaOpt.Setting.InvalidOption.RequireNative";
+				if (translateMessage)
+					message = message.Translate().ToString();
 			}
 			if (_enabled && (Flags & OptimizationFlags.RequireBurst) > 0 && !YaOptGlobal.IsBurstAvailable)
 			{
 				if (!dryRun)
 					_enabled = false;
 				error = true;
-				message = "YaOpt.Setting.InvalidOption.RequireBurst".Translate().ToString();
+				message = "YaOpt.Setting.InvalidOption.RequireBurst";
+				if (translateMessage)
+					message = message.Translate().ToString();
 			}
-			if (!silent && error)
+			if (printError && error)
 			{
-				YaOptMod.Error($"Optimization {Name.Translate()} has been disabled because {message}");
+				var name = Name;
+				if (translateMessage)
+					name = name.Translate();
+				YaOptMod.Error($"Optimization {name} has been disabled because {message}");
 			}
 			return !error;
 		}

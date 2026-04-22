@@ -18,6 +18,7 @@
 	<loadAfter>
 		<li>Ludeon.RimWorld</li>
 		<li>brrainz.harmony</li>
+		<li>zetrith.prepatcher</li>
 		<li>Nals.FacialAnimation</li>
 	</loadAfter>
 	<description>

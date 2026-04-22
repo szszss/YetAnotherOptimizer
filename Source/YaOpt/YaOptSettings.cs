@@ -483,13 +483,19 @@ namespace YaOpt
 			FuncExposeData = (settings) =>
 			{
 				var ddsOnly = settings.LazyTextureLoadDdsOnly;
+				var radical = settings.LazyTextureLoadRadical;
 				Scribe_Values.Look(ref ddsOnly, "OptLazyTextureLoad_DdsOnly", true);
+				Scribe_Values.Look(ref radical, "OptLazyTextureLoad_Radical", false);
 				settings.LazyTextureLoadDdsOnly = ddsOnly;
+				settings.LazyTextureLoadRadical = radical;
 			}
 		};
 
 		[field: Unsaved]
 		public bool LazyTextureLoadDdsOnly { get; set; } = true;
+
+		[field: Unsaved]
+		public bool LazyTextureLoadRadical { get; set; } = false;
 
 		/// <summary>
 		/// Optimizes XML patch operations by simplifying common XPath expressions.
@@ -625,7 +631,7 @@ namespace YaOpt
 			base.ExposeData();
 			if (YaOptGlobal.IsLibraryLoaded && Scribe.mode == LoadSaveMode.Saving)
 			{
-				ValidateOptions(false);
+				ValidateOptions(true);
 			}
 			foreach (var option in _allOptimizations)
 			{
@@ -638,15 +644,15 @@ namespace YaOpt
 			}
 			if (YaOptGlobal.IsLibraryLoaded && Scribe.mode == LoadSaveMode.LoadingVars)
 			{
-				ValidateOptions(false);
+				ValidateOptions(true);
 			}
 		}
 
-		public void ValidateOptions(bool silent)
+		public void ValidateOptions(bool printError, bool translateMessage = true)
 		{
 			foreach (var option in _allOptimizations)
 			{
-				option.Validate(false, silent, out _);
+				option.Validate(false, printError, translateMessage, out _);
 			}
 		}
 
