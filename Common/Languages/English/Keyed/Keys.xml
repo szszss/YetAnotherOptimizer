@@ -17,13 +17,13 @@
 	<YaOpt.Setting.Category.Tps>TPS Optimizations</YaOpt.Setting.Category.Tps>
 	<YaOpt.Setting.Category.Misc>Other Optimizations</YaOpt.Setting.Category.Misc>
 	<YaOpt.Setting.InvalidOption>Cannot enable optimization: </YaOpt.Setting.InvalidOption>
-	<YaOpt.Setting.InvalidOption.RequireNative>Requires 64-bit Windows or Linux OS.</YaOpt.Setting.InvalidOption.RequireNative>
+	<YaOpt.Setting.InvalidOption.RequirePrepatcher>Requires Prepatcher Mod.</YaOpt.Setting.InvalidOption.RequirePrepatcher>
 	<YaOpt.Setting.InvalidOption.RequireBurst>Requires loaded Burst library.</YaOpt.Setting.InvalidOption.RequireBurst>
 	<YaOpt.Setting.Message.RequireReload>Changed settings will take effect after loading a save or restarting the game.</YaOpt.Setting.Message.RequireReload>
 	<YaOpt.Setting.Note.Banned>Disabled by {0}</YaOpt.Setting.Note.Banned>
 	<YaOpt.Setting.Note.Stability>[Stability Note]</YaOpt.Setting.Note.Stability>
 	<YaOpt.Setting.Note.Compatibility>[Mod Compatibility Note]</YaOpt.Setting.Note.Compatibility>
-	<YaOpt.Setting.Note.Platform>[Platform Limitation]</YaOpt.Setting.Note.Platform>
+	<YaOpt.Setting.Note.Prepatch>[Prepatch]</YaOpt.Setting.Note.Prepatch>
 	<YaOpt.Setting.Note.Multithread>[Multithread]</YaOpt.Setting.Note.Multithread>
 	<YaOpt.Setting.Option.DebugOutput>Debug Output</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>Output debug info to the console. Enabling this may slightly reduce game speed, as the game records the entire stack trace for each console message, which is an expensive operation.</YaOpt.Setting.Option.DebugOutput.Desc>
@@ -44,7 +44,7 @@
 	<YaOpt.Setting.Option.LazyTextureLoad>Lazy Texture Loading</YaOpt.Setting.Option.LazyTextureLoad>
 	<YaOpt.Setting.Option.LazyTextureLoad.Desc>Vanilla loads all mod textures into VRAM at startup. This optimization loads textures only when they are first requested, reducing startup time and VRAM usage, but causing stutters when textures are loaded in-game. Note that texture unloading is not yet implemented, so VRAM usage may eventually reach peak levels during long play sessions.</YaOpt.Setting.Option.LazyTextureLoad.Desc>
 	<YaOpt.Setting.Option.LazyTextureLoad.Compatibility>This can cause inaccurate statistics in Graphics Settings+ and ImageOpt.</YaOpt.Setting.Option.LazyTextureLoad.Compatibility>
-	<YaOpt.Setting.Option.LazyTextureLoad.Platform>Due to Harmony limitation in patching generic methods, this is implemented via low-level hooks. Currently only supports Windows.</YaOpt.Setting.Option.LazyTextureLoad.Platform>
+	<YaOpt.Setting.Option.LazyTextureLoad.Prepatch>Due to Harmony limitation in patching generic methods, this is implemented via prepatch. It requires Prepatcher Mod. If you switch this option, you need to restart the game for this optimization to take effect.</YaOpt.Setting.Option.LazyTextureLoad.Prepatch>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>Lazy Load DDS Only</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>Only enable lazy loading for DDS textures (and Zstd compressed DDS from ImageOpt). Non-DDS formats require extra time to convert to a renderable format upon loading, causing noticeable stuttering during runtime loading.</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
 	<YaOpt.Setting.Option.LazyTextureLoad.Radical>More Radical Lazy Loading</YaOpt.Setting.Option.LazyTextureLoad.Radical>
@@ -71,10 +71,9 @@
 	<YaOpt.Setting.Option.ToggleTabCheck.Desc>Throttles the visibility check for toggleable tabs (e.g. the Mechanoid tab). Some modded tabs perform complex, uncached queries every frame to decide if they should be hidden. This optimization limits these checks to once every 500ms. Visibility is forcibly refreshed when pausing, unpausing, or switching maps.</YaOpt.Setting.Option.ToggleTabCheck.Desc>
 	<YaOpt.Setting.Option.ComputeMatrixBurst>Burst Accelerated Matrix Computation</YaOpt.Setting.Option.ComputeMatrixBurst>
 	<YaOpt.Setting.Option.ComputeMatrixBurst.Desc>Accelerates the matrix computation step in render preparation using Burst. Vanilla intended to use Burst for this heavy calculation but failed due to a coding oversight. This optimization implements a working Burst solution.</YaOpt.Setting.Option.ComputeMatrixBurst.Desc>
-	<YaOpt.Setting.Option.ComputeMatrixBurst.Platform>The platform must be able to load the Burst library.</YaOpt.Setting.Option.ComputeMatrixBurst.Platform>
 	<YaOpt.Setting.Option.ThingGetComp>Thing Component Lookup Acceleration</YaOpt.Setting.Option.ThingGetComp>
 	<YaOpt.Setting.Option.ThingGetComp.Desc>Vanilla GetComp is fast when finding an existing component but very slow when looking for a missing one. Unfortunately, the only way to check if a component exists is to query it and wait for a failure. This optimization rewrites the lookup mechanism to ensure fast failure when searching for non-existent components.</YaOpt.Setting.Option.ThingGetComp.Desc>
-	<YaOpt.Setting.Option.ThingGetComp.Platform>Due to Harmony limitation in patching generic methods, this is implemented via low-level hooks. Currently only supports Windows.</YaOpt.Setting.Option.ThingGetComp.Platform>
+	<YaOpt.Setting.Option.ThingGetComp.Prepatch>Due to Harmony limitation in patching generic methods, this is implemented via prepatch. It requires Prepatcher Mod. If you switch this option, you need to restart the game for this optimization to take effect.</YaOpt.Setting.Option.ThingGetComp.Prepatch>
 	<YaOpt.Setting.Option.ParallelPawnTick>Parallel Pawn Tick</YaOpt.Setting.Option.ParallelPawnTick>
 	<YaOpt.Setting.Option.ParallelPawnTick.Desc>Introduces limited multithreading for pawn updates. Multithreading handles pawn job interruption checks, constant job checks, and mood updates.</YaOpt.Setting.Option.ParallelPawnTick.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.Stable>If the error log shows "ParallelPawnTickManager" in the call stack, try disabling this optimization.</YaOpt.Setting.Option.ParallelPawnTick.Stable>

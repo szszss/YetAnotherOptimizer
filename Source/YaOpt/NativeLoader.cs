@@ -1,4 +1,3 @@
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,22 +13,16 @@ namespace YaOpt
 
 		public static void LoadLibraries(ModContentPack content)
 		{
-			string nativeDllName = null;
-			string initerName = null;
 			string burstDllName = null;
 
 			if (Environment.Is64BitProcess && Environment.Is64BitOperatingSystem)
 			{
 				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 				{
-					nativeDllName = "YaOpt.Native.Win64.dll";
-					initerName = "YaOpt.Native.Win64.Initer";
 					burstDllName = "yaopt_burst_win64.dll";
 				}
 				else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 				{
-					nativeDllName = "YaOpt.Native.Unix64.dll";
-					initerName = "YaOpt.Native.Unix64.Initer";
 					burstDllName = "yaopt_burst_linux64.so";
 				}
 				else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -38,14 +31,6 @@ namespace YaOpt
 				}
 			}
 
-			if (nativeDllName != null)
-			{
-				LoadNativeLibrary(content, nativeDllName, initerName);
-			}
-			else
-			{
-				YaOptMod.Warning($"Some functions only work on Windows and Linux. Current OS: {Environment.OSVersion}");
-			}
 			if (burstDllName != null)
 			{
 				LoadBurstLibrary(content, burstDllName);
@@ -65,30 +50,6 @@ namespace YaOpt
 					return path;
 			}
 			return null;
-		}
-
-		private static void LoadNativeLibrary(ModContentPack content, string dllName, string initerType)
-		{
-			try
-			{
-				var dllPath = GetFileFromFolders(content.foldersToLoadDescendingOrder,
-					Path.Combine("Assemblies", dllName));
-				if (string.IsNullOrEmpty(dllPath))
-				{
-					throw new FileNotFoundException("Cannot find native library", dllPath);
-				}
-				YaOptMod.Debug($"Load Native library from {dllPath}");
-				//var dll = Assembly.LoadFile(dllPath);
-				//var type = dll.GetType(initerType, true);
-				// ReSharper disable once PossibleNullReferenceException
-				//type.GetMethod("Init").Invoke(null, null);
-				AccessTools.Method(AccessTools.TypeByName(initerType), "Init").Invoke(null, null);
-				YaOptGlobal.IsNativeAvailable = true;
-			}
-			catch (Exception e)
-			{
-				YaOptMod.Error($"Error when load {dllName}. Trampoline will be unavailable\n {e}");
-			}
 		}
 
 		private static void LoadBurstLibrary(ModContentPack content, string dllName)

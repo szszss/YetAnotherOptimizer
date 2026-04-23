@@ -3,7 +3,6 @@
 	<YaOpt.Setting.SubCategory.CombatExtended>Combat Extended Integration</YaOpt.Setting.SubCategory.CombatExtended>
 	<YaOpt.Setting.Option.CELineOfSightBurst>Burst Acceleration</YaOpt.Setting.Option.CELineOfSightBurst>
 	<YaOpt.Setting.Option.CELineOfSightBurst.Desc>Accelerates line of sight processing using Burst.</YaOpt.Setting.Option.CELineOfSightBurst.Desc>
-	<YaOpt.Setting.Option.CELineOfSightBurst.Platform>The platform must be able to load the Burst library.</YaOpt.Setting.Option.CELineOfSightBurst.Platform>
 	<YaOpt.Setting.SubCategory.FacialAnimation>Facial Animation Integration</YaOpt.Setting.SubCategory.FacialAnimation>
 	<YaOpt.Setting.Option.FAParallelUpdate>Parallel Facial Animation Update</YaOpt.Setting.Option.FAParallelUpdate>
 	<YaOpt.Setting.Option.FAParallelUpdate.Desc>Moves facial animation updates from the main thread to the parallel object rendering preparation phase.</YaOpt.Setting.Option.FAParallelUpdate.Desc>
@@ -11,7 +10,6 @@
 	<YaOpt.Setting.Option.FADeLinq.Desc>LINQ expressions are a data query method in C#, but they are unfriendly to Unity's Garbage Collection system, generating significant GC overhead at runtime. This optimization rewrites all LINQ expressions into GC-friendly traditional data queries.</YaOpt.Setting.Option.FADeLinq.Desc>
 	<YaOpt.Setting.Option.FADeLinqBurst>Burst Acceleration</YaOpt.Setting.Option.FADeLinqBurst>
 	<YaOpt.Setting.Option.FADeLinqBurst.Desc>Accelerates facial animation processing using Burst. Requires "Remove LINQ" to be enabled.</YaOpt.Setting.Option.FADeLinqBurst.Desc>
-	<YaOpt.Setting.Option.FADeLinqBurst.Platform>The platform must be able to load the Burst library.</YaOpt.Setting.Option.FADeLinqBurst.Platform>
 	<YaOpt.Setting.Option.FAAnimCache>Animation Cache</YaOpt.Setting.Option.FAAnimCache>
 	<YaOpt.Setting.Option.FAAnimCache.Desc>Caches the list of facial animations to avoid frequent reconstruction.</YaOpt.Setting.Option.FAAnimCache.Desc>
 	<YaOpt.Setting.Option.FAPawnSpawn>Pawn Spawning Optimization</YaOpt.Setting.Option.FAPawnSpawn>

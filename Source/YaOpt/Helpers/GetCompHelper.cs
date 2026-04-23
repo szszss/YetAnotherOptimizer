@@ -7,7 +7,7 @@ using Verse;
 
 namespace YaOpt.Helpers
 {
-	internal static class GetCompHelper
+	public static class GetCompHelper
 	{
 		public const int VERSION_MAGICNUMBER_HAS_THINGHOLDER = 0x7F000000;
 
@@ -106,65 +106,11 @@ namespace YaOpt.Helpers
 		}
 
 		[SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
-		public static ThingComp Get(ThingWithComps thing, Type compType, int version, Dictionary<Type, ThingComp[]> compsByType)
+		public static ThingComp Get(ThingWithComps thing, Type compType,
+			List<ThingComp> compList, int version, Dictionary<Type, ThingComp[]> compsByType)
 		{
-			/*Type compType = null;
-			var print = !usedMrgctx.Contains(mrgctx);
-			var ptrMonoGenericInst = Marshal.ReadIntPtr(mrgctx, 8);
-			var ptrMonoType = Marshal.ReadIntPtr(ptrMonoGenericInst, 8);
-			var ptrMonoClass = Marshal.ReadIntPtr(ptrMonoType);
-			var ptrRuntimeInfo = Marshal.ReadIntPtr(ptrMonoClass, 208);
-			var ptrVTB = IntPtr.Zero;
-			var ptrType = IntPtr.Zero;
-			if (ptrRuntimeInfo != IntPtr.Zero)
-			{
-				ptrVTB = Marshal.ReadIntPtr(ptrRuntimeInfo, 8);
-				if (ptrVTB != IntPtr.Zero)
-				{
-					ptrType = Marshal.ReadIntPtr(ptrVTB, 24);
-					if (ptrType != IntPtr.Zero)
-					{
-						compType = AsmHelper.TrampolineFactory.GetObjectFromPtr<Type>(ptrType);
-					}
-				}
-			}
-			if (print)
-			{
-				usedMrgctx.Add(mrgctx);
-				YaOptMod.Log("MRGCTX: 0x" + mrgctx.ToString("X"));
-				YaOptMod.Log("MRGCTX + 0x10: 0x" + Marshal.ReadIntPtr(mrgctx + 0x10).ToString("X"));
-				YaOptMod.Log("MRGCTX + 0x18: 0x" + Marshal.ReadIntPtr(mrgctx + 0x18).ToString("X"));
-				YaOptMod.Log("MRGCTX + 0x20: 0x" + Marshal.ReadIntPtr(mrgctx + 0x20).ToString("X"));
-				YaOptMod.Log("MRGCTX + 0x28: 0x" + Marshal.ReadIntPtr(mrgctx + 0x28).ToString("X"));
-				YaOptMod.Log("MonoGenericInst: 0x" + ptrMonoGenericInst.ToString("X"));
-				YaOptMod.Log("MonoType: 0x" + ptrMonoType.ToString("X"));
-				YaOptMod.Log("MonoClass: 0x" + ptrMonoClass.ToString("X"));
-				YaOptMod.Log("RuntimeInfo: 0x" + ptrMonoClass.ToString("X"));
-				if (ptrRuntimeInfo != IntPtr.Zero)
-				{
-					YaOptMod.Log("VTB: 0x" + ptrVTB.ToString("X"));
-					if (ptrVTB != IntPtr.Zero)
-					{
-						YaOptMod.Log("Type: 0x" + ptrType.ToString("X"));
-						if (compType != null)
-						{
-							YaOptMod.Log("Resolved type: " + compType.Name);
-						}
-					}
-				}
-			}*/
-			//compType = AsmHelper.TrampolineFactory.GetObjectFromPtr<Type>(mrgctx + 0x28);
-			//var cfPtr = AsmHelper.TrampolineFactory.GetObjectMemoryAddress(typeof(CompForbiddable));
-			var compList = thing.AllComps;
-			if (compType == null || compList.Count == 0)
+			if (compList.Count == 0)
 				return null;
-			/*switch (compList.Count)
-			{
-				case 0: return null;
-				case 1:
-					var comp = compList[0];
-					return compType.IsInstanceOfType(comp) ? comp : null; // IsInstanceOfType is just too slow
-			}*/
 
 			if (compsByType == null)
 				return GetCompBySlowPath(compType, compList);

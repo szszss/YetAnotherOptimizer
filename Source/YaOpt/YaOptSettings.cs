@@ -222,7 +222,6 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.ComputeMatrixBurst",
 			Desc = "YaOpt.Setting.Option.ComputeMatrixBurst.Desc",
-			NotePlatform = "YaOpt.Setting.Option.ComputeMatrixBurst.Platform",
 			Category = OptimizationCategory.Fps,
 			Flags = OptimizationFlags.RequireBurst,
 		};
@@ -234,14 +233,14 @@ namespace YaOpt
 		/// Unfortunately, checking if a component exists requires calling GetComp and waiting for a null result.
 		/// This optimization rewrites the lookup mechanism to ensure fast failure for missing components.
 		/// </summary>
-		/// <seealso cref="Patches.Trampolines.Verse_ThingWithComps_GetComp"/>
+		/// <seealso cref="Prepatch.Patches.Verse_ThingWithComps_GetComp"/>
 		public OptimizationOption OptThingGetComp { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ThingGetComp",
 			Desc = "YaOpt.Setting.Option.ThingGetComp.Desc",
-			NotePlatform = "YaOpt.Setting.Option.ThingGetComp.Platform",
+			NotePrepatch = "YaOpt.Setting.Option.ThingGetComp.Prepatch",
 			Category = OptimizationCategory.Tps,
-			Flags = OptimizationFlags.RequireNative,
+			Flags = OptimizationFlags.RequirePrepatcher
 		};
 
 		/// <summary>
@@ -467,7 +466,7 @@ namespace YaOpt
 		/// but may cause stutters when textures are loaded during gameplay.
 		/// Note: Texture unloading is not implemented, so VRAM usage may increase over time.
 		/// </summary>
-		/// <seealso cref="Patches.Trampolines.Verse_ContentFinder_Get"/>
+		/// <seealso cref="Prepatch.Patches.Verse_ContentFinder_Get"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
 		/// <seealso cref="Patches.Early.Verse_ModContentLoader_LoadTexture"/>
@@ -476,9 +475,9 @@ namespace YaOpt
 			Name = "YaOpt.Setting.Option.LazyTextureLoad",
 			Desc = "YaOpt.Setting.Option.LazyTextureLoad.Desc",
 			NoteCompatibility = "YaOpt.Setting.Option.LazyTextureLoad.Compatibility",
-			NotePlatform = "YaOpt.Setting.Option.LazyTextureLoad.Platform",
+			NotePrepatch = "YaOpt.Setting.Option.LazyTextureLoad.Prepatch",
 			Category = OptimizationCategory.Misc,
-			Flags = OptimizationFlags.RequireNative,
+			Flags = OptimizationFlags.RequirePrepatcher,
 			FuncPostDraw = SettingsPanel.LazyTextureLoadPostDraw,
 			FuncExposeData = (settings) =>
 			{

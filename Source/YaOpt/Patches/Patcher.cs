@@ -5,7 +5,6 @@ using System.Reflection;
 using Verse;
 using YaOpt.Helpers;
 using YaOpt.Patches.Compatibility;
-using YaOpt.Patches.Trampolines;
 
 namespace YaOpt.Patches
 {
@@ -25,7 +24,6 @@ namespace YaOpt.Patches
 		/// </summary>
 		public static void Init()
 		{
-			TrampolinePatcher.Init();
 			LongEventHandler.QueueLongEvent(PatchOnStartup, "YaOpt.Loading.Patching".Translate(), false, null);
 		}
 
@@ -74,7 +72,6 @@ namespace YaOpt.Patches
 				{
 					YaOptMod.Debug("Uninstalling exist patches...");
 					harmony.UnpatchAll(harmony.Id);
-					TrampolinePatcher.UninstallAll();
 					YaOptSubMod.UnpatchAll(YaOptGlobal.SubMods, harmony);
 					_hasPatched = false;
 				}
@@ -82,8 +79,6 @@ namespace YaOpt.Patches
 				// Apply Harmony patches from the current assembly.
 				YaOptMod.Debug("Patching...");
 				noError &= harmony.TryPatchAll(assembly);
-				// Install trampoline patches for generic methods.
-				TrampolinePatcher.InstallAll();
 				// Apply submod patches.
 				noError &= YaOptSubMod.PatchAll(YaOptGlobal.SubMods, harmony);
 				// Execute unpatcher to resolve conflicts.
@@ -126,7 +121,7 @@ namespace YaOpt.Patches
 					if (forceEnable)
 					{
 						fieldCompatibilityMode.SetValue(objSettings, true);
-						msg = "YaOpt.Message.ButterCompatibilityNotEnabled";
+						msg = "YaOpt.Message.ButterCompatibilityForceEnable";
 					}
 					else
 					{

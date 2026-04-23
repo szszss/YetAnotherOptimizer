@@ -23,12 +23,12 @@ The project consists of four core modules, each handling optimization at a diffe
   - Uses `[BurstCompile]` to mark critical paths.
   - Strictly prohibits referencing any managed objects (reference types); only uses `NativeArray` and unmanaged structures (`struct`).
 
-### 1.3 `Source/YaOpt.Native.Win64` (Native Module)
-- **Purpose**: Handles x64 native interop and low-level memory modification.
+### 1.3 `Source/YaOpt.Prepatch` (Prepatch Module)
+- **Purpose**: Handle Prepatch that must be applied before the game starts.
 - **Functions**:
-  - Implements `ITrampolineFactory` to bypass Harmony limitations (e.g., hooking generic methods) by manually writing x64 machine code (`MOV RAX, ... JMP RAX`).
-  - Uses `VirtualProtect` to modify memory permissions.
-  - Makes extensive use of `unsafe` pointer operations.
+  - Uses `Prepatcher` instead of Harmony because of some limitations (e.g., hooking generic methods).
+  - Uses `FreePatch` to modify method.
+  - Uses `Mono.Cecil.Cil` to emit IL code.
 
 ### 1.4 `Source/YaOpt.OtherMod.*` (Compatibility Module)
 - **Purpose**: Compatibility patches for specific popular mods (e.g., `FacialAnimation`, `HumanoidAlienRaces`).
@@ -47,7 +47,7 @@ Root
 ├── Source/
 │   ├── YaOpt/              # Core C# project
 │   ├── YaOpt.Unity/        # Unity Burst project
-│   ├── YaOpt.Native.Win64/ # Win64 Interop project
+│   ├── YaOpt.Prepatch/     # Prepatch project
 │   └── YaOpt.OtherMod.*/   # Compatibility projects
 ├── About/                  # Mod metadata
 └── LoadFolders.xml         # Loading logic
@@ -81,11 +81,7 @@ Since this is an optimization mod, performance is the highest priority:
 - **Defensive Programming**: When searching for instructions in a Transpiler, consider that other mods may have already modified the code.
 - **Comments**: Complex IL operations must include comments explaining the intent (*Why*), not just the operation (*What*).
 
-### 3.4 Unsafe Code
-- `unsafe` code blocks and pointer operations are allowed in performance-critical areas but must ensure boundary checks and memory safety.
-- In `YaOpt.Native.Win64`, exercise extreme caution when directly manipulating memory addresses to ensure alignment and read/write permissions.
-
-### 3.5 Documentation Style
+### 3.4 Documentation Style
 - **Be Concise**: XML documentation should be brief and to the point.
 - **Summary Only for Simple Members**: For straightforward methods/properties, a single `<summary>` line is sufficient.
 - **Remarks for Complexity**: Use `<remarks>` only when explaining non-obvious behavior, thread safety, or performance implications.

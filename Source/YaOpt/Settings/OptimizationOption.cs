@@ -45,7 +45,7 @@ namespace YaOpt.Settings
 
 		public string NoteCompatibility { get; set; } = string.Empty;
 
-		public string NotePlatform { get; set; } = string.Empty;
+		public string NotePrepatch { get; set; } = string.Empty;
 
 		public string NoteMultithread { get; set; } = string.Empty;
 
@@ -74,12 +74,12 @@ namespace YaOpt.Settings
 			// Validator doesn't validate multiplay and mod requirements. They are validated in the getter of Enabled
 			message = string.Empty;
 			var error = false;
-			if (_enabled && (Flags & OptimizationFlags.RequireNative) > 0 && !YaOptGlobal.IsNativeAvailable)
+			if (_enabled && (Flags & OptimizationFlags.RequirePrepatcher) > 0 && !YaOptGlobal.IsPrepatcherAvailable)
 			{
 				if (!dryRun)
 					_enabled = false;
 				error = true;
-				message = "YaOpt.Setting.InvalidOption.RequireNative";
+				message = "YaOpt.Setting.InvalidOption.RequirePrepatcher";
 				if (translateMessage)
 					message = message.Translate().ToString();
 			}

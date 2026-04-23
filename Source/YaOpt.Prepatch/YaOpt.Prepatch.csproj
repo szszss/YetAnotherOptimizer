@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <Import Project="..\Settings.props" />
@@ -12,12 +11,17 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0" />
     <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
-	<PackageReference Include="SharpDisasm" Version="1.1.11" />
+    <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
+    <PackageReference Include="Zetrith.Prepatcher" Version="1.2.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Publicize Include="0Harmony" />
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Assemblies\&quot; /i /y" />
-	<Exec Command="xcopy &quot;$(TargetDir)SharpDisasm.dll&quot; &quot;$(SolutionDir)..\1.6\Assemblies\&quot; /i /y" />
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Prepatch\Assemblies\&quot; /i /y" />
   </Target>
 </Project>

@@ -7,7 +7,7 @@ namespace YaOpt.Settings
 	{
 		None = 0,
 		MultiplayerIncompatible = 0b0000_0001,
-		RequireNative            = 0b0000_0010,
+		RequirePrepatcher       = 0b0000_0010,
 		RequireBurst            = 0b0001_0000,
 
 		NoSnapshot            = 0b0001_0000_0000_0000,

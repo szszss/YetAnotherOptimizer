@@ -5,7 +5,6 @@ using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
 using YaOpt.Patches;
-using YaOpt.Patches.Trampolines;
 
 namespace YaOpt
 {
@@ -54,6 +53,7 @@ namespace YaOpt
 		{
 			// Set the singleton instance and detect if Multiplayer mod is active.
 			Instance = this;
+			Log("Now loading...");
 			YaOptGlobal.IsMultiplayer = YaOptGlobal.HasMod("rwmt.Multiplayer");
 
 			// Initialize compatibility submods.
@@ -61,15 +61,18 @@ namespace YaOpt
 
 			// Load settings.
 			Settings = GetSettings<YaOptSettings>();
-			Log("Now loading...");
+			CheckPrepatch();
 
-			// Load native libraries and burst libraries.
+			// Load and burst libraries.
 			NativeLoader.LoadLibraries(content);
 			YaOptGlobal.IsLibraryLoaded = true;
 
 			// Apply settings and early Harmony patches.
 			ApplySettings();
 			ApplyEarlyPatches();
+
+			// Init Prepatch
+			InitPrepatch();
 		}
 
 		private void InitSubMods()
@@ -91,6 +94,31 @@ namespace YaOpt
 #endif
 		}
 
+		private void CheckPrepatch()
+		{
+			if (YaOptGlobal.HasMod("zetrith.prepatcher"))
+			{
+				var type = AccessTools.TypeByName("YaOpt.Prepatch.YaOptPrepatch");
+				if (type != null)
+				{
+					Debug("Prepatcher presents.");
+					YaOptGlobal.IsPrepatcherAvailable = true;
+				}
+			}
+		}
+
+		private void InitPrepatch()
+		{
+			if (YaOptGlobal.IsPrepatcherAvailable)
+			{
+				var type = AccessTools.TypeByName("YaOpt.Prepatch.YaOptPrepatch");
+				if (Settings.OptThingGetComp.Enabled)
+					AccessTools.Field(type, "ThingWithCompsGetCompEnabled").SetValue(null, true);
+				if (Settings.OptLazyTextureLoad.Enabled)
+					AccessTools.Field(type, "ContentFinderGetEnabled").SetValue(null, true);
+			}
+		}
+
 		/// <summary>
 		/// Applies early Harmony patches that must run before other mods load.
 		/// </summary>
@@ -98,18 +126,12 @@ namespace YaOpt
 		{
 			EarlyHarmony.TryPatchAll(Assembly.GetExecutingAssembly(), true);
 
-			if (!YaOptGlobal.IsTrampolineAvailable)
-				return;
-
 			if (Settings.OptLazyTextureLoad.Enabled)
 			{
 				ContentManager.Init();
 				ContentManager.OnlyLazilyLoadDds = Settings.LazyTextureLoadDdsOnly;
 				ContentManager.EnableDownsampling = Settings.LazyTextureLoadRadical;
 			}
-			TrampolinePatcher.RegisterTrampolineInstallers();
-			TrampolinePatcher.EarlyInit();
-			TrampolinePatcher.EarlyInstallAll();
 		}
 
 		/// <summary>

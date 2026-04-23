@@ -232,7 +232,7 @@ namespace YaOpt.Settings
 			var label = option.Name.Translate().ToString();
 			var hasNoteS = !string.IsNullOrWhiteSpace(option.NoteStability);
 			var hasNoteC = !string.IsNullOrWhiteSpace(option.NoteCompatibility);
-			var hasNoteP = !string.IsNullOrWhiteSpace(option.NotePlatform);
+			var hasNoteP = !string.IsNullOrWhiteSpace(option.NotePrepatch);
 			var hasNoteMT = !string.IsNullOrWhiteSpace(option.NoteMultithread);
 			if (hasNoteS || hasNoteC || hasNoteP || hasNoteMT)
 			{
@@ -325,10 +325,10 @@ namespace YaOpt.Settings
 					.Append(option.NoteCompatibility.Translate()).Append("</color>");
 			}
 
-			if (!string.IsNullOrWhiteSpace(option.NotePlatform))
+			if (!string.IsNullOrWhiteSpace(option.NotePrepatch))
 			{
-				sb.Append("\n\n").Append("<color=#88F0F0>").Append("YaOpt.Setting.Note.Platform".Translate()).Append("\n")
-					.Append(option.NotePlatform.Translate()).Append("</color>");
+				sb.Append("\n\n").Append("<color=#88F0F0>").Append("YaOpt.Setting.Note.Prepatch".Translate()).Append("\n")
+					.Append(option.NotePrepatch.Translate()).Append("</color>");
 			}
 
 			if (!string.IsNullOrWhiteSpace(option.NoteMultithread))
