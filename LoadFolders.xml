@@ -7,5 +7,6 @@
 		<li IfModActive="Nals.FacialAnimation">1.6/Mods/Facial Animation</li>
 		<li IfModActive="erdelf.HumanoidAlienRaces">1.6/Mods/Humanoid Alien Races</li>
 		<li IfModActive="dev.soeur.imageopt">1.6/Mods/Image Opt</li>
+		<li IfModActive="OskarPotocki.VanillaFactionsExpanded.Core">1.6/Mods/Vanilla Expanded Framework</li>
 	</v1.6>
 </loadFolders>

@@ -21,4 +21,7 @@
 	<YaOpt.Setting.Option.HARDeLinq.Desc>LINQ expressions are a data query method in C#, but they are unfriendly to Unity's Garbage Collection system, generating significant GC overhead at runtime. This optimization rewrites all LINQ expressions into GC-friendly traditional data queries.</YaOpt.Setting.Option.HARDeLinq.Desc>
 	<YaOpt.Setting.Option.HARTextureCache>Texture Loading Optimization</YaOpt.Setting.Option.HARTextureCache>
 	<YaOpt.Setting.Option.HARTextureCache.Desc>Optimizes texture loading for the Humanoid Alien Races mod by using the texture caching system provided by this mod. This provides significant performance improvements for races with dynamic body parts.</YaOpt.Setting.Option.HARTextureCache.Desc>
+	<YaOpt.Setting.SubCategory.VanillaExpandedFramework>Vanilla Expanded Framework Integration</YaOpt.Setting.SubCategory.VanillaExpandedFramework>
+	<YaOpt.Setting.Option.VEFMemoryLeakFix>Fix Memory Leak</YaOpt.Setting.Option.VEFMemoryLeakFix>
+	<YaOpt.Setting.Option.VEFMemoryLeakFix.Desc>Vanilla Expanded Framework has two caches that are never cleared, causing pawn spawning in the game to remain in memory even after loading a save, until the game is exited. This optimization clears these two caches when loading a save and clears the caches once a day in-game.</YaOpt.Setting.Option.VEFMemoryLeakFix.Desc>
 </LanguageData>

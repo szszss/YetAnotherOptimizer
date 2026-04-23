@@ -6,7 +6,7 @@ using System.Reflection;
 using Verse;
 using YaOpt.Helpers;
 
-namespace YaOpt.Patches.Compatibility.VanillaExpandedFramework
+namespace YaOpt.OtherMod.VanillaExpandedFramework.Patches.ThreadSafe
 {
 	[HarmonyPatch]
 	[HarmonyAfter("OskarPotocki.VEF")]
@@ -33,8 +33,7 @@ namespace YaOpt.Patches.Compatibility.VanillaExpandedFramework
 			if (original != null)
 				return true;
 
-			var shouldRun = YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
-							YaOptGlobal.HasMod("OskarPotocki.VanillaFactionsExpanded.Core");
+			var shouldRun = YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
 
 			if (shouldRun && _typeRecipeExtension == null)
 			{

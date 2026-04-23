@@ -21,4 +21,7 @@
 	<YaOpt.Setting.Option.HARDeLinq.Desc>Linq表达式是C#的一种数据查询方式，然而它对Unity的垃圾回收系统及其不友好，会在运行时产生大量GC开销。此优化将所有Linq表达式重写为对GC更友好的传统数据查询。</YaOpt.Setting.Option.HARDeLinq.Desc>
 	<YaOpt.Setting.Option.HARTextureCache>纹理加载优化</YaOpt.Setting.Option.HARTextureCache>
 	<YaOpt.Setting.Option.HARTextureCache.Desc>优化了外星人框架Mod的纹理加载，让它使用本Mod提供的纹理缓存系统，对拥有动态身体部件的种族有较大的性能提升。</YaOpt.Setting.Option.HARTextureCache.Desc>
+	<YaOpt.Setting.SubCategory.VanillaExpandedFramework>原版扩展框架联动</YaOpt.Setting.SubCategory.VanillaExpandedFramework>
+	<YaOpt.Setting.Option.VEFMemoryLeakFix>修复内存泄露</YaOpt.Setting.Option.VEFMemoryLeakFix>
+	<YaOpt.Setting.Option.VEFMemoryLeakFix.Desc>原版扩展框架存在两处不会清理的缓存，导致游戏中出现的角色在内存中不会被清除，即使在加载存档后也会驻留在内存里，直到退出游戏。此优化会在加载存档时清空这两个缓存，并在游戏内每天清理一次缓存。</YaOpt.Setting.Option.VEFMemoryLeakFix.Desc>
 </LanguageData>
