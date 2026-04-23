@@ -3,6 +3,7 @@
 	<YaOpt.Loading.SearchingTypes>YaOpt: 初始化类型数据库</YaOpt.Loading.SearchingTypes>
 	<YaOpt.Loading.Patching>YaOpt: 重新应用设置</YaOpt.Loading.Patching>
 	<YaOpt.Message.ButterCompatibilityNotEnabled>你同时安装了YaOpt和Butter++，必须在设置中开启Butter++的兼容模式。</YaOpt.Message.ButterCompatibilityNotEnabled>
+	<YaOpt.Message.ButterCompatibilityForceEnable>你同时安装了YaOpt和Butter++，已强制开启Butter++的兼容模式。</YaOpt.Message.ButterCompatibilityForceEnable>
 	<YaOpt.Message.ErrorWhilePatching>YaOpt在应用设置时出现了错误，游戏可能无法正常运行，查阅控制台获取详细信息。</YaOpt.Message.ErrorWhilePatching>
 	<YaOpt.Setting.Button.DisableAll>禁用全部优化</YaOpt.Setting.Button.DisableAll>
 	<YaOpt.Setting.Button.EnableAll>启用全部优化</YaOpt.Setting.Button.EnableAll>
@@ -41,11 +42,13 @@
 	<YaOpt.Setting.Option.FastRecacheRequested.Desc>优化物体是否需要重新生成渲染参数的检查。原版游戏通过递归调用渲染树上的每一个子节点来检查是否有子节点要求更新。统计发现97%的物体渲染树不超过4层，此优化将前4层节点的检查内联到一个函数中，省去了虚函数调用的开销。注：性能监测显示提升很小，未来版本可能移除。</YaOpt.Setting.Option.FastRecacheRequested.Desc>
 	<YaOpt.Setting.Option.FastRecacheRequested.Compatibility>该优化假设所有的渲染节点都使用原版的缓存更新检查逻辑。如果在游戏启动时检测到有其他Mod重写了缓存更新检查，此优化会被自动禁用。</YaOpt.Setting.Option.FastRecacheRequested.Compatibility>
 	<YaOpt.Setting.Option.LazyTextureLoad>延迟纹理加载</YaOpt.Setting.Option.LazyTextureLoad>
-	<YaOpt.Setting.Option.LazyTextureLoad.Desc>原版游戏会在启动时将所有Mod纹理加载入显存中。这个优化会让纹理仅在被首次调用时加载，能降低启动耗时和显存占用，但会让游戏内首次载入纹理时顿卡。需要注意的是，目前尚未实现纹理卸载机制，当你一次游戏玩得足够久时，显存占用仍可能会逐渐增加至巅峰。</YaOpt.Setting.Option.LazyTextureLoad.Desc>
+	<YaOpt.Setting.Option.LazyTextureLoad.Desc>原版游戏会在启动时将所有Mod纹理加载入显存中。这个优化会让纹理仅在被首次调用时加载，能降低启动耗时和显存占用，但会让游戏内首次载入纹理时顿卡。需要注意的是，目前尚未实现纹理卸载机制，当你一次游戏玩得足够久时，显存占用仍可能会逐渐增加至巅峰。此优化以及它的所有子选项在更改后都需要重启游戏才生效。</YaOpt.Setting.Option.LazyTextureLoad.Desc>
 	<YaOpt.Setting.Option.LazyTextureLoad.Compatibility>会导致Graphics Settings+和ImageOpt的统计数据不准。</YaOpt.Setting.Option.LazyTextureLoad.Compatibility>
 	<YaOpt.Setting.Option.LazyTextureLoad.Platform>由于Harmony不支持为泛型方法打补丁，该优化通过Hook底层代码来实现，目前仅支持Windows平台。</YaOpt.Setting.Option.LazyTextureLoad.Platform>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>仅延迟加载DDS格式</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
 	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>只对DDS格式（以及ImageOpt的Zstd压缩DDS）纹理启用延迟加载，非DDS格式图片在载入时需要花费额外时间将其转换成能被游戏引擎渲染的格式，在运行中载入时会有明显的卡顿。</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
+	<YaOpt.Setting.Option.LazyTextureLoad.Radical>更激进的延迟加载</YaOpt.Setting.Option.LazyTextureLoad.Radical>
+	<YaOpt.Setting.Option.LazyTextureLoad.Radical.Desc>基础优化仅会延迟加载角色和物品的纹理，由于游戏特性，建筑贴图始终会在游戏启动时载入，以便生成贴图集以及作为预览图标。开启此选项后，对于尺寸超过256的纹理，游戏启动载入时都会将其缩小至256，并在游戏中实际用到时才会加载完整纹理。由于需要在创建物体时进行加载检测，会略微增加创建物体的开销，表现就是少许增加载入游戏时和地图上刷新大量物体时的卡顿。建议仅在开启基础优化后显存占用依旧紧张时才启用此选项。此外此选项仅支持DDS（以及Zstd压缩DDS）贴图。</YaOpt.Setting.Option.LazyTextureLoad.Radical.Desc>
 	<YaOpt.Setting.Option.FastPatchOperation>简化XPath</YaOpt.Setting.Option.FastPatchOperation>
 	<YaOpt.Setting.Option.FastPatchOperation.Desc>如果XML补丁中XPath表达式比较简单，形如Defs/定义类型[defName = "定义名"]，那么这个优化将会将XPath表达式简化为简单的节点查询，提高游戏启动速度。</YaOpt.Setting.Option.FastPatchOperation.Desc>
 	<YaOpt.Setting.Option.FastTranslationInjection>优化文本注入</YaOpt.Setting.Option.FastTranslationInjection>
@@ -76,28 +79,39 @@
 	<YaOpt.Setting.Option.ParallelPawnTick.Desc>为角色更新引入有限的多线程处理。多线程处理角色的工作中断判断、常态工作判断和情绪更新。</YaOpt.Setting.Option.ParallelPawnTick.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.Stable>如果错误日志的调用栈中出现了ParallelPawnTickManager字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelPawnTick.Stable>
 	<YaOpt.Setting.Option.ParallelPawnTick.Compatibility>Mod不得在工作失败条件的判断逻辑中产生副作用（即不能对游戏实际状态产生影响），且不能执行非线程安全操作。失败条件的判断可能会在一帧中执行两次（一次在预测器中，一次在主线程中）。</YaOpt.Setting.Option.ParallelPawnTick.Compatibility>
-	<YaOpt.Setting.Option.ParallelPawnTick.MultiThread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelPawnTick.MultiThread>
+	<YaOpt.Setting.Option.ParallelPawnTick.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelPawnTick.Multithread>
 	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>工作中断预测</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>
 	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>预测角色当前的工作在本帧是否会失败或被紧急工作（如躲避敌人）打断。如果预测通过，主线程将不再进行重复检测；否则，主线程会重新进行一次标准检测。</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>常态工作预测</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>预测角色是否会在本帧产生常态工作，常态工作指高优先级的角色行为，如躲避敌人、在太空寻找氧气等。</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>
-	<YaOpt.Setting.Option.ParallelPawnTick.MoodUpdate>情绪更新</YaOpt.Setting.Option.ParallelPawnTick.MoodUpdate>
-	<YaOpt.Setting.Option.ParallelPawnTick.MoodUpdate.Desc>多线程更新角色的心情。</YaOpt.Setting.Option.ParallelPawnTick.MoodUpdate.Desc>
 	<YaOpt.Setting.Option.ParallelJobGiver>并行工作发布</YaOpt.Setting.Option.ParallelJobGiver>
 	<YaOpt.Setting.Option.ParallelJobGiver.Desc>为角色发布工作是游戏中开销最大的操作之一。原版逻辑是将角色所有允许执行的工作按优先级排成序列，依次检查直到找到第一个可执行的工作。该优化使用多线程检查这个序列。当某个线程找到可执行的工作后，会将序列截断于此处（丢弃后续低优先级工作），等待其他检查更高优先级工作的线程完成，最后从所有结果中取出优先级最高的那个工作并发布。</YaOpt.Setting.Option.ParallelJobGiver.Desc>
 	<YaOpt.Setting.Option.ParallelJobGiver.Stable>如果错误日志的调用栈中出现了ParallelJobGiver字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelJobGiver.Stable>
 	<YaOpt.Setting.Option.ParallelJobGiver.Compatibility>Mod不能在工作发布的判断逻辑中产生副作用（即不能对游戏产生实际影响），不能执行非线程安全的操作。永远不应假定发布的任务一定会被执行（多线程处理时可能会产生多个可执行的工作，只有优先级最高的那个会被采纳，其他的会被丢弃）。</YaOpt.Setting.Option.ParallelJobGiver.Compatibility>
-	<YaOpt.Setting.Option.ParallelJobGiver.MultiThread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelJobGiver.MultiThread>
+	<YaOpt.Setting.Option.ParallelJobGiver.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelJobGiver.Multithread>
 	<YaOpt.Setting.Option.ParallelPostMapTick>并行地图更新</YaOpt.Setting.Option.ParallelPostMapTick>
 	<YaOpt.Setting.Option.ParallelPostMapTick.Desc>多线程执行地图的环境效果、水体冻结和气体扩散更新。</YaOpt.Setting.Option.ParallelPostMapTick.Desc>
 	<YaOpt.Setting.Option.ParallelPostMapTick.Stable>如果错误日志的调用栈中出现了SteadyEnvironmentEffects、TempTerrainManager或GasGrid字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelPostMapTick.Stable>
-	<YaOpt.Setting.Option.ParallelPostMapTick.MultiThread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelPostMapTick.MultiThread>
+	<YaOpt.Setting.Option.ParallelPostMapTick.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelPostMapTick.Multithread>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate>并行情绪更新</YaOpt.Setting.Option.ParallelThoughtUpdate>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate.Desc>多线程执行角色的情绪更新。</YaOpt.Setting.Option.ParallelThoughtUpdate.Desc>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>如果错误日志的调用栈中出现了ParallelThoughtRecalculatingJob、ParallelThoughtCreatingJob、ParallelPreceptThoughtCreatingJob、ParallelThoughtAddingJob和ParallelThoughtUpdater字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>
 	<YaOpt.Setting.Option.IdeoCheck>文化检查优化</YaOpt.Setting.Option.IdeoCheck>
 	<YaOpt.Setting.Option.IdeoCheck.Desc>游戏在检查文化是否允许做某事时，会遍历其下所有的戒律。此优化会在戒律每次更新时，为它创建缓存，记录那些涉及到禁令的戒律，然后在检查文化是否允许做某事时，只遍历那些有禁令的戒律。</YaOpt.Setting.Option.IdeoCheck.Desc>
 	<YaOpt.Setting.Option.WindUpdate>植物摇曳效果优化</YaOpt.Setting.Option.WindUpdate>
 	<YaOpt.Setting.Option.WindUpdate.Desc>游戏会在每一个逻辑帧中为所有植物材质更新风力强度参数，这是没必要的。优化后将仅在渲染帧中更新风力强度。</YaOpt.Setting.Option.WindUpdate.Desc>
 	<YaOpt.Setting.Option.FastListerRemove>物体移除优化</YaOpt.Setting.Option.FastListerRemove>
 	<YaOpt.Setting.Option.FastListerRemove.Desc>优化从游戏中移除物体时的效率。原版游戏在移除物体时，需要在多个检索列表中进行线性搜索以找到并删除物体。此优化为每个物体添加了索引记录，移除时可直接定位并使用“交换移除”策略（将末尾物体移至空位）。</YaOpt.Setting.Option.FastListerRemove.Desc>
+	<YaOpt.Setting.Option.CameraUpdateRate>更新速率计算优化</YaOpt.Setting.Option.CameraUpdateRate>
+	<YaOpt.Setting.Option.CameraUpdateRate.Desc>游戏会在每一帧计算物体在屏幕上的可见性，并调低屏幕外物体的更新速率，然而这个计算过于精细了，以至于它本身就有一定的开销。此优化微调了可见性判断，稍微放宽了判定标准，减少了更新速率计算的开销，代价是在一些特定条件下可能有少量接近屏幕边缘但不可见的物体也被误判为可见，让系统增加它们的更新速率导致运行开销。但在大部分情况下，这个优化是值得的。</YaOpt.Setting.Option.CameraUpdateRate.Desc>
+	<YaOpt.Setting.Option.GetMapPawns>地图角色检索优化</YaOpt.Setting.Option.GetMapPawns>
+	<YaOpt.Setting.Option.GetMapPawns.Desc>优化了游戏中检索地图上角色的代码，消除了一些重复计算。此外还对照料婴儿的工作判定做了一定的节流，原版在检索饥饿的婴儿时除了会搜索呆在地图上的婴儿外，还会检查载人容器（如空投舱），这一步骤占了运算大头，因此优化后每三次判定才会做一次全图容器搜索，另外两次只会检查容器外的婴儿。</YaOpt.Setting.Option.GetMapPawns.Desc>
+	<YaOpt.Setting.Option.GetMapPawns.Compatibility>优化了殖民者头像栏的角色检索优化，如果你安装了头像栏类Mod，并且发现其功能失效的话，可以尝试禁用这个优化。</YaOpt.Setting.Option.GetMapPawns.Compatibility>
+	<YaOpt.Setting.Option.AttackTargetFinder>索敌优化</YaOpt.Setting.Option.AttackTargetFinder>
+	<YaOpt.Setting.Option.AttackTargetFinder.Desc>优化战斗时的索敌计算，消除了一些重复计算。</YaOpt.Setting.Option.AttackTargetFinder.Desc>
+	<YaOpt.Setting.Option.AppendThingHolders>物体容器检索优化</YaOpt.Setting.Option.AppendThingHolders>
+	<YaOpt.Setting.Option.AppendThingHolders.Desc>优化对物体容器的递归搜索，减少了对非容器的内容物的检查开销。</YaOpt.Setting.Option.AppendThingHolders.Desc>
 	<YaOpt.Setting.Option.MeditationTick>冥想更新节流</YaOpt.Setting.Option.MeditationTick>
 	<YaOpt.Setting.Option.MeditationTick.Desc>将冥想时的逻辑帧更新频率降低为每100帧一次，每次更新提供100倍效果。冥想更新相当消耗性能，特别是部落灵能者每帧都会扫描全图灵草。注：此优化会对游玩产生轻微影响，角色退出冥想时会损失未结算的冥想收益（平均每次提前中断冥想时损失50帧/0.83秒的冥想收益）。</YaOpt.Setting.Option.MeditationTick.Desc>
 	<YaOpt.Setting.Option.MeditationTick.Compatibility>兼容原版灵能扩展（Vanilla Psycasts Expanded）,但可能会与其他大幅修改冥想机制的Mod产生冲突。与Performance Esmolas的功能重复，如果同时安装了Performance Esmolas，会优先使用它的优化实现。</YaOpt.Setting.Option.MeditationTick.Compatibility>

@@ -35,7 +35,7 @@ namespace YaOpt.Patches
 		private static void PatchOnStartup()
 		{
 			TryPatch(true, false);
-			CheckButterPlusPlus();
+			CheckButterPlusPlus(false);
 		}
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace YaOpt.Patches
 		public static void CheckAndRePatchOnLoadGame()
 		{
 			TryPatch(false, true);
-			CheckButterPlusPlus();
+			CheckButterPlusPlus(true);
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace YaOpt.Patches
 				YaOptGlobal.CreateOptionSnapshot();
 		}
 
-		private static void CheckButterPlusPlus()
+		private static void CheckButterPlusPlus(bool forceEnable)
 		{
 			if (!YaOptGlobal.HasMod("olli.butterplusplus"))
 				return;
@@ -122,7 +122,17 @@ namespace YaOpt.Patches
 				var cm = (bool)fieldCompatibilityMode.GetValue(objSettings);
 				if (!cm)
 				{
-					var str = "YaOpt.Message.ButterCompatibilityNotEnabled".Translate().ToString();
+					string msg = null;
+					if (forceEnable)
+					{
+						fieldCompatibilityMode.SetValue(objSettings, true);
+						msg = "YaOpt.Message.ButterCompatibilityNotEnabled";
+					}
+					else
+					{
+						msg = "YaOpt.Message.ButterCompatibilityNotEnabled";
+					}
+					var str = msg.Translate().ToString();
 					YaOptMod.Error(str);
 					Messages.Message(str, null, MessageTypeDefOf.CautionInput, false);
 				}

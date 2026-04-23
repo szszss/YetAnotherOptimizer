@@ -348,7 +348,6 @@ namespace YaOpt
 			Name = "YaOpt.Setting.Option.ParallelThoughtUpdate",
 			Desc = "YaOpt.Setting.Option.ParallelThoughtUpdate.Desc",
 			NoteStability = "YaOpt.Setting.Option.ParallelThoughtUpdate.Stable",
-			NoteCompatibility = "YaOpt.Setting.Option.ParallelThoughtUpdate.Compatibility",
 			NoteMultithread = "YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
@@ -449,6 +448,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.GetMapPawns",
 			Desc = "YaOpt.Setting.Option.GetMapPawns.Desc",
+			NoteCompatibility = "YaOpt.Setting.Option.GetMapPawns.Compatibility",
 			Category = OptimizationCategory.Tps,
 		};
 

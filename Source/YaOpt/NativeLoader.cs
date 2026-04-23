@@ -1,9 +1,8 @@
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using HarmonyLib;
 using Unity.Burst;
 using Verse;
 
@@ -115,7 +114,7 @@ namespace YaOpt
 			catch (Exception e)
 			{
 				YaOptMod.Error($"Error when load Burst library. " +
-				               $"Any features that require Burst will not work.\n {e}");
+							   $"Any features that require Burst will not work.\n {e}");
 			}
 		}
 	}

@@ -450,10 +450,10 @@ namespace YaOpt.Settings
 		{
 			if (option.Enabled)
 			{
-				listing.Gap(listing.verticalSpacing);
 				listing.Indent();
 
 				{
+					listing.Gap(listing.verticalSpacing);
 					var ddsOnly = panel._settings.LazyTextureLoadDdsOnly;
 					DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.LazyTextureLoad.DdsOnly".Translate(),
 						ddsOnly, false, out var mouseOver, out var result, -12);
@@ -467,6 +467,7 @@ namespace YaOpt.Settings
 				}
 
 				{
+					listing.Gap(listing.verticalSpacing);
 					var radical = panel._settings.LazyTextureLoadRadical;
 					DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.LazyTextureLoad.Radical".Translate(),
 						radical, false, out var mouseOver, out var result, -12);

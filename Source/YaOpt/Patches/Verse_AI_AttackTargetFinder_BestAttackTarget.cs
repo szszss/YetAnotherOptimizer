@@ -2,7 +2,6 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Verse;
 using Verse.AI;
 using YaOpt.Helpers;
 using YaOpt.Helpers.ThreadSafe;
@@ -21,7 +20,7 @@ namespace YaOpt.Patches
 			static bool Prepare()
 			{
 				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled &&
-				       !YaOptGlobal.HasMod("Vortex.Kingfisher");
+					   !YaOptGlobal.HasMod("Vortex.Kingfisher");
 			}
 
 			static void Prefix()
@@ -71,7 +70,7 @@ namespace YaOpt.Patches
 			static bool Prepare()
 			{
 				return YaOptGlobal.Settings.OptAttackTargetFinder.Enabled &&
-				       !YaOptGlobal.HasMod("Vortex.Kingfisher");
+					   !YaOptGlobal.HasMod("Vortex.Kingfisher");
 			}
 
 			static bool Prefix(IAttackTarget __0, ref bool __result)

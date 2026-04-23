@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using Unity.Jobs;
 using UnityEngine;
 
@@ -373,10 +372,11 @@ namespace YaOpt.Helpers
 		{
 			if (jobHandle.Equals(default))
 				return;
-			while (!jobHandle.IsCompleted)
+			/*while (!jobHandle.IsCompleted)
 			{
 				Thread.SpinWait(10);
-			}
+			}*/
+			jobHandle.Complete();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

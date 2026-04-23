@@ -1,6 +1,6 @@
+using RimWorld.IO;
 using System;
 using System.IO;
-using RimWorld.IO;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
@@ -44,8 +44,8 @@ namespace YaOpt.OtherMod.ImageOpt
 					int skipLevels = 0;
 					long additionalOffset = 0;
 					var downsampled = ContentManager.CanDownsampleNow() &&
-					                  ContentManager.TryCalculateDownsampleOffset(texture, ddsHeader,
-						                  out owner, out skipLevels, out additionalOffset);
+									  ContentManager.TryCalculateDownsampleOffset(texture, ddsHeader,
+										  out owner, out skipLevels, out additionalOffset);
 
 					if (downsampled)
 					{

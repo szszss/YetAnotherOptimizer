@@ -17,7 +17,6 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces
 		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_AlienPartGenerator_RotationOffset_GetOffset"/>
 		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_ExtendedGraphics_ConditionApparel_Satisfied"/>
 		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_ExtendedGraphics_ExtendedGraphicsPawnWrapper_GetBodyPart"/>
-		/// <seealso cref="HumanoidAlienRaces.Patches.AlienRace_ThoughtSettings_ReplaceIfApplicable"/>
 		public static OptimizationOption OptHARDeLinq { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.HARDeLinq",

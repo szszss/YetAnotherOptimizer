@@ -1,12 +1,10 @@
 using HarmonyLib;
-using RimWorld;
 using RimWorld.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using UnityEngine;
 using Verse;
 
@@ -519,7 +517,7 @@ namespace YaOpt.Helpers
 			if (_optimizedThingDefs.Remove(def))
 			{
 				_thingDefReloadTextureQueue.Enqueue(def);
-				
+
 			}
 		}
 
@@ -645,7 +643,7 @@ namespace YaOpt.Helpers
 				int skipLevels = 0;
 				long offset = 0;
 				var downsampled = CanDownsampleNow() && TryCalculateDownsampleOffset(texture, ddsHeader,
-					                  out owner, out skipLevels, out offset);
+									  out owner, out skipLevels, out offset);
 
 				if (downsampled)
 				{
