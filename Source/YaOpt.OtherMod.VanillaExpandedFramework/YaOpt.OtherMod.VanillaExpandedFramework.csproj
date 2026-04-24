@@ -19,10 +19,6 @@
     </Reference>
   </ItemGroup>
   
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Mods\Vanilla Expanded Framework\Assemblies\&quot; /i /y" />
   </Target>

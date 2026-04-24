@@ -76,7 +76,7 @@ namespace YaOpt.Helpers
 		private static readonly Dictionary<ThingDef, List<Texture2D>> _thingDefToTexturesMapping =
 			new Dictionary<ThingDef, List<Texture2D>>();
 
-		private static Queue<ThingDef> _thingDefReloadTextureQueue = new Queue<ThingDef>();
+		private static readonly Queue<ThingDef> _thingDefReloadTextureQueue = new Queue<ThingDef>();
 
 		private static bool _isGameStarting = true;
 

@@ -1,6 +1,6 @@
+using Prepatcher;
 using System;
 using System.Linq;
-using Prepatcher;
 using YaOpt.Helpers;
 using Instruction = Mono.Cecil.Cil.Instruction;
 using ModuleDefinition = Mono.Cecil.ModuleDefinition;
