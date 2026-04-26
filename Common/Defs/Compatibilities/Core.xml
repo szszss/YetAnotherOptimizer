@@ -216,7 +216,6 @@
 			<!-- PawnCapacitiesHandler -->
 			<LockPatch>
 				<method>Verse.PawnCapacitiesHandler:GetLevel</method>
-				<scope>Instance</scope> <!-- Test! -->
 			</LockPatch>
 			
 			<!-- RegionTraverser -->

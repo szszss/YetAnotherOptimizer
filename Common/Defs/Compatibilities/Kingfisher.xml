@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="Vortex.Kingfisher">
+		<defName>Kingfisher</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>Kingfisher.Features.Combat.AttackTargetFinderRewrite:BestAttackTarget</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>

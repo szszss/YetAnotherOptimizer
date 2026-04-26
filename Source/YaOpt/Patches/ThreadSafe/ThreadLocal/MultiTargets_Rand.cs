@@ -14,13 +14,13 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 	internal static class MultiTargets_Rand
 	{
 		[ThreadStatic]
-		private static uint _seed;
+		internal static uint _seed;
 
 		[ThreadStatic]
-		private static uint _iterations;
+		internal static uint _iterations;
 
 		[ThreadStatic]
-		private static bool _inited;
+		internal static bool _inited;
 
 		private static ThreadLocal<Stack<ulong>> _threadLocalStateStack =
 			new ThreadLocal<Stack<ulong>>(() => new Stack<ulong>());

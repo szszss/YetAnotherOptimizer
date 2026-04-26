@@ -27,15 +27,6 @@ namespace YaOpt.Patches.Debugging
 			}
 
 			YaOptMod.Error("Found an explosion with invalid center.");
-			/*var pos = instigator.Position;
-			var heldPos = instigator.PositionHeld;
-			YaOptMod.Error($"{instigator.ToStringSafe()} - Pos:{pos}, HeldPos:{heldPos}");
-			if (instigator is Pawn pawn)
-			{
-				var equipTrack = pawn.equipment;
-				var equipment = equipTrack.Primary;
-				YaOptMod.Error($"Equipment: {equipment.GetInspectString()}");
-			}*/
 		}
 	}
 }
