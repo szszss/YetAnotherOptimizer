@@ -6,10 +6,12 @@ using Instruction = Mono.Cecil.Cil.Instruction;
 using ModuleDefinition = Mono.Cecil.ModuleDefinition;
 using OpCodes = Mono.Cecil.Cil.OpCodes;
 
-namespace YaOpt.Prepatch.Patches
+namespace YaOpt.Patches.Prepatch
 {
 	internal static class Verse_ContentFinder_Get
 	{
+		public static bool Enabled = false;
+
 		[FreePatch]
 		static void RewriteAssembly(ModuleDefinition module)
 		{
@@ -18,7 +20,7 @@ namespace YaOpt.Prepatch.Patches
 			if (method == null)
 				throw new MissingMemberException("Verse.ContentFinder", "Get");
 			var fieldRefEnabled = module.ImportReference(
-				typeof(YaOptPrepatch).GetField(nameof(YaOptPrepatch.ContentFinderGetEnabled)));
+				typeof(Verse_ContentFinder_Get).GetField(nameof(Enabled)));
 			var methodRefGetContent = module.ImportReference(
 				typeof(ContentManager).GetMethod(nameof(ContentManager.GetContent)));
 			var methodRefGetTypeFromHandle = module.ImportReference(

@@ -1,9 +1,11 @@
 using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Verse;
+using YaOpt.Patches.Prepatch;
 
 namespace YaOpt.Helpers
 {
@@ -31,20 +33,21 @@ namespace YaOpt.Helpers
 
 		//private static HashSet<IntPtr> usedMrgctx = new HashSet<IntPtr>();
 
-		public static Dictionary<Type, ThingComp[]> CreateCompsByType(List<ThingComp> comps)
+		public static Dictionary<Type, ThingComp[]> CreateCompsByType(ThingWithComps thing, List<ThingComp> comps)
 		{
 			var compsByType = new Dictionary<Type, ThingComp[]>();
-			RecreateCompsByType(compsByType, comps);
+			RecreateCompsByType(thing, compsByType, comps);
 			return compsByType;
 		}
 
-		public static void RecreateCompsByType(
+		public static void RecreateCompsByType(ThingWithComps thing,
 			Dictionary<Type, ThingComp[]> compsByType, List<ThingComp> comps)
 		{
 			lock (_tmpCompsByType)
 			{
 				var objType = typeof(object);
 				var hasThingHolder = false;
+				var bloomFilter = new BloomFilter();
 				_tmpCompsByType.Clear();
 				foreach (var comp in comps)
 				{
@@ -55,8 +58,10 @@ namespace YaOpt.Helpers
 						_tmpCompsByType[type] = list;
 					}
 					list.Add(comp);
+					bloomFilter.Set(type);
 				}
 				var interfaceThingHolder = typeof(IThingHolder);
+				// Cache IThingHolder
 				foreach (var comp in comps)
 				{
 					if (comp is IThingHolder)
@@ -70,6 +75,7 @@ namespace YaOpt.Helpers
 						list.Add(comp);
 					}
 				}
+				// Cache comps by their type hierarchy
 				foreach (var comp in comps)
 				{
 					var parentType = comp.GetType().BaseType;
@@ -81,10 +87,12 @@ namespace YaOpt.Helpers
 							_tmpCompsByType[parentType] = list;
 						}
 						list.Add(comp);
+						bloomFilter.Set(parentType);
 						parentType = parentType.BaseType;
 					}
 				}
 				compsByType.Clear();
+				// Convert to Dictionary
 				using (var enumerator = _tmpCompsByType.GetEnumerator())
 				{
 					while (enumerator.MoveNext())
@@ -98,11 +106,31 @@ namespace YaOpt.Helpers
 						SimplePool<List<ThingComp>>.Return(pair.Value);
 					}
 				}
+				if (Verse_ThingWithComps_GetComp.Enabled)
+				{
+					thing.YaOptStruct() = new Verse_ThingWithComps_GetComp.YaOptThingWithCompsStruct
+					{
+						BloomFilter = bloomFilter,
+						Equippable = TryGet<CompEquippable>(compsByType),
+						CauseGameCondition = TryGet<CompCauseGameCondition>(compsByType),
+						BladelinkWeapon = TryGet<CompBladelinkWeapon>(compsByType),
+						PowerTrader = TryGet<CompPowerTrader>(compsByType),
+						WakeUpDormant = TryGet<CompWakeUpDormant>(compsByType),
+						AssignableToPawnGrave = TryGet<CompAssignableToPawn_Grave>(compsByType),
+					};
+				}
 				_tmpCompsByType.Clear();
 				_listVersionFieldRef(comps) = hasThingHolder
 						? VERSION_MAGICNUMBER_HAS_THINGHOLDER
 						: VERSION_MAGICNUMBER_NO_THINGHOLDER;
 			}
+		}
+
+		private static T TryGet<T>(Dictionary<Type, ThingComp[]> compsByType) where T : class
+		{
+			if (compsByType.TryGetValue(typeof(T), out var list))
+				return list[0] as T;
+			return null;
 		}
 
 		[SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
@@ -124,11 +152,20 @@ namespace YaOpt.Helpers
 					if (version != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
 						version != VERSION_MAGICNUMBER_NO_THINGHOLDER)
 					{
-						RecreateCompsByType(compsByType, compList);
+						RecreateCompsByType(thing, compsByType, compList);
 					}
 					Interlocked.MemoryBarrier();
 				}
 			}
+
+			var yaoptStruct = thing.YaOptStruct();
+			if (compType == typeof(CompEquippable))
+				return yaoptStruct.Equippable;
+			if (!yaoptStruct.BloomFilter.Get(compType))
+			{
+				return null;
+			}
+
 			if (compsByType.TryGetValue(compType, out var list))
 			{
 				return list[0];
@@ -166,7 +203,7 @@ namespace YaOpt.Helpers
 					if (listVersion != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
 						listVersion != VERSION_MAGICNUMBER_NO_THINGHOLDER)
 					{
-						RecreateCompsByType(compsByType, list);
+						RecreateCompsByType(thing, compsByType, list);
 					}
 					Interlocked.MemoryBarrier();
 				}

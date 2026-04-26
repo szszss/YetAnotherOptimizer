@@ -55,13 +55,13 @@ namespace YaOpt
 			Instance = this;
 			Log("Now loading...");
 			YaOptGlobal.IsMultiplayer = YaOptGlobal.HasMod("rwmt.Multiplayer");
+			YaOptGlobal.IsPrepatcherAvailable = YaOptGlobal.HasMod("zetrith.prepatcher");
 
 			// Initialize compatibility submods.
 			InitSubMods();
 
 			// Load settings.
 			Settings = GetSettings<YaOptSettings>();
-			CheckPrepatch();
 
 			// Load and burst libraries.
 			NativeLoader.LoadLibraries(content);
@@ -72,7 +72,7 @@ namespace YaOpt
 			ApplyEarlyPatches();
 
 			// Init Prepatch
-			InitPrepatch();
+			Patches.Prepatch.Prepatcher.Init();
 		}
 
 		private void InitSubMods()
@@ -92,31 +92,6 @@ namespace YaOpt
 #if false && DEBUG
 			HarmonyLib.Harmony.DEBUG = true;
 #endif
-		}
-
-		private void CheckPrepatch()
-		{
-			if (YaOptGlobal.HasMod("zetrith.prepatcher"))
-			{
-				var type = AccessTools.TypeByName("YaOpt.Prepatch.YaOptPrepatch");
-				if (type != null)
-				{
-					Debug("Prepatcher presents.");
-					YaOptGlobal.IsPrepatcherAvailable = true;
-				}
-			}
-		}
-
-		private void InitPrepatch()
-		{
-			if (YaOptGlobal.IsPrepatcherAvailable)
-			{
-				var type = AccessTools.TypeByName("YaOpt.Prepatch.YaOptPrepatch");
-				if (Settings.OptThingGetComp.Enabled)
-					AccessTools.Field(type, "ThingWithCompsGetCompEnabled").SetValue(null, true);
-				if (Settings.OptLazyTextureLoad.Enabled)
-					AccessTools.Field(type, "ContentFinderGetEnabled").SetValue(null, true);
-			}
 		}
 
 		/// <summary>

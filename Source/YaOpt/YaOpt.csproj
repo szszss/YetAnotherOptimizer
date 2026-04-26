@@ -8,14 +8,21 @@
 
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
+	<PackageReference Include="Krafs.Publicizer" Version="2.3.0" />
     <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
+	<PackageReference Include="Zetrith.Prepatcher" Version="1.2.0" />
 	<Reference Include="YaOpt.Unity">
       <HintPath>$(SolutionDir)..\1.6\Assemblies\YaOpt.Unity.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Publicize Include="0Harmony" />
+  </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Assemblies\&quot; /i /y" />
+	<Exec Command="xcopy &quot;$(TargetDir)0PrepatcherAPI.dll&quot; &quot;$(SolutionDir)..\1.6\Assemblies\&quot; /i /y" />
   </Target>
 </Project>

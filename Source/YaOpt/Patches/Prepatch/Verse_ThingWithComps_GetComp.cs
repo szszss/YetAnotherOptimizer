@@ -1,18 +1,36 @@
 using Prepatcher;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Verse;
 using YaOpt.Helpers;
 using Instruction = Mono.Cecil.Cil.Instruction;
 using ModuleDefinition = Mono.Cecil.ModuleDefinition;
 using OpCodes = Mono.Cecil.Cil.OpCodes;
 
-namespace YaOpt.Prepatch.Patches
+namespace YaOpt.Patches.Prepatch
 {
 	internal static class Verse_ThingWithComps_GetComp
 	{
+		public static bool Enabled = false;
+
+		[PrepatcherField]
+		public static extern ref YaOptThingWithCompsStruct YaOptStruct(this ThingWithComps target);
+
+		internal struct YaOptThingWithCompsStruct
+		{
+			public BloomFilter BloomFilter;
+			public CompEquippable Equippable;
+			public CompCauseGameCondition CauseGameCondition;
+			public CompBladelinkWeapon BladelinkWeapon;
+			public CompPowerTrader PowerTrader;
+			public CompWakeUpDormant WakeUpDormant;
+			public CompAssignableToPawn_Grave AssignableToPawnGrave;
+		}
+
 		[FreePatch]
 		static void RewriteAssembly(ModuleDefinition module)
 		{
@@ -22,7 +40,7 @@ namespace YaOpt.Prepatch.Patches
 				throw new MissingMemberException("Verse.ThingWithComps", "GetComp");
 
 			var fieldRefEnabled = module.ImportReference(
-				typeof(YaOptPrepatch).GetField(nameof(YaOptPrepatch.ThingWithCompsGetCompEnabled)));
+				typeof(Verse_ThingWithComps_GetComp).GetField(nameof(Enabled)));
 			var fieldRefComps = module.ImportReference(
 				typeof(ThingWithComps).GetField("comps", BindingFlags.Instance | BindingFlags.NonPublic));
 			var fieldRefCompsByType = module.ImportReference(

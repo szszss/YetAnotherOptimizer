@@ -30,7 +30,8 @@ namespace YaOpt.Patches
 				{
 					skip = false;
 					yield return CodeInstruction.LoadArgument(0);
-					yield return CodeInstruction.LoadArgument(0);
+					yield return new CodeInstruction(OpCodes.Dup);
+					yield return new CodeInstruction(OpCodes.Dup);
 					yield return CodeInstruction.LoadField(typeof(ThingWithComps), "comps");
 					yield return CodeInstruction.Call(typeof(GetCompHelper), nameof(GetCompHelper.CreateCompsByType));
 				}

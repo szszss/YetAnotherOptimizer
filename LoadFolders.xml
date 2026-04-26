@@ -2,7 +2,6 @@
 	<v1.6>
 		<li>Common</li>
 		<li>1.6</li>
-		<li IfModActive="zetrith.prepatcher">1.6/Prepatch</li>
 		<li IfModActive="CETeam.CombatExtended">1.6/Mods/Combat Extended</li>
 		<li IfModActive="Nals.FacialAnimation">1.6/Mods/Facial Animation</li>
 		<li IfModActive="erdelf.HumanoidAlienRaces">1.6/Mods/Humanoid Alien Races</li>
