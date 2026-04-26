@@ -6,6 +6,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
+using YaOpt.Patches;
+using YaOpt.Patches.Prepatch;
 using YaOpt.Settings;
 
 namespace YaOpt
@@ -154,6 +156,9 @@ namespace YaOpt
 			set => _mapMeshUpdateInterval = math.clamp(value, 100, 1000);
 		}
 
+		[Unsaved]
+		private int _mapMeshUpdateInterval = 300;
+
 		/// <summary>
 		/// Fixes a bug where <see cref="PawnRenderNodeProperties.Worker"/>
 		/// cache was not being used, causing slow initialization.
@@ -233,7 +238,8 @@ namespace YaOpt
 		/// Unfortunately, checking if a component exists requires calling GetComp and waiting for a null result.
 		/// This optimization rewrites the lookup mechanism to ensure fast failure for missing components.
 		/// </summary>
-		/// <seealso cref="Prepatch.Patches.Verse_ThingWithComps_GetComp"/>
+		/// <seealso cref="MultiTargets_ThingGetComp"/>
+		/// <seealso cref="Patches.Prepatch.Verse_ThingWithComps_GetComp"/>
 		public OptimizationOption OptThingGetComp { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.ThingGetComp",
@@ -259,6 +265,137 @@ namespace YaOpt
 			NoteCompatibility = "YaOpt.Setting.Option.MeditationTick.Compatibility",
 			Category = OptimizationCategory.Tps
 		};
+
+		/// <summary>
+		/// Dynamically throttles idle job checks based on the number of colonists.
+		/// Includes optimizations for:
+		/// 1. Bed usability check (Toils_Bed.BedNoLongerUsable)
+		/// 2. Lay down job override check (Toils_LayDown.LayDown)
+		/// 3. Wander idle job duration (JobGiver_Wander)
+		/// These significantly reduce the overhead of high-frequency checks when there are many colonists.
+		/// </summary>
+		/// <seealso cref="Patches.RimWorld_Toils_Bed_BedNoLongerUsable"/>
+		/// <seealso cref="Patches.RimWorld_Toils_LayDown_LayDown"/>
+		/// <seealso cref="Patches.Verse_AI_JobGiver_Wander_TryGiveJob"/>
+		public OptimizationOption OptIdleThrottle { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.IdleThrottle",
+			Desc = "YaOpt.Setting.Option.IdleThrottle.Desc",
+			Category = OptimizationCategory.Tps,
+			FuncPostDraw = SettingsPanel.IdleThrottlePostDraw,
+			FuncExposeData = (settings) =>
+			{
+				bool bValue = settings.IdleThrottleGetUpDynamic;
+				Scribe_Values.Look(ref bValue, "OptIdleThrottle_GetUp_Dynamic", true);
+				settings.IdleThrottleGetUpDynamic = bValue;
+				bValue = settings.IdleThrottleStopWanderDynamic;
+				Scribe_Values.Look(ref bValue, "OptIdleThrottle_StopWander_Dynamic", true);
+				settings.IdleThrottleStopWanderDynamic = bValue;
+
+				int iValue = settings.IdleThrottleGetUpIntervalMin;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_GetUp_MinInterval", 211);
+				settings.IdleThrottleGetUpIntervalMin = iValue;
+				iValue = settings.IdleThrottleGetUpIntervalMax;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_GetUp_MaxInterval", 600);
+				settings.IdleThrottleGetUpIntervalMax = iValue;
+				iValue = settings.IdleThrottleGetUpPeopleMin;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_GetUp_MinPeople", 3);
+				settings.IdleThrottleGetUpPeopleMin = iValue;
+				iValue = settings._idleThrottleGetUpPeopleMax;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_GetUp_MaxPeople", 15);
+				settings._idleThrottleGetUpPeopleMax = iValue;
+				iValue = settings._idleThrottleStopWanderIntervalMin;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_StopWander_MinInterval", 125);
+				settings._idleThrottleStopWanderIntervalMin = iValue;
+				iValue = settings.IdleThrottleStopWanderIntervalMax;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_StopWander_MaxInterval", 360);
+				settings.IdleThrottleStopWanderIntervalMax = iValue;
+				iValue = settings.IdleThrottleStopWanderPeopleMin;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_StopWander_MinPeople", 3);
+				settings.IdleThrottleStopWanderPeopleMin = iValue;
+				iValue = settings._idleThrottleStopWanderPeopleMax;
+				Scribe_Values.Look(ref iValue, "OptIdleThrottle_StopWander_MaxPeople", 10);
+				settings._idleThrottleStopWanderPeopleMax = iValue;
+			}
+		};
+
+		[field: Unsaved]
+		public bool IdleThrottleGetUpDynamic { get; set; } = true;
+
+		public int IdleThrottleGetUpIntervalMin
+		{
+			get => _idleThrottleGetUpIntervalMin;
+			set => _idleThrottleGetUpIntervalMin = math.clamp(value, 211, 1000);
+		}
+
+		public int IdleThrottleGetUpIntervalMax
+		{
+			get => _idleThrottleGetUpIntervalMax;
+			set => _idleThrottleGetUpIntervalMax = math.clamp(value, 211, 1000);
+		}
+
+		public int IdleThrottleGetUpPeopleMin
+		{
+			get => _idleThrottleGetUpPeopleMin;
+			set => _idleThrottleGetUpPeopleMin = math.clamp(value, 1, 20);
+		}
+
+		public int IdleThrottleGetUpPeopleMax
+		{
+			get => _idleThrottleGetUpPeopleMax;
+			set => _idleThrottleGetUpPeopleMax = math.clamp(value, 1, 50);
+		}
+
+		[field: Unsaved]
+		public bool IdleThrottleStopWanderDynamic { get; set; } = true;
+
+		public int IdleThrottleStopWanderIntervalMin
+		{
+			get => _idleThrottleStopWanderIntervalMin;
+			set => _idleThrottleStopWanderIntervalMin = math.clamp(value, 125, 1000);
+		}
+
+		public int IdleThrottleStopWanderIntervalMax
+		{
+			get => _idleThrottleStopWanderIntervalMax;
+			set => _idleThrottleStopWanderIntervalMax = math.clamp(value, 125, 1000);
+		}
+
+		public int IdleThrottleStopWanderPeopleMin
+		{
+			get => _idleThrottleStopWanderPeopleMin;
+			set => _idleThrottleStopWanderPeopleMin = math.clamp(value, 1, 20);
+		}
+
+		public int IdleThrottleStopWanderPeopleMax
+		{
+			get => _idleThrottleStopWanderPeopleMax;
+			set => _idleThrottleStopWanderPeopleMax = math.clamp(value, 1, 50);
+		}
+
+		[Unsaved]
+		private int _idleThrottleGetUpIntervalMin = 211;
+
+		[Unsaved]
+		private int _idleThrottleGetUpIntervalMax = 600;
+
+		[Unsaved]
+		private int _idleThrottleGetUpPeopleMin = 3;
+
+		[Unsaved]
+		private int _idleThrottleGetUpPeopleMax = 15;
+
+		[Unsaved]
+		private int _idleThrottleStopWanderIntervalMin = 125;
+
+		[Unsaved]
+		private int _idleThrottleStopWanderIntervalMax = 360;
+
+		[Unsaved]
+		private int _idleThrottleStopWanderPeopleMin = 3;
+
+		[Unsaved]
+		private int _idleThrottleStopWanderPeopleMax = 10;
 
 		/// <summary>
 		/// Extends the vanilla stat caching system to include <see cref="StatDefOf.ComfyTemperatureMin"/>,
@@ -466,7 +603,7 @@ namespace YaOpt
 		/// but may cause stutters when textures are loaded during gameplay.
 		/// Note: Texture unloading is not implemented, so VRAM usage may increase over time.
 		/// </summary>
-		/// <seealso cref="Prepatch.Patches.Verse_ContentFinder_Get"/>
+		/// <seealso cref="Verse_ContentFinder_Get"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationMulti"/>
 		/// <seealso cref="Patches.Early.MultiTargets_PatchOperationSingle"/>
 		/// <seealso cref="Patches.Early.Verse_ModContentLoader_LoadTexture"/>
@@ -562,9 +699,6 @@ namespace YaOpt
 
 		[Unsaved]
 		private readonly SettingsPanel _settingsPanel;
-
-		[Unsaved]
-		private int _mapMeshUpdateInterval = 300;
 
 		public IReadOnlyList<OptimizationOption> AllOptimizations => _allOptimizations.AsReadOnly();
 

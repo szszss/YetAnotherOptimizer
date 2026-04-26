@@ -57,11 +57,18 @@ namespace YaOpt
 		public static bool IsTrampolineAvailable => TrampolineFactory.IsAvailable;
 
 		/// <summary>
-		/// Gets a value indicating whether parallel material property updates are enabled.
+		/// Gets a value indicating whether parallel material property update is enabled.
 		/// </summary>
 		/// <seealso cref="YaOpt.Patches.Verse_PawnRenderTree_ParallelPreDraw"/>
 		/// <seealso cref="YaOpt.YaOptSettings.OptParallelMaterialUpdate"/>
 		public static bool IsParallelMaterialUpdateEnabled { get; internal set; }
+
+		/// <summary>
+		/// Gets a value indicating whether idle check throttle is enabled.
+		/// </summary>
+		/// <seealso cref="YaOpt.Helpers.IdleHelper"/>
+		/// <seealso cref="YaOpt.YaOptSettings.OptIdleThrottle"/>
+		public static bool IsIdleThrottleEnabled { get; internal set; }
 
 		/// <summary>
 		/// Gets a value indicating whether the current thread is the Unity main thread.
@@ -186,6 +193,7 @@ namespace YaOpt
 				}
 			}
 			IsParallelMaterialUpdateEnabled = Settings.OptParallelMaterialUpdate.Enabled;
+			IsIdleThrottleEnabled = Settings.OptIdleThrottle.Enabled;
 		}
 
 		/// <summary>

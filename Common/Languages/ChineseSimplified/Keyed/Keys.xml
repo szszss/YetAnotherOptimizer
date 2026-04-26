@@ -98,6 +98,34 @@
 	<YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>
 	<YaOpt.Setting.Option.IdeoCheck>文化检查优化</YaOpt.Setting.Option.IdeoCheck>
 	<YaOpt.Setting.Option.IdeoCheck.Desc>游戏在检查文化是否允许做某事时，会遍历其下所有的戒律。此优化会在戒律每次更新时，为它创建缓存，记录那些涉及到禁令的戒律，然后在检查文化是否允许做某事时，只遍历那些有禁令的戒律。</YaOpt.Setting.Option.IdeoCheck.Desc>
+	<YaOpt.Setting.Option.IdleThrottle>闲时检查优化</YaOpt.Setting.Option.IdleThrottle>
+	<YaOpt.Setting.Option.IdleThrottle.Desc>对游戏中闲置角色（睡觉和闲逛）的中断闲置检测做节流。具体优化包括三项，其中后两项是可配置的：\n1.优化卧床角色的床铺可用性检测，原版卧床角色每帧都会检测当前床铺是否可用，虽然很有必要，但却包含了一些运算量较大的计算，比如判断因病卧床的角色是否痊愈等。节流后每15帧（0.25秒）才会进行一次完整检测，其他14帧只会进行简单的快速检测，如判断床铺是否被毁。\n2.优化卧床角色起床工作的检测间隔，原版游戏的卧床角色每211帧会进行一次工作判定，优化可以延长这个间隔，还可以让间隔变为动态间隔，根据卧床的殖民者数量来控制间隔，确保小型殖民地的角色依然能快速响应突发情况。\n3.优化闲逛角色的工作检测间隔，原版处于闲置状态的殖民者每125~200帧会进行一次工作判定，优化可以延长这个间隔，并且也能实现动态间隔，根据处于无事可做状态的殖民者数量来控制间隔。</YaOpt.Setting.Option.IdleThrottle.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Title>起床工作检测</YaOpt.Setting.Option.IdleThrottle.GetUp.Title>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp>检测间隔: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Desc>调整让卧床角色起床工作的检测间隔，单位为逻辑帧（Tick），原版为211帧。</YaOpt.Setting.Option.IdleThrottle.GetUp.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic>动态间隔</YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic.Desc>根据躺下的殖民者数量来控制卧床角色起床工作的检测间隔。</YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Min>最短间隔: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.Min>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Min.Desc>躺下的殖民者数量小于等于最小人数时的检测间隔，单位为逻辑帧（Tick），原版为211帧。</YaOpt.Setting.Option.IdleThrottle.GetUp.Min.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Max>最长间隔: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.Max>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Max.Desc>躺下的殖民者数量大于等于最大人数时的检测间隔，单位为逻辑帧（Tick），当人数介于最小和最大人数之间时，采用线性差值计算间隔。</YaOpt.Setting.Option.IdleThrottle.GetUp.Max.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin>最小人数: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin.Desc>躺下的殖民者数量小于等于此人数时，检测间隔将达到最短。</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax>最大人数: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax.Desc>躺下的殖民者数量大于等于此人数时，检测间隔将达到最长，当人数介于最小和最大人数之间时，检测间隔将会线性增长。</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Title>停止闲逛检测</YaOpt.Setting.Option.IdleThrottle.StopWander.Title>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander>检测间隔: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Desc>调整让闲逛角色寻找工作的检测间隔，单位为逻辑帧（Tick），原版为至少125帧。\n实际检测间隔会有一个随机浮动，以将角色的工作检测在运行时间上分散开，避免形成顿卡。\n随机浮动范围在 {0} ~ {1}</YaOpt.Setting.Option.IdleThrottle.StopWander.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic>动态间隔</YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic.Desc>根据闲来无事的殖民者数量来控制闲逛角色寻找工作的检测间隔。</YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Min>最短间隔: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.Min>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Min.Desc>当闲来无事的殖民者数量小于等于最小人数时的检测间隔，单位为逻辑帧（Tick），原版为至少125帧。\n实际检测间隔会有一个随机浮动，以将角色的工作检测在运行时间上分散开，避免形成顿卡。\n随机浮动范围在 {0} ~ {1}</YaOpt.Setting.Option.IdleThrottle.StopWander.Min.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Max>最长间隔: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.Max>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Max.Desc>当闲来无事的殖民者数量大于等于最大人数时的检测间隔，单位为逻辑帧（Tick），当人数介于最小和最大人数之间时，采用线性差值计算间隔。\n实际检测间隔会有一个随机浮动，以将角色的工作检测在运行时间上分散开，避免形成顿卡。\n随机浮动范围在 {0} ~ {1}</YaOpt.Setting.Option.IdleThrottle.StopWander.Max.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin>最小人数: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin.Desc>当闲来无事的殖民者数量小于等于此人数时，检测间隔将达到最短。</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax>最大人数: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax.Desc>当闲来无事的殖民者数量大于等于此人数时，检测间隔将达到最长，当人数介于最小和最大人数之间时，检测间隔将会线性增长。</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax.Desc>
 	<YaOpt.Setting.Option.WindUpdate>植物摇曳效果优化</YaOpt.Setting.Option.WindUpdate>
 	<YaOpt.Setting.Option.WindUpdate.Desc>游戏会在每一个逻辑帧中为所有植物材质更新风力强度参数，这是没必要的。优化后将仅在渲染帧中更新风力强度。</YaOpt.Setting.Option.WindUpdate.Desc>
 	<YaOpt.Setting.Option.FastListerRemove>物体移除优化</YaOpt.Setting.Option.FastListerRemove>

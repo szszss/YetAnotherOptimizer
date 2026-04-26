@@ -484,5 +484,224 @@ namespace YaOpt.Settings
 				listing.Gap(listing.verticalSpacing);
 			}
 		}
+
+		public static void IdleThrottlePostDraw(SettingsPanel panel,
+			Listing_Standard listing, OptimizationOption option)
+		{
+			if (option.Enabled)
+			{
+				listing.Indent();
+
+				#region GetUp
+
+				{
+					listing.Gap(listing.verticalSpacing);
+					listing.Label("YaOpt.Setting.Option.IdleThrottle.GetUp.Title".Translate());
+				}
+
+				{
+					listing.Gap(1);
+					var oldValue = panel._settings.IdleThrottleGetUpDynamic;
+					DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic".Translate(),
+						oldValue, false, out var mouseOver, out var result, -12);
+					if (mouseOver)
+					{
+						panel._lastMouseOverOption = null;
+						panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic.Desc".Translate();
+					}
+					if (oldValue != result)
+						panel._settings.IdleThrottleGetUpDynamic = result;
+					listing.Gap(5);
+				}
+
+				{
+					var strTitle = panel._settings.IdleThrottleGetUpDynamic
+						? "YaOpt.Setting.Option.IdleThrottle.GetUp.Min"
+						: "YaOpt.Setting.Option.IdleThrottle.GetUp";
+					var descTitle = panel._settings.IdleThrottleGetUpDynamic
+						? "YaOpt.Setting.Option.IdleThrottle.GetUp.Min.Desc"
+						: "YaOpt.Setting.Option.IdleThrottle.GetUp.Desc";
+
+					var rect = listing.GetRect(20);
+					listing.Gap(-25);
+					var result = (int)listing.SliderLabeled(
+						strTitle.Translate(panel._settings.IdleThrottleGetUpIntervalMin),
+						panel._settings.IdleThrottleGetUpIntervalMin, 211, 1000);
+					if (result != 211)
+						result = result / 10 * 10;
+					panel._settings.IdleThrottleGetUpIntervalMin = result;
+					panel._settings.IdleThrottleGetUpIntervalMax = Math.Max(panel._settings.IdleThrottleGetUpIntervalMax, result);
+					if (Mouse.IsOver(rect))
+					{
+						Widgets.DrawHighlight(rect);
+						panel._lastMouseOverOption = null;
+						panel._showingDesc = descTitle.Translate();
+					}
+					listing.Gap(-2);
+				}
+
+				if (panel._settings.IdleThrottleGetUpDynamic)
+				{
+					{
+						var rect = listing.GetRect(20);
+						listing.Gap(-25);
+						var result = (int)listing.SliderLabeled(
+							"YaOpt.Setting.Option.IdleThrottle.GetUp.Max".Translate(panel._settings.IdleThrottleGetUpIntervalMax),
+							panel._settings.IdleThrottleGetUpIntervalMax, 211, 1000);
+						if (result != 211)
+							result = result / 10 * 10;
+						panel._settings.IdleThrottleGetUpIntervalMax = result;
+						panel._settings.IdleThrottleGetUpIntervalMin = Math.Min(panel._settings.IdleThrottleGetUpIntervalMin, result);
+						if (Mouse.IsOver(rect))
+						{
+							Widgets.DrawHighlight(rect);
+							panel._lastMouseOverOption = null;
+							panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.GetUp.Max.Desc".Translate();
+						}
+						listing.Gap(-2);
+					}
+
+					{
+						var rect = listing.GetRect(20);
+						listing.Gap(-25);
+						var result = (int)listing.SliderLabeled(
+							"YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin".Translate(panel._settings.IdleThrottleGetUpPeopleMin),
+							panel._settings.IdleThrottleGetUpPeopleMin, 1, 20);
+						panel._settings.IdleThrottleGetUpPeopleMin = result;
+						panel._settings.IdleThrottleGetUpPeopleMax = Math.Max(panel._settings.IdleThrottleGetUpPeopleMax, result);
+						if (Mouse.IsOver(rect))
+						{
+							Widgets.DrawHighlight(rect);
+							panel._lastMouseOverOption = null;
+							panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin.Desc".Translate();
+						}
+						listing.Gap(-2);
+					}
+
+					{
+						var rect = listing.GetRect(20);
+						listing.Gap(-25);
+						var result = (int)listing.SliderLabeled(
+							"YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax".Translate(panel._settings.IdleThrottleGetUpPeopleMax),
+							panel._settings.IdleThrottleGetUpPeopleMax, 1, 50);
+						panel._settings.IdleThrottleGetUpPeopleMax = result;
+						panel._settings.IdleThrottleGetUpPeopleMin = Math.Min(panel._settings.IdleThrottleGetUpPeopleMin, result);
+						if (Mouse.IsOver(rect))
+						{
+							Widgets.DrawHighlight(rect);
+							panel._lastMouseOverOption = null;
+							panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax.Desc".Translate();
+						}
+					}
+				}
+				#endregion
+
+				#region StopWander
+
+				{
+					listing.Label("YaOpt.Setting.Option.IdleThrottle.StopWander.Title".Translate());
+				}
+
+				{
+					listing.Gap(1);
+					var oldValue = panel._settings.IdleThrottleStopWanderDynamic;
+					DrawCheckboxLabeled(listing, "YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic".Translate(),
+						oldValue, false, out var mouseOver, out var result, -12);
+					if (mouseOver)
+					{
+						panel._lastMouseOverOption = null;
+						panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic.Desc".Translate();
+					}
+					if (oldValue != result)
+						panel._settings.IdleThrottleStopWanderDynamic = result;
+					listing.Gap(5);
+				}
+
+				{
+					var strTitle = panel._settings.IdleThrottleStopWanderDynamic
+						? "YaOpt.Setting.Option.IdleThrottle.StopWander.Min"
+						: "YaOpt.Setting.Option.IdleThrottle.StopWander";
+					var descTitle = panel._settings.IdleThrottleStopWanderDynamic
+						? "YaOpt.Setting.Option.IdleThrottle.StopWander.Min.Desc"
+						: "YaOpt.Setting.Option.IdleThrottle.StopWander.Desc";
+
+					var rect = listing.GetRect(20);
+					listing.Gap(-25);
+					var result = (int)listing.SliderLabeled(
+						strTitle.Translate(panel._settings.IdleThrottleStopWanderIntervalMin),
+						panel._settings.IdleThrottleStopWanderIntervalMin, 125, 1000);
+					if (result != 125)
+						result = result / 10 * 10;
+					panel._settings.IdleThrottleStopWanderIntervalMin = result;
+					panel._settings.IdleThrottleStopWanderIntervalMax = Math.Max(panel._settings.IdleThrottleStopWanderIntervalMax, result);
+					if (Mouse.IsOver(rect))
+					{
+						Widgets.DrawHighlight(rect);
+						panel._lastMouseOverOption = null;
+						panel._showingDesc = descTitle.Translate(result, result + 75);
+					}
+					listing.Gap(-2);
+				}
+
+				if (panel._settings.IdleThrottleStopWanderDynamic)
+				{
+					{
+						var rect = listing.GetRect(20);
+						listing.Gap(-25);
+						var result = (int)listing.SliderLabeled(
+							"YaOpt.Setting.Option.IdleThrottle.StopWander.Max".Translate(panel._settings.IdleThrottleStopWanderIntervalMax),
+							panel._settings.IdleThrottleStopWanderIntervalMax, 125, 1000);
+						if (result != 125)
+							result = result / 10 * 10;
+						panel._settings.IdleThrottleStopWanderIntervalMax = result;
+						panel._settings.IdleThrottleStopWanderIntervalMin = Math.Min(panel._settings.IdleThrottleStopWanderIntervalMin, result);
+						if (Mouse.IsOver(rect))
+						{
+							Widgets.DrawHighlight(rect);
+							panel._lastMouseOverOption = null;
+							panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.StopWander.Max.Desc"
+								.Translate(result, result + 75);
+						}
+						listing.Gap(-2);
+					}
+
+					{
+						var rect = listing.GetRect(20);
+						listing.Gap(-25);
+						var result = (int)listing.SliderLabeled(
+							"YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin".Translate(panel._settings.IdleThrottleStopWanderPeopleMin),
+							panel._settings.IdleThrottleStopWanderPeopleMin, 1, 20);
+						panel._settings.IdleThrottleStopWanderPeopleMin = result;
+						panel._settings.IdleThrottleStopWanderPeopleMax = Math.Max(panel._settings.IdleThrottleStopWanderPeopleMax, result);
+						if (Mouse.IsOver(rect))
+						{
+							Widgets.DrawHighlight(rect);
+							panel._lastMouseOverOption = null;
+							panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin.Desc".Translate();
+						}
+						listing.Gap(-2);
+					}
+
+					{
+						var rect = listing.GetRect(20);
+						listing.Gap(-25);
+						var result = (int)listing.SliderLabeled(
+							"YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax".Translate(panel._settings.IdleThrottleStopWanderPeopleMax),
+							panel._settings.IdleThrottleStopWanderPeopleMax, 1, 50);
+						panel._settings.IdleThrottleStopWanderPeopleMax = result;
+						panel._settings.IdleThrottleStopWanderPeopleMin = Math.Min(panel._settings.IdleThrottleStopWanderPeopleMin, result);
+						if (Mouse.IsOver(rect))
+						{
+							Widgets.DrawHighlight(rect);
+							panel._lastMouseOverOption = null;
+							panel._showingDesc = "YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax.Desc".Translate();
+						}
+					}
+				}
+				#endregion
+
+				listing.Outdent();
+			}
+		}
 	}
 }
