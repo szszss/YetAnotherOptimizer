@@ -108,14 +108,11 @@ namespace YaOpt.Helpers.ThreadSafe
 				AccessTools.PropertySetter(typeof(GreedySpinLock),
 					nameof(GreedySpinLock.DetectDeadlock));
 			_methodLockWrapperEnter = AccessTools.Method(
-				typeof(LockWrapper),
-				nameof(LockWrapper.Enter));
-			_methodLockWrapperExit = AccessTools.Method(
-				typeof(LockWrapper),
-				nameof(LockWrapper.Exit));
-			_methodGetLockWrapper = AccessTools.Method(
 				typeof(LockPatchGenerator),
-				nameof(GetLock));
+				nameof(EnterLock));
+			_methodLockWrapperExit = AccessTools.Method(
+				typeof(LockPatchGenerator),
+				nameof(ExitLock));
 		}
 
 		public static PatchInfo GetOrCreatePatchMethods(MethodBase targetMethod, LockScope lockScope,
@@ -235,9 +232,8 @@ namespace YaOpt.Helpers.ThreadSafe
 			{
 				case LockScope.Key:
 				case LockScope.Type:
-					// GetLock(lockIndex).Enter();
+					// LockPatchGenerator.EnterLock(lockIndex);
 					ilPrefix.Emit(OpCodes.Ldc_I4, lockIndex);
-					ilPrefix.Emit(OpCodes.Call, _methodGetLockWrapper);
 					ilPrefix.Emit(OpCodes.Call, _methodLockWrapperEnter);
 					// __state = true;
 					ilPrefix.Emit(OpCodes.Ldarg_0);
@@ -284,9 +280,8 @@ namespace YaOpt.Helpers.ThreadSafe
 			{
 				case LockScope.Key:
 				case LockScope.Type:
-					// GetLock(lockIndex).Exit();
+					// LockPatchGenerator.ExitLock(lockIndex);
 					ilFinalizer.Emit(OpCodes.Ldc_I4, lockIndex);
-					ilFinalizer.Emit(OpCodes.Call, _methodGetLockWrapper);
 					ilFinalizer.Emit(OpCodes.Call, _methodLockWrapperExit);
 					break;
 				case LockScope.Method:
@@ -310,6 +305,18 @@ namespace YaOpt.Helpers.ThreadSafe
 		private static LockWrapper GetLock(int lockIndex)
 		{
 			return _lockWrappers[lockIndex];
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void EnterLock(int lockIndex)
+		{
+			_lockWrappers[lockIndex].Enter();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ExitLock(int lockIndex)
+		{
+			_lockWrappers[lockIndex].Exit();
 		}
 
 		private static int GetOrCreateLockWrapper(string lockKey, bool supportRecursion, bool detectDeadlock)

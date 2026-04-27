@@ -1,4 +1,3 @@
-using System;
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
@@ -18,7 +17,7 @@ namespace YaOpt.Patches
 		{
 			yield return AccessTools.Method(
 				typeof(GenHostility),
-				nameof(GenHostility.HostileTo), new []{ typeof(Thing), typeof(Faction) });
+				nameof(GenHostility.HostileTo), new[] { typeof(Thing), typeof(Faction) });
 			yield return AccessTools.Method(
 				typeof(GenHostility),
 				nameof(GenHostility.HostileTo), new[] { typeof(Thing), typeof(Thing) });
@@ -49,7 +48,7 @@ namespace YaOpt.Patches
 			foreach (var instruction in instructions)
 			{
 				if (instruction.Calls("TryGetComp") && instruction.operand is MethodInfo method1 &&
-				    method1.IsGenericMethod && method1.GetParameters().Length == 1)
+					method1.IsGenericMethod && method1.GetParameters().Length == 1)
 				{
 					var type = method1.GetGenericArguments()[0];
 					if (type == typeof(CompCauseGameCondition))
@@ -84,7 +83,7 @@ namespace YaOpt.Patches
 					}
 				}
 				else if (instruction.Calls("GetComp") && instruction.operand is MethodInfo method2 &&
-				         method2.IsGenericMethod)
+						 method2.IsGenericMethod)
 				{
 					var type = method2.GetGenericArguments()[0];
 					if (type == typeof(CompCauseGameCondition))
@@ -119,7 +118,7 @@ namespace YaOpt.Patches
 					}
 				}
 				if (instruction.Calls("TryGetComp") && instruction.operand is MethodInfo method3 &&
-				    method3.IsGenericMethod && method3.GetParameters().Length == 2)
+					method3.IsGenericMethod && method3.GetParameters().Length == 2)
 				{
 					var type = method3.GetGenericArguments()[0];
 					if (type == typeof(CompActivity))

@@ -1,7 +1,6 @@
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
 using Verse;
 using YaOpt.Helpers;
 using YaOpt.Patches.ThreadSafe.ThreadLocal;
@@ -24,7 +23,7 @@ namespace YaOpt.Patches.Compatibility.MapPreview
 		static bool Prepare()
 		{
 			return YaOptGlobal.NeedThreadSafe &&
-			       YaOptGlobal.HasType("MapPreview.Patches.Patch_Verse_Map");
+				   YaOptGlobal.HasType("MapPreview.Patches.Patch_Verse_Map");
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

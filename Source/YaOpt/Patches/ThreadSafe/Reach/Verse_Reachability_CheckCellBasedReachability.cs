@@ -6,7 +6,8 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 {
 	[HarmonyPatch(typeof(Reachability))]
 	[HarmonyPatch("CheckCellBasedReachability")]
-	// TODO:
+	//TODO: Actually, it could be rewritten with ThreadLocal,
+	//but this method is very rarely called, so I'm too lazy to do it.
 	internal static class Verse_Reachability_CheckCellBasedReachability
 	{
 		static bool Prepare()
