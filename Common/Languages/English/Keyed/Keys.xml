@@ -4,6 +4,8 @@
 	<YaOpt.Loading.Patching>YaOpt: Re-applying settings</YaOpt.Loading.Patching>
 	<YaOpt.Message.ButterCompatibilityNotEnabled>You have both YaOpt and Butter++ installed. The compatibility mode of Butter++ must be enabled.</YaOpt.Message.ButterCompatibilityNotEnabled>
 	<YaOpt.Message.ButterCompatibilityForceEnable>You have both YaOpt and Butter++ installed. The compatibility mode of Butter++ was enforced.</YaOpt.Message.ButterCompatibilityForceEnable>
+	<YaOpt.Message.PerformanceOptimizerGetComp>You have both YaOpt and Performance Optimizer installed, and the multi-threaded optimizations of YaOpt is enabled. If you encounter the "System.InvalidOperationException: Collection was modified" error randomly but infrequently in the game, try disable "Faster GetComp methods replacement" of Performance Optimizer.</YaOpt.Message.PerformanceOptimizerGetComp>
+	<YaOpt.Message.PerformanceFishSeeConsole>You have both YaOpt and Performance Fish installed, and you have enabled the options that have compatibility issues. See the console for details.</YaOpt.Message.PerformanceFishSeeConsole>
 	<YaOpt.Message.ErrorWhilePatching>YaOpt encountered an error while applying settings. The game may not function correctly. Check the console for details.</YaOpt.Message.ErrorWhilePatching>
 	<YaOpt.Setting.Button.DisableAll>Disable All Optimizations</YaOpt.Setting.Button.DisableAll>
 	<YaOpt.Setting.Button.EnableAll>Enable All Optimizations</YaOpt.Setting.Button.EnableAll>

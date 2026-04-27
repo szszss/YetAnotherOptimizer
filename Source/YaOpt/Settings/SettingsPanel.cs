@@ -1,3 +1,4 @@
+using FxResources.System.ValueTuple;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -144,6 +145,27 @@ namespace YaOpt.Settings
 				case SettingsTab.Misc:
 					lastCategory = GetCategoryText(OptimizationCategory.Misc);
 					break;
+			}
+			if (CompatibilityChecker.HasProblem)
+			{
+				leftRect.SplitHorizontally(35f, out var btnRect, out leftRect);
+				if (listing.ButtonText("YaOpt.Setting.Button.AutoFixCompatibility".Translate()))
+				{
+					// Change the options
+					CompatibilityChecker.Check(true, true, true, true);
+					// Check again
+					CompatibilityChecker.Check(false, false, false, true);
+					if (CompatibilityChecker.HasProblem)
+					{
+						Messages.Message("YaOpt.Message.CompatibilityFixFailed".Translate(),
+							null, MessageTypeDefOf.CautionInput, false);
+					}
+					else
+					{
+						Messages.Message("YaOpt.Message.CompatibilityFixSucceed".Translate(),
+							null, MessageTypeDefOf.SilentInput, false);
+					}
+				}
 			}
 			foreach (var option in _settings.AllOptimizations)
 			{

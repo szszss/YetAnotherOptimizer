@@ -2,9 +2,26 @@
 <LanguageData>
 	<YaOpt.Loading.SearchingTypes>YaOpt: 初始化类型数据库</YaOpt.Loading.SearchingTypes>
 	<YaOpt.Loading.Patching>YaOpt: 重新应用设置</YaOpt.Loading.Patching>
-	<YaOpt.Message.ButterCompatibilityNotEnabled>你同时安装了YaOpt和Butter++，必须在设置中开启Butter++的兼容模式。</YaOpt.Message.ButterCompatibilityNotEnabled>
+	<YaOpt.Message.ButterCompatibilityNotEnabled>你同时安装了YaOpt和Butter++，必须在设置中开启Butter++的兼容模式，或者在YaOpt的设置菜单里点击“修复兼容性选项”。</YaOpt.Message.ButterCompatibilityNotEnabled>
 	<YaOpt.Message.ButterCompatibilityForceEnable>你同时安装了YaOpt和Butter++，已强制开启Butter++的兼容模式。</YaOpt.Message.ButterCompatibilityForceEnable>
+	<YaOpt.Message.PerformanceOptimizerGetComp>你同时安装了YaOpt和Performance Optimizer，并且启用了YaOpt的多线程类优化，如果你在游戏中遇到随机出现但不频繁的“System.InvalidOperationException: Collection was modified”报错的话，尝试关掉Performance Optimizer的“更快的GetComp方法替换（Faster GetComp methods replacement）”。</YaOpt.Message.PerformanceOptimizerGetComp>
+	<YaOpt.Message.PerformanceFishSeeConsole>你同时安装了YaOpt和Performance Fish，并且开启了有兼容问题的选项，详细信息见控制台。</YaOpt.Message.PerformanceFishSeeConsole>
+	<YaOpt.Message.PerformanceFishIncompatibility1>你同时安装了YaOpt和Performance Fish，并且开启了有兼容问题的选项，请在在YaOpt的设置菜单里点击“修复兼容性选项”，或者按照以下信息选择性地关闭冲突的优化。</YaOpt.Message.PerformanceFishIncompatibility1>
+	<YaOpt.Message.PerformanceFishIncompatibility2>（左侧：YaOpt）      （右侧：Performance Fish）</YaOpt.Message.PerformanceFishIncompatibility2>
+	<YaOpt.Message.PerformanceFishIncompatibility3>在完成操作后，请关闭设置菜单并重启游戏。</YaOpt.Message.PerformanceFishIncompatibility3>
+	<YaOpt.Message.PerformanceFish.RuntimeInfoCache>【其他】类型信息缓存 —— 关闭AccessToolsCacheing的AllTypes</YaOpt.Message.PerformanceFish.RuntimeInfoCache>
+	<YaOpt.Message.PerformanceFish.WindUpdate>【TPS】植物摇曳效果优化 —— 关闭MiscOptimizations的WindManager_WindManagerTick</YaOpt.Message.PerformanceFish.WindUpdate>
+	<YaOpt.Message.PerformanceFish.IdleThrottle>【TPS】闲时检查优化 —— 关闭Toils_BedOptimization的FailOnBedNoLongerUsable</YaOpt.Message.PerformanceFish.IdleThrottle>
+	<YaOpt.Message.PerformanceFish.ParallelJobGiver>【TPS】并行工作发布 —— 关闭StorageSettingsPatches的AllowedToAccept</YaOpt.Message.PerformanceFish.ParallelJobGiver>
+	<YaOpt.Message.PerformanceFish.ThingGetComp>【TPS】物体组件查询加速 —— 关闭GetCompCaching的ThingComp</YaOpt.Message.PerformanceFish.ThingGetComp>
+	<YaOpt.Message.PerformanceFish.LazyTextureLoad>【其他】延迟纹理加载 —— 关闭ContentFinderCaching的Get</YaOpt.Message.PerformanceFish.LazyTextureLoad>
+	<YaOpt.Message.PerformanceFish.EarlyRenderPrepare>【FPS】提前准备物体渲染 —— 关闭DynamicDrawManagerPatches的DrawDynamicThings</YaOpt.Message.PerformanceFish.EarlyRenderPrepare>
+	<YaOpt.Message.PerformanceFish.ComputeMatrixBurst>【FPS】ComputeMatrix Burst加速 —— 关闭PawnRenderingOptimizations的PawnRenderTreeComputeMatrix</YaOpt.Message.PerformanceFish.ComputeMatrixBurst>
+	<YaOpt.Message.PerformanceFish.FastListerRemove>【TPS】物体移除优化 —— 关闭ThingsPrepatches下的全部六个选项</YaOpt.Message.PerformanceFish.FastListerRemove>
+	<YaOpt.Message.CompatibilityFixSucceed>已修复兼容性选项，重启游戏以生效。</YaOpt.Message.CompatibilityFixSucceed>
+	<YaOpt.Message.CompatibilityFixFailed>修复兼容性选项失败，仍有不兼容项存在，详见控制台。</YaOpt.Message.CompatibilityFixFailed>
 	<YaOpt.Message.ErrorWhilePatching>YaOpt在应用设置时出现了错误，游戏可能无法正常运行，查阅控制台获取详细信息。</YaOpt.Message.ErrorWhilePatching>
+	<YaOpt.Setting.Button.AutoFixCompatibility>修复兼容性选项</YaOpt.Setting.Button.AutoFixCompatibility>
 	<YaOpt.Setting.Button.DisableAll>禁用全部优化</YaOpt.Setting.Button.DisableAll>
 	<YaOpt.Setting.Button.EnableAll>启用全部优化</YaOpt.Setting.Button.EnableAll>
 	<YaOpt.Setting.Button.DisableAllFps>禁用全部FPS优化</YaOpt.Setting.Button.DisableAllFps>

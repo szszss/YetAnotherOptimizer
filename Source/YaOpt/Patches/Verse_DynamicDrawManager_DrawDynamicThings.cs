@@ -14,6 +14,7 @@ namespace YaOpt.Patches
 	/// <seealso cref="YaOptSettings.OptWindUpdate"/>
 	[HarmonyPatch(typeof(DynamicDrawManager))]
 	[HarmonyPatch(nameof(DynamicDrawManager.DrawDynamicThings))]
+	[ManualPatch]
 	internal static class Verse_DynamicDrawManager_DrawDynamicThings
 	{
 		static bool Prepare()
@@ -22,11 +23,31 @@ namespace YaOpt.Patches
 			return settings.OptEarlyRenderPrepare.Enabled || settings.OptWindUpdate.Enabled;
 		}
 
-		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+		static void Patch(Harmony harmony)
 		{
 			var settings = YaOptGlobal.Settings;
-			var prp = settings.OptEarlyRenderPrepare.Enabled;
-			var wind = settings.OptWindUpdate.Enabled;
+			var prefix = settings.OptWindUpdate.Enabled
+				? new HarmonyMethod(typeof(Verse_DynamicDrawManager_DrawDynamicThings), nameof(Prefix))
+				: null;
+			var transpiler = settings.OptEarlyRenderPrepare.Enabled
+				? new HarmonyMethod(typeof(Verse_DynamicDrawManager_DrawDynamicThings), nameof(Transpiler))
+				: null;
+			if (prefix != null || transpiler != null)
+			{
+				harmony.Patch(AccessTools.Method(
+						typeof(DynamicDrawManager), nameof(DynamicDrawManager.DrawDynamicThings)),
+					prefix: prefix,
+					transpiler: transpiler);
+			}
+		}
+
+		static void Prefix()
+		{
+			WindHelper.UpdateWindForMaterials();
+		}
+
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+		{
 			var firstTime = true;
 			var skip = false;
 			foreach (var instruction in instructions)
@@ -39,17 +60,9 @@ namespace YaOpt.Patches
 				if (firstTime && instruction.opcode == OpCodes.Stloc_0)
 				{
 					firstTime = false;
-					if (prp)
-					{
-						skip = true;
-					}
-					// update wind for current map
-					if (wind)
-					{
-						yield return CodeInstruction.Call(typeof(WindHelper), nameof(WindHelper.UpdateWindForMaterials));
-					}
+					skip = true;
 				}
-				else if (prp && instruction.opcode == OpCodes.Ldstr && "Draw Visible".Equals(instruction.operand))
+				else if (instruction.opcode == OpCodes.Ldstr && "Draw Visible".Equals(instruction.operand))
 				{
 					var typeThingCullDetails = AccessTools.TypeByName("Verse.DynamicDrawManager/ThingCullDetails");
 					var typeNativeArrayThingCullDetails = typeof(NativeArray<>).MakeGenericType(typeThingCullDetails);
