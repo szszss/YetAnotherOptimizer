@@ -21,9 +21,7 @@ namespace YaOpt.Patches
 		{
 			if (YaOptGlobal.HasMod("Vortex.Kingfisher"))
 			{
-				return AccessTools.Method(
-					AccessTools.TypeByName("Kingfisher.Features.Things.ListerThingsRewrite"),
-					"Remove");
+				return AccessTools.Method(AccessTools.TypeByName("Kingfisher.Features.ListerThingsRewrite"), "Remove");
 			}
 			else
 			{

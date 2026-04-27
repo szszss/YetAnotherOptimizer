@@ -4,7 +4,7 @@
 		<defName>Kingfisher</defName>
 		<lockPatches>
 			<LockPatch>
-				<method>Kingfisher.Features.Combat.AttackTargetFinderRewrite:BestAttackTarget</method>
+				<method>Kingfisher.Features.AttackTargetFinderRewrite:BestAttackTarget</method>
 			</LockPatch>
 		</lockPatches>
 	</YaOpt.CompatibilityDef>
