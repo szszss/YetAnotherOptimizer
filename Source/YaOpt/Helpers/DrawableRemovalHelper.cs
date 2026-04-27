@@ -1,4 +1,3 @@
-using Gilzoide.ManagedJobs;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.Jobs;
@@ -66,7 +65,7 @@ namespace YaOpt.Helpers
 			_isJobRunning = !_thingToDeRegisterDrawable.IsEmpty;
 			if (_isJobRunning)
 			{
-				_handle = new ManagedJob(new RemoveDrawableJob()).Schedule();
+				_handle = new YaOptManagedJobs.Job(new RemoveDrawableJob()).Schedule();
 			}
 		}
 

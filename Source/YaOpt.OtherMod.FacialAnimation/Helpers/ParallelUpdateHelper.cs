@@ -1,5 +1,4 @@
 using FacialAnimation;
-using Gilzoide.ManagedJobs;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.Jobs;
@@ -52,7 +51,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 			if (_pendingPawns.Count > 0)
 			{
 				_jobRunning = true;
-				_jobHandle = new ManagedJobFor(new UpdateFacialAnimationJob(_pendingPawns))
+				_jobHandle = new YaOptManagedJobs.JobFor(new UpdateFacialAnimationJob(_pendingPawns))
 					.ScheduleParallel(_pendingPawns.Count, 1);
 			}
 		}

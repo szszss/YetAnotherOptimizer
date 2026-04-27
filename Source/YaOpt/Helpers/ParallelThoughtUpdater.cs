@@ -1,4 +1,3 @@
-using Gilzoide.ManagedJobs;
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Concurrent;
@@ -30,7 +29,7 @@ namespace YaOpt.Helpers
 				YaOptGlobal.IsParallelRunningInTick = true;
 				var pawn = thoughtHandler.pawn;
 				var handleRecalculating =
-					new ManagedJobFor(new ParallelThoughtRecalculatingJob(cachedThoughts)).ScheduleParallel(
+					new YaOptManagedJobs.JobFor(new ParallelThoughtRecalculatingJob(cachedThoughts)).ScheduleParallel(
 						cachedThoughts.Count, UnityData.GetIdealBatchCount(cachedThoughts.Count));
 
 				foreach (var thought in cachedThoughts)
@@ -40,15 +39,15 @@ namespace YaOpt.Helpers
 
 				if (ModsConfig.IdeologyActive && pawn.Ideo != null)
 				{
-					handleRecalculating = new ManagedJob(new ParallelPreceptThoughtCreatingJob(pawn,
+					handleRecalculating = new YaOptManagedJobs.Job(new ParallelPreceptThoughtCreatingJob(pawn,
 						cachedThoughts, pawn.Ideo.PreceptsListForReading)).Schedule(handleRecalculating);
 				}
 
 				var situationalNonSocialThoughtDefs = ThoughtUtility.situationalNonSocialThoughtDefs;
-				var handleCreating = new ManagedJobFor(new ParallelThoughtCreatingJob(thoughtHandler,
+				var handleCreating = new YaOptManagedJobs.JobFor(new ParallelThoughtCreatingJob(thoughtHandler,
 					situationalNonSocialThoughtDefs)).ScheduleParallel(situationalNonSocialThoughtDefs.Count, 1);
 
-				var waitHandle = new ManagedJob(new ParallelThoughtAddingJob(cachedThoughts)).Schedule(
+				var waitHandle = new YaOptManagedJobs.Job(new ParallelThoughtAddingJob(cachedThoughts)).Schedule(
 					JobHandle.CombineDependencies(handleRecalculating, handleCreating));
 
 				waitHandle.Complete();

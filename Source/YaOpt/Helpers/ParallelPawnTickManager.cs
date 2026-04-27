@@ -1,4 +1,3 @@
-using Gilzoide.ManagedJobs;
 using LudeonTK;
 using System;
 using System.Collections.Concurrent;
@@ -142,10 +141,10 @@ namespace YaOpt.Helpers
 
 			YaOptGlobal.IsParallelRunningInTick = true;
 			JobHandle handle = JobHandle.CombineDependencies(
-				new ManagedJobFor(new ParallelPawnJob(_humanPawns,
+				new YaOptManagedJobs.JobFor(new ParallelPawnJob(_humanPawns,
 						predictJobFailure, predictConstantJob))
 					.ScheduleParallel(_humanPawns.Count, 1),
-				new ManagedJobFor(new ParallelPawnJob(_nonhumanPawns,
+				new YaOptManagedJobs.JobFor(new ParallelPawnJob(_nonhumanPawns,
 						predictJobFailure, false, _humanPawns.Count))
 					.ScheduleParallel(_nonhumanPawns.Count, batchSize));
 

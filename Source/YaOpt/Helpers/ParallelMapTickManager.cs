@@ -1,4 +1,3 @@
-using Gilzoide.ManagedJobs;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -84,9 +83,9 @@ namespace YaOpt.Helpers
 			{
 				// Rebuilding any dirty region.
 				map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
-				_tmpJobHandles[i++] = new ManagedJob(new SteadyEnvironmentEffectsJob(map.steadyEnvironmentEffects)).Schedule();
-				_tmpJobHandles[i++] = new ManagedJob(new TempTerrainManagerJob(map.tempTerrain)).Schedule();
-				_tmpJobHandles[i++] = new ManagedJob(new GasGridJob(map.gasGrid)).Schedule();
+				_tmpJobHandles[i++] = new YaOptManagedJobs.Job(new SteadyEnvironmentEffectsJob(map.steadyEnvironmentEffects)).Schedule();
+				_tmpJobHandles[i++] = new YaOptManagedJobs.Job(new TempTerrainManagerJob(map.tempTerrain)).Schedule();
+				_tmpJobHandles[i++] = new YaOptManagedJobs.Job(new GasGridJob(map.gasGrid)).Schedule();
 			}
 			_postMapTickJobHandle = JobHandle.CombineDependencies(_tmpJobHandles);
 			_jobRunning = true;

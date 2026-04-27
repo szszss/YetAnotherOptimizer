@@ -1,4 +1,3 @@
-using Gilzoide.ManagedJobs;
 using HarmonyLib;
 using RimWorld;
 using System;
@@ -173,7 +172,7 @@ namespace YaOpt.Helpers
 				}
 
 				YaOptGlobal.IsParallelRunningInTick = true;
-				jobHandle = new ManagedJobFor(
+				jobHandle = new YaOptManagedJobs.JobFor(
 						new IssueJobPackageJob(pawn, jobList))
 					.ScheduleParallel(parallelTaskCount, 1);
 				JobHandle.ScheduleBatchedJobs();
