@@ -105,6 +105,11 @@ namespace YaOpt.Helpers
 			}
 		}
 
+		public void Clear()
+		{
+			_records.Clear();
+		}
+
 		public ThingRecord GetThingRecord(Thing thing, ListerThingsUse use)
 		{
 			if (use != ListerThingsUse.Global)

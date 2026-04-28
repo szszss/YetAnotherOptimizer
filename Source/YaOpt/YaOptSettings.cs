@@ -545,6 +545,7 @@ namespace YaOpt
 		/// This reduces complexity to O(1) at the cost of a negligible increase in memory usage.
 		/// </summary>
 		/// <seealso cref="Patches.Verse_ListerThings_Add"/>
+		/// <seealso cref="Patches.Verse_ListerThings_Clear"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Contains"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Remove"/>
 		/// <seealso cref="Patches.Verse_ThingDef_HasAssignableCompFrom"/>

@@ -166,22 +166,16 @@ namespace YaOpt.Patches
 			}
 			var listCount = list.Count;
 
-			if (index < 0 || index >= listCount)
+			if (index < 0 || index >= listCount || list[index] != thing)
 			{
-				YaOptMod.Error($"Invalid index: {index} for thing {thing}. Fallback to the original path.");
+				YaOptMod.Error($"Thing does not match its index: {index} for thing {thing}. " +
+							   "Fallback to the original path.");
 				list.Remove(thing);
 				return true;
 			}
 			if (index == listCount - 1)
 			{
-				if (list[index] == thing)
-				{
-					list.RemoveAt(index);
-					return true;
-				}
-				YaOptMod.Error($"Thing does not match its index: {index} for thing {thing}. " +
-							   "Fallback to the original path.");
-				list.Remove(thing);
+				list.RemoveAt(index);
 				return true;
 			}
 			var swapThing = list[listCount - 1];
@@ -217,22 +211,16 @@ namespace YaOpt.Patches
 			record.HaulIndex = -1;
 			var listCount = list.Count;
 
-			if (index < 0 || index >= listCount)
+			if (index < 0 || index >= listCount || list[index] != haul)
 			{
-				YaOptMod.Error($"Invalid index: {index} for thing {haul}. Fallback to the original path.");
+				YaOptMod.Error($"Thing does not match its index: {index} for thing {haul}. " +
+							   "Fallback to the original path.");
 				list.Remove(haul);
 				return true;
 			}
 			if (index == listCount - 1)
 			{
-				if (list[index] == haul)
-				{
-					list.RemoveAt(index);
-					return true;
-				}
-				YaOptMod.Error($"Thing does not match its index: {index} for thing {haul}. " +
-							   "Fallback to the original path.");
-				list.Remove(haul);
+				list.RemoveAt(index);
 				return true;
 			}
 			var swapThing = list[listCount - 1];
