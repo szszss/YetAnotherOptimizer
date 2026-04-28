@@ -16,12 +16,9 @@ namespace YaOpt.Patches
 			return YaOptGlobal.Settings.OptFastListerRemove.Enabled;
 		}
 
-		static void Postfix(ListerThings __instance)
+		static void Prefix(ListerThings __instance)
 		{
-			if (__instance.use == ListerThingsUse.Global)
-			{
-				ListerThingsIndexer.GetListerThingsIndex(__instance).Clear();
-			}
+			ListerThingsIndexer.TryClear(__instance);
 		}
 	}
 }

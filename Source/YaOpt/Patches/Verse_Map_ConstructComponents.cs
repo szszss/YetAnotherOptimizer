@@ -12,6 +12,11 @@ namespace YaOpt.Patches
 	[HarmonyPriority(Priority.HigherThanNormal)]
 	internal static class Verse_Map_ConstructComponents
 	{
+		static bool Prepare()
+		{
+			return YaOptGlobal.Settings.OptFastListerRemove.Enabled;
+		}
+
 		static void Postfix(Map __instance)
 		{
 			ListerThingsIndexer.Create(__instance.listerThings);

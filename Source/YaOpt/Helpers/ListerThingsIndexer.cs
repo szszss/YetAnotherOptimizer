@@ -81,6 +81,16 @@ namespace YaOpt.Helpers
 			return indexer;
 		}
 
+		public static void TryClear(ListerThings lister)
+		{
+			if (lister.use != ListerThingsUse.Global)
+				return;
+			if (_indexers.TryGetValue(lister, out var indexer))
+			{
+				indexer.Clear();
+			}
+		}
+
 		public ThingRecord Add(Thing thing, ListerThingsUse use)
 		{
 			if (use != ListerThingsUse.Global)

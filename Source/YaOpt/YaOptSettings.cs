@@ -548,6 +548,7 @@ namespace YaOpt
 		/// <seealso cref="Patches.Verse_ListerThings_Clear"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Contains"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Remove"/>
+		/// <seealso cref="Patches.Verse_Map_ConstructComponents"/>
 		/// <seealso cref="Patches.Verse_ThingDef_HasAssignableCompFrom"/>
 		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
 		public OptimizationOption OptFastListerRemove { get; } = new OptimizationOption
