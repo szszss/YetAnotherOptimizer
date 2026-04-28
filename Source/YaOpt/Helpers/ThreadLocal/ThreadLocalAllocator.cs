@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 
 namespace YaOpt.Helpers.ThreadLocal
@@ -14,11 +15,21 @@ namespace YaOpt.Helpers.ThreadLocal
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
 		}
 
+		public static int TryAllocate(FieldInfo field, bool trackAllValues = false)
+		{
+			return TryAllocate(field.FullName(), trackAllValues);
+		}
+
 		public static int TryAllocate(string key, bool trackAllValues = false)
 		{
 			if (_keyMapping.TryGetValue(key, out var index))
 				return index;
 			return Allocate(key, trackAllValues);
+		}
+
+		public static int Allocate(FieldInfo field, bool trackAllValues = false)
+		{
+			return Allocate(field.FullName(), trackAllValues);
 		}
 
 		public static int Allocate(string key, bool trackAllValues = false)

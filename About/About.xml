@@ -21,9 +21,6 @@
 		<li>zetrith.prepatcher</li>
 		<li>Nals.FacialAnimation</li>
 	</loadAfter>
-	<incompatibleWith>
-		<li>bs.performance</li>
-	</incompatibleWith>
 	<description>
 YetAnotherOptimizer is a high-performance optimization mod for RimWorld.
 It is designed to significantly increase game frame rates (both FPS and TPS) and make the late-game colonies run smoother.

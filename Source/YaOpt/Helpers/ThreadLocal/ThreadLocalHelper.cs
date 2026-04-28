@@ -46,7 +46,8 @@ namespace YaOpt.Helpers.ThreadLocal
 		{
 			var local = generator.DeclareLocal(field.FieldType);
 			var type = typeof(ThreadLocalAllocator<>).MakeGenericType(field.FieldType);
-			var index = type.GetMethod("TryAllocate").Invoke(null, new object[] { field.FullName(), false });
+			var index = type.GetMethod("TryAllocate", new []{ typeof(FieldInfo), typeof(bool) })
+				.Invoke(null, new object[] { field, false });
 			yield return new CodeInstruction(OpCodes.Ldc_I4, index);
 			yield return CodeInstruction.Call(type, "Get");
 			yield return CodeInstruction.StoreLocal(local.LocalIndex);
