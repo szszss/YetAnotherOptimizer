@@ -203,11 +203,6 @@
 				<method>RimWorld.ItemAvailability:ThingsAvailableAnywhere</method>
 			</LockPatch>
 			
-			<!-- JobGiver_ConfigurableHostilityResponse -->
-			<LockPatch>
-				<method>RimWorld.JobGiver_ConfigurableHostilityResponse:TryGetAttackNearbyEnemyJob</method>
-			</LockPatch>
-			
 			<!-- ListerArtificialBuildingsForMeditation -->
 			<LockPatch>
 				<method>RimWorld.ListerArtificialBuildingsForMeditation:GetForCell</method>

@@ -17,6 +17,10 @@
       <HintPath>$([System.IO.Path]::Combine($(SteamWorkshopDirectory), 'content\294100\2023507013\1.6\Assemblies\VEF.dll'))</HintPath>
       <Private>True</Private>
     </Reference>
+	<Reference Include="MVCF">
+      <HintPath>$([System.IO.Path]::Combine($(SteamWorkshopDirectory), 'content\294100\2023507013\1.6\Assemblies\MVCF.dll'))</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
