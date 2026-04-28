@@ -66,7 +66,7 @@ namespace YaOpt.OtherMod.VanillaExpandedFramework.Patches.ThreadSafe
 			Adjust = adjust;
 		}
 
-		public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
 			foreach (var instruction in instructions)
 			{
