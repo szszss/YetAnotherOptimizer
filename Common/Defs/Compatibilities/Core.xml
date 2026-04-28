@@ -3,6 +3,10 @@
 	<YaOpt.CompatibilityDef>
 		<defName>Core</defName>
 		
+		<ignoredJobFailurePredicting>
+			<li>Research</li> <!-- Can't validate job.Project -->
+		</ignoredJobFailurePredicting>
+		
 		<threadLocalPatches>
 			<!-- QuestUtility -->
 			<ThreadLocalPatch>
