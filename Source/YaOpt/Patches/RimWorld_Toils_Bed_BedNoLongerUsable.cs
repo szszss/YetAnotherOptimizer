@@ -13,7 +13,7 @@ namespace YaOpt.Patches
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptIdleThrottle.Enabled;
+			return YaOptGlobal.Settings.OptBedThrottle.Enabled;
 		}
 
 		static bool Prefix(Pawn actor, Thing bedThing, ref bool __result)

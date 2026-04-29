@@ -11,7 +11,7 @@
 	<YaOpt.Message.PerformanceFishIncompatibility3>在完成操作后，请关闭设置菜单并重启游戏。</YaOpt.Message.PerformanceFishIncompatibility3>
 	<YaOpt.Message.PerformanceFish.RuntimeInfoCache>【其他】类型信息缓存 —— 关闭AccessToolsCacheing的AllTypes</YaOpt.Message.PerformanceFish.RuntimeInfoCache>
 	<YaOpt.Message.PerformanceFish.WindUpdate>【TPS】植物摇曳效果优化 —— 关闭MiscOptimizations的WindManager_WindManagerTick</YaOpt.Message.PerformanceFish.WindUpdate>
-	<YaOpt.Message.PerformanceFish.IdleThrottle>【TPS】闲时检查优化 —— 关闭Toils_BedOptimization的FailOnBedNoLongerUsable</YaOpt.Message.PerformanceFish.IdleThrottle>
+	<YaOpt.Message.PerformanceFish.BedThrottle>【TPS】床铺检查优化 —— 关闭Toils_BedOptimization的FailOnBedNoLongerUsable</YaOpt.Message.PerformanceFish.BedThrottle>
 	<YaOpt.Message.PerformanceFish.ParallelJobGiver>【TPS】并行工作发布 —— 关闭StorageSettingsPatches的AllowedToAccept</YaOpt.Message.PerformanceFish.ParallelJobGiver>
 	<YaOpt.Message.PerformanceFish.ThingGetComp>【TPS】物体组件查询加速 —— 关闭GetCompCaching的ThingComp</YaOpt.Message.PerformanceFish.ThingGetComp>
 	<YaOpt.Message.PerformanceFish.LazyTextureLoad>【其他】延迟纹理加载 —— 关闭ContentFinderCaching的Get</YaOpt.Message.PerformanceFish.LazyTextureLoad>
@@ -115,8 +115,11 @@
 	<YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>
 	<YaOpt.Setting.Option.IdeoCheck>文化检查优化</YaOpt.Setting.Option.IdeoCheck>
 	<YaOpt.Setting.Option.IdeoCheck.Desc>游戏在检查文化是否允许做某事时，会遍历其下所有的戒律。此优化会在戒律每次更新时，为它创建缓存，记录那些涉及到禁令的戒律，然后在检查文化是否允许做某事时，只遍历那些有禁令的戒律。</YaOpt.Setting.Option.IdeoCheck.Desc>
+	<YaOpt.Setting.Option.BedThrottle>床铺检查优化</YaOpt.Setting.Option.BedThrottle>
+	<YaOpt.Setting.Option.BedThrottle.Desc>优化卧床角色的床铺可用性检测，原版卧床角色每帧都会检测当前床铺是否可用，虽然很有必要，但却包含了一些运算量较大的计算，比如判断因病卧床的角色是否痊愈等。节流后每15帧（0.25秒）才会进行一次完整检测，其他14帧只会进行简单的快速检测，如判断床铺是否被毁。</YaOpt.Setting.Option.BedThrottle.Desc>
+	<YaOpt.Setting.Option.BedThrottle.Compatibility>与Performance Fish的同类优化（FailOnBedNoLongerUsable）功能重复，Performance Fish的起床检测优化为每64帧检测一次，其他时间不检测。简单来说，YaOpt更安全，Performance Fish更快。建议使用Performance Fish的实现，因为床铺意外不可用的情况太罕见，用非常小的起床延迟换取相当的性能提升是值得的。</YaOpt.Setting.Option.BedThrottle.Compatibility>
 	<YaOpt.Setting.Option.IdleThrottle>闲时检查优化</YaOpt.Setting.Option.IdleThrottle>
-	<YaOpt.Setting.Option.IdleThrottle.Desc>对游戏中闲置角色（睡觉和闲逛）的中断闲置检测做节流。具体优化包括三项，其中后两项是可配置的：\n1.优化卧床角色的床铺可用性检测，原版卧床角色每帧都会检测当前床铺是否可用，虽然很有必要，但却包含了一些运算量较大的计算，比如判断因病卧床的角色是否痊愈等。节流后每15帧（0.25秒）才会进行一次完整检测，其他14帧只会进行简单的快速检测，如判断床铺是否被毁。\n2.优化卧床角色起床工作的检测间隔，原版游戏的卧床角色每211帧会进行一次工作判定，优化可以延长这个间隔，还可以让间隔变为动态间隔，根据卧床的殖民者数量来控制间隔，确保小型殖民地的角色依然能快速响应突发情况。\n3.优化闲逛角色的工作检测间隔，原版处于闲置状态的殖民者每125~200帧会进行一次工作判定，优化可以延长这个间隔，并且也能实现动态间隔，根据处于无事可做状态的殖民者数量来控制间隔。</YaOpt.Setting.Option.IdleThrottle.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.Desc>对游戏中闲置角色（睡觉和闲逛）的中断闲置检测做节流。具体优化包括：\n1.优化卧床角色起床工作的检测间隔，原版游戏的卧床角色每211帧会进行一次工作判定，优化可以延长这个间隔，还可以让间隔变为动态间隔，根据卧床的殖民者数量来控制间隔，确保小型殖民地的角色依然能快速响应突发情况。\n2.优化闲逛角色的工作检测间隔，原版处于闲置状态的殖民者每125~200帧会进行一次工作判定，优化可以延长这个间隔，并且也能实现动态间隔，根据处于无事可做状态的殖民者数量来控制间隔。</YaOpt.Setting.Option.IdleThrottle.Desc>
 	<YaOpt.Setting.Option.IdleThrottle.GetUp.Title>起床工作检测</YaOpt.Setting.Option.IdleThrottle.GetUp.Title>
 	<YaOpt.Setting.Option.IdleThrottle.GetUp>检测间隔: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp>
 	<YaOpt.Setting.Option.IdleThrottle.GetUp.Desc>调整让卧床角色起床工作的检测间隔，单位为逻辑帧（Tick），原版为211帧。</YaOpt.Setting.Option.IdleThrottle.GetUp.Desc>

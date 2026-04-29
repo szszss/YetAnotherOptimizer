@@ -267,14 +267,29 @@ namespace YaOpt
 		};
 
 		/// <summary>
-		/// Dynamically throttles idle job checks based on the number of colonists.
-		/// Includes optimizations for:
-		/// 1. Bed usability check (Toils_Bed.BedNoLongerUsable)
-		/// 2. Lay down job override check (Toils_LayDown.LayDown)
-		/// 3. Wander idle job duration (JobGiver_Wander)
-		/// These significantly reduce the overhead of high-frequency checks when there are many colonists.
+		/// Throttles bed usability check when pawns are lying down in their beds.
+		/// This overlaps with the very same optimization from Performance Fish.
+		/// Performance Fish throttles the check frequency to once every 64 ticks,
+		/// and performs no check on unchecked ticks.
+		/// YaOpt throttles the check frequency to once every 15 ticks,
+		/// and performs a simple, quick check on unchecked ticks.
 		/// </summary>
 		/// <seealso cref="Patches.RimWorld_Toils_Bed_BedNoLongerUsable"/>
+		public OptimizationOption OptBedThrottle { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.BedThrottle",
+			Desc = "YaOpt.Setting.Option.BedThrottle.Desc",
+			NoteCompatibility = "YaOpt.Setting.Option.BedThrottle.Compatibility",
+			Category = OptimizationCategory.Tps
+		};
+
+		/// <summary>
+		/// Dynamically throttles idle job checks based on the number of colonists.
+		/// Includes optimizations for:
+		/// 1. Lay down job override check (Toils_LayDown.LayDown)
+		/// 2. Wander idle job duration (JobGiver_Wander)
+		/// These significantly reduce the overhead of high-frequency checks when there are many colonists.
+		/// </summary>
 		/// <seealso cref="Patches.RimWorld_Toils_LayDown_LayDown"/>
 		/// <seealso cref="Patches.Verse_AI_JobGiver_Wander_TryGiveJob"/>
 		public OptimizationOption OptIdleThrottle { get; } = new OptimizationOption

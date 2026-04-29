@@ -174,7 +174,17 @@ namespace YaOpt
 								getterFishPatchEnabled.Invoke(patch, null) is bool b && b)
 							{
 								if (canForceDo)
-									setterFishPatchEnabled.Invoke(patch, new object[] { false });
+								{
+									if (patch.GetType().FullName ==
+									    "PerformanceFish.JobSystem.Toils_BedOptimization+FailOnBedNoLongerUsable_Patch")
+									{
+										YaOptGlobal.Settings.OptBedThrottle.Enabled = false;
+									}
+									else
+									{
+										setterFishPatchEnabled.Invoke(patch, new object[] { false });
+									}
+								}
 								if (!errors.Contains(error))
 									errors.Add(error);
 							}
@@ -208,6 +218,7 @@ namespace YaOpt
 						var getterSettings = AccessTools.PropertyGetter(typeMod, "Settings");
 						var objSettings = getterSettings.Invoke(null, null);
 						_settingsWrite.Invoke(objSettings, null);
+						YaOptGlobal.Settings.Write();
 					}
 					if (!silent)
 					{
@@ -248,9 +259,9 @@ namespace YaOpt
 				return false;
 			}
 			if (name == "PerformanceFish.JobSystem.Toils_BedOptimization+FailOnBedNoLongerUsable_Patch" &&
-				YaOptGlobal.Settings.OptIdleThrottle.Enabled)
+				YaOptGlobal.Settings.OptBedThrottle.Enabled)
 			{
-				error = "YaOpt.Message.PerformanceFish.IdleThrottle".Translate();
+				error = "YaOpt.Message.PerformanceFish.BedThrottle".Translate();
 				return false;
 			}
 			if (name == "PerformanceFish.Hauling.StorageSettingsPatches+AllowedToAcceptPatch" &&
