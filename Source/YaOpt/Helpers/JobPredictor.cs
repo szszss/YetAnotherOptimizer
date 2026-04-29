@@ -73,34 +73,41 @@ namespace YaOpt.Helpers
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public static ExpectedTargetStatus GetExpectedTargetStatus(Thing thing)
 			{
-				var status = ExpectedTargetStatus.None;
 				if (thing == null)
-					return status;
+					return ExpectedTargetStatus.None;
+				return GetExpectedTargetStatusDo(thing);
+			}
+
+			private static ExpectedTargetStatus GetExpectedTargetStatusDo(Thing thing)
+			{
+				var status = ExpectedTargetStatus.None;
 				if (!thing.Destroyed)
 				{
 					status |= ExpectedTargetStatus.Spawned;
-					if (thing is Pawn pawn)
+					if (thing is ThingWithComps thingWithComps)
 					{
-						var health = pawn.health;
-						if (!health.Dead)
+						if (thingWithComps.compForbiddable?.Forbidden == true)
 						{
-							status |= ExpectedTargetStatus.Alive;
-							if (!health.Downed)
+							status |= ExpectedTargetStatus.Forbidden;
+						}
+						if (thingWithComps is Pawn pawn)
+						{
+							var health = pawn.health;
+							if (!health.Dead)
 							{
-								status |= ExpectedTargetStatus.Awake;
-								if (pawn.InMentalState)
+								status |= ExpectedTargetStatus.Alive;
+								if (!health.Downed)
 								{
-									status |= ExpectedTargetStatus.InMentalState;
+									status |= ExpectedTargetStatus.Awake;
+									if (pawn.InMentalState)
+									{
+										status |= ExpectedTargetStatus.InMentalState;
+									}
 								}
 							}
 						}
 					}
-					if (thing is ThingWithComps thingWithComps && thingWithComps.compForbiddable?.Forbidden == true)
-					{
-						status |= ExpectedTargetStatus.Forbidden;
-					}
 				}
-
 				return status;
 			}
 

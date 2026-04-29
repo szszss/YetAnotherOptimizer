@@ -1,15 +1,24 @@
 using HarmonyLib;
+using LudeonTK;
 using RimWorld;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.Jobs;
+using Unity.Jobs.LowLevel.Unsafe;
 using Verse;
 
 namespace YaOpt.Helpers
 {
 	public static class ParallelThoughtUpdater
 	{
-		private static readonly HashSet<ThoughtDef> _createdThoughts = new HashSet<ThoughtDef>();
+		[TweakValue("YaOpt")]
+		private static bool ParallelThoughtUpdaterManualBatch = false;
+
+		[TweakValue("YaOpt", 1f, 256f)]
+		private static int ParallelThoughtUpdaterBatchSize = 16;
+
+		private static readonly HashSet<ThoughtDef> _createdThoughtDefs = new HashSet<ThoughtDef>();
 
 		private static readonly ConcurrentQueue<Thought_Situational> _thoughtsToAdd =
 			new ConcurrentQueue<Thought_Situational>();
@@ -28,39 +37,55 @@ namespace YaOpt.Helpers
 			{
 				YaOptGlobal.IsParallelRunningInTick = true;
 				var pawn = thoughtHandler.pawn;
-				var handleRecalculating =
-					new YaOptManagedJobs.JobFor(new ParallelThoughtRecalculatingJob(cachedThoughts)).ScheduleParallel(
-						cachedThoughts.Count, UnityData.GetIdealBatchCount(cachedThoughts.Count));
 
 				foreach (var thought in cachedThoughts)
 				{
-					_createdThoughts.Add(thought.def);
+					_createdThoughtDefs.Add(thought.def);
+				}
+
+				var situationalNonSocialThoughtDefs = ThoughtUtility.situationalNonSocialThoughtDefs;
+				var batchSize = ParallelThoughtUpdaterManualBatch
+					? ParallelThoughtUpdaterBatchSize
+					: UnityData.GetIdealBatchCount(situationalNonSocialThoughtDefs.Count);
+				var handleCreating = new YaOptManagedJobs.JobFor(
+						new ParallelThoughtCreatingJob(thoughtHandler,situationalNonSocialThoughtDefs))
+					.ScheduleParallel(situationalNonSocialThoughtDefs.Count, batchSize);
+
+				JobHandle.ScheduleBatchedJobs();
+
+				foreach (var thought in cachedThoughts)
+				{
+					thought.RecalculateState();
 				}
 
 				if (ModsConfig.IdeologyActive && pawn.Ideo != null)
 				{
-					handleRecalculating = new YaOptManagedJobs.Job(new ParallelPreceptThoughtCreatingJob(pawn,
-						cachedThoughts, pawn.Ideo.PreceptsListForReading)).Schedule(handleRecalculating);
+					foreach (var precept in pawn.Ideo.PreceptsListForReading)
+					{
+						var newThoughts = precept.SituationThoughtsToAdd(pawn, cachedThoughts);
+						if (newThoughts.Count > 0)
+						{
+							cachedThoughts.AddRange(newThoughts);
+						}
+					}
 				}
 
-				var situationalNonSocialThoughtDefs = ThoughtUtility.situationalNonSocialThoughtDefs;
-				var handleCreating = new YaOptManagedJobs.JobFor(new ParallelThoughtCreatingJob(thoughtHandler,
-					situationalNonSocialThoughtDefs)).ScheduleParallel(situationalNonSocialThoughtDefs.Count, 1);
+				handleCreating.Complete();
 
-				var waitHandle = new YaOptManagedJobs.Job(new ParallelThoughtAddingJob(cachedThoughts)).Schedule(
-					JobHandle.CombineDependencies(handleRecalculating, handleCreating));
-
-				waitHandle.Complete();
+				while (_thoughtsToAdd.TryDequeue(out var thought))
+				{
+					cachedThoughts.Add(thought);
+				}
 			}
 			finally
 			{
 				YaOptGlobal.IsParallelRunningInTick = false;
-				_createdThoughts.Clear();
+				_createdThoughtDefs.Clear();
 				_thoughtsToAdd.Clear();
 			}
 		}
 
-		private readonly struct ParallelThoughtRecalculatingJob : IJobFor
+		/*private readonly struct ParallelThoughtRecalculatingJob : IJobFor
 		{
 			private readonly List<Thought_Situational> _cachedThoughts;
 
@@ -73,7 +98,7 @@ namespace YaOpt.Helpers
 			{
 				_cachedThoughts[index].RecalculateState();
 			}
-		}
+		}*/
 
 		private readonly struct ParallelThoughtCreatingJob : IJobFor
 		{
@@ -92,7 +117,7 @@ namespace YaOpt.Helpers
 			public void Execute(int index)
 			{
 				var thoughtDef = _situationalNonSocialThoughtDefs[index];
-				if (!_createdThoughts.Contains(thoughtDef))
+				if (!_createdThoughtDefs.Contains(thoughtDef))
 				{
 					var thought = _tryCreateThought(_thoughtHandler, thoughtDef);
 					if (thought != null)
@@ -103,7 +128,7 @@ namespace YaOpt.Helpers
 			}
 		}
 
-		private readonly struct ParallelPreceptThoughtCreatingJob : IJob
+		/*private readonly struct ParallelPreceptThoughtCreatingJob : IJob
 		{
 			private readonly Pawn _pawn;
 
@@ -130,9 +155,9 @@ namespace YaOpt.Helpers
 					}
 				}
 			}
-		}
+		}*/
 
-		private readonly struct ParallelThoughtAddingJob : IJob
+		/*private readonly struct ParallelThoughtAddingJob : IJob
 		{
 			private readonly List<Thought_Situational> _cachedThoughts;
 
@@ -148,6 +173,6 @@ namespace YaOpt.Helpers
 					_cachedThoughts.Add(thought);
 				}
 			}
-		}
+		}*/
 	}
 }

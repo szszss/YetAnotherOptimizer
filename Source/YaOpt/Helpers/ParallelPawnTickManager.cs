@@ -218,14 +218,13 @@ namespace YaOpt.Helpers
 				}
 #endif
 				var pawn = _list[index];
-				var suspended = pawn.Suspended;
 				var shouldTickInterval = false;
 				var tickDeltaPlusOne = -1;
 				if (_predictConstantJob)
 				{
 					shouldTickInterval = ThingHelper.ShouldTickInterval(pawn, out tickDeltaPlusOne);
 				}
-				if (!suspended)
+				if (pawn.Spawned)
 				{
 					JobPredictor.ProcessPawn(pawn, _gameTick, tickDeltaPlusOne,
 						_predictJobFailure, shouldTickInterval);
