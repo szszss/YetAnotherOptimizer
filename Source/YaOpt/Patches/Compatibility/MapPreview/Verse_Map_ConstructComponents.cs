@@ -23,9 +23,9 @@ namespace YaOpt.Patches.Compatibility.MapPreview
 				   YaOptGlobal.HasType("MapPreview.MapPreviewGenerator");
 		}
 
-		static void Postfix(Map __instance)
+		static void Postfix(Map map)
 		{
-			ListerThingsIndexer.Create(__instance.listerThings);
+			ListerThingsIndexer.Create(map.listerThings);
 		}
 	}
 }

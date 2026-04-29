@@ -5,6 +5,7 @@
 		
 		<ignoredJobFailurePredicting>
 			<li>Research</li> <!-- Can't validate job.Project -->
+			<li>BuildRoof</li> <!-- Will use FloodFiller.FloodFill, which has a lock -->
 		</ignoredJobFailurePredicting>
 		
 		<threadLocalPatches>
@@ -157,6 +158,7 @@
 			</LockPatch>
 			<LockPatch>
 				<method>Verse.Room:get_Role</method>
+				<scope>Method</scope> <!-- Many RoomRoleWorkers use shared static fields -->
 			</LockPatch>
 			
 			<!-- TileTemperaturesComp -->

@@ -6,6 +6,9 @@
 			<LockPatch>
 				<method>Kingfisher.Features.AttackTargetFinderRewrite:BestAttackTarget</method>
 			</LockPatch>
+			<LockPatch>
+				<method>Kingfisher.Features.RefuelWorkCandidates:CandidatesFor</method>
+			</LockPatch>
 		</lockPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>
