@@ -23,14 +23,7 @@ The project consists of four core modules, each handling optimization at a diffe
   - Uses `[BurstCompile]` to mark critical paths.
   - Strictly prohibits referencing any managed objects (reference types); only uses `NativeArray` and unmanaged structures (`struct`).
 
-### 1.3 `Source/YaOpt.Prepatch` (Prepatch Module)
-- **Purpose**: Handle Prepatch that must be applied before the game starts.
-- **Functions**:
-  - Uses `Prepatcher` instead of Harmony because of some limitations (e.g., hooking generic methods).
-  - Uses `FreePatch` to modify method.
-  - Uses `Mono.Cecil.Cil` to emit IL code.
-
-### 1.4 `Source/YaOpt.OtherMod.*` (Compatibility Module)
+### 1.3 `Source/YaOpt.OtherMod.*` (Compatibility Module)
 - **Purpose**: Compatibility patches for specific popular mods (e.g., `FacialAnimation`, `HumanoidAlienRaces`).
 - **Principles**: Must reference via reflection or soft dependencies to avoid hard crashes if the target mod is missing.
 
@@ -47,7 +40,6 @@ Root
 ├── Source/
 │   ├── YaOpt/              # Core C# project
 │   ├── YaOpt.Unity/        # Unity Burst project
-│   ├── YaOpt.Prepatch/     # Prepatch project
 │   └── YaOpt.OtherMod.*/   # Compatibility projects
 ├── About/                  # Mod metadata
 └── LoadFolders.xml         # Loading logic

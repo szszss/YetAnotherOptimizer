@@ -10,6 +10,7 @@
 			<li>YaOpt.Helpers.ParallelPawnTickManager:ParellellyTickPawns</li>
 			<li>YaOpt.Helpers.ParallelPreDrawHelper:WaitUntilCullJobComplete</li>
 			<li>YaOpt.Helpers.ParallelPreDrawHelper:WaitUntilPreDrawJobComplete</li>
+			<li>YaOpt.Helpers.ParallelThoughtUpdater:Update</li>
 		</Methods>
 		<NestedTypes>
 		</NestedTypes>
