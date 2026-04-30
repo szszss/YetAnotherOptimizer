@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="bs.performance">
+		<defName>PerformanceFish</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>PerformanceFish.JobSystem.WorkGiver_DoBillOptimization/TryFindBestIngredientsHelper_Patch:Postfix</method>
+			</LockPatch>
+			<LockPatch>
+				<method>PerformanceFish.JobSystem.WorkGiver_DoBillOptimization/TryFindBestIngredientsInSet_NoMixHelper_Patch:MarkIngredientCountAsFound</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
