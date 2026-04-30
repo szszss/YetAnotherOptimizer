@@ -371,7 +371,7 @@ namespace YaOpt.Helpers
 				var job = pawn.CurJob;
 				if (job != null)
 				{
-					if (CompatibilityDefines.CachedIgnoredJobFailurePredicting.Contains(job.def))
+					if (CompatibilityDefines.IsJobFailurePredictingIgnored(job.def))
 						return true;
 
 					// We can't validate target queue. So we will stop predicting if a job uses target queue.

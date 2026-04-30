@@ -1,7 +1,9 @@
 using RimWorld;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Verse;
 using YaOpt.Helpers;
 using YaOpt.Helpers.ThreadSafe;
@@ -26,6 +28,11 @@ namespace YaOpt.Defines
 
 		public static readonly Dictionary<MethodBase, LockPatchManager.PatchRequest> LockPatches =
 			new Dictionary<MethodBase, LockPatchManager.PatchRequest>();
+
+		private static readonly BitArray _ignoredJobFailurePredictingBloomFilter =
+			new BitArray(4096);
+
+		private const int BLOOMFILTER_MASK = 0xFFF;
 
 		public static void Load()
 		{
@@ -117,6 +124,23 @@ namespace YaOpt.Defines
 					}
 				}
 			}
+
+			foreach (var jobDef in CachedIgnoredJobFailurePredicting)
+			{
+				var mask = jobDef.shortHash & BLOOMFILTER_MASK;
+				_ignoredJobFailurePredictingBloomFilter[mask] = true;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsJobFailurePredictingIgnored(JobDef jobDef)
+		{
+			var mask = jobDef.shortHash & BLOOMFILTER_MASK;
+			if (_ignoredJobFailurePredictingBloomFilter[mask])
+			{
+				return CachedIgnoredJobFailurePredicting.Contains(jobDef);
+			}
+			return false;
 		}
 	}
 }
