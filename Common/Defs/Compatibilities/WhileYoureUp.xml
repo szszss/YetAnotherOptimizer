@@ -30,6 +30,10 @@
 				<workGiverClass>PickUpAndHaul.WorkGiver_HaulToInventory</workGiverClass>
 				<parallelism>MainThreaded</parallelism>
 			</WorkGiverCompatibility>
+			<WorkGiverCompatibility> <!-- Occur in very rare cases. Maybe because of Performance Fish, too. -->
+				<workGiverClass>WorkGiver_HaulGeneral</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
 		</workGiverCompatibilities>
 	</YaOpt.CompatibilityDef>
 	
@@ -39,6 +43,10 @@
 		<workGiverCompatibilities>
 			<WorkGiverCompatibility>
 				<workGiverClass>PickUpAndHaul.WorkGiver_HaulToInventory</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+			<WorkGiverCompatibility> <!-- Occur in very rare cases. Maybe because of Performance Fish, too. -->
+				<workGiverClass>WorkGiver_HaulGeneral</workGiverClass>
 				<parallelism>MainThreaded</parallelism>
 			</WorkGiverCompatibility>
 		</workGiverCompatibilities>
