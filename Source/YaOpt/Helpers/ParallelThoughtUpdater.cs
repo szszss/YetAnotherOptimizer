@@ -1,11 +1,9 @@
 using HarmonyLib;
 using LudeonTK;
 using RimWorld;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.Jobs;
-using Unity.Jobs.LowLevel.Unsafe;
 using Verse;
 
 namespace YaOpt.Helpers

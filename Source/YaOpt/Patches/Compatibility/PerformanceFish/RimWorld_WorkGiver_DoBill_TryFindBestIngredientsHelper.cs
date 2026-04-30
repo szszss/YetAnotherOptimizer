@@ -64,8 +64,8 @@ namespace YaOpt.Patches.Compatibility.PerformanceFish
 			for (var i = dirtyCallIndex - 1; i >= 0; i--)
 			{
 				if (codes[i].opcode == OpCodes.Call
-				    && codes[i].operand is MethodInfo method
-				    && method.Name == "GetOrAddReference")
+					&& codes[i].operand is MethodInfo method
+					&& method.Name == "GetOrAddReference")
 				{
 					getOrAddIndex = i;
 					break;

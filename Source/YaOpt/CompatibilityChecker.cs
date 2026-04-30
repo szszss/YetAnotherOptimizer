@@ -176,7 +176,7 @@ namespace YaOpt
 								if (canForceDo)
 								{
 									if (patch.GetType().FullName ==
-									    "PerformanceFish.JobSystem.Toils_BedOptimization+FailOnBedNoLongerUsable_Patch")
+										"PerformanceFish.JobSystem.Toils_BedOptimization+FailOnBedNoLongerUsable_Patch")
 									{
 										YaOptGlobal.Settings.OptBedThrottle.Enabled = false;
 									}
