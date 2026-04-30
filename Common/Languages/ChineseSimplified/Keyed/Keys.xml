@@ -111,7 +111,7 @@
 	<YaOpt.Setting.Option.ParallelPostMapTick.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelPostMapTick.Multithread>
 	<YaOpt.Setting.Option.ParallelThoughtUpdate>并行情绪更新</YaOpt.Setting.Option.ParallelThoughtUpdate>
 	<YaOpt.Setting.Option.ParallelThoughtUpdate.Desc>多线程执行角色的情绪更新。</YaOpt.Setting.Option.ParallelThoughtUpdate.Desc>
-	<YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>如果错误日志的调用栈中出现了ParallelThoughtRecalculatingJob、ParallelThoughtCreatingJob、ParallelPreceptThoughtCreatingJob、ParallelThoughtAddingJob和ParallelThoughtUpdater字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>如果错误日志的调用栈中出现了ParallelThoughtCreatingJob或ParallelThoughtUpdater字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>
 	<YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>
 	<YaOpt.Setting.Option.IdeoCheck>文化检查优化</YaOpt.Setting.Option.IdeoCheck>
 	<YaOpt.Setting.Option.IdeoCheck.Desc>游戏在检查文化是否允许做某事时，会遍历其下所有的戒律。此优化会在戒律每次更新时，为它创建缓存，记录那些涉及到禁令的戒律，然后在检查文化是否允许做某事时，只遍历那些有禁令的戒律。</YaOpt.Setting.Option.IdeoCheck.Desc>

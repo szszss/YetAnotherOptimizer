@@ -107,6 +107,8 @@ namespace YaOpt
 				var getterEnabled = AccessTools.PropertyGetter(typeOptimization, "IsEnabled");
 
 				var objPerformPatchesPerFrames = fieldPerformPatchesPerFrames.GetValue(null);
+				if (objPerformPatchesPerFrames == null)
+					return;
 				var objOptimization = fieldOptimization.GetValue(objPerformPatchesPerFrames);
 				if (objOptimization == null)
 					return;

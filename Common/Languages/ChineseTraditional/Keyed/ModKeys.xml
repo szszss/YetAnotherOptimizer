@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+	<YaOpt.Setting.SubCategory.CombatExtended>戰鬥擴展聯動</YaOpt.Setting.SubCategory.CombatExtended>
+	<YaOpt.Setting.Option.CELineOfSightBurst>Burst加速</YaOpt.Setting.Option.CELineOfSightBurst>
+	<YaOpt.Setting.Option.CELineOfSightBurst.Desc>使用Burst加速射擊線計算。</YaOpt.Setting.Option.CELineOfSightBurst.Desc>
+	<YaOpt.Setting.SubCategory.FacialAnimation>動態表情聯動</YaOpt.Setting.SubCategory.FacialAnimation>
+	<YaOpt.Setting.Option.FAParallelUpdate>並行面部表情更新</YaOpt.Setting.Option.FAParallelUpdate>
+	<YaOpt.Setting.Option.FAParallelUpdate.Desc>將主執行緒中的表情更新挪到並行的物體渲染準備階段進行。</YaOpt.Setting.Option.FAParallelUpdate.Desc>
+	<YaOpt.Setting.Option.FADeLinq>去除Linq</YaOpt.Setting.Option.FADeLinq>
+	<YaOpt.Setting.Option.FADeLinq.Desc>Linq運算式是C#的一種資料查詢方式，然而它對Unity的垃圾回收系統極其不友好，會在執行時產生大量GC開銷。此最佳化將所有Linq運算式重寫為對GC更友好的傳統資料查詢。</YaOpt.Setting.Option.FADeLinq.Desc>
+	<YaOpt.Setting.Option.FADeLinqBurst>Burst加速</YaOpt.Setting.Option.FADeLinqBurst>
+	<YaOpt.Setting.Option.FADeLinqBurst.Desc>使用Burst加速表情動畫處理，要求開啟“去除Linq”。</YaOpt.Setting.Option.FADeLinqBurst.Desc>
+	<YaOpt.Setting.Option.FAAnimCache>動畫快取</YaOpt.Setting.Option.FAAnimCache>
+	<YaOpt.Setting.Option.FAAnimCache.Desc>快取表情動畫列表，避免其頻繁重建。</YaOpt.Setting.Option.FAAnimCache.Desc>
+	<YaOpt.Setting.Option.FAPawnSpawn>角色生成最佳化</YaOpt.Setting.Option.FAPawnSpawn>
+	<YaOpt.Setting.Option.FAPawnSpawn.Desc>快取了一些角色生成時使用的資訊，減少角色生成時的卡頓。</YaOpt.Setting.Option.FAPawnSpawn.Desc>
+	<YaOpt.Setting.Option.FATextureCache>紋理載入最佳化</YaOpt.Setting.Option.FATextureCache>
+	<YaOpt.Setting.Option.FATextureCache.Desc>最佳化了動態表情Mod對面部紋理的載入，讓它使用本Mod提供的紋理快取系統，減少角色生成時的卡頓。</YaOpt.Setting.Option.FATextureCache.Desc>
+	<YaOpt.Setting.SubCategory.HumanoidAlienRaces>外星人框架聯動</YaOpt.Setting.SubCategory.HumanoidAlienRaces>
+	<YaOpt.Setting.Option.HARDeLinq>去除Linq</YaOpt.Setting.Option.HARDeLinq>
+	<YaOpt.Setting.Option.HARDeLinq.Desc>Linq運算式是C#的一種資料查詢方式，然而它對Unity的垃圾回收系統極其不友好，會在執行時產生大量GC開銷。此最佳化將所有Linq運算式重寫為對GC更友好的傳統資料查詢。</YaOpt.Setting.Option.HARDeLinq.Desc>
+	<YaOpt.Setting.Option.HARTextureCache>紋理載入最佳化</YaOpt.Setting.Option.HARTextureCache>
+	<YaOpt.Setting.Option.HARTextureCache.Desc>最佳化了外星人框架Mod的紋理載入，讓它使用本Mod提供的紋理快取系統，對擁有動態身體部件的種族有較大的效能提升。</YaOpt.Setting.Option.HARTextureCache.Desc>
+	<YaOpt.Setting.SubCategory.VanillaExpandedFramework>原版擴展框架聯動</YaOpt.Setting.SubCategory.VanillaExpandedFramework>
+	<YaOpt.Setting.Option.VEFMemoryLeakFix>修復記憶體洩漏</YaOpt.Setting.Option.VEFMemoryLeakFix>
+	<YaOpt.Setting.Option.VEFMemoryLeakFix.Desc>原版擴展框架存在兩處不會清理的快取，導致遊戲中出現的角色在記憶體中不會被清除，即使在載入存檔後也會駐留在記憶體裡，直到退出遊戲。此最佳化會在載入存檔時清空這兩個快取，並在遊戲內每天清理一次快取。</YaOpt.Setting.Option.VEFMemoryLeakFix.Desc>
+</LanguageData>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+	<YaOpt.Loading.SearchingTypes>YaOpt: 初始化類型資料庫</YaOpt.Loading.SearchingTypes>
+	<YaOpt.Loading.Patching>YaOpt: 重新套用設定</YaOpt.Loading.Patching>
+	<YaOpt.Message.ButterCompatibilityNotEnabled>你同時安裝了YaOpt和Butter++，必須在設定中開啟Butter++的相容模式，或者在YaOpt的設定選單裡點擊“修復相容性選項”。</YaOpt.Message.ButterCompatibilityNotEnabled>
+	<YaOpt.Message.ButterCompatibilityForceEnable>你同時安裝了YaOpt和Butter++，已強制開啟Butter++的相容模式。</YaOpt.Message.ButterCompatibilityForceEnable>
+	<YaOpt.Message.PerformanceOptimizerGetComp>你同時安裝了YaOpt和Performance Optimizer，並且啟用了YaOpt的多執行緒類最佳化，如果你在遊戲中遇到隨機出現但不頻繁的“System.InvalidOperationException: Collection was modified”報錯的話，嘗試關閉Performance Optimizer的“更快的GetComp方法替換（Faster GetComp methods replacement）”。</YaOpt.Message.PerformanceOptimizerGetComp>
+	<YaOpt.Message.PerformanceFishSeeConsole>你同時安裝了YaOpt和Performance Fish，並且開啟了有相容問題的選項，詳細資訊見主控台。</YaOpt.Message.PerformanceFishSeeConsole>
+	<YaOpt.Message.PerformanceFishIncompatibility1>你同時安裝了YaOpt和Performance Fish，並且開啟了有相容問題的選項，請在YaOpt的設定選單裡點擊“修復相容性選項”，或者按照以下資訊選擇性地關閉衝突的最佳化。</YaOpt.Message.PerformanceFishIncompatibility1>
+	<YaOpt.Message.PerformanceFishIncompatibility2>（左側：YaOpt）      （右側：Performance Fish）</YaOpt.Message.PerformanceFishIncompatibility2>
+	<YaOpt.Message.PerformanceFishIncompatibility3>在完成操作後，請關閉設定選單並重啟遊戲。</YaOpt.Message.PerformanceFishIncompatibility3>
+	<YaOpt.Message.PerformanceFish.RuntimeInfoCache>【其他】類型資訊快取 —— 關閉AccessToolsCacheing的AllTypes</YaOpt.Message.PerformanceFish.RuntimeInfoCache>
+	<YaOpt.Message.PerformanceFish.WindUpdate>【TPS】植物搖曳效果最佳化 —— 關閉MiscOptimizations的WindManager_WindManagerTick</YaOpt.Message.PerformanceFish.WindUpdate>
+	<YaOpt.Message.PerformanceFish.BedThrottle>【TPS】床鋪檢查最佳化 —— 關閉Toils_BedOptimization的FailOnBedNoLongerUsable</YaOpt.Message.PerformanceFish.BedThrottle>
+	<YaOpt.Message.PerformanceFish.ParallelWorkGiver>【TPS】並行工作發佈 —— 關閉StorageSettingsPatches的AllowedToAccept</YaOpt.Message.PerformanceFish.ParallelWorkGiver>
+	<YaOpt.Message.PerformanceFish.ThingGetComp>【TPS】物體組件查詢加速 —— 關閉GetCompCaching的ThingComp</YaOpt.Message.PerformanceFish.ThingGetComp>
+	<YaOpt.Message.PerformanceFish.LazyTextureLoad>【其他】延遲紋理載入 —— 關閉ContentFinderCaching的Get</YaOpt.Message.PerformanceFish.LazyTextureLoad>
+	<YaOpt.Message.PerformanceFish.EarlyRenderPrepare>【FPS】提前準備物體渲染 —— 關閉DynamicDrawManagerPatches的DrawDynamicThings</YaOpt.Message.PerformanceFish.EarlyRenderPrepare>
+	<YaOpt.Message.PerformanceFish.ComputeMatrixBurst>【FPS】ComputeMatrix Burst加速 —— 關閉PawnRenderingOptimizations的PawnRenderTreeComputeMatrix</YaOpt.Message.PerformanceFish.ComputeMatrixBurst>
+	<YaOpt.Message.PerformanceFish.FastListerRemove>【TPS】物體移除最佳化 —— 關閉ThingsPrepatches下的全部六個選項</YaOpt.Message.PerformanceFish.FastListerRemove>
+	<YaOpt.Message.CompatibilityFixSucceed>已修復相容性選項，重啟遊戲以生效。</YaOpt.Message.CompatibilityFixSucceed>
+	<YaOpt.Message.CompatibilityFixFailed>修復相容性選項失敗，仍有不相容項存在，詳見主控台。</YaOpt.Message.CompatibilityFixFailed>
+	<YaOpt.Message.ErrorWhilePatching>YaOpt在套用設定時出現了錯誤，遊戲可能無法正常執行，查閱主控台獲取詳細資訊。</YaOpt.Message.ErrorWhilePatching>
+	<YaOpt.Setting.Button.AutoFixCompatibility>修復相容性選項</YaOpt.Setting.Button.AutoFixCompatibility>
+	<YaOpt.Setting.Button.DisableAll>停用全部最佳化</YaOpt.Setting.Button.DisableAll>
+	<YaOpt.Setting.Button.EnableAll>啟用全部最佳化</YaOpt.Setting.Button.EnableAll>
+	<YaOpt.Setting.Button.DisableAllFps>停用全部FPS最佳化</YaOpt.Setting.Button.DisableAllFps>
+	<YaOpt.Setting.Button.EnableAllFps>啟用全部FPS最佳化</YaOpt.Setting.Button.EnableAllFps>
+	<YaOpt.Setting.Button.DisableAllTps>停用全部TPS最佳化</YaOpt.Setting.Button.DisableAllTps>
+	<YaOpt.Setting.Button.EnableAllTps>啟用全部TPS最佳化</YaOpt.Setting.Button.EnableAllTps>
+	<YaOpt.Setting.Button.DisableAllMisc>停用全部雜項最佳化</YaOpt.Setting.Button.DisableAllMisc>
+	<YaOpt.Setting.Button.EnableAllMisc>啟用全部雜項最佳化</YaOpt.Setting.Button.EnableAllMisc>
+	<YaOpt.Setting.Category.Fps>FPS最佳化</YaOpt.Setting.Category.Fps>
+	<YaOpt.Setting.Category.Tps>TPS最佳化</YaOpt.Setting.Category.Tps>
+	<YaOpt.Setting.Category.Misc>其他最佳化</YaOpt.Setting.Category.Misc>
+	<YaOpt.Setting.InvalidOption>無法啟用該最佳化：</YaOpt.Setting.InvalidOption>
+	<YaOpt.Setting.InvalidOption.RequirePrepatcher>需要安裝Prepatcher。</YaOpt.Setting.InvalidOption.RequirePrepatcher>
+	<YaOpt.Setting.InvalidOption.RequireBurst>需要正常載入的Burst庫。</YaOpt.Setting.InvalidOption.RequireBurst>
+	<YaOpt.Setting.Message.RequireReload>更改的設定將在載入存檔或重啟遊戲後生效。</YaOpt.Setting.Message.RequireReload>
+	<YaOpt.Setting.Note.Banned>被{0}停用</YaOpt.Setting.Note.Banned>
+	<YaOpt.Setting.Note.Stability>【穩定性說明】</YaOpt.Setting.Note.Stability>
+	<YaOpt.Setting.Note.Compatibility>【Mod相容性說明】</YaOpt.Setting.Note.Compatibility>
+	<YaOpt.Setting.Note.Prepatch>【預修補程式】</YaOpt.Setting.Note.Prepatch>
+	<YaOpt.Setting.Note.Multithread>【多執行緒】</YaOpt.Setting.Note.Multithread>
+	<YaOpt.Setting.Option.DebugOutput>偵錯輸出</YaOpt.Setting.Option.DebugOutput>
+	<YaOpt.Setting.Option.DebugOutput.Desc>在主控台中輸出偵錯資訊，啟用這個選項可能會略微降低遊戲速度，因為遊戲會在每次輸出主控台資訊時記錄整個呼叫堆疊，這是一個開銷很大的操作。</YaOpt.Setting.Option.DebugOutput.Desc>
+	<YaOpt.Setting.Option.MaterialGetColor>材質顏色快取</YaOpt.Setting.Option.MaterialGetColor>
+	<YaOpt.Setting.Option.MaterialGetColor.Desc>快取材質顏色以減少頻繁呼叫底層引擎函式帶來的開銷。當顏色發生變化時會自動更新快取。</YaOpt.Setting.Option.MaterialGetColor.Desc>
+	<YaOpt.Setting.Option.ColoredText>富文本最佳化</YaOpt.Setting.Option.ColoredText>
+	<YaOpt.Setting.Option.ColoredText.Desc>最佳化富文本（如彩色文字）的解析效能。原版遊戲在尋找標籤位置時使用了效能較低的IndexOf多載（涉及區域性相關檢查），此最佳化將其替換為效能更高、只進行直接位元組比較的多載。</YaOpt.Setting.Option.ColoredText.Desc>
+	<YaOpt.Setting.Option.EarlyRenderPrepare>提前準備物體渲染</YaOpt.Setting.Option.EarlyRenderPrepare>
+	<YaOpt.Setting.Option.EarlyRenderPrepare.Desc>提前啟動物體渲染的準備工作。原版遊戲雖然支援多執行緒準備物體渲染資料，但只在靜態地形繪製完成後才開始。此最佳化將準備工作提前到地形繪製之前啟動，利用主執行緒繪製地形的時間在後台並行處理物體資料，從而減少主執行緒的等待時間。</YaOpt.Setting.Option.EarlyRenderPrepare.Desc>
+	<YaOpt.Setting.Option.EarlyRenderPrepare.Compatibility>按照遊戲規範，物體在渲染準備階段不應進行任何實際渲染。如果有Mod在準備階段繪製物體，它繪製的物體會被地形覆蓋住。</YaOpt.Setting.Option.EarlyRenderPrepare.Compatibility>
+	<YaOpt.Setting.Option.PrepareBatchCount>微調渲染準備批次數量</YaOpt.Setting.Option.PrepareBatchCount>
+	<YaOpt.Setting.Option.PrepareBatchCount.Desc>原版遊戲在並行準備渲染資料時使用較大的批次數量。然而不同物體（如角色與物品）的渲染準備開銷差異巨大，且分佈不均（如襲擊時的角色紮堆）。這導致執行緒負載不均衡，部分執行緒早早完成，而其他執行緒仍在處理重負載。此最佳化將批次數量調小，使空閒執行緒能透過工作竊取演算法分擔更多工作，從而平衡負載。</YaOpt.Setting.Option.PrepareBatchCount.Desc>
+	<YaOpt.Setting.Option.ParallelMaterialUpdate>並行材質參數更新</YaOpt.Setting.Option.ParallelMaterialUpdate>
+	<YaOpt.Setting.Option.ParallelMaterialUpdate.Desc>將材質參數更新放入並行的物體渲染準備中進行。原版遊戲僅在主執行緒中執行此操作，但通常並不需要。如果檢測到有Mod多載了特定物體的材質參數更新邏輯（可能包含非執行緒安全的操作），本Mod會自動將這些物體的更新退化回主執行緒執行。</YaOpt.Setting.Option.ParallelMaterialUpdate.Desc>
+	<YaOpt.Setting.Option.FastRecacheRequested>內聯快取更新檢查</YaOpt.Setting.Option.FastRecacheRequested>
+	<YaOpt.Setting.Option.FastRecacheRequested.Desc>最佳化物體是否需要重新生成渲染參數的檢查。原版遊戲透過遞迴呼叫渲染樹上的每一個子節點來檢查是否有子節點要求更新。統計發現97%的物體渲染樹不超過4層，此最佳化將前4層節點的檢查內聯到一個函式中，省去了虛擬函式呼叫的開銷。註：效能監測顯示提升很小，未來版本可能移除。</YaOpt.Setting.Option.FastRecacheRequested.Desc>
+	<YaOpt.Setting.Option.FastRecacheRequested.Compatibility>該最佳化假設所有的渲染節點都使用原版的快取更新檢查邏輯。如果在遊戲啟動時檢測到有其他Mod重寫了快取更新檢查，此最佳化會被自動停用。</YaOpt.Setting.Option.FastRecacheRequested.Compatibility>
+	<YaOpt.Setting.Option.LazyTextureLoad>延遲紋理載入</YaOpt.Setting.Option.LazyTextureLoad>
+	<YaOpt.Setting.Option.LazyTextureLoad.Desc>原版遊戲會在啟動時將所有Mod紋理載入顯示卡記憶體中。這個最佳化會讓紋理僅在被首次呼叫時載入，能降低啟動耗時和顯示卡記憶體佔用，但會讓遊戲內首次載入紋理時頓卡。需要注意的是，目前尚未實現紋理卸載機制，當你一次遊戲玩得足夠久時，顯示卡記憶體佔用仍可能會逐漸增加至巔峰。此最佳化以及它的所有子選項在更改後都需要重啟遊戲才生效。</YaOpt.Setting.Option.LazyTextureLoad.Desc>
+	<YaOpt.Setting.Option.LazyTextureLoad.Compatibility>會導致Graphics Settings+和ImageOpt的統計資料不準。</YaOpt.Setting.Option.LazyTextureLoad.Compatibility>
+	<YaOpt.Setting.Option.LazyTextureLoad.Prepatch>由於Harmony不支援為泛型方法打修補程式，該最佳化透過Prepatcher Mod來實現。開關此最佳化後需要重啟遊戲來生效。</YaOpt.Setting.Option.LazyTextureLoad.Prepatch>
+	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>僅延遲載入DDS格式</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly>
+	<YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>只對DDS格式（以及ImageOpt的Zstd壓縮DDS）紋理啟用延遲載入，非DDS格式圖片在載入時需要花費額外時間將其轉換成能被遊戲引擎渲染的格式，在執行中載入時會有明顯的卡頓。</YaOpt.Setting.Option.LazyTextureLoad.DdsOnly.Desc>
+	<YaOpt.Setting.Option.LazyTextureLoad.Radical>更激進的延遲載入</YaOpt.Setting.Option.LazyTextureLoad.Radical>
+	<YaOpt.Setting.Option.LazyTextureLoad.Radical.Desc>基礎最佳化僅會延遲載入角色和物品的紋理，由於遊戲特性，建築貼圖始終會在遊戲啟動時載入，以便生成貼圖集以及作為預覽圖示。開啟此選項後，對於尺寸超過256的紋理，遊戲啟動載入時都會將其縮小至256，並在遊戲中實際用到時才會載入完整紋理。由於需要在創建物體時進行載入檢測，會略微增加創建物體的開銷，表現就是少許增加載入遊戲時和地圖上重新整理大量物體時的卡頓。建議僅在開啟基礎最佳化後顯示卡記憶體佔用依舊緊張時才啟用此選項。此外此選項僅支援DDS（以及Zstd壓縮DDS）貼圖。</YaOpt.Setting.Option.LazyTextureLoad.Radical.Desc>
+	<YaOpt.Setting.Option.FastPatchOperation>簡化XPath</YaOpt.Setting.Option.FastPatchOperation>
+	<YaOpt.Setting.Option.FastPatchOperation.Desc>如果XML修補程式中XPath運算式比較簡單，形如Defs/定義類型[defName = "定義名"]，那麼這個最佳化將會將XPath運算式簡化為簡單的節點查詢，提高遊戲啟動速度。</YaOpt.Setting.Option.FastPatchOperation.Desc>
+	<YaOpt.Setting.Option.FastTranslationInjection>最佳化文本注入</YaOpt.Setting.Option.FastTranslationInjection>
+	<YaOpt.Setting.Option.FastTranslationInjection.Desc>遊戲在啟動時會將文本檔案注入到XML資料中，在此過程中還會檢查有無文本檔案錯誤，例如重複對一個欄位注入文本。然而這個檢查過程是個時間複雜度為O(N^2)的操作，該最佳化將其中一段迴圈對比最佳化成了查表，將時間複雜度降為O(N)。它能加速遊戲啟動速度，在非英文語言中效果更明顯。</YaOpt.Setting.Option.FastTranslationInjection.Desc>
+	<YaOpt.Setting.Option.RuntimeInfoCache>類型資訊快取</YaOpt.Setting.Option.RuntimeInfoCache>
+	<YaOpt.Setting.Option.RuntimeInfoCache.Desc>在遊戲啟動時快取程式中的類型資訊，加快Harmony類型檢索，能提高一些Mod的Harmony修補程式處理速度。在Mod環境下加快遊戲啟動速度，在原版環境中無用。</YaOpt.Setting.Option.RuntimeInfoCache.Desc>
+	<YaOpt.Setting.Option.FixTextureAtlas>修復小尺寸紋理集花屏</YaOpt.Setting.Option.FixTextureAtlas>
+	<YaOpt.Setting.Option.FixTextureAtlas.Desc>遊戲會將部分紋理拼接成紋理集以提高渲染速度。原版生成程式存在缺陷，當紋理集小於512x512時會開啟Mipmap但未填充資料，導致鏡頭拉遠時物體花屏（彩色條紋）。該問題常出現在使用了高畫質紋理Mod的地圖雜物（如碎石）上。此修復修補程式解決了這個問題。</YaOpt.Setting.Option.FixTextureAtlas.Desc>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle>地形更新限流</YaOpt.Setting.Option.MapMeshUpdateThrottle>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>限制地圖網格（地形渲染）的更新頻率。原版遊戲中，雪或沙塵厚度的任何變化都會在渲染幀立即觸發網格更新，在變化頻繁時（如降雪或融化）會消耗大量資源。此最佳化設定了更新之間的最短現實時間間隔。當遊戲暫停時會強制更新。</YaOpt.Setting.Option.MapMeshUpdateThrottle.Desc>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>最短更新間隔: {0}毫秒</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval>
+	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>調整兩次更新間最短的現實時間間隔，需要注意的是，由於遊戲對地形採用增量更新，這個選項是有邊際效應的，將間隔設為1000毫秒並不能將更新開銷降低為100毫秒的十分之一，因為單次更新需要處理的地塊也多了。推薦值為300或500，如果你不在乎視覺效果，調成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
+	<YaOpt.Setting.Option.PRNRWorker>修復PawnRenderNodeProperties快取</YaOpt.Setting.Option.PRNRWorker>
+	<YaOpt.Setting.Option.PRNRWorker.Desc>PawnRenderNodeProperties的Worker在初始化時很慢。雖然遊戲為它準備了快取，但由於設計疏忽，快取永遠不會被讀取。此最佳化修復了該Bug，使其能正確使用快取。</YaOpt.Setting.Option.PRNRWorker.Desc>
+	<YaOpt.Setting.Option.GraphicTextureCache>紋理索引快取</YaOpt.Setting.Option.GraphicTextureCache>
+	<YaOpt.Setting.Option.GraphicTextureCache.Desc>快取Graphic_Multi初始化所需的紋理。原版遊戲每次初始化時都需要透過字串拼接構建東西南北四個朝向的紋理路徑並進行資源查找。此最佳化快取了這些紋理，消除了重複的字串拼接和資源查找開銷。本最佳化最初為外星人框架開發，現已整合入本體，供任何頻繁重建Graphic_Multi的物體受益。註：這個最佳化可能會導致開發者選項中的紋理熱重載失效。</YaOpt.Setting.Option.GraphicTextureCache.Desc>
+	<YaOpt.Setting.Option.Silhouette>剪影快取最佳化</YaOpt.Setting.Option.Silhouette>
+	<YaOpt.Setting.Option.Silhouette.Desc>最佳化剪影（螢幕拉遠後的小圖示）快取的查找效能。</YaOpt.Setting.Option.Silhouette.Desc>
+	<YaOpt.Setting.Option.ToggleTabCheck>標籤頁檢查節流</YaOpt.Setting.Option.ToggleTabCheck>
+	<YaOpt.Setting.Option.ToggleTabCheck.Desc>限制可隱藏標籤頁（如機械體頁面）的可見性檢查頻率。部分Mod的標籤頁未實現快取機制，導致每幀都進行複雜的可見性查詢。此最佳化引入了一套上層快取，將可見性檢查限制為每500毫秒一次。當遊戲暫停、解除暫停或切換地圖時會強制重新整理。</YaOpt.Setting.Option.ToggleTabCheck.Desc>
+	<YaOpt.Setting.Option.ComputeMatrixBurst>ComputeMatrix Burst加速</YaOpt.Setting.Option.ComputeMatrixBurst>
+	<YaOpt.Setting.Option.ComputeMatrixBurst.Desc>在物體渲染準備中，ComputeMatrix是一個運算量較大的步驟。遊戲原計畫使用Burst加速此過程，但因編程疏忽未能生效。此最佳化重寫了Burst實現，使其正常工作。</YaOpt.Setting.Option.ComputeMatrixBurst.Desc>
+	<YaOpt.Setting.Option.ThingGetComp>物體組件查詢加速</YaOpt.Setting.Option.ThingGetComp>
+	<YaOpt.Setting.Option.ThingGetComp.Desc>原版遊戲在查找存在的組件時很快，但在查找不存在的組件時非常慢。遺憾的是，判斷組件是否存在的唯一辦法就是透過GetComp查詢並等待失敗結果。該最佳化重寫了GetComp的查詢機制，確保當查找不存在的組件時也能迅速返回失敗結果。</YaOpt.Setting.Option.ThingGetComp.Desc>
+	<YaOpt.Setting.Option.ThingGetComp.Prepatch>由於Harmony不支援為泛型方法打修補程式，該最佳化透過Prepatcher Mod來實現。開關此最佳化後需要重啟遊戲來生效。</YaOpt.Setting.Option.ThingGetComp.Prepatch>
+	<YaOpt.Setting.Option.ParallelPawnTick>並行角色更新</YaOpt.Setting.Option.ParallelPawnTick>
+	<YaOpt.Setting.Option.ParallelPawnTick.Desc>為角色更新引入有限的多執行緒處理。多執行緒處理角色的工作中斷判斷、常態工作判斷和情緒更新。</YaOpt.Setting.Option.ParallelPawnTick.Desc>
+	<YaOpt.Setting.Option.ParallelPawnTick.Stable>如果錯誤日誌的呼叫堆疊中出現了ParallelPawnTickManager字樣，可以嘗試關閉這個最佳化。</YaOpt.Setting.Option.ParallelPawnTick.Stable>
+	<YaOpt.Setting.Option.ParallelPawnTick.Compatibility>Mod不得在工作失敗條件的判斷邏輯中產生副作用（即不能對遊戲實際狀態產生影響），且不能執行非執行緒安全操作。失敗條件的判斷可能會在一幀中執行兩次（一次在預測器中，一次在主執行緒中）。</YaOpt.Setting.Option.ParallelPawnTick.Compatibility>
+	<YaOpt.Setting.Option.ParallelPawnTick.Multithread>使用多執行緒工作，啟用連線Mod時自動停用。</YaOpt.Setting.Option.ParallelPawnTick.Multithread>
+	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>工作中斷預測</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>
+	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>預測角色當前的工作在本幀是否會失敗或被緊急工作（如躲避敵人）打斷。如果預測通過，主執行緒將不再進行重複檢測；否則，主執行緒會重新進行一次標準檢測。</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>
+	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>常態工作預測</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>
+	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>預測角色是否會在本幀產生常態工作，常態工作指高優先順序的角色行為，如躲避敵人、在太空尋找氧氣等。</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>
+	<YaOpt.Setting.Option.ParallelWorkGiver>並行工作發佈</YaOpt.Setting.Option.ParallelWorkGiver>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Desc>為角色發佈工作是遊戲中開銷最大的操作之一。原版邏輯是將角色所有允許執行的工作按優先順序排成序列，依次檢查直到找到第一個可執行的工作。該最佳化使用多執行緒檢查這個序列。當某個執行緒找到可執行的工作後，會將序列截斷於此處（丟棄後續低優先順序工作），等待其他檢查更高優先順序工作的執行緒完成，最後從所有結果中取出優先順序最高的那個工作並發佈。</YaOpt.Setting.Option.ParallelWorkGiver.Desc>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Stable>如果錯誤日誌的呼叫堆疊中出現了ParallelWorkGiver字樣，可以嘗試關閉這個最佳化。</YaOpt.Setting.Option.ParallelWorkGiver.Stable>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Compatibility>Mod不能在工作發佈的判斷邏輯中產生副作用（即不能對遊戲產生實際影響），不能執行非執行緒安全的操作。永遠不應假定發佈的任務一定會被執行（多執行緒處理時可能會產生多個可執行的工作，只有優先順序最高的那個會被採納，其他的會被丟棄）。</YaOpt.Setting.Option.ParallelWorkGiver.Compatibility>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Multithread>使用多執行緒工作，啟用連線Mod時自動停用。</YaOpt.Setting.Option.ParallelWorkGiver.Multithread>
+	<YaOpt.Setting.Option.ParallelPostMapTick>並行地圖更新</YaOpt.Setting.Option.ParallelPostMapTick>
+	<YaOpt.Setting.Option.ParallelPostMapTick.Desc>多執行緒執行地圖的環境效果、水體凍結和氣體擴散更新。</YaOpt.Setting.Option.ParallelPostMapTick.Desc>
+	<YaOpt.Setting.Option.ParallelPostMapTick.Stable>如果錯誤日誌的呼叫堆疊中出現了SteadyEnvironmentEffects、TempTerrainManager或GasGrid字樣，可以嘗試關閉這個最佳化。</YaOpt.Setting.Option.ParallelPostMapTick.Stable>
+	<YaOpt.Setting.Option.ParallelPostMapTick.Multithread>使用多執行緒工作，啟用連線Mod時自動停用。</YaOpt.Setting.Option.ParallelPostMapTick.Multithread>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate>並行情緒更新</YaOpt.Setting.Option.ParallelThoughtUpdate>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate.Desc>多執行緒執行角色的情緒更新。</YaOpt.Setting.Option.ParallelThoughtUpdate.Desc>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>如果錯誤日誌的呼叫堆疊中出現了ParallelThoughtCreatingJob或ParallelThoughtUpdater字樣，可以嘗試關閉這個最佳化。</YaOpt.Setting.Option.ParallelThoughtUpdate.Stable>
+	<YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>使用多執行緒工作，啟用連線Mod時自動停用。</YaOpt.Setting.Option.ParallelThoughtUpdate.Multithread>
+	<YaOpt.Setting.Option.IdeoCheck>文化檢查最佳化</YaOpt.Setting.Option.IdeoCheck>
+	<YaOpt.Setting.Option.IdeoCheck.Desc>遊戲在檢查文化是否允許做某事時，會遍歷其下所有的戒律。此最佳化會在戒律每次更新時，為它建立快取，記錄那些涉及到禁令的戒律，然後在檢查文化是否允許做某事時，只遍歷那些有禁令的戒律。</YaOpt.Setting.Option.IdeoCheck.Desc>
+	<YaOpt.Setting.Option.BedThrottle>床鋪檢查最佳化</YaOpt.Setting.Option.BedThrottle>
+	<YaOpt.Setting.Option.BedThrottle.Desc>最佳化臥床角色的床鋪可用性檢測，原版臥床角色每幀都會檢測當前床鋪是否可用，雖然很有必要，但卻包含了一些運算量較大的計算，比如判斷因病臥床的角色是否痊癒等。節流後每15幀（0.25秒）才會進行一次完整檢測，其他14幀只會進行簡單的快速檢測，如判斷床鋪是否被毀。</YaOpt.Setting.Option.BedThrottle.Desc>
+	<YaOpt.Setting.Option.BedThrottle.Compatibility>與Performance Fish的同類最佳化（FailOnBedNoLongerUsable）功能重複，Performance Fish的起床檢測最佳化為每64幀檢測一次，其他時間不檢測。簡單來說，YaOpt更安全，Performance Fish更快。建議使用Performance Fish的實現，因為床鋪意外不可用的情況太罕見，用非常小的起床延遲換取相當的效能提升是值得的。</YaOpt.Setting.Option.BedThrottle.Compatibility>
+	<YaOpt.Setting.Option.IdleThrottle>閒置檢查最佳化</YaOpt.Setting.Option.IdleThrottle>
+	<YaOpt.Setting.Option.IdleThrottle.Desc>對遊戲中閒置角色（睡覺和閒逛）的中斷閒置檢測做節流。具體最佳化包括：\n1.最佳化臥床角色起床工作的檢測間隔，原版遊戲的臥床角色每211幀會進行一次工作判定，最佳化可以延長這個間隔，還可以讓間隔變為動態間隔，根據臥床的殖民者數量來控制間隔，確保小型殖民地的角色依然能快速響應突發情況。\n2.最佳化閒逛角色的工作檢測間隔，原版處於閒置狀態的殖民者每125~200幀會進行一次工作判定，最佳化可以延長這個間隔，並且也能實現動態間隔，根據處於無事可做狀態的殖民者數量來控制間隔。</YaOpt.Setting.Option.IdleThrottle.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Title>起床工作檢測</YaOpt.Setting.Option.IdleThrottle.GetUp.Title>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp>檢測間隔: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Desc>調整讓臥床角色起床工作的檢測間隔，單位為邏輯幀（Tick），原版為211幀。</YaOpt.Setting.Option.IdleThrottle.GetUp.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic>動態間隔</YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic.Desc>根據躺下的殖民者數量來控制臥床角色起床工作的檢測間隔。</YaOpt.Setting.Option.IdleThrottle.GetUp.Dynamic.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Min>最短間隔: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.Min>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Min.Desc>躺下的殖民者數量小於等於最小人數時的檢測間隔，單位為邏輯幀（Tick），原版為211幀。</YaOpt.Setting.Option.IdleThrottle.GetUp.Min.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Max>最長間隔: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.Max>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.Max.Desc>躺下的殖民者數量大於等於最大人數時的檢測間隔，單位為邏輯幀（Tick），當人數介於最小和最大人數之間時，採用線性差值計算間隔。</YaOpt.Setting.Option.IdleThrottle.GetUp.Max.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin>最小人數: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin.Desc>躺下的殖民者數量小於等於此人數時，檢測間隔將達到最短。</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMin.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax>最大人數: {0}</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax>
+	<YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax.Desc>躺下的殖民者數量大於等於此人數時，檢測間隔將達到最長，當人數介於最小和最大人數之間時，檢測間隔將會線性增長。</YaOpt.Setting.Option.IdleThrottle.GetUp.PeopleMax.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Title>停止閒逛檢測</YaOpt.Setting.Option.IdleThrottle.StopWander.Title>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander>檢測間隔: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Desc>調整讓閒逛角色尋找工作的檢測間隔，單位為邏輯幀（Tick），原版為至少125幀。\n實際檢測間隔會有一個隨機浮動，以將角色的工作檢測在執行時間上分散開，避免形成頓卡。\n隨機浮動範圍在 {0} ~ {1}</YaOpt.Setting.Option.IdleThrottle.StopWander.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic>動態間隔</YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic.Desc>根據閒來無事的殖民者數量來控制閒逛角色尋找工作的檢測間隔。</YaOpt.Setting.Option.IdleThrottle.StopWander.Dynamic.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Min>最短間隔: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.Min>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Min.Desc>當閒來無事的殖民者數量小於等於最小人數時的檢測間隔，單位為邏輯幀（Tick），原版為至少125幀。\n實際檢測間隔會有一個隨機浮動，以將角色的工作檢測在執行時間上分散開，避免形成頓卡。\n隨機浮動範圍在 {0} ~ {1}</YaOpt.Setting.Option.IdleThrottle.StopWander.Min.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Max>最長間隔: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.Max>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.Max.Desc>當閒來無事的殖民者數量大於等於最大人數時的檢測間隔，單位為邏輯幀（Tick），當人數介於最小和最大人數之間時，採用線性差值計算間隔。\n實際檢測間隔會有一個隨機浮動，以將角色的工作檢測在執行時間上分散開，避免形成頓卡。\n隨機浮動範圍在 {0} ~ {1}</YaOpt.Setting.Option.IdleThrottle.StopWander.Max.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin>最小人數: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin.Desc>當閒來無事的殖民者數量小於等於此人數時，檢測間隔將達到最短。</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMin.Desc>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax>最大人數: {0}</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax>
+	<YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax.Desc>當閒來無事的殖民者數量大於等於此人數時，檢測間隔將達到最長，當人數介於最小和最大人數之間時，檢測間隔將會線性增長。</YaOpt.Setting.Option.IdleThrottle.StopWander.PeopleMax.Desc>
+	<YaOpt.Setting.Option.WindUpdate>植物搖曳效果最佳化</YaOpt.Setting.Option.WindUpdate>
+	<YaOpt.Setting.Option.WindUpdate.Desc>遊戲會在每一個邏輯幀中為所有植物材質更新風力強度參數，這是沒必要的。最佳化後將僅在渲染幀中更新風力強度。</YaOpt.Setting.Option.WindUpdate.Desc>
+	<YaOpt.Setting.Option.FastListerRemove>物體移除最佳化</YaOpt.Setting.Option.FastListerRemove>
+	<YaOpt.Setting.Option.FastListerRemove.Desc>最佳化從遊戲中移除物體時的效率。原版遊戲在移除物體時，需要在多個檢索列表中進行線性搜索以找到並刪除物體。此最佳化為每個物體添加了索引記錄，移除時可直接定位並使用“交換移除”策略（將末尾物體移至空位）。</YaOpt.Setting.Option.FastListerRemove.Desc>
+	<YaOpt.Setting.Option.CameraUpdateRate>更新速率計算最佳化</YaOpt.Setting.Option.CameraUpdateRate>
+	<YaOpt.Setting.Option.CameraUpdateRate.Desc>遊戲會在每一幀計算物體在螢幕上的可見性，並調低螢幕外物體的更新速率，然而這個計算過於精細了，以至於它本身就有一定的開銷。此最佳化微調了可見性判斷，稍微放寬了判定標準，減少了更新速率計算的開銷，代價是在一些特定條件下可能有少量接近螢幕邊緣但不可見的物體也被誤判為可見，讓系統增加它們的更新速率導致執行開銷。但在大部分情況下，這個最佳化是值得的。</YaOpt.Setting.Option.CameraUpdateRate.Desc>
+	<YaOpt.Setting.Option.GetMapPawns>地圖角色檢索最佳化</YaOpt.Setting.Option.GetMapPawns>
+	<YaOpt.Setting.Option.GetMapPawns.Desc>最佳化了遊戲中檢索地圖上角色的程式碼，消除了一些重複計算。此外還對照料嬰兒的工作判定做了一定的節流，原版在檢索飢餓的嬰兒時除了會搜索待在地圖上的嬰兒外，還會檢查載人容器（如空投艙），這一步驟佔了運算大頭，因此最佳化後每三次判定才會做一次全圖容器搜索，另外兩次只會檢查容器外的嬰兒。</YaOpt.Setting.Option.GetMapPawns.Desc>
+	<YaOpt.Setting.Option.GetMapPawns.Compatibility>最佳化了殖民者頭像欄的角色檢索最佳化，如果你安裝了頭像欄類Mod，並且發現其功能失效的話，可以嘗試停用這個最佳化。</YaOpt.Setting.Option.GetMapPawns.Compatibility>
+	<YaOpt.Setting.Option.AttackTargetFinder>索敵最佳化</YaOpt.Setting.Option.AttackTargetFinder>
+	<YaOpt.Setting.Option.AttackTargetFinder.Desc>最佳化戰鬥時的索敵計算，消除了一些重複計算。</YaOpt.Setting.Option.AttackTargetFinder.Desc>
+	<YaOpt.Setting.Option.AppendThingHolders>物體容器檢索最佳化</YaOpt.Setting.Option.AppendThingHolders>
+	<YaOpt.Setting.Option.AppendThingHolders.Desc>最佳化對物體容器的遞迴搜索，減少了對非容器的內容物的檢查開銷。</YaOpt.Setting.Option.AppendThingHolders.Desc>
+	<YaOpt.Setting.Option.MeditationTick>冥想更新節流</YaOpt.Setting.Option.MeditationTick>
+	<YaOpt.Setting.Option.MeditationTick.Desc>將冥想時的邏輯幀更新頻率降低為每100幀一次，每次更新提供100倍效果。冥想更新相當消耗效能，特別是部落靈能者每幀都會掃描全圖靈草。註：此最佳化會對遊玩產生輕微影響，角色退出冥想時會損失未結算的冥想收益（平均每次提前中斷冥想時損失50幀/0.83秒的冥想收益）。</YaOpt.Setting.Option.MeditationTick.Desc>
+	<YaOpt.Setting.Option.MeditationTick.Compatibility>相容原版靈能擴展（Vanilla Psycasts Expanded）,但可能會與其他大幅修改冥想機制的Mod產生衝突。與Performance Esmolas的功能重複，如果同時安裝了Performance Esmolas，會優先使用它的最佳化實現。</YaOpt.Setting.Option.MeditationTick.Compatibility>
+	<YaOpt.Setting.Option.StatCache>更多屬性快取</YaOpt.Setting.Option.StatCache>
+	<YaOpt.Setting.Option.StatCache.Desc>將角色的舒適溫度和污垢率加入原版的屬性快取系統。舒適溫度改為每20幀更新一次（裝備變動時強制重新整理），污垢率每60幀更新一次。這能減少頻繁存取這些高開銷屬性時的效能損耗。</YaOpt.Setting.Option.StatCache.Desc>
+	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>
+	<YaOpt.Setting.Tab.Fps>FPS</YaOpt.Setting.Tab.Fps>
+	<YaOpt.Setting.Tab.Tps>TPS</YaOpt.Setting.Tab.Tps>
+	<YaOpt.Setting.Tab.Misc>其他</YaOpt.Setting.Tab.Misc>
+</LanguageData>

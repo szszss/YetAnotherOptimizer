@@ -83,21 +83,6 @@ namespace YaOpt.Helpers
 			}
 		}
 
-		/*private readonly struct ParallelThoughtRecalculatingJob : IJobFor
-		{
-			private readonly List<Thought_Situational> _cachedThoughts;
-
-			public ParallelThoughtRecalculatingJob(List<Thought_Situational> cachedThoughts)
-			{
-				_cachedThoughts = cachedThoughts;
-			}
-
-			public void Execute(int index)
-			{
-				_cachedThoughts[index].RecalculateState();
-			}
-		}*/
-
 		private readonly struct ParallelThoughtCreatingJob : IJobFor
 		{
 			private readonly SituationalThoughtHandler _thoughtHandler;
@@ -125,52 +110,5 @@ namespace YaOpt.Helpers
 				}
 			}
 		}
-
-		/*private readonly struct ParallelPreceptThoughtCreatingJob : IJob
-		{
-			private readonly Pawn _pawn;
-
-			private readonly List<Thought_Situational> _cachedThoughts;
-
-			private readonly List<Precept> _pawnPrecepts;
-
-			public ParallelPreceptThoughtCreatingJob(Pawn pawn, List<Thought_Situational> cachedThoughts,
-				List<Precept> pawnPrecepts)
-			{
-				_pawn = pawn;
-				_cachedThoughts = cachedThoughts;
-				_pawnPrecepts = pawnPrecepts;
-			}
-
-			public void Execute()
-			{
-				foreach (var precept in _pawnPrecepts)
-				{
-					var newThoughts = precept.SituationThoughtsToAdd(_pawn, _cachedThoughts);
-					if (newThoughts.Count > 0)
-					{
-						_cachedThoughts.AddRange(newThoughts);
-					}
-				}
-			}
-		}*/
-
-		/*private readonly struct ParallelThoughtAddingJob : IJob
-		{
-			private readonly List<Thought_Situational> _cachedThoughts;
-
-			public ParallelThoughtAddingJob(List<Thought_Situational> cachedThoughts)
-			{
-				_cachedThoughts = cachedThoughts;
-			}
-
-			public void Execute()
-			{
-				while (_thoughtsToAdd.TryDequeue(out var thought))
-				{
-					_cachedThoughts.Add(thought);
-				}
-			}
-		}*/
 	}
 }
