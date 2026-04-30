@@ -18,7 +18,7 @@ using static YaOpt.Defines.WorkGiverCompatibility.Parallelism;
 
 namespace YaOpt.Helpers
 {
-	internal static class ParallelJobGiver
+	internal static class ParallelWorkGiver
 	{
 		public static bool Running;
 
@@ -82,7 +82,7 @@ namespace YaOpt.Helpers
 			}
 		}
 
-		static ParallelJobGiver()
+		static ParallelWorkGiver()
 		{
 			pawnCanUseWorkGiver = AccessTools.MethodDelegate<PawnCanUseWorkGiverDelegate>(
 					AccessTools.Method(typeof(JobGiver_Work), "PawnCanUseWorkGiver"), null, false, null);
@@ -173,7 +173,7 @@ namespace YaOpt.Helpers
 
 				YaOptGlobal.IsParallelRunningInTick = true;
 				jobHandle = new YaOptManagedJobs.JobFor(
-						new IssueJobPackageJob(pawn, jobList))
+						new IssueWorkJob(pawn, jobList))
 					.ScheduleParallel(parallelTaskCount, 1);
 				JobHandle.ScheduleBatchedJobs();
 				while (!jobHandle.IsCompleted)
@@ -686,13 +686,13 @@ namespace YaOpt.Helpers
 			}
 		}
 
-		private readonly struct IssueJobPackageJob : IJobFor
+		private readonly struct IssueWorkJob : IJobFor
 		{
 			private readonly Pawn _pawn;
 
 			private readonly List<WorkGiver> _jobList;
 
-			public IssueJobPackageJob(Pawn pawn, List<WorkGiver> jobList)
+			public IssueWorkJob(Pawn pawn, List<WorkGiver> jobList)
 			{
 				_pawn = pawn;
 				_jobList = jobList;

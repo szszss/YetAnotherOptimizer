@@ -18,7 +18,7 @@ namespace YaOpt.Patches.Compatibility.ReGrowth
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 				   YaOptGlobal.HasType("ReGrowthCore.Patch_JobOnCell");
 		}
 

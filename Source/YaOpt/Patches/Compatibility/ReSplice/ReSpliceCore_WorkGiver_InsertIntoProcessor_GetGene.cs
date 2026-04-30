@@ -18,7 +18,7 @@ namespace YaOpt.Patches.Compatibility.ReSplice
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled && YaOptGlobal.HasMod("ReSplice.XOTR.Core");
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled && YaOptGlobal.HasMod("ReSplice.XOTR.Core");
 		}
 
 		static void Prefix(out bool __state)

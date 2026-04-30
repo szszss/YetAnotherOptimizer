@@ -10,7 +10,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static bool Prefix(Map ___map, IntVec3 start)

@@ -35,7 +35,7 @@ namespace YaOpt.Patches.Compatibility.PerformanceFish
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled && YaOptGlobal.HasMod("bs.performance");
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled && YaOptGlobal.HasMod("bs.performance");
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

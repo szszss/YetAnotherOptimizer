@@ -14,7 +14,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

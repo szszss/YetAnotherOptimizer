@@ -6,7 +6,7 @@ using YaOpt.Helpers;
 
 namespace YaOpt.Patches
 {
-	/// <seealso cref="YaOptSettings.OptParallelJobGiver"/>
+	/// <seealso cref="YaOptSettings.OptParallelWorkGiver"/>
 	[HarmonyPatch]
 	internal static class MultiTargets_ClosestThingGlobal
 	{
@@ -18,7 +18,7 @@ namespace YaOpt.Patches
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -30,15 +30,15 @@ namespace YaOpt.Patches
 				if (instruction.Calls("get_Count"))
 				{
 					yield return CodeInstruction.Call(
-						typeof(ParallelJobGiver),
-						nameof(ParallelJobGiver.ClosestThingGlobalFastEscape),
+						typeof(ParallelWorkGiver),
+						nameof(ParallelWorkGiver.ClosestThingGlobalFastEscape),
 						new[] { typeof(int) });
 				}
 				else if (instruction.Calls("MoveNext"))
 				{
 					yield return CodeInstruction.Call(
-						typeof(ParallelJobGiver),
-						nameof(ParallelJobGiver.ClosestThingGlobalFastEscape),
+						typeof(ParallelWorkGiver),
+						nameof(ParallelWorkGiver.ClosestThingGlobalFastEscape),
 						new[] { typeof(bool) });
 				}
 			}

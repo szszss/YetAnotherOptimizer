@@ -20,7 +20,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 
 			static bool Prepare()
 			{
-				return YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+				return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 					   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
 					   YaOptGlobal.HasType("WhileYoureUp.Mod");
 			}
@@ -45,7 +45,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 
 			static bool Prepare()
 			{
-				return YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+				return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 					   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
 					   YaOptGlobal.HasType("WhileYoureUp.Mod");
 			}
@@ -69,7 +69,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 
 			static bool Prepare()
 			{
-				var shouldDo = YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+				var shouldDo = YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 							   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
 							   YaOptGlobal.HasType("WhileYoureUp.Mod");
 				if (shouldDo && _thingsInReducedPriorityStoreFieldRef == null)

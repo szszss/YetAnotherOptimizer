@@ -33,7 +33,7 @@ namespace YaOpt.OtherMod.VanillaExpandedFramework.Patches.ThreadSafe
 			if (original != null)
 				return true;
 
-			var shouldRun = YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			var shouldRun = YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 
 			if (shouldRun && _typeRecipeExtension == null)
 			{

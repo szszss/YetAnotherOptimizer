@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Verse;
+using YaOpt.Helpers;
 using YaOpt.Helpers.Trampolines;
 using YaOpt.Settings;
 
@@ -87,20 +88,20 @@ namespace YaOpt
 		/// Gets a value indicating whether thread-safe code paths are required.
 		/// </summary>
 		/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
-		/// <seealso cref="YaOptSettings.OptParallelJobGiver"/>
+		/// <seealso cref="YaOptSettings.OptParallelWorkGiver"/>
 		/// <seealso cref="YaOptSettings.OptParallelThoughtUpdate"/>
 		/// <seealso cref="YaOptSettings.OptParallelPostMapTick"/>
 		public static bool NeedThreadSafe => YaOptMod.Instance.Settings.OptParallelPawnTick.Enabled ||
-											 YaOptMod.Instance.Settings.OptParallelJobGiver.Enabled ||
+											 YaOptMod.Instance.Settings.OptParallelWorkGiver.Enabled ||
 											 YaOptMod.Instance.Settings.OptParallelThoughtUpdate.Enabled ||
 											 YaOptMod.Instance.Settings.OptParallelPostMapTick.Enabled;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether a parallel program is currently running in tick update.
-		/// It only returns True when ParallelJobGiver, ParallelThoughtUpdater or JobPredictor is running.
+		/// It only returns True when ParallelWorkGiver, ParallelThoughtUpdater or JobPredictor is running.
 		/// </summary>
 		/// <seealso cref="Helpers.JobPredictor"/>
-		/// <seealso cref="Helpers.ParallelJobGiver"/>
+		/// <seealso cref="ParallelWorkGiver"/>
 		/// <seealso cref="Helpers.ParallelThoughtUpdater"/>
 		public static bool IsParallelRunningInTick { get; set; }
 

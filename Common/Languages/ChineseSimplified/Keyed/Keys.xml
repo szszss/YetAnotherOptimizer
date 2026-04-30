@@ -12,7 +12,7 @@
 	<YaOpt.Message.PerformanceFish.RuntimeInfoCache>【其他】类型信息缓存 —— 关闭AccessToolsCacheing的AllTypes</YaOpt.Message.PerformanceFish.RuntimeInfoCache>
 	<YaOpt.Message.PerformanceFish.WindUpdate>【TPS】植物摇曳效果优化 —— 关闭MiscOptimizations的WindManager_WindManagerTick</YaOpt.Message.PerformanceFish.WindUpdate>
 	<YaOpt.Message.PerformanceFish.BedThrottle>【TPS】床铺检查优化 —— 关闭Toils_BedOptimization的FailOnBedNoLongerUsable</YaOpt.Message.PerformanceFish.BedThrottle>
-	<YaOpt.Message.PerformanceFish.ParallelJobGiver>【TPS】并行工作发布 —— 关闭StorageSettingsPatches的AllowedToAccept</YaOpt.Message.PerformanceFish.ParallelJobGiver>
+	<YaOpt.Message.PerformanceFish.ParallelWorkGiver>【TPS】并行工作发布 —— 关闭StorageSettingsPatches的AllowedToAccept</YaOpt.Message.PerformanceFish.ParallelWorkGiver>
 	<YaOpt.Message.PerformanceFish.ThingGetComp>【TPS】物体组件查询加速 —— 关闭GetCompCaching的ThingComp</YaOpt.Message.PerformanceFish.ThingGetComp>
 	<YaOpt.Message.PerformanceFish.LazyTextureLoad>【其他】延迟纹理加载 —— 关闭ContentFinderCaching的Get</YaOpt.Message.PerformanceFish.LazyTextureLoad>
 	<YaOpt.Message.PerformanceFish.EarlyRenderPrepare>【FPS】提前准备物体渲染 —— 关闭DynamicDrawManagerPatches的DrawDynamicThings</YaOpt.Message.PerformanceFish.EarlyRenderPrepare>
@@ -100,11 +100,11 @@
 	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>预测角色当前的工作在本帧是否会失败或被紧急工作（如躲避敌人）打断。如果预测通过，主线程将不再进行重复检测；否则，主线程会重新进行一次标准检测。</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>常态工作预测</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>预测角色是否会在本帧产生常态工作，常态工作指高优先级的角色行为，如躲避敌人、在太空寻找氧气等。</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>
-	<YaOpt.Setting.Option.ParallelJobGiver>并行工作发布</YaOpt.Setting.Option.ParallelJobGiver>
-	<YaOpt.Setting.Option.ParallelJobGiver.Desc>为角色发布工作是游戏中开销最大的操作之一。原版逻辑是将角色所有允许执行的工作按优先级排成序列，依次检查直到找到第一个可执行的工作。该优化使用多线程检查这个序列。当某个线程找到可执行的工作后，会将序列截断于此处（丢弃后续低优先级工作），等待其他检查更高优先级工作的线程完成，最后从所有结果中取出优先级最高的那个工作并发布。</YaOpt.Setting.Option.ParallelJobGiver.Desc>
-	<YaOpt.Setting.Option.ParallelJobGiver.Stable>如果错误日志的调用栈中出现了ParallelJobGiver字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelJobGiver.Stable>
-	<YaOpt.Setting.Option.ParallelJobGiver.Compatibility>Mod不能在工作发布的判断逻辑中产生副作用（即不能对游戏产生实际影响），不能执行非线程安全的操作。永远不应假定发布的任务一定会被执行（多线程处理时可能会产生多个可执行的工作，只有优先级最高的那个会被采纳，其他的会被丢弃）。</YaOpt.Setting.Option.ParallelJobGiver.Compatibility>
-	<YaOpt.Setting.Option.ParallelJobGiver.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelJobGiver.Multithread>
+	<YaOpt.Setting.Option.ParallelWorkGiver>并行工作发布</YaOpt.Setting.Option.ParallelWorkGiver>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Desc>为角色发布工作是游戏中开销最大的操作之一。原版逻辑是将角色所有允许执行的工作按优先级排成序列，依次检查直到找到第一个可执行的工作。该优化使用多线程检查这个序列。当某个线程找到可执行的工作后，会将序列截断于此处（丢弃后续低优先级工作），等待其他检查更高优先级工作的线程完成，最后从所有结果中取出优先级最高的那个工作并发布。</YaOpt.Setting.Option.ParallelWorkGiver.Desc>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Stable>如果错误日志的调用栈中出现了ParallelWorkGiver字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelWorkGiver.Stable>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Compatibility>Mod不能在工作发布的判断逻辑中产生副作用（即不能对游戏产生实际影响），不能执行非线程安全的操作。永远不应假定发布的任务一定会被执行（多线程处理时可能会产生多个可执行的工作，只有优先级最高的那个会被采纳，其他的会被丢弃）。</YaOpt.Setting.Option.ParallelWorkGiver.Compatibility>
+	<YaOpt.Setting.Option.ParallelWorkGiver.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelWorkGiver.Multithread>
 	<YaOpt.Setting.Option.ParallelPostMapTick>并行地图更新</YaOpt.Setting.Option.ParallelPostMapTick>
 	<YaOpt.Setting.Option.ParallelPostMapTick.Desc>多线程执行地图的环境效果、水体冻结和气体扩散更新。</YaOpt.Setting.Option.ParallelPostMapTick.Desc>
 	<YaOpt.Setting.Option.ParallelPostMapTick.Stable>如果错误日志的调用栈中出现了SteadyEnvironmentEffects、TempTerrainManager或GasGrid字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelPostMapTick.Stable>

@@ -17,7 +17,7 @@ namespace YaOpt.Patches.Compatibility
 
 		public static void Unpatch()
 		{
-			if ((YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled) &&
+			if ((YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled) &&
 				YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer"))
 			{
 				unpatchedPo = true;
@@ -32,7 +32,7 @@ namespace YaOpt.Patches.Compatibility
 					HarmonyPatchType.All, "PerformanceOptimizer.Main");
 			}
 
-			if (YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+			if (YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 				YaOptGlobal.HasType("SmartMedicine.UseTempSleepSpot"))
 			{
 				unpatchedSm = true;
@@ -43,7 +43,7 @@ namespace YaOpt.Patches.Compatibility
 			}
 
 			shouldRecoverWyau = true;
-			if (YaOptGlobal.Settings.OptParallelJobGiver.Enabled && YaOptGlobal.HasType("WhileYoureUp.Mod"))
+			if (YaOptGlobal.Settings.OptParallelWorkGiver.Enabled && YaOptGlobal.HasType("WhileYoureUp.Mod"))
 			{
 				unpatchedWyau = true;
 				shouldRecoverWyau = false;

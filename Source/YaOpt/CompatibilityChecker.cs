@@ -265,9 +265,9 @@ namespace YaOpt
 				return false;
 			}
 			if (name == "PerformanceFish.Hauling.StorageSettingsPatches+AllowedToAcceptPatch" &&
-				YaOptGlobal.Settings.OptParallelJobGiver.Enabled)
+				YaOptGlobal.Settings.OptParallelWorkGiver.Enabled)
 			{
-				error = "YaOpt.Message.PerformanceFish.ParallelJobGiver".Translate();
+				error = "YaOpt.Message.PerformanceFish.ParallelWorkGiver".Translate();
 				return false;
 			}
 			error = null;

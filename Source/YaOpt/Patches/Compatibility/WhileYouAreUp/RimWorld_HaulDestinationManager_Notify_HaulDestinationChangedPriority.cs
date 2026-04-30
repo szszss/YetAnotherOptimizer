@@ -64,7 +64,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 
 		static bool Prepare()
 		{
-			var result = YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+			var result = YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 						 YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
 						 YaOptGlobal.HasType("WhileYoureUp.Mod");
 			if (result && _allHaulDestinationsInOrderQueue.Count == 0)

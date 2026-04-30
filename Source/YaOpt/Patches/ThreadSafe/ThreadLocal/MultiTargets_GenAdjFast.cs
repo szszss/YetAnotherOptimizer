@@ -40,7 +40,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		{
 			// Don't sure if parallel job fail tests need this.
 			// Some WorkGivers need this. (i.e. Fluffy_Breakdowns.WorkGiver_Maintenance)
-			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

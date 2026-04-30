@@ -12,7 +12,7 @@ namespace YaOpt.Patches.ThreadSafe.Locked
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static void Prefix(out bool __state)

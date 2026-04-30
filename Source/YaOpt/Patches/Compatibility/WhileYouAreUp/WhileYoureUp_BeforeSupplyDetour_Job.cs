@@ -25,7 +25,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 			if (original != null)
 				return true;
 
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled && YaOptGlobal.HasType("WhileYoureUp.Mod");
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled && YaOptGlobal.HasType("WhileYoureUp.Mod");
 		}
 
 		public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

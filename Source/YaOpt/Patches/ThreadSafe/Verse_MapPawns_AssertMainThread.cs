@@ -9,7 +9,7 @@ namespace YaOpt.Patches.ThreadSafe
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static bool Prefix()

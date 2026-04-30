@@ -10,7 +10,7 @@ namespace YaOpt.OtherMod.VanillaExpandedFramework.Patches.ThreadSafe
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static void Prefix(out bool __state)

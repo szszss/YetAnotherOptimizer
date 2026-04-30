@@ -10,7 +10,7 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 	{
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 				   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
 				   YaOptGlobal.HasType("WhileYoureUp.Mod");
 		}

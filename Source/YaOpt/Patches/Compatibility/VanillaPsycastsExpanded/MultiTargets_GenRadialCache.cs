@@ -24,7 +24,7 @@ namespace YaOpt.Patches.Compatibility.VanillaPsycastsExpanded
 			if (original != null)
 				return true;
 
-			var shouldRun = (YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled) &&
+			var shouldRun = (YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled) &&
 							YaOptGlobal.HasMod("VanillaExpanded.VPsycastsE");
 
 			return shouldRun;

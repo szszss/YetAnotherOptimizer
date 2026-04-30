@@ -19,7 +19,7 @@ namespace YaOpt.Patches.Debugging
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static void Prefix()
@@ -27,7 +27,7 @@ namespace YaOpt.Patches.Debugging
 			if (YaOptGlobal.IsParallelRunningInTick)
 			{
 				YaOptMod.Error("A Reservation operation was detected during the execution of " +
-							   "ParallelJobGiver or ParallelPawnTickManager. This is strictly prohibited. " +
+							   "ParallelWorkGiver or ParallelPawnTickManager. This is strictly prohibited. " +
 							   "You can analyze the call stack to determine which WorkerGiver " +
 							   "or JobPrediction performed this operation. " +
 							   "Please report this compatibility issue to YaOpt developers.");

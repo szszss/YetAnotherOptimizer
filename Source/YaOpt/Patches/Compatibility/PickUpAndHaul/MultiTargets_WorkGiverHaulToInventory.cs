@@ -29,7 +29,7 @@ namespace YaOpt.Patches.Compatibility.PickUpAndHaul
 			if (original != null)
 				return true;
 
-			return YaOptGlobal.Settings.OptParallelJobGiver.Enabled &&
+			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled &&
 				   YaOptGlobal.HasType("PickUpAndHaul.WorkGiver_HaulToInventory") &&
 				   // WorkGiver_HaulToInventory will be main-thread only when WhileYoureUp is present
 				   !YaOptGlobal.HasType("WhileYoureUp.Mod");

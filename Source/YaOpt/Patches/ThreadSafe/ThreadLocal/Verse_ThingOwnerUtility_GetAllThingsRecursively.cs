@@ -20,7 +20,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 
 		static bool Prepare()
 		{
-			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled;
+			return YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
 		static bool Prefix(Map __0, ThingRequest __1,

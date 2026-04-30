@@ -470,22 +470,22 @@ namespace YaOpt
 		public bool ParallelPawnConstantJobPrediction { get; set; } = true;
 
 		/// <summary>
-		/// Optimizes job giving by checking job priorities in parallel.
-		/// Job giving is one of the most expensive operations. It iterates through a prioritized list of allowed jobs
+		/// Optimizes work giving by checking work priorities in parallel.
+		/// Work giving is one of the most expensive operations. It iterates through a prioritized list of allowed works
 		/// until a valid one is found. This optimization uses multiple threads to check this list.
-		/// When a thread finds a valid job, it truncates the list (discarding lower priority jobs)
-		/// and waits for threads checking higher priority jobs to finish.
-		/// Finally, the valid job with the highest priority is selected.
+		/// When a thread finds a valid work, it truncates the list (discarding lower priority works)
+		/// and waits for threads checking higher priority works to finish.
+		/// Finally, the valid work with the highest priority is selected.
 		/// </summary>
 		/// <seealso cref="Patches.RimWorld_JobGiver_Work_TryIssueJobPackage"/>
 		/// <seealso cref="YaOptGlobal.NeedThreadSafe"/>
-		public OptimizationOption OptParallelJobGiver { get; } = new OptimizationOption
+		public OptimizationOption OptParallelWorkGiver { get; } = new OptimizationOption
 		{
-			Name = "YaOpt.Setting.Option.ParallelJobGiver",
-			Desc = "YaOpt.Setting.Option.ParallelJobGiver.Desc",
-			NoteStability = "YaOpt.Setting.Option.ParallelJobGiver.Stable",
-			NoteCompatibility = "YaOpt.Setting.Option.ParallelJobGiver.Compatibility",
-			NoteMultithread = "YaOpt.Setting.Option.ParallelJobGiver.Multithread",
+			Name = "YaOpt.Setting.Option.ParallelWorkGiver",
+			Desc = "YaOpt.Setting.Option.ParallelWorkGiver.Desc",
+			NoteStability = "YaOpt.Setting.Option.ParallelWorkGiver.Stable",
+			NoteCompatibility = "YaOpt.Setting.Option.ParallelWorkGiver.Compatibility",
+			NoteMultithread = "YaOpt.Setting.Option.ParallelWorkGiver.Multithread",
 			Category = OptimizationCategory.Tps,
 			Flags = OptimizationFlags.MultiplayerIncompatible,
 		};

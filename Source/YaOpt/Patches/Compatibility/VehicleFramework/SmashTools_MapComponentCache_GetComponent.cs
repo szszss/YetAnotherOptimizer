@@ -19,7 +19,7 @@ namespace YaOpt.Patches.Compatibility.VehicleFramework
 
 		static bool Prepare()
 		{
-			return (YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelJobGiver.Enabled) &&
+			return (YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled) &&
 				   YaOptGlobal.HasType("SmashTools.MapComponentCache");
 		}
 
