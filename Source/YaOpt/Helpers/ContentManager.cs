@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
+using LudeonTK;
 using UnityEngine;
 using Verse;
 
@@ -96,6 +98,10 @@ namespace YaOpt.Helpers
 		private static readonly byte[] _tmpDdsHeaderBytes = new byte[128];
 		private static readonly byte[] _tmpTextureDataBytes = new byte[(int)(512 * 512 * 4 * sizeof(int) * 1.34f)];
 		private static GCHandle _tmpDdsHeaderHandle;
+
+		private static int _statTotalTextureCount;
+		private static int _statLoadedFullTextureCount;
+		private static int _statLoadedDownsampledTextureCount;
 
 		/// <summary>
 		/// If <c>true</c>, only DDS textures are lazily loaded; other formats load immediately.
@@ -447,6 +453,7 @@ namespace YaOpt.Helpers
 		public static void RegisterTextureNotLoaded(int textureId, VirtualFile file)
 		{
 			_texturesNotLoaded[textureId] = file;
+			_statTotalTextureCount++;
 		}
 
 		public static void MakeSureTextureLoaded(Texture2D texture)
@@ -456,6 +463,7 @@ namespace YaOpt.Helpers
 			var id = texture.GetInstanceID();
 			if (_texturesNotLoaded.Remove(id, out var file))
 			{
+				_statLoadedFullTextureCount++;
 				LoadTexture(texture, file);
 			}
 		}
@@ -517,7 +525,6 @@ namespace YaOpt.Helpers
 			if (_optimizedThingDefs.Remove(def))
 			{
 				_thingDefReloadTextureQueue.Enqueue(def);
-
 			}
 		}
 
@@ -539,6 +546,8 @@ namespace YaOpt.Helpers
 		{
 			if (tex != null && _optimizedTextures.Remove(tex.GetInstanceID(), out var info))
 			{
+				_statLoadedDownsampledTextureCount--;
+				_statLoadedFullTextureCount++;
 				LoadTexture(tex, info.File);
 			}
 		}
@@ -619,6 +628,8 @@ namespace YaOpt.Helpers
 				_thingDefToTexturesMapping[ownerDef] = list;
 			}
 			list.Add(texture);
+			_statLoadedFullTextureCount--; // Revert the increment in MakeSureTextureLoaded
+			_statLoadedDownsampledTextureCount++;
 		}
 
 		private static void LoadTextureDds(Texture2D texture, VirtualFile file)
@@ -840,6 +851,62 @@ namespace YaOpt.Helpers
 				return _gsMipmapBias(_gsSettings);
 			}
 			return 0;
+		}
+
+		[DebugOutput("YaOpt")]
+		private static void PrintTextureStatistics()
+		{
+			if (_statTotalTextureCount == 0)
+			{
+				YaOptMod.Error("Unable to track texture usage when lazy loading is disabled.");
+				return;
+			}
+
+			var unloaded = _statTotalTextureCount - _statLoadedFullTextureCount - _statLoadedDownsampledTextureCount;
+			YaOptMod.Log($"Total: {_statTotalTextureCount}");
+			var ratioLoaded = _statLoadedFullTextureCount / (float)_statTotalTextureCount * 100;
+			var ratioUnloaded = 100f;
+			if (!EnableDownsampling)
+			{
+				YaOptMod.Log($"Loaded: {_statLoadedFullTextureCount} ({ratioLoaded:F2}%)");
+			}
+			else
+			{
+				YaOptMod.Log($"Loaded (Full): {_statLoadedFullTextureCount} ({ratioLoaded:F2}%)");
+				ratioUnloaded -= ratioLoaded;
+				ratioLoaded = _statLoadedDownsampledTextureCount / (float)_statTotalTextureCount * 100;
+				YaOptMod.Log($"Loaded (Down): {_statLoadedDownsampledTextureCount} ({ratioLoaded:F2}%)");
+			}
+			ratioUnloaded -= ratioLoaded;
+			ratioUnloaded = Math.Max(ratioUnloaded, 0);
+			YaOptMod.Log($"Unloaded : {unloaded} ({ratioUnloaded:F2}%)");
+		}
+
+		[DebugOutput("YaOpt")]
+		private static void PrintTextureStatisticsWithDetails()
+		{
+			if (_statTotalTextureCount == 0)
+			{
+				YaOptMod.Error("Unable to track texture usage when lazy loading is disabled.");
+				return;
+			}
+
+			PrintTextureStatistics();
+			YaOptMod.Log("Now printing details:");
+
+			var sb = new StringBuilder("Downsampled:");
+			foreach (var (_, info) in _optimizedTextures)
+			{
+				sb.AppendLine().Append(info.File.Name).Append(" - ").Append(info.File.FullPath);
+			}
+			YaOptMod.Log(sb.ToString());
+
+			sb = new StringBuilder("Unloaded:");
+			foreach (var (_, file) in _texturesNotLoaded)
+			{
+				sb.AppendLine().Append(file.Name).Append(" - ").Append(file.FullPath);
+			}
+			YaOptMod.Log(sb.ToString());
 		}
 	}
 }
