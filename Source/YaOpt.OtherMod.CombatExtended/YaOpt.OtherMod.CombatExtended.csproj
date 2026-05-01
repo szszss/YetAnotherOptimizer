@@ -3,9 +3,6 @@
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   
-  <Import Project="..\Settings.props" />
-  <Import Project="..\UserSettings.props" Condition="exists('..\UserSettings.props')" />
-  
   <ItemGroup>
     <ProjectReference Include="..\YaOpt\YaOpt.csproj" />
   </ItemGroup>
@@ -13,11 +10,11 @@
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
     <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
-	<Reference Include="CombatExtended">
+    <Reference Include="CombatExtended">
       <HintPath>$([System.IO.Path]::Combine($(SteamWorkshopDirectory), 'content\294100\2890901044\Assemblies\CombatExtended.dll'))</HintPath>
       <Private>True</Private>
     </Reference>
-	<Reference Include="YaOpt.Unity">
+    <Reference Include="YaOpt.Unity">
       <HintPath>$(SolutionDir)..\1.6\Assemblies\YaOpt.Unity.dll</HintPath>
       <Private>True</Private>
     </Reference>

@@ -3,9 +3,6 @@
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   
-  <Import Project="..\Settings.props" />
-  <Import Project="..\UserSettings.props" Condition="exists('..\UserSettings.props')" />
-  
   <ItemGroup>
     <ProjectReference Include="..\YaOpt\YaOpt.csproj" />
   </ItemGroup>
@@ -13,11 +10,11 @@
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
     <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
-	<Reference Include="VEF">
+    <Reference Include="VEF">
       <HintPath>$([System.IO.Path]::Combine($(SteamWorkshopDirectory), 'content\294100\2023507013\1.6\Assemblies\VEF.dll'))</HintPath>
       <Private>True</Private>
     </Reference>
-	<Reference Include="MVCF">
+    <Reference Include="MVCF">
       <HintPath>$([System.IO.Path]::Combine($(SteamWorkshopDirectory), 'content\294100\2023507013\1.6\Assemblies\MVCF.dll'))</HintPath>
       <Private>True</Private>
     </Reference>

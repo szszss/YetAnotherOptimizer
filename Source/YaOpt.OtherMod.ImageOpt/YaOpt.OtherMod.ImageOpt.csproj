@@ -4,9 +4,6 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-
-  <Import Project="..\Settings.props"/>
-  <Import Project="..\UserSettings.props" Condition="exists('..\UserSettings.props')" />
   
   <ItemGroup>
     <ProjectReference Include="..\YaOpt\YaOpt.csproj" />

@@ -1,7 +1,8 @@
 <Project>
-	<PropertyGroup>
-		<GameVersion>1.6</GameVersion>
-		<RimworldVersion>1.6.4633</RimworldVersion>
-		<HarmonyVersion>2.4.2</HarmonyVersion>
-	</PropertyGroup>
+  <PropertyGroup>
+    <GameVersion>1.6</GameVersion>
+    <RimworldVersion>1.6.4633</RimworldVersion>
+    <HarmonyVersion>2.4.2</HarmonyVersion>
+    <PrepatcherVersion>1.2.0</PrepatcherVersion>
+  </PropertyGroup>
 </Project>
