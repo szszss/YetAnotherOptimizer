@@ -18,7 +18,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches.Compatibility.EliteBionicsFrame
 		{
 			if (original != null)
 			{
-				MiscHelper.CheckHash(original, Hash128.Parse("98a7331af366b9791427b373f813340a"));
+				MiscHelper.CheckHash(original, Hash128.Parse("fe3a324f0872b548d5778c4aae14b812"));
 			}
 			return SubMod.OptFAParallelUpdate.Enabled && YaOptGlobal.HasMod("V1024.EBFramework");
 		}
