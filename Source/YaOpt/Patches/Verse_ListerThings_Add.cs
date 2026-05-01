@@ -77,7 +77,7 @@ namespace YaOpt.Patches
 						yield return CodeInstruction.LoadLocal(localThingRequestGroup);
 					}
 					yield return CodeInstruction.Call(
-							typeof(Verse_ListerThings_Add), nameof(AddToThingList));
+							typeof(ListerThingsHelper), nameof(ListerThingsHelper.AddToThingList));
 					count++;
 					continue;
 				}
@@ -90,41 +90,12 @@ namespace YaOpt.Patches
 					yield return CodeInstruction.LoadLocal(localRecord.LocalIndex);
 					yield return CodeInstruction.LoadLocal(localUse.LocalIndex);
 					yield return CodeInstruction.Call(
-						typeof(Verse_ListerThings_Add), nameof(AddToHaulList));
+						typeof(ListerThingsHelper), nameof(ListerThingsHelper.AddToHaulList));
 					continue;
 				}
 
 				yield return instruction;
 			}
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static void AddToThingList(List<Thing> list, Thing thing,
-			ThingRecord record, ListerThingsUse use, int indexType)
-		{
-			list.Add(thing);
-			if (use != ListerThingsUse.Global)
-				return;
-			var index = list.Count - 1;
-			if (indexType == INDEX_TYPE_DEF)
-			{
-				record.DefIndex = index;
-			}
-			else
-			{
-				record.GroupIndex[indexType] = index;
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static void AddToHaulList(List<IHaulSource> list, IHaulSource haulSource,
-			ThingRecord record, ListerThingsUse use)
-		{
-			list.Add(haulSource);
-			if (use != ListerThingsUse.Global)
-				return;
-			var index = list.Count - 1;
-			record.HaulIndex = index;
 		}
 	}
 }

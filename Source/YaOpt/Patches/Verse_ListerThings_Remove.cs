@@ -1,3 +1,4 @@
+using System;
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
@@ -15,8 +16,6 @@ namespace YaOpt.Patches
 	[HarmonyPatch]
 	internal static class Verse_ListerThings_Remove
 	{
-		private const int INDEX_TYPE_DEF = -1;
-
 		static MethodBase TargetMethod()
 		{
 			if (YaOptGlobal.HasMod("Vortex.Kingfisher"))
@@ -87,7 +86,7 @@ namespace YaOpt.Patches
 					if (count == 0)
 					{
 						// indexType = INDEX_TYPE_DEF
-						yield return new CodeInstruction(OpCodes.Ldc_I4, INDEX_TYPE_DEF);
+						yield return new CodeInstruction(OpCodes.Ldc_I4, ListerThingsHelper.INDEX_TYPE_DEF);
 					}
 					else
 					{
@@ -95,7 +94,7 @@ namespace YaOpt.Patches
 						yield return CodeInstruction.LoadLocal(localThingRequestGroup);
 					}
 					yield return CodeInstruction.Call(
-						typeof(Verse_ListerThings_Remove), nameof(RemoveFromThingList));
+						typeof(ListerThingsHelper), nameof(ListerThingsHelper.RemoveFromThingList));
 					if (hasKingfisher)
 						yield return new CodeInstruction(OpCodes.Pop);
 
@@ -112,7 +111,7 @@ namespace YaOpt.Patches
 					yield return CodeInstruction.LoadLocal(localRecord.LocalIndex);
 					yield return CodeInstruction.LoadLocal(localUse.LocalIndex);
 					yield return CodeInstruction.Call(
-						typeof(Verse_ListerThings_Remove), nameof(RemoveFromHaulList));
+						typeof(ListerThingsHelper), nameof(ListerThingsHelper.RemoveFromHaulList));
 					if (hasKingfisher)
 						yield return new CodeInstruction(OpCodes.Pop);
 					continue;
@@ -137,98 +136,6 @@ namespace YaOpt.Patches
 				}
 			}
 			return false;
-		}
-
-		static bool RemoveFromThingList(List<Thing> list, Thing thing,
-			ListerThingsIndexer indexer, ThingRecord record, ListerThingsUse use, int indexType)
-		{
-			int index;
-
-			if (use != ListerThingsUse.Global)
-			{
-				// For the ListerThings of a Region, we use a reverse search.
-				// The existence time of things in the ListerThings of a Region is polarized.
-				// They either exist for a long time or will be removed soon.
-				// The latter are usually located at the end of the array.
-				list.ReverseRemove(thing);
-				return true;
-			}
-
-			if (indexType == INDEX_TYPE_DEF)
-			{
-				index = record.DefIndex;
-				record.DefIndex = -1;
-			}
-			else
-			{
-				index = record.GroupIndex[indexType];
-				record.GroupIndex[indexType] = -1;
-			}
-			var listCount = list.Count;
-
-			if (index < 0 || index >= listCount || list[index] != thing)
-			{
-				YaOptMod.Error($"Thing does not match its index: {index} for thing {thing}. " +
-							   "Fallback to the original path.");
-				list.Remove(thing);
-				return true;
-			}
-			if (index == listCount - 1)
-			{
-				list.RemoveAt(index);
-				return true;
-			}
-			var swapThing = list[listCount - 1];
-			var swapThingRecord = indexer.GetThingRecord(swapThing, use);
-			list.RemoveAt(listCount - 1);
-			list[index] = swapThing;
-			if (indexType == INDEX_TYPE_DEF)
-			{
-				swapThingRecord.DefIndex = index;
-			}
-			else
-			{
-				swapThingRecord.GroupIndex[indexType] = index;
-			}
-			return true;
-		}
-
-
-		static bool RemoveFromHaulList(List<IHaulSource> list, IHaulSource haul,
-			ListerThingsIndexer indexer, ThingRecord record, ListerThingsUse use)
-		{
-			int index;
-
-			if (use != ListerThingsUse.Global)
-			{
-				index = list.LastIndexOf(haul);
-				if (index >= 0)
-					list.RemoveAt(index);
-				return true;
-			}
-
-			index = record.HaulIndex;
-			record.HaulIndex = -1;
-			var listCount = list.Count;
-
-			if (index < 0 || index >= listCount || list[index] != haul)
-			{
-				YaOptMod.Error($"Thing does not match its index: {index} for thing {haul}. " +
-							   "Fallback to the original path.");
-				list.Remove(haul);
-				return true;
-			}
-			if (index == listCount - 1)
-			{
-				list.RemoveAt(index);
-				return true;
-			}
-			var swapThing = list[listCount - 1];
-			var swapThingRecord = indexer.GetThingRecord((Thing)swapThing, use);
-			list.RemoveAt(listCount - 1);
-			list[index] = swapThing;
-			swapThingRecord.HaulIndex = index;
-			return true;
 		}
 	}
 }
