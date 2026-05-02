@@ -92,12 +92,12 @@
 	<YaOpt.Setting.Option.ThingGetComp.Desc>原版遊戲在查找存在的組件時很快，但在查找不存在的組件時非常慢。遺憾的是，判斷組件是否存在的唯一辦法就是透過GetComp查詢並等待失敗結果。該最佳化重寫了GetComp的查詢機制，確保當查找不存在的組件時也能迅速返回失敗結果。</YaOpt.Setting.Option.ThingGetComp.Desc>
 	<YaOpt.Setting.Option.ThingGetComp.Prepatch>由於Harmony不支援為泛型方法打修補程式，該最佳化透過Prepatcher Mod來實現。開關此最佳化後需要重啟遊戲來生效。</YaOpt.Setting.Option.ThingGetComp.Prepatch>
 	<YaOpt.Setting.Option.ParallelPawnTick>並行角色更新</YaOpt.Setting.Option.ParallelPawnTick>
-	<YaOpt.Setting.Option.ParallelPawnTick.Desc>為角色更新引入有限的多執行緒處理。多執行緒處理角色的工作中斷判斷、常態工作判斷和情緒更新。</YaOpt.Setting.Option.ParallelPawnTick.Desc>
+	<YaOpt.Setting.Option.ParallelPawnTick.Desc>為角色更新引入有限的多執行緒處理。多執行緒處理角色的工作中斷判斷、常態工作判斷。</YaOpt.Setting.Option.ParallelPawnTick.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.Stable>如果錯誤日誌的呼叫堆疊中出現了ParallelPawnTickManager字樣，可以嘗試關閉這個最佳化。</YaOpt.Setting.Option.ParallelPawnTick.Stable>
 	<YaOpt.Setting.Option.ParallelPawnTick.Compatibility>Mod不得在工作失敗條件的判斷邏輯中產生副作用（即不能對遊戲實際狀態產生影響），且不能執行非執行緒安全操作。失敗條件的判斷可能會在一幀中執行兩次（一次在預測器中，一次在主執行緒中）。</YaOpt.Setting.Option.ParallelPawnTick.Compatibility>
 	<YaOpt.Setting.Option.ParallelPawnTick.Multithread>使用多執行緒工作，啟用連線Mod時自動停用。</YaOpt.Setting.Option.ParallelPawnTick.Multithread>
 	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>工作中斷預測</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>
-	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>預測角色當前的工作在本幀是否會失敗或被緊急工作（如躲避敵人）打斷。如果預測通過，主執行緒將不再進行重複檢測；否則，主執行緒會重新進行一次標準檢測。</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>
+	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>預測角色當前的工作在本幀是否會被強制中斷（如物品不可用）。如果預測不會失敗，主執行緒將不再進行重複檢測；否則，主執行緒會重新進行一次標準檢測。</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>常態工作預測</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>預測角色是否會在本幀產生常態工作，常態工作指高優先順序的角色行為，如躲避敵人、在太空尋找氧氣等。</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>
 	<YaOpt.Setting.Option.ParallelWorkGiver>並行工作發佈</YaOpt.Setting.Option.ParallelWorkGiver>

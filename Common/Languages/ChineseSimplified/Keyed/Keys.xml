@@ -92,12 +92,12 @@
 	<YaOpt.Setting.Option.ThingGetComp.Desc>原版游戏在查找存在的组件时很快，但在查找不存在的组件时非常慢。遗憾的是，判断组件是否存在的唯一办法就是通过GetComp查询并等待失败结果。该优化重写了GetComp的查询机制，确保当查找不存在的组件时也能迅速返回失败结果。</YaOpt.Setting.Option.ThingGetComp.Desc>
 	<YaOpt.Setting.Option.ThingGetComp.Prepatch>由于Harmony不支持为泛型方法打补丁，该优化通过Prepatcher Mod来实现。开关此优化后需要重启游戏来生效。</YaOpt.Setting.Option.ThingGetComp.Prepatch>
 	<YaOpt.Setting.Option.ParallelPawnTick>并行角色更新</YaOpt.Setting.Option.ParallelPawnTick>
-	<YaOpt.Setting.Option.ParallelPawnTick.Desc>为角色更新引入有限的多线程处理。多线程处理角色的工作中断判断、常态工作判断和情绪更新。</YaOpt.Setting.Option.ParallelPawnTick.Desc>
+	<YaOpt.Setting.Option.ParallelPawnTick.Desc>为角色更新引入有限的多线程处理。多线程处理角色的工作中断判断、常态工作判断。</YaOpt.Setting.Option.ParallelPawnTick.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.Stable>如果错误日志的调用栈中出现了ParallelPawnTickManager字样，可以尝试关闭这个优化。</YaOpt.Setting.Option.ParallelPawnTick.Stable>
 	<YaOpt.Setting.Option.ParallelPawnTick.Compatibility>Mod不得在工作失败条件的判断逻辑中产生副作用（即不能对游戏实际状态产生影响），且不能执行非线程安全操作。失败条件的判断可能会在一帧中执行两次（一次在预测器中，一次在主线程中）。</YaOpt.Setting.Option.ParallelPawnTick.Compatibility>
 	<YaOpt.Setting.Option.ParallelPawnTick.Multithread>使用多线程工作，启用联机Mod时自动禁用。</YaOpt.Setting.Option.ParallelPawnTick.Multithread>
 	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>工作中断预测</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction>
-	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>预测角色当前的工作在本帧是否会失败或被紧急工作（如躲避敌人）打断。如果预测通过，主线程将不再进行重复检测；否则，主线程会重新进行一次标准检测。</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>
+	<YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>预测角色当前的工作在本帧是否会被迫中断（如物品不可用）。如果预测不会失败，主线程将不再进行重复检测；否则，主线程会重新进行一次标准检测。</YaOpt.Setting.Option.ParallelPawnTick.JobFailurePrediction.Desc>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>常态工作预测</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction>
 	<YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>预测角色是否会在本帧产生常态工作，常态工作指高优先级的角色行为，如躲避敌人、在太空寻找氧气等。</YaOpt.Setting.Option.ParallelPawnTick.ConstantJobPrediction.Desc>
 	<YaOpt.Setting.Option.ParallelWorkGiver>并行工作发布</YaOpt.Setting.Option.ParallelWorkGiver>
