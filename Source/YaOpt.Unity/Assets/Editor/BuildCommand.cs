@@ -93,13 +93,13 @@ public static class BuildCommand
                 break;
             case BuildTarget.StandaloneLinux64:
                 burstLibName = "lib_burst_generated.so";
-                burstSourcePath = Path.Combine(buildPath, "YaOpt_Data", "Plugins", "x86_64", burstLibName);
+                burstSourcePath = Path.Combine(buildPath, "YaOpt_Data", "Plugins", burstLibName);
                 managedSourcePath = Path.Combine(buildPath, "YaOpt_Data", "Managed", managedDllName);
                 break;
             case BuildTarget.StandaloneOSX:
                 burstLibName = "lib_burst_generated.bundle";
                 // macOS bundle structure is different
-                burstSourcePath = Path.Combine(buildPath, "YaOpt.app", "Contents", "Plugins", burstLibName); 
+                burstSourcePath = Path.Combine(buildPath, "YaOpt.app", "Contents", "PlugIns", burstLibName); 
                 managedSourcePath = Path.Combine(buildPath, "YaOpt.app", "Contents", "Resources", "Data", "Managed", managedDllName);
                 break;
         }
