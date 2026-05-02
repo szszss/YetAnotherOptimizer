@@ -691,7 +691,7 @@ namespace YaOpt.Helpers
 				var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
 				try
 				{
-					UploadTextureDdsData(texture, ddsHeader, handle.AddrOfPinnedObject(), data.Length, skipLevels);
+					UploadTextureDdsData(texture, ddsHeader, handle.AddrOfPinnedObject(), dataSize, skipLevels);
 					if (downsampled)
 					{
 						RegisterDownsampledTexture(owner, texture, file,
