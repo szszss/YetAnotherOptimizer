@@ -1,11 +1,14 @@
 name: Build
 
 on:
-  # push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
+  push:
+    branches: [ "master" ]
+    tags: [ "v*" ]
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_type }}-${{ github.sha }}
+  cancel-in-progress: false
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -13,7 +16,7 @@ env:
   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
 jobs:
-  # 检测 Unity 代码是否有变化，决定是否需要重新构建
+  # Detect changes to Unity code and determine if a rebuild is necessary.
   check-unity-changes:
     name: Check Unity Changes
     runs-on: ubuntu-latest
@@ -44,7 +47,7 @@ jobs:
           echo "hash=$HASH" >> $GITHUB_OUTPUT
           echo "Unity source hash: $HASH"
 
-  # Unity 构建 - 仅在代码变化时执行
+  # Unity Build - Execute only when code changes
   build-unity:
     name: Build Unity (${{ matrix.targetPlatform }})
     needs: check-unity-changes
@@ -98,7 +101,7 @@ jobs:
           path: Source/YaOpt.Unity/Builds/Artifacts
           key: unity-build-${{ needs.check-unity-changes.outputs.unity-hash }}-${{ matrix.targetPlatform }}
 
-  # 恢复缓存的 Unity Artifacts（代码无变化时）
+  # Restore cached Unity Artifacts (when the code has not changed).
   restore-unity-cache:
     name: Restore Unity Cache (${{ matrix.targetPlatform }})
     needs: check-unity-changes
@@ -134,7 +137,7 @@ jobs:
           echo "Consider triggering a manual rebuild with workflow_dispatch"
           exit 1
 
-  # 主项目构建
+  # Main project build
   build-main:
     name: Build Main Project
     needs: [build-unity, restore-unity-cache]
@@ -191,3 +194,62 @@ jobs:
         with:
           name: YetAnotherOptimizer-1.6
           path: 1.6/
+
+  publish:
+    name: Publish
+    needs: build-main
+    if: always() && needs.build-main.result == 'success' && (github.ref_type == 'tag' || github.ref_name == 'master')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: YetAnotherOptimizer-1.6
+          path: build/1.6
+
+      - name: Package Mod
+        shell: bash
+        run: |
+          mkdir -p output
+          cp -r build/1.6 output/1.6
+          cp -r About output/
+          cp -r Common output/
+          cp LoadFolders.xml output/
+          [ -f CHANGELOG.md ] && cp CHANGELOG.md output/
+          cd output
+          zip -r ../YetAnotherOptimizer.zip .
+
+      - name: Create GitHub Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --generate-notes \
+            YetAnotherOptimizer.zip
+
+      - name: Create Nightly Pre-release
+        if: github.ref_type == 'branch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHA_SHORT=$(git rev-parse --short=7 HEAD)
+          DATE=$(date +'%Y%m%d')
+          RELEASE_NAME="nightly-${DATE}-${SHA_SHORT}"
+          if git tag --points-at HEAD | grep -q '^v'; then
+            echo "Commit already version-tagged, skipping nightly"
+            exit 0
+          fi
+          gh release create "$RELEASE_NAME" \
+            --title "$RELEASE_NAME" \
+            --prerelease \
+            --notes "Nightly build from commit ${SHA_SHORT}" \
+            YetAnotherOptimizer.zip

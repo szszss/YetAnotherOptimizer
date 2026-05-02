@@ -1,0 +1,41 @@
+{
+  "$schema": "./schemas/versionize.schema.json",
+  "tagTemplate": "v{version}",
+  "aggregatePrereleases": true,
+  "changelog": {
+    "header": "YaOpt Changelog",
+    "includeAllCommits": false,
+    "linkTemplates": {
+      "issueLink": "https://github.com/szszss/YetAnotherOptimizer/issues/{issue}",
+      "commitLink": "https://github.com/szszss/YetAnotherOptimizer/commit/{commitSha}",
+      "versionTagLink": "https://github.com/szszss/YetAnotherOptimizer/compare/{previousTag}...{currentTag}"
+    },
+    "sections": [
+      {
+        "type": "feat",
+        "section": "✨ Features",
+        "hidden": false
+      },
+	  {
+        "type": "compat",
+        "section": "🤝 Compatibility",
+        "hidden": false
+      },
+      {
+        "type": "fix",
+        "section": "🩹 Bug Fixes",
+        "hidden": false
+      },
+      {
+        "type": "perf",
+        "section": "🚀 Performance",
+        "hidden": false
+      },
+      {
+        "type": "chore",
+        "section": "🧩 Other",
+        "hidden": false
+      }
+    ]
+  }
+}
