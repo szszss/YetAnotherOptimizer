@@ -31,6 +31,11 @@
         "section": "🚀 Performance",
         "hidden": false
       },
+	  {
+        "type": "trans",
+        "section": "📖 Translations",
+        "hidden": false
+      },
       {
         "type": "chore",
         "section": "🧩 Other",

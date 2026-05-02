@@ -1,8 +1,9 @@
 # Yet another Optimizer
 
 ![RimWorld 1.6](https://img.shields.io/badge/RimWorld-1.6-blue)
+![License MIT](https://img.shields.io/badge/license-MIT-blue)
 
-*Yet another Optimizer* (*YaOpt*) is a performance optimization mod for *RimWorld*. It improves TPS and FPS through Harmony patching, multithreading, Burst-compiled math, and targeted caching.
+*Yet another Optimizer* (YaOpt) is a performance optimization mod for *RimWorld*. It improves TPS and FPS through Harmony patching, multithreading, Burst-compiled math, and targeted caching.
 
 ## Features
 
@@ -14,7 +15,7 @@ Optimizations are grouped into three categories, all configurable in the in-game
 
 ## Requirements
 
-- RimWorld 1.6
+- [RimWorld 1.6](https://store.steampowered.com/app/294100)
 - [Harmony](https://github.com/pardeike/Harmony)
 - *(Optional)* [Prepatcher](https://github.com/Zetrith/Prepatcher) — required for certain optimizations
 

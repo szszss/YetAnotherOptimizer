@@ -176,12 +176,12 @@ jobs:
           path: temp/macos
 
       - name: Organize Artifacts
-        shell: cmd
+        shell: bash
         run: |
-          copy temp\windows\lib_burst_generated.dll 1.6\Burst\
-          copy temp\linux\lib_burst_generated.so 1.6\Burst\
-          xcopy /E /I /Y temp\macos\lib_burst_generated.bundle 1.6\Burst\lib_burst_generated.bundle
-          copy temp\windows\YaOpt.Unity.dll 1.6\Assemblies\
+          cp temp/windows/lib_burst_generated.dll 1.6/Burst/
+          cp temp/linux/lib_burst_generated.so 1.6/Burst/
+          cp -r temp/macos/lib_burst_generated.bundle 1.6/Burst/
+          cp temp/windows/YaOpt.Unity.dll 1.6/Assemblies/
 
       - name: Restore NuGet Packages
         run: nuget restore Source/YaOpt.sln
