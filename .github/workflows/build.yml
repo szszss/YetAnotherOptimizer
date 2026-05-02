@@ -1,9 +1,10 @@
 name: Build
 
 on:
-  push:
-    branches: [ "master" ]
-    tags: [ "v*" ]
+  # All CI builds are temporarily disabled because the Steam Workshop dependencies issue cannot be resolved for now.
+  #push:
+  #  branches: [ "master" ]
+  #  tags: [ "v*" ]
   workflow_dispatch:
 
 concurrency:
