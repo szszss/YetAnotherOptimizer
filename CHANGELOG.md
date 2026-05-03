@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Fix: CheckCellBasedReachability fails in non-main thread, which could cause roads cannot be generated during map generation.
+
 ## 1.0.2  (2026-05-03)
 
 * Fix: LoadTextureDds may uploads more data than required, which could cause crashes in some environments.
