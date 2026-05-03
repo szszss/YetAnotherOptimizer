@@ -631,7 +631,7 @@ namespace YaOpt
 			NoteCompatibility = "YaOpt.Setting.Option.LazyTextureLoad.Compatibility",
 			NotePrepatch = "YaOpt.Setting.Option.LazyTextureLoad.Prepatch",
 			Category = OptimizationCategory.Misc,
-			Flags = OptimizationFlags.RequirePrepatcher | OptimizationFlags.AlwaysSave,
+			Flags = OptimizationFlags.RequirePrepatcher,
 			FuncPostDraw = SettingsPanel.LazyTextureLoadPostDraw,
 			FuncExposeData = (settings) =>
 			{
@@ -663,7 +663,6 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.FastPatchOperation",
 			Desc = "YaOpt.Setting.Option.FastPatchOperation.Desc",
-			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -680,7 +679,6 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.FastTranslationInjection",
 			Desc = "YaOpt.Setting.Option.FastTranslationInjection.Desc",
-			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -695,7 +693,6 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.RuntimeInfoCache",
 			Desc = "YaOpt.Setting.Option.RuntimeInfoCache.Desc",
-			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -711,7 +708,6 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.FixTextureAtlas",
 			Desc = "YaOpt.Setting.Option.FixTextureAtlas.Desc",
-			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -791,8 +787,7 @@ namespace YaOpt
 			{
 				if ((option.Flags & OptimizationFlags.DontSave) == 0)
 				{
-					var forceSave = ((option.Flags & OptimizationFlags.AlwaysSave) != 0);
-					Scribe_Values.Look(ref option._enabled, option.SettingId, option.Default, forceSave);
+					Scribe_Values.Look(ref option._enabled, option.SettingId, option.Default);
 					if (option.FuncExposeData != null)
 						option.FuncExposeData(this);
 				}
