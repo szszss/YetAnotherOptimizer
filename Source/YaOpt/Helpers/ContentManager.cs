@@ -450,6 +450,16 @@ namespace YaOpt.Helpers
 			return t;
 		}
 
+		public static IEnumerable<T> EnsureAllLoaded<T>(IEnumerable<T> source) where T : class
+		{
+			foreach (var item in source)
+			{
+				if (item is Texture2D tex)
+					MakeSureTextureLoaded(tex);
+				yield return item;
+			}
+		}
+
 		public static void RegisterTextureNotLoaded(int textureId, VirtualFile file)
 		{
 			_texturesNotLoaded[textureId] = file;
@@ -789,8 +799,28 @@ namespace YaOpt.Helpers
 					texture.filterMode = FilterMode.Trilinear;
 					texture.anisoLevel = anisoLevel;
 					texture.mipMapBias = mipmapBias;
-					texture.Apply(true, true);
-					texture = StaticTextureAtlas.FastCompressDXT(texture, true);
+					texture.Apply(true, false);
+					var compressedTex = StaticTextureAtlas.FastCompressDXT(texture);
+					if (compressedTex != texture) // FastCompressDXT don't compress small texture. It just return them.
+					{
+						var hasMipmap = compressedTex.mipmapCount > 1;
+						texture.Reinitialize(compressedTex.width, compressedTex.height,
+							compressedTex.format, hasMipmap);
+						texture.Apply(false, true);
+						for (int i = 0, j = compressedTex.mipmapCount; i < j; i++)
+						{
+							var mipmapWidth = Mathf.Max(1, compressedTex.width >> i);
+							var mipmapHeight = Mathf.Max(1, compressedTex.height >> i);
+							Graphics.CopyTexture(compressedTex, 0, i, 0, 0,
+								mipmapWidth, mipmapHeight, texture, 0, i, 0, 0);
+						}
+
+						global::UnityEngine.Object.DestroyImmediate(compressedTex);
+					}
+					else
+					{
+						texture.Apply(true, true);
+					}
 				}
 			}
 			else

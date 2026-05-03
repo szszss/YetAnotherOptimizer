@@ -7,6 +7,7 @@ namespace YaOpt.Patches.Prepatch
 			if (YaOptGlobal.IsPrepatcherAvailable)
 			{
 				Verse_ContentFinder_Get.Enabled = YaOptGlobal.Settings.OptLazyTextureLoad.Enabled;
+				Verse_ContentFinder_GetAllInFolder.Enabled = YaOptGlobal.Settings.OptLazyTextureLoad.Enabled;
 				Verse_ThingWithComps_GetComp.Enabled = YaOptGlobal.Settings.OptThingGetComp.Enabled;
 			}
 		}
