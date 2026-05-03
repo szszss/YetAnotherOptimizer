@@ -1,4 +1,4 @@
-## 1.0.4
+## 1.0.4  (2026-05-04)
 
 * Fix: System.ArgumentNullException when retrieving IThingHolders from a ThingWithComps whose compsByType is null.
 * Fix: Lazy Loading doesn't work when loading textures in bulk using GetAllInFolder.
