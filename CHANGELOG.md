@@ -1,6 +1,7 @@
 ## 1.0.3
 
 * Fix: CheckCellBasedReachability fails in non-main thread, which could cause roads cannot be generated during map generation.
+* Fix: Crashes when lazy loading textures whose size is not a multiple of 4.
 * Fix: Errors related to ListerThings.
 * Refactor: ListerThingsIndexer create and destroy.
 

@@ -61,6 +61,17 @@ namespace YaOpt.OtherMod.ImageOpt
 							(data[i], data[i + 2]) = (data[i + 2], data[i]);
 						}
 					}
+					if (ddsHeader.PixelFormat.IsCompressed && (ddsHeader.Width % 4 != 0 || ddsHeader.Height % 4 != 0))
+					{
+						YaOptMod.Warning($"The size of texture {originalFile.Name}" +
+						                 $"({ddsHeader.Width}x{ddsHeader.Height}) " +
+						                 "is not multiple of 4. The texture could be glitch. " +
+						                 $"(Full path: {originalFile.FullPath})");
+						if (ddsHeader.Width % 4 != 0)
+							ddsHeader.Width += 4 - (ddsHeader.Width % 4);
+						if (ddsHeader.Height % 4 != 0)
+							ddsHeader.Height += 4 - (ddsHeader.Height % 4);
+					}
 					fixed (void* ptr = data)
 					{
 						ContentManager.UploadTextureDdsData(texture, ddsHeader, new IntPtr(ptr), data.Length, skipLevels);

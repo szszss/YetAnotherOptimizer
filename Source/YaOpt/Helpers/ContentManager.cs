@@ -1,4 +1,5 @@
 using HarmonyLib;
+using LudeonTK;
 using RimWorld.IO;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using LudeonTK;
 using UnityEngine;
 using Verse;
 
@@ -581,6 +581,10 @@ namespace YaOpt.Helpers
 			if (ddsHeader.Width < MAX_ATLAS_SIZE && ddsHeader.Height < MAX_ATLAS_SIZE)
 				return false;
 
+			// Don't downsample the texture which the size is not multiple of 4
+			if (ddsHeader.Width % 4 != 0 || ddsHeader.Height % 4 != 0)
+				return false;
+
 			int w = (int)ddsHeader.Width;
 			int h = (int)ddsHeader.Height;
 			int maxSkip = (int)ddsHeader.MipMapCount - 1;
@@ -686,6 +690,17 @@ namespace YaOpt.Helpers
 					{
 						(data[i], data[i + 2]) = (data[i + 2], data[i]);
 					}
+				}
+				if (ddsHeader.PixelFormat.IsCompressed && (ddsHeader.Width % 4 != 0 || ddsHeader.Height % 4 != 0))
+				{
+					YaOptMod.Warning($"The size of texture {file.Name}" +
+					                 $"({ddsHeader.Width}x{ddsHeader.Height}) " +
+					                 "is not multiple of 4. The texture could be glitch. " +
+					                 $"(Full path: {file.FullPath})");
+					if (ddsHeader.Width % 4 != 0)
+						ddsHeader.Width += 4 - (ddsHeader.Width % 4);
+					if (ddsHeader.Height % 4 != 0)
+						ddsHeader.Height += 4 - (ddsHeader.Height % 4);
 				}
 
 				var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
