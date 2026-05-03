@@ -10,6 +10,7 @@ namespace YaOpt.Settings
 		RequirePrepatcher       = 0b0000_0010,
 		RequireBurst            = 0b0001_0000,
 
+		AlwaysSave            = 0b0000_1000_0000_0000,
 		NoSnapshot            = 0b0001_0000_0000_0000,
 		IgnoreEnableAll       = 0b0010_0000_0000_0000,
 		IgnoreDisableAll      = 0b0100_0000_0000_0000,

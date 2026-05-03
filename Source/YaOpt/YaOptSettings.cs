@@ -561,9 +561,9 @@ namespace YaOpt
 		/// </summary>
 		/// <seealso cref="Patches.Verse_ListerThings_Add"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Clear"/>
+		/// <seealso cref="Patches.Verse_ListerThings_Constructor"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Contains"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Remove"/>
-		/// <seealso cref="Patches.Verse_Map_ConstructComponents"/>
 		/// <seealso cref="Patches.Verse_ThingDef_HasAssignableCompFrom"/>
 		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
 		public OptimizationOption OptFastListerRemove { get; } = new OptimizationOption
@@ -631,7 +631,7 @@ namespace YaOpt
 			NoteCompatibility = "YaOpt.Setting.Option.LazyTextureLoad.Compatibility",
 			NotePrepatch = "YaOpt.Setting.Option.LazyTextureLoad.Prepatch",
 			Category = OptimizationCategory.Misc,
-			Flags = OptimizationFlags.RequirePrepatcher,
+			Flags = OptimizationFlags.RequirePrepatcher | OptimizationFlags.AlwaysSave,
 			FuncPostDraw = SettingsPanel.LazyTextureLoadPostDraw,
 			FuncExposeData = (settings) =>
 			{
@@ -663,6 +663,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.FastPatchOperation",
 			Desc = "YaOpt.Setting.Option.FastPatchOperation.Desc",
+			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -679,6 +680,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.FastTranslationInjection",
 			Desc = "YaOpt.Setting.Option.FastTranslationInjection.Desc",
+			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -693,6 +695,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.RuntimeInfoCache",
 			Desc = "YaOpt.Setting.Option.RuntimeInfoCache.Desc",
+			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -708,6 +711,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.FixTextureAtlas",
 			Desc = "YaOpt.Setting.Option.FixTextureAtlas.Desc",
+			Flags = OptimizationFlags.AlwaysSave,
 			Category = OptimizationCategory.Misc
 		};
 
@@ -787,7 +791,8 @@ namespace YaOpt
 			{
 				if ((option.Flags & OptimizationFlags.DontSave) == 0)
 				{
-					Scribe_Values.Look(ref option._enabled, option.SettingId, option.Default);
+					var forceSave = ((option.Flags & OptimizationFlags.AlwaysSave) != 0);
+					Scribe_Values.Look(ref option._enabled, option.SettingId, option.Default, forceSave);
 					if (option.FuncExposeData != null)
 						option.FuncExposeData(this);
 				}
