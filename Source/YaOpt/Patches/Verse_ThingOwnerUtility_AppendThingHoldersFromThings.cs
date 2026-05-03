@@ -34,12 +34,7 @@ namespace YaOpt.Patches
 				}
 				if (isThingWithComps && thing is ThingWithComps thingWithComps)
 				{
-					var allComps = GetCompHelper.GetThingHolderComps(thingWithComps);
-					for (var index = 0; index < allComps.Length; index++)
-					{
-						var t = allComps[index];
-						outThingsHolders.Add((IThingHolder)t);
-					}
+					GetCompHelper.RetrieveThingHolderComps(thingWithComps, outThingsHolders);
 				}
 				i++;
 			}

@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Fix: System.ArgumentNullException when retrieving IThingHolders from a ThingWithComps whose compsByType is null.
+
 ## 1.0.3  (2026-05-03)
 
 * Fix: CheckCellBasedReachability fails in non-main thread, which could cause roads cannot be generated during map generation.

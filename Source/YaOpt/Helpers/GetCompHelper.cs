@@ -184,16 +184,22 @@ namespace YaOpt.Helpers
 		}
 
 		[SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
-		public static ThingComp[] GetThingHolderComps(ThingWithComps thing)
+		public static void RetrieveThingHolderComps(ThingWithComps thing, List<IThingHolder> outThingsHolders)
 		{
 			var list = thing.AllComps;
 			if (list.Count == 0)
-				return Array.Empty<ThingComp>();
+				return;
 			var listVersion = _listVersionFieldRef(list);
 			if (listVersion == VERSION_MAGICNUMBER_NO_THINGHOLDER)
-				return Array.Empty<ThingComp>();
+				return;
 
 			var compsByType = _thingCompsByTypeFieldRef(thing);
+			if (compsByType == null)
+			{
+				RetrieveThingHolderCompsBySlowPath(list, outThingsHolders);
+				return;
+			}
+
 			if (listVersion != VERSION_MAGICNUMBER_HAS_THINGHOLDER)
 			{
 				lock (compsByType)
@@ -209,8 +215,24 @@ namespace YaOpt.Helpers
 				}
 			}
 			if (compsByType.TryGetValue(typeof(IThingHolder), out var result))
-				return result;
-			return Array.Empty<ThingComp>();
+			{
+				for (var i = 0; i < result.Length; i++)
+				{
+					outThingsHolders.Add((IThingHolder)result[i]);
+				}
+			}
+		}
+
+		private static void RetrieveThingHolderCompsBySlowPath(
+			List<ThingComp> allComps, List<IThingHolder> outThingsHolders)
+		{
+			for (var i = 0; i < allComps.Count; i++)
+			{
+				if (allComps[i] is IThingHolder thingHolder)
+				{
+					outThingsHolders.Add(thingHolder);
+				}
+			}
 		}
 	}
 }
