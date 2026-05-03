@@ -1,4 +1,4 @@
-## 1.0.3
+## 1.0.3  (2026-05-03)
 
 * Fix: CheckCellBasedReachability fails in non-main thread, which could cause roads cannot be generated during map generation.
 * Fix: Crashes when lazy loading textures whose size is not a multiple of 4.
