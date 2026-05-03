@@ -18,7 +18,7 @@ namespace YaOpt.Patches.Compatibility.AdaptiveStorageFramework
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptFastListerRemove.Enabled &&
-			       YaOptGlobal.HasMod("adaptive.storage.framework");
+				   YaOptGlobal.HasMod("adaptive.storage.framework");
 		}
 
 		static bool Prefix(Thing item, Map map)

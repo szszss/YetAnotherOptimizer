@@ -694,9 +694,9 @@ namespace YaOpt.Helpers
 				if (ddsHeader.PixelFormat.IsCompressed && (ddsHeader.Width % 4 != 0 || ddsHeader.Height % 4 != 0))
 				{
 					YaOptMod.Warning($"The size of texture {file.Name}" +
-					                 $"({ddsHeader.Width}x{ddsHeader.Height}) " +
-					                 "is not multiple of 4. The texture could be glitch. " +
-					                 $"(Full path: {file.FullPath})");
+									 $"({ddsHeader.Width}x{ddsHeader.Height}) " +
+									 "is not multiple of 4. The texture could be glitch. " +
+									 $"(Full path: {file.FullPath})");
 					if (ddsHeader.Width % 4 != 0)
 						ddsHeader.Width += 4 - (ddsHeader.Width % 4);
 					if (ddsHeader.Height % 4 != 0)

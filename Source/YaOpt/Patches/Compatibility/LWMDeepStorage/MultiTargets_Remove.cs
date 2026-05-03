@@ -23,7 +23,7 @@ namespace YaOpt.Patches.Compatibility.LWMDeepStorage
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptFastListerRemove.Enabled &&
-			       YaOptGlobal.HasMod("lwm.deepstorage");
+				   YaOptGlobal.HasMod("lwm.deepstorage");
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
