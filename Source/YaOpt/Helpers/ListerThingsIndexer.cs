@@ -42,30 +42,14 @@ namespace YaOpt.Helpers
 		public static void Create(ListerThings lister)
 		{
 			if (lister.use != ListerThingsUse.Global)
-			{
-				YaOptMod.Error("Attempting to create indexer for a region ListerThings.");
 				return;
-			}
-			if (_indexers.ContainsKey(lister))
-			{
-				YaOptMod.Error("Attempting to create indexer multiple times for a ListerThings.");
-				return;
-			}
 			_indexers[lister] = new ListerThingsIndexer();
 		}
 
 		public static void Destroy(ListerThings lister)
 		{
 			if (lister.use != ListerThingsUse.Global)
-			{
-				YaOptMod.Error("Attempting to remove indexer for a region ListerThings.");
 				return;
-			}
-			if (!_indexers.ContainsKey(lister))
-			{
-				YaOptMod.Error("Attempting to remove indexer multiple times for a ListerThings.");
-				return;
-			}
 			_indexers.Remove(lister);
 		}
 
@@ -79,16 +63,6 @@ namespace YaOpt.Helpers
 				return _dummyListerThingsIndex;
 			}
 			return indexer;
-		}
-
-		public static void TryClear(ListerThings lister)
-		{
-			if (lister.use != ListerThingsUse.Global)
-				return;
-			if (_indexers.TryGetValue(lister, out var indexer))
-			{
-				indexer.Clear();
-			}
 		}
 
 		public ThingRecord Add(Thing thing, ListerThingsUse use)

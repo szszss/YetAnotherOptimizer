@@ -1,6 +1,8 @@
 ## 1.0.3
 
 * Fix: CheckCellBasedReachability fails in non-main thread, which could cause roads cannot be generated during map generation.
+* Fix: Errors related to ListerThings.
+* Refactor: ListerThingsIndexer create and destroy.
 
 ## 1.0.2  (2026-05-03)
 

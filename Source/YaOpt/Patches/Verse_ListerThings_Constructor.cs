@@ -1,3 +1,4 @@
+using System;
 using HarmonyLib;
 using Verse;
 using YaOpt.Helpers;
@@ -8,17 +9,18 @@ namespace YaOpt.Patches
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptFastListerRemove"/>
 	[HarmonyPatch(typeof(ListerThings))]
-	[HarmonyPatch(nameof(ListerThings.Clear))]
-	internal static class Verse_ListerThings_Clear
+	[HarmonyPatch(MethodType.Constructor)]
+	[HarmonyPatch(new [] { typeof(ListerThingsUse), typeof(ThingListChangedCallbacks) })]
+	internal static class Verse_ListerThings_Constructor
 	{
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptFastListerRemove.Enabled;
 		}
 
-		static void Prefix(ListerThings __instance)
+		static void Postfix(ListerThings __instance)
 		{
-			ListerThingsIndexer.Destroy(__instance);
+			ListerThingsIndexer.Create(__instance);
 		}
 	}
 }
