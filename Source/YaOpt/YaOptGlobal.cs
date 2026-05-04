@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Verse;
 using YaOpt.Helpers;
-using YaOpt.Helpers.Trampolines;
 using YaOpt.Settings;
 
 namespace YaOpt
@@ -47,15 +46,6 @@ namespace YaOpt
 		/// Gets a value indicating whether all required libraries have been loaded.
 		/// </summary>
 		public static bool IsLibraryLoaded { get; internal set; }
-
-		/// <summary>
-		/// Gets a value indicating whether trampoline patching is available on the current platform.
-		/// </summary>
-		/// <remarks>
-		/// Trampolines are used to patch generic methods that Harmony cannot handle directly.
-		/// </remarks>
-		/// <seealso cref="TrampolineFactory.IsAvailable"/>
-		public static bool IsTrampolineAvailable => TrampolineFactory.IsAvailable;
 
 		/// <summary>
 		/// Gets a value indicating whether parallel material property update is enabled.
