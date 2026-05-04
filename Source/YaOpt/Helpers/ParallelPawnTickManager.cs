@@ -34,9 +34,9 @@ namespace YaOpt.Helpers
 		}
 
 #if DEBUG
-		private static Stopwatch _stopwatch;
+		private static System.Diagnostics.Stopwatch _stopwatch;
 
-		private static ConcurrentQueue<string> _debugOutputs;
+		private static System.Collections.Concurrent.ConcurrentQueue<string> _debugOutputs;
 
 		private static bool _debugLog = false;
 
@@ -94,9 +94,9 @@ namespace YaOpt.Helpers
 #if DEBUG
 			if (_debugLog)
 			{
-				_stopwatch = new Stopwatch();
+				_stopwatch = new System.Diagnostics.Stopwatch();
 				_stopwatch.Start();
-				_debugOutputs = new ConcurrentQueue<string>();
+				_debugOutputs = new System.Collections.Concurrent.ConcurrentQueue<string>();
 				_debugOutputs.Enqueue("Begin ParellellyTickPawns");
 			}
 #endif
@@ -230,7 +230,7 @@ namespace YaOpt.Helpers
 				if (_debugLog)
 				{
 					var current = _stopwatch.GetElapsedMicrosecondLong();
-					var str = $"Thread {Thread.CurrentThread.ManagedThreadId} " +
+					var str = $"Thread {System.Threading.Thread.CurrentThread.ManagedThreadId} " +
 							  $"finished {pawn} (Job {index + _debugJobIndexOffset}) at " +
 							  $"{current} μs. Cost: {current - time}μs.";
 					_debugOutputs.Enqueue(str);
