@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Fix: Thread-safe for LovePartnerRelationUtility, Pawn_RelationsTracker and ThoughtHandler.
+
 ## 1.0.5  (2026-05-04)
 
 * Fix: Thread-safe for SpouseRelationUtility and TraitSet.

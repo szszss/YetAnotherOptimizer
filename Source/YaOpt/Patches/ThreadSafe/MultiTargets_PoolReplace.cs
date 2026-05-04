@@ -1,4 +1,5 @@
 using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -18,6 +19,21 @@ namespace YaOpt.Patches.ThreadSafe
 			yield return AccessTools.Method(typeof(ToilMaker), nameof(ToilMaker.MakeToil));
 			yield return AccessTools.Method(typeof(ToilMaker), nameof(ToilMaker.ReturnToPool));
 			yield return AccessTools.Method(typeof(GenClosest), nameof(GenClosest.RegionwiseBFSWorker));
+			foreach (var method in GetPawnRelationsTracker())
+				yield return method;
+		}
+
+		private static IEnumerable<MethodBase> GetPawnRelationsTracker()
+		{
+			var type = typeof(Pawn_RelationsTracker);
+			foreach (var nested in type.GetNestedTypes(BindingFlags.NonPublic))
+			{
+				if (nested.GetField("<>1__state", BindingFlags.NonPublic | BindingFlags.Instance) == null)
+					continue;
+				var moveNext = nested.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+				if (moveNext != null)
+					yield return moveNext;
+			}
 		}
 
 		static bool Prepare()

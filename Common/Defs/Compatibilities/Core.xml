@@ -136,6 +136,12 @@
 				<replace>tmpTrashableBuildingCandidates</replace>
 			</ThreadLocalPatch>
 			
+			<!-- LovePartnerRelationUtility -->
+			<ThreadLocalPatch>
+				<method>RimWorld.LovePartnerRelationUtility:ExistingLovePartners</method>
+				<replace>tmpExistingLovePartners</replace>
+			</ThreadLocalPatch>
+			
 			<!-- SpouseRelationUtility -->
 			<ThreadLocalPatch>
 				<method>RimWorld.SpouseRelationUtility:GetSpouses</method>
@@ -154,6 +160,17 @@
 				<replace>tmpStack</replace>
 			</ThreadLocalPatch>
 			<!-- Didn't patch RemoveSpousesAsForbiddenByIdeo since it doesn't look like running in non-main thread -->
+			
+			<!-- ThoughtHandler -->
+			<!-- No need to handle tmpThoughts and tmpTotalMoodOffsetThoughts; they are only used in the main thread. -->
+			<ThreadLocalPatch>
+				<method>RimWorld.ThoughtHandler:OpinionOffsetOfGroup</method>
+				<replace>tmpSocialThoughts</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.ThoughtHandler:TotalOpinionOffset</method>
+				<replace>tmpTotalOpinionOffsetThoughts</replace>
+			</ThreadLocalPatch>
 			
 			<!-- TraitSet -->
 			<ThreadLocalPatch>
@@ -270,6 +287,11 @@
 					<li>Verse.Pawn</li>
 				</parameters>
 				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			
+			<!-- Pawn_RelationsTracker -->
+			<LockPatch>
+				<method>RimWorld.Pawn_RelationsTracker:get_FamilyByBlood</method>
 			</LockPatch>
 			
 			<!-- CastPositionFinder -->
