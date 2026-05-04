@@ -1,4 +1,4 @@
-## 1.0.6
+## 1.0.6  (2026-05-04)
 
 * Fix: Thread-safe for LovePartnerRelationUtility, Pawn_RelationsTracker and ThoughtHandler.
 * Fix: When ParallelThoughtUpdater encounters an error, it clears the work cache before the worker threads stop, that may cause more errors to occur.
