@@ -135,6 +135,31 @@
 				<method>RimWorld.JobGiver_AITrashBuildingsDistant:TryGiveJob</method>
 				<replace>tmpTrashableBuildingCandidates</replace>
 			</ThreadLocalPatch>
+			
+			<!-- SpouseRelationUtility -->
+			<ThreadLocalPatch>
+				<method>RimWorld.SpouseRelationUtility:GetSpouses</method>
+				<replace>tmpSpouses</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.SpouseRelationUtility:GetLoveRelations</method>
+				<replace>tmpLoveRelations</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.SpouseRelationUtility:GetLoveCluster</method>
+				<replace>tmpLoveClusterPawns</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.SpouseRelationUtility:GetLoveCluster</method>
+				<replace>tmpStack</replace>
+			</ThreadLocalPatch>
+			<!-- Didn't patch RemoveSpousesAsForbiddenByIdeo since it doesn't look like running in non-main thread -->
+			
+			<!-- TraitSet -->
+			<ThreadLocalPatch>
+				<method>RimWorld.TraitSet:get_TraitsSorted</method>
+				<replace>tmpTraits</replace>
+			</ThreadLocalPatch>
 		</threadLocalPatches>
 		
 		<lockPatches>

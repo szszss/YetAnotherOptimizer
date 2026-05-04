@@ -1,3 +1,7 @@
+## 1.0.5  (2026-05-04)
+
+* Fix: Thread-safe for SpouseRelationUtility and TraitSet.
+
 ## 1.0.4  (2026-05-04)
 
 * Fix: System.ArgumentNullException when retrieving IThingHolders from a ThingWithComps whose compsByType is null.
