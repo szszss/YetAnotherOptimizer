@@ -31,6 +31,7 @@ namespace YaOpt.Helpers
 
 		public static void Update(SituationalThoughtHandler thoughtHandler, List<Thought_Situational> cachedThoughts)
 		{
+			JobHandle handleCreating = default;
 			try
 			{
 				YaOptGlobal.IsParallelRunningInTick = true;
@@ -45,8 +46,8 @@ namespace YaOpt.Helpers
 				var batchSize = ParallelThoughtUpdaterManualBatch
 					? ParallelThoughtUpdaterBatchSize
 					: UnityData.GetIdealBatchCount(situationalNonSocialThoughtDefs.Count);
-				var handleCreating = new YaOptManagedJobs.JobFor(
-						new ParallelThoughtCreatingJob(thoughtHandler,situationalNonSocialThoughtDefs))
+				handleCreating = new YaOptManagedJobs.JobFor(
+						new ParallelThoughtCreatingJob(thoughtHandler, situationalNonSocialThoughtDefs))
 					.ScheduleParallel(situationalNonSocialThoughtDefs.Count, batchSize);
 
 				JobHandle.ScheduleBatchedJobs();
@@ -69,11 +70,21 @@ namespace YaOpt.Helpers
 				}
 
 				handleCreating.Complete();
+				handleCreating = default;
 
 				while (_thoughtsToAdd.TryDequeue(out var thought))
 				{
 					cachedThoughts.Add(thought);
 				}
+			}
+			catch
+			{
+				// If there are exceptions, try stop jobs firstly.
+				if (!handleCreating.IsCompleted)
+				{
+					handleCreating.Complete();
+				}
+				throw; // No exceptions handling here, just re-throw them.
 			}
 			finally
 			{
