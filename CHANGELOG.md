@@ -1,3 +1,8 @@
+## 1.0.7
+
+* Fix: TryFindRandomReachableNearbyCell fails if any multithreading options are enabled.
+* Fix: Thread-safe for ListerBuildings.
+
 ## 1.0.6  (2026-05-04)
 
 * Fix: Thread-safe for LovePartnerRelationUtility, Pawn_RelationsTracker and ThoughtHandler.
