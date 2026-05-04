@@ -22,18 +22,18 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			foreach (var nestedType in typeof(CellFinder).GetNestedTypes(
 						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
-				var method = AccessTools.FirstMethod(nestedType, methodInfo =>
+				foreach (var method in nestedType.GetMethods(
+					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
 				{
-					var param = methodInfo.GetParameters();
-					return param?.Length == 1 && param[0].ParameterType == typeof(Region) &&
-						   methodInfo.ReturnType == typeof(bool) &&
-						   (methodInfo.Name.Contains("<RandomRegionNear>") ||
-							methodInfo.Name.Contains("<TryFindRandomReachableNearbyCell>"));
-				});
-				if (method != null)
-				{
-					YaOptMod.Debug($"MultiTargets_CellFinder found a method from CellFinder: {method.FullName()}");
-					yield return method;
+					var param = method.GetParameters();
+					if (param?.Length == 1 && param[0].ParameterType == typeof(Region) &&
+						method.ReturnType == typeof(bool) &&
+						(method.Name.Contains("<RandomRegionNear>") ||
+						 method.Name.Contains("<TryFindRandomReachableNearbyCell>")))
+					{
+						YaOptMod.Debug($"MultiTargets_CellFinder found a method from CellFinder: {method.FullName()}");
+						yield return method;
+					}
 				}
 			}
 		}
