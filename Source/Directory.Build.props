@@ -2,6 +2,6 @@
   <Import Project="Settings.props" />
   <Import Project="UserSettings.props" Condition="exists('UserSettings.props')" />
   <PropertyGroup>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
   </PropertyGroup>
 </Project>
