@@ -29,35 +29,29 @@ namespace YaOpt.Patches
 			var skipNextConcat = false;
 			foreach (var instruction in instructions)
 			{
-				if (instruction.opcode == OpCodes.Ldstr && instruction.operand is string str && str == "_north")
+				if (instruction.opcode == OpCodes.Ldstr && instruction.operand is string str)
 				{
-					if (str == "_north")
+					switch (str)
 					{
-						variant = TextureCache.VARIANT_NORTH;
-						skipNextConcat = true;
-						continue;
-					}
-					if (str == "_east")
-					{
-						variant = TextureCache.VARIANT_EAST;
-						skipNextConcat = true;
-						continue;
-					}
-					if (str == "_south")
-					{
-						variant = TextureCache.VARIANT_SOUTH;
-						skipNextConcat = true;
-						continue;
-					}
-					if (str == "_west")
-					{
-						variant = TextureCache.VARIANT_WEST;
-						skipNextConcat = true;
-						continue;
-					}
-					if (str == "m")
-					{
-						type = TextureCache.TYPE_MASK;
+						case "_north":
+							variant = TextureCache.VARIANT_NORTH;
+							skipNextConcat = true;
+							continue;
+						case "_east":
+							variant = TextureCache.VARIANT_EAST;
+							skipNextConcat = true;
+							continue;
+						case "_south":
+							variant = TextureCache.VARIANT_SOUTH;
+							skipNextConcat = true;
+							continue;
+						case "_west":
+							variant = TextureCache.VARIANT_WEST;
+							skipNextConcat = true;
+							continue;
+						case "m":
+							type = TextureCache.TYPE_MASK;
+							break;
 					}
 				}
 				if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo)

@@ -86,7 +86,6 @@ namespace YaOpt.Helpers
 		public static Texture2D Get(string pathWithoutAnyPostfix, int type, int variant)
 		{
 			CacheEntry entry;
-			var postfix = string.Empty;
 			if (lastUsedPath == pathWithoutAnyPostfix && lastUsedType == type)
 			{
 				entry = lastUsedCacheEntry;
@@ -108,7 +107,6 @@ namespace YaOpt.Helpers
 							entry = new CacheEntry();
 							texMaskCache[pathWithoutAnyPostfix] = entry;
 						}
-						postfix = "m";
 						break;
 					default:
 						throw new ArgumentOutOfRangeException(nameof(type));
@@ -117,6 +115,7 @@ namespace YaOpt.Helpers
 				lastUsedPath = pathWithoutAnyPostfix;
 				lastUsedType = type;
 			}
+			var postfix = type == TYPE_MASK ? "m" : string.Empty;
 
 			if (entry.IsNull(variant))
 				return null;

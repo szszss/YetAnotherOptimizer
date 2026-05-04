@@ -1,3 +1,7 @@
+## 1.0.8  (2026-05-05)
+
+* Fix: Graphic Texture Caching may fail to load north-facing textures.
+
 ## 1.0.7  (2026-05-05)
 
 * Fix: TryFindRandomReachableNearbyCell fails if any multithreading options are enabled.
