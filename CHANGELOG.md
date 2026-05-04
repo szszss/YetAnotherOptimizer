@@ -1,4 +1,4 @@
-## 1.0.7
+## 1.0.7  (2026-05-05)
 
 * Fix: TryFindRandomReachableNearbyCell fails if any multithreading options are enabled.
 * Fix: Thread-safe for ListerBuildings.
