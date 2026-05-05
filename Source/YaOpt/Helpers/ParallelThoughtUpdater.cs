@@ -1,6 +1,7 @@
 using HarmonyLib;
 using LudeonTK;
 using RimWorld;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.Jobs;
@@ -21,6 +22,9 @@ namespace YaOpt.Helpers
 		private static readonly ConcurrentQueue<Thought_Situational> _thoughtsToAdd =
 			new ConcurrentQueue<Thought_Situational>();
 
+		private static readonly ConcurrentBag<Exception> _exceptionInWorkers =
+			new ConcurrentBag<Exception>();
+
 		private delegate Thought_Situational TryCreateThoughtDelegate(
 			SituationalThoughtHandler instance, ThoughtDef def);
 
@@ -40,6 +44,12 @@ namespace YaOpt.Helpers
 				foreach (var thought in cachedThoughts)
 				{
 					_createdThoughtDefs.Add(thought.def);
+				}
+
+				foreach (var map in Find.Maps)
+				{
+					// Ensure factions lists init in main thread.
+					map.mapPawns.SpawnedPawnsInFaction(null);
 				}
 
 				var situationalNonSocialThoughtDefs = ThoughtUtility.situationalNonSocialThoughtDefs;
@@ -91,6 +101,11 @@ namespace YaOpt.Helpers
 				YaOptGlobal.IsParallelRunningInTick = false;
 				_createdThoughtDefs.Clear();
 				_thoughtsToAdd.Clear();
+
+				while (_exceptionInWorkers.TryTake(out var ex))
+				{
+					Log.Error(ex.ToString());
+				}
 			}
 		}
 
@@ -110,14 +125,21 @@ namespace YaOpt.Helpers
 
 			public void Execute(int index)
 			{
-				var thoughtDef = _situationalNonSocialThoughtDefs[index];
-				if (!_createdThoughtDefs.Contains(thoughtDef))
+				try
 				{
-					var thought = _tryCreateThought(_thoughtHandler, thoughtDef);
-					if (thought != null)
+					var thoughtDef = _situationalNonSocialThoughtDefs[index];
+					if (!_createdThoughtDefs.Contains(thoughtDef))
 					{
-						_thoughtsToAdd.Enqueue(thought);
+						var thought = _tryCreateThought(_thoughtHandler, thoughtDef);
+						if (thought != null)
+						{
+							_thoughtsToAdd.Enqueue(thought);
+						}
 					}
+				}
+				catch (Exception ex)
+				{
+					_exceptionInWorkers.Add(ex);
 				}
 			}
 		}
