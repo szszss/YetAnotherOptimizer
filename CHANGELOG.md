@@ -1,6 +1,7 @@
-## 1.0.10
+## 1.0.10  (2026-05-05)
 
 * Fix: Errors related to DynamicDrawManager.DrawDynamicThings in Early Render Preparation and Plant Sway Optimization.
+* Refactor: Simplify the modifications made to TickList by Parallel Pawn Tick, providing better compatibility.
 
 ## 1.0.9  (2026-05-05)
 

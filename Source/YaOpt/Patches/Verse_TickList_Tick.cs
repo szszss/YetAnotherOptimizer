@@ -1,7 +1,6 @@
-using HarmonyLib;
 using System;
+using HarmonyLib;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection.Emit;
 using Verse;
 using YaOpt.Helpers;
@@ -9,7 +8,7 @@ using YaOpt.Helpers;
 namespace YaOpt.Patches
 {
 	/// <summary>
-	/// Executes parallel pawn tick prediction and processes pawns from dedicated bucket.
+	/// Executes parallel pawn tick prediction.
 	/// Also includes optimizations for thing removal.
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptParallelPawnTick"/>
@@ -28,6 +27,8 @@ namespace YaOpt.Patches
 		{
 			var ppt = YaOptGlobal.Settings.OptParallelPawnTick.Enabled;
 			var tr = YaOptGlobal.Settings.OptFastListerRemove.Enabled;
+
+			var parellellyTickInserted = false;
 
 			if (ppt)
 			{
@@ -52,9 +53,7 @@ namespace YaOpt.Patches
 				yield return new CodeInstruction(OpCodes.Nop).WithLabels(label);
 			}
 
-			var list = instructions.ToList();
-			list.RemoveLast(); // remove Ret
-			foreach (var instruction in list)
+			foreach (var instruction in instructions)
 			{
 				// Replace list.Remove with MiscHelper.ReverseRemove
 				if (tr && instruction.Calls("Remove"))
@@ -64,63 +63,29 @@ namespace YaOpt.Patches
 						nameof(MiscHelper.ReverseRemove), null, new[] { typeof(Thing) });
 					continue;
 				}
+				// Call ParallelTickerManager.ParellellyTickPawns() if this is a normal TickList
+				if (ppt && instruction.LoadsField("fastEcology", true))
+				{
+					parellellyTickInserted = true;
+					var label = generator.DefineLabel();
+					// if (tickType == TickerType.Normal) {
+					yield return CodeInstruction.LoadArgument(0);
+					yield return CodeInstruction.LoadField(typeof(TickList), "tickType");
+					yield return new CodeInstruction(OpCodes.Ldc_I4_1); // TickerType.Normal
+					yield return new CodeInstruction(OpCodes.Bne_Un_S, label);
+					//   ParallelPawnTickManager.ParellellyTickPawns();
+					yield return CodeInstruction.Call(
+						typeof(ParallelPawnTickManager), nameof(ParallelPawnTickManager.ParellellyTickPawns));
+					// }
+					yield return new CodeInstruction(OpCodes.Nop).WithLabels(label);
+				}
 				yield return instruction;
 			}
 
-			if (ppt)
+			if (ppt && !parellellyTickInserted)
 			{
-				// Tick all pawns
-				var label = generator.DefineLabel();
-				// if (tickType == TickerType.Normal) {
-				yield return CodeInstruction.LoadArgument(0);
-				yield return CodeInstruction.LoadField(typeof(TickList), "tickType");
-				yield return new CodeInstruction(OpCodes.Ldc_I4_1); // TickerType.Normal
-				yield return new CodeInstruction(OpCodes.Bne_Un_S, label);
-				//   TickPawns(thingLists);
-				yield return CodeInstruction.LoadArgument(0);
-				yield return CodeInstruction.LoadField(typeof(TickList), "thingLists");
-				yield return CodeInstruction.Call(
-					typeof(Verse_TickList_Tick), nameof(TickPawns));
-				// }
-				yield return new CodeInstruction(OpCodes.Nop).WithLabels(label);
-			}
-
-			yield return new CodeInstruction(OpCodes.Ret);
-		}
-
-		private static void TickPawns(List<List<Thing>> thingLists)
-		{
-			if (thingLists.Count > 1)
-			{
-				ParallelPawnTickManager.ParellellyTickPawns();
-				foreach (var thing in thingLists[1])
-				{
-					if (thing.Destroyed)
-						continue;
-					try
-					{
-						thing.DoTick();
-					}
-					catch (Exception ex)
-					{
-						string text = (thing.Spawned ? $" (at {thing.Position})" : "");
-						if (Prefs.DevMode)
-						{
-							Log.Error($"Exception ticking {thing.ToStringSafe()}{text}: {ex}");
-						}
-						else
-						{
-							Log.ErrorOnce(
-								$"Exception ticking {thing.ToStringSafe()}{text}. " +
-								$"Suppressing further errors. Exception: {ex}", thing.thingIDNumber ^ 576876901);
-						}
-					}
-				}
-			}
-			else
-			{
-				Log.ErrorOnce("Can't find pawn list from TickList. " +
-							  "Pawns won't be ticked.", typeof(Verse_TickList_Tick).GetHashCode());
+				throw new Exception("Unable to find the insertion point for " +
+				                    "ParallelPawnTickManager.ParellellyTickPawns in TickList.Tick");
 			}
 		}
 	}

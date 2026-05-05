@@ -1,6 +1,8 @@
 using LudeonTK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 using Unity.Jobs;
 using UnityEngine;
 using Verse;
@@ -22,10 +24,12 @@ namespace YaOpt.Helpers
 
 		public static List<int> PawnsWhoShouldSkipMoodUpdate { get; private set; } = new List<int>();
 
-		/// <summary>
-		/// Current game tick, cached to avoid race conditions during parallel processing.
-		/// </summary>
-		private static int _gameTick;
+		private static int _gameTick = -1;
+
+		// For debug. Used to track possible multiple calls to ParellellyTickPawns in one tick.
+		private static StackTrace _firstCallerStackTrace;
+
+		private static bool _alreadyPrintMultipleCallsError;
 
 		static ParallelPawnTickManager()
 		{
@@ -101,6 +105,20 @@ namespace YaOpt.Helpers
 			}
 #endif
 
+			if (_firstCallerStackTrace == null)
+				_firstCallerStackTrace = new StackTrace(true);
+
+			var currentTick = GenTicks.TicksGame;
+			if (currentTick == _gameTick)
+			{
+				if (!_alreadyPrintMultipleCallsError)
+				{
+					PrintMultipleCallsError(new StackTrace(true));
+				}
+				return;
+			}
+			_gameTick = currentTick;
+
 			foreach (var map in Find.Maps)
 			{
 				// Rebuilding any dirty region.
@@ -124,7 +142,6 @@ namespace YaOpt.Helpers
 #endif
 			}
 
-			_gameTick = GenTicks.TicksGame;
 			var batchSize = Math.Clamp(Mathf.FloorToInt(_parellellyTickPawnsBatchSize), 1, 16);
 			var predictJobFailure = YaOptGlobal.Settings.ParallelPawnJobFailurePrediction;
 			var predictConstantJob = YaOptGlobal.Settings.ParallelPawnConstantJobPrediction;
@@ -183,6 +200,25 @@ namespace YaOpt.Helpers
 			_nonhumanPawns.Clear();
 			PawnsWhoShouldSkipMoodUpdate.Clear();
 			JobPredictor.CleanCache();
+			_gameTick = -1;
+		}
+
+		private static void PrintMultipleCallsError(StackTrace secondStackTrace)
+		{
+			_alreadyPrintMultipleCallsError = true;
+			
+			var sb = new StringBuilder("A mod attempts to call NormalTickList.Tick multiple times within a single tick, " +
+			                           "it may cause Parallel Pawn Tick to malfunction.").AppendLine();
+			if (_firstCallerStackTrace == null)
+				sb.AppendLine("Cannot find the first callstacks");
+			else
+			{
+				sb.AppendLine("First time call stacks:");
+				sb.AppendLine(_firstCallerStackTrace.ToString());
+			}
+			sb.AppendLine("Second time call stacks:");
+			sb.AppendLine(secondStackTrace.ToString());
+			YaOptMod.Error(sb.ToString());
 		}
 
 		/// <summary>
