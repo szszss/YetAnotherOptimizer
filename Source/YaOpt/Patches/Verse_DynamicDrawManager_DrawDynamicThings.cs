@@ -12,17 +12,9 @@ namespace YaOpt.Patches
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
 	/// <seealso cref="YaOptSettings.OptWindUpdate"/>
-	[HarmonyPatch(typeof(DynamicDrawManager))]
-	[HarmonyPatch(nameof(DynamicDrawManager.DrawDynamicThings))]
 	[ManualPatch]
 	internal static class Verse_DynamicDrawManager_DrawDynamicThings
 	{
-		static bool Prepare()
-		{
-			var settings = YaOptGlobal.Settings;
-			return settings.OptEarlyRenderPrepare.Enabled || settings.OptWindUpdate.Enabled;
-		}
-
 		static void Patch(Harmony harmony)
 		{
 			var settings = YaOptGlobal.Settings;
