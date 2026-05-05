@@ -1,6 +1,7 @@
 ## 1.0.9  (2026-05-05)
 
 * Compatibility: Make Room.Role reentrant.
+* Fix: Thread-safe for PawnsFinder.
 
 ## 1.0.8  (2026-05-05)
 
