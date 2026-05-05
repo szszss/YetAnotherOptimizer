@@ -34,8 +34,8 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			var localDestRegions = generator.DeclareLocal(typeof(List<Region>));
 			var labelIfMainThreadElse = generator.DefineLabel();
 			var labelIfMainThreadEnd = generator.DefineLabel();
-			// var isMainThread = UnityData.IsInMainThread;
-			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
+			// var isMainThread = YaOptGlobal.IsInMainThread;
+			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return CodeInstruction.StoreLocal(localIsMainThread.LocalIndex);
 			// if (isMainThread) {
 			yield return CodeInstruction.LoadLocal(localIsMainThread.LocalIndex);

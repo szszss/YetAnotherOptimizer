@@ -16,7 +16,7 @@ namespace YaOpt.Patches.ThreadSafe
 
 		static bool Prefix(Region root, RegionEntryPredicate entryCondition, RegionProcessor regionProcessor, int maxRegions, RegionType traversableRegionTypes)
 		{
-			if (UnityData.IsInMainThread)
+			if (YaOptGlobal.IsInMainThread)
 				return true;
 			ParallelRegionTraverser.BreadthFirstTraverse(root, entryCondition, regionProcessor, maxRegions, traversableRegionTypes);
 			return false;

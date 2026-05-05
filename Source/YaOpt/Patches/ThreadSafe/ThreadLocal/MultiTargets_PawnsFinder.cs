@@ -245,12 +245,12 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			var local = generator.DeclareLocal(fieldPawnFinder.FieldType);
 			/*
 			 * List<Pawn> list;
-			 * if (UnityData.IsInMainThread)
+			 * if (YaOptGlobal.IsInMainThread)
 			 *     list = PawnsFinder.fieldName
 			 * else
 			 *     list = ThreadLocalPawnsFinder.FieldName.Value
 			 */
-			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
+			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return new CodeInstruction(OpCodes.Brfalse_S, labelElse);
 			yield return new CodeInstruction(OpCodes.Ldsfld, fieldPawnFinder);
 			yield return new CodeInstruction(OpCodes.Br_S, labelEnd);

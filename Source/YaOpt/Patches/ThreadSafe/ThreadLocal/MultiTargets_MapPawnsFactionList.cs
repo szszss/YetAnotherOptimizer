@@ -30,12 +30,12 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			var labelEnd = generator.DefineLabel();
 			/*
 			 * List<Pawn> list;
-			 * if (!UnityData.IsInMainThread)
+			 * if (!YaOptGlobal.IsInMainThread)
 			 *   list = ThreadLocalMapPawns.GetPooledList()
 			 * else
 			 *   list = this.factionDictionary.GetPawnList(faction);
 			 */
-			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
+			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return new CodeInstruction(OpCodes.Brtrue_S, labelElse);
 			yield return new CodeInstruction(OpCodes.Call,
 				AccessTools.Method(typeof(ThreadLocalMapPawns), nameof(ThreadLocalMapPawns.GetPooledList)));

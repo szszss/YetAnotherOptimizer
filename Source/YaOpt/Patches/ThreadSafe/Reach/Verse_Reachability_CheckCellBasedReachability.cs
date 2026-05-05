@@ -32,8 +32,8 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			Label jumpTarget = default;
 			Label labelBrfalseFix = default;
 
-			// var isMainThread = UnityData.IsInMainThread;
-			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
+			// var isMainThread = YaOptGlobal.IsInMainThread;
+			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return CodeInstruction.StoreLocal(localIsMainThread.LocalIndex);
 
 			// var lockTaken = false;

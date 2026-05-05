@@ -92,12 +92,12 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			var local = generator.DeclareLocal(listType);
 			/*
 			 * List<Pawn> list;
-			 * if (UnityData.IsInMainThread)
+			 * if (YaOptGlobal.IsInMainThread)
 			 *	 list = this.xxx
 			 * else
 			 *   list = ThreadLocalMapPawns.Xxx
 			 */
-			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
+			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return new CodeInstruction(OpCodes.Brfalse_S, labelElse);
 			yield return CodeInstruction.LoadArgument(0);
 			yield return new CodeInstruction(OpCodes.Ldfld,

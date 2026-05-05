@@ -15,7 +15,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 
 		static bool Prefix(Map ___map, IntVec3 start)
 		{
-			if (UnityData.IsInMainThread)
+			if (YaOptGlobal.IsInMainThread)
 				return true;
 
 			var tlr = ThreadLocalReachability.Reachabilities.Value;

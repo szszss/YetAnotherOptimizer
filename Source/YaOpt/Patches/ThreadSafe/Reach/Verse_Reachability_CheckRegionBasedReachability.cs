@@ -33,8 +33,8 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			var labelIfMainThreadEnd = generator.DefineLabel();
 			var list = instructions.ToList();
 			var firstTryFinallyBlock = false;
-			// var isMainThread = UnityData.IsInMainThread;
-			yield return CodeInstruction.Call(typeof(UnityData), "get_IsInMainThread");
+			// var isMainThread = YaOptGlobal.IsInMainThread;
+			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return CodeInstruction.StoreLocal(localIsMainThread.LocalIndex);
 			// var lockTaken = false;
 			yield return new CodeInstruction(OpCodes.Ldc_I4_0);

@@ -409,6 +409,8 @@ namespace YaOpt.Helpers
 		/// </remarks>
 		public static object GetContent(Type itemType, string itemPath, bool reportFailure = true)
 		{
+			// I didn't replace this IsInMainThread with the one in YaOptGlobal
+			// because I'm not sure if this method will be called before YaOptGlobal.MarkAsMainThread or not.
 			if (!UnityData.IsInMainThread)
 			{
 				Log.Error($"Tried to get a resource {itemPath} from a different thread. " +

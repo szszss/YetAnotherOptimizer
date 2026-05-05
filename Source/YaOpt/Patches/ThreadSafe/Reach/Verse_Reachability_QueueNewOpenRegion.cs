@@ -15,7 +15,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 
 		static bool Prefix(Region region)
 		{
-			if (UnityData.IsInMainThread)
+			if (YaOptGlobal.IsInMainThread)
 				return true;
 
 			if (region == null)
