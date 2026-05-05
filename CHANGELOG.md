@@ -1,3 +1,7 @@
+## 1.0.9  (2026-05-05)
+
+* Compatibility: Make Room.Role reentrant.
+
 ## 1.0.8  (2026-05-05)
 
 * Fix: Graphic Texture Caching may fail to load north-facing textures.

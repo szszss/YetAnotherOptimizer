@@ -197,10 +197,12 @@
 			</LockPatch>
 			<LockPatch>
 				<method>Verse.Room:GetStat</method>
+				<supportRecursion>true</supportRecursion>
 			</LockPatch>
 			<LockPatch>
 				<method>Verse.Room:get_Role</method>
 				<scope>Method</scope> <!-- Many RoomRoleWorkers use shared static fields -->
+				<supportRecursion>true</supportRecursion>
 			</LockPatch>
 			
 			<!-- TileTemperaturesComp -->
