@@ -33,7 +33,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 		{
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
 			UpdateCallbackHelper.RegisterPreRenderCallback(PreRender);
-			UpdateCallbackHelper.RegisterPostRenderCallback(PostRender);
+			UpdateCallbackHelper.RegisterPreDynamicDrawCallback(PreDynamicDraw);
 		}
 
 		private static void ClearCache()
@@ -56,7 +56,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 			}
 		}
 
-		private static void PostRender(int tick)
+		private static void PreDynamicDraw(int tick)
 		{
 			if (_jobRunning)
 			{

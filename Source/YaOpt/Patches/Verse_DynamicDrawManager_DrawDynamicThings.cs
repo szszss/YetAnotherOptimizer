@@ -19,22 +19,25 @@ namespace YaOpt.Patches
 		{
 			var settings = YaOptGlobal.Settings;
 			var prefix = settings.OptWindUpdate.Enabled
-				? new HarmonyMethod(typeof(Verse_DynamicDrawManager_DrawDynamicThings), nameof(Prefix))
-				: null;
+				? new HarmonyMethod(typeof(Verse_DynamicDrawManager_DrawDynamicThings), nameof(PrefixWithWindUpdate))
+				: new HarmonyMethod(typeof(Verse_DynamicDrawManager_DrawDynamicThings), nameof(Prefix));
 			var transpiler = settings.OptEarlyRenderPrepare.Enabled
 				? new HarmonyMethod(typeof(Verse_DynamicDrawManager_DrawDynamicThings), nameof(Transpiler))
 				: null;
-			if (prefix != null || transpiler != null)
-			{
-				harmony.Patch(AccessTools.Method(
-						typeof(DynamicDrawManager), nameof(DynamicDrawManager.DrawDynamicThings)),
-					prefix: prefix,
-					transpiler: transpiler);
-			}
+			harmony.Patch(AccessTools.Method(
+					typeof(DynamicDrawManager), nameof(DynamicDrawManager.DrawDynamicThings)),
+				prefix: prefix,
+				transpiler: transpiler);
 		}
 
 		static void Prefix()
 		{
+			UpdateCallbackHelper.PreDynamicDraw();
+		}
+
+		static void PrefixWithWindUpdate()
+		{
+			Prefix();
 			WindHelper.UpdateWindForMaterials();
 		}
 
