@@ -1,3 +1,7 @@
+## 1.0.11
+
+* Compatibility: Thread-safe patch for Zoology: Realistic Animal Overhaul.
+
 ## 1.0.10  (2026-05-05)
 
 * Fix: Errors related to DynamicDrawManager.DrawDynamicThings in Early Render Preparation and Plant Sway Optimization.

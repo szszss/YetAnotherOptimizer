@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="com.abobashark.zoologymod">
+		<defName>Zoology</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>ZoologyMod.HarmonyPatches.Patch_ScavengeringCore:TryGetScavengerCorpseState</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
