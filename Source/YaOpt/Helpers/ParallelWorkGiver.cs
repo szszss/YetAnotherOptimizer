@@ -162,8 +162,9 @@ namespace YaOpt.Helpers
 				var mainThreadHasJobToDone = workGiversProcessedByMainThread.Count > 0;
 				if (JOBDEBUG)
 				{
-					pawn.jobs.DebugLogEvent($"{parallelTaskCount} of {jobList?.Count} WorkGivers are being processed by " +
-											$"{JobsUtility.JobWorkerMaximumCount} worker threads.");
+					pawn.jobs.DebugLogEvent(
+						$"{parallelTaskCount} of {jobList?.Count} WorkGivers are being processed by " +
+						$"{JobsUtility.JobWorkerMaximumCount} worker threads.");
 					if (mainThreadHasJobToDone)
 					{
 						pawn.jobs.DebugLogEvent(
@@ -192,6 +193,7 @@ namespace YaOpt.Helpers
 						jobHandle.CompleteWithSpinWait(); // Make sure it's finished
 					}
 				}
+				jobHandle = default;
 				YaOptGlobal.IsParallelRunningInTick = false;
 				if (mainThreadHasJobToDone)
 				{
@@ -262,6 +264,16 @@ namespace YaOpt.Helpers
 				}
 
 				return thinkResult;
+			}
+			catch
+			{
+				// If there are exceptions, try stop jobs firstly.
+				if (!jobHandle.IsCompleted)
+				{
+					jobHandle.Complete();
+				}
+				YaOptGlobal.IsParallelRunningInTick = false;
+				throw; // No exceptions handling here, just re-throw them.
 			}
 			finally
 			{
