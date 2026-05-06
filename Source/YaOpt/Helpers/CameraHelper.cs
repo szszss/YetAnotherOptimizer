@@ -6,6 +6,11 @@ using Verse;
 
 namespace YaOpt.Helpers
 {
+	// StaticConstructorOnStartup is required.
+	// Otherwise, in the tick when the game loads a save file,
+	// PreTick will not be registered or called because CameraHelper has never been used.
+	// Some mods will encounter errors as a result.
+	[StaticConstructorOnStartup]
 	internal static class CameraHelper
 	{
 		public static CellRect ViewOfCamera { get; private set; }
