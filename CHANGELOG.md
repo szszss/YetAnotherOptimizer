@@ -1,4 +1,4 @@
-## 1.0.11
+## 1.0.11  (2026-05-07)
 
 * Fix: Thread-safe for HaulAIUtility.
 * Compatibility: Thread-safe patch for Zoology: Realistic Animal Overhaul.
