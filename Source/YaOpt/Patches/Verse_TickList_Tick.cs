@@ -1,5 +1,5 @@
-using System;
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Verse;
@@ -85,7 +85,7 @@ namespace YaOpt.Patches
 			if (ppt && !parellellyTickInserted)
 			{
 				throw new Exception("Unable to find the insertion point for " +
-				                    "ParallelPawnTickManager.ParellellyTickPawns in TickList.Tick");
+									"ParallelPawnTickManager.ParellellyTickPawns in TickList.Tick");
 			}
 		}
 	}

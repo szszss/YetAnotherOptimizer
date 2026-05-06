@@ -206,9 +206,9 @@ namespace YaOpt.Helpers
 		private static void PrintMultipleCallsError(StackTrace secondStackTrace)
 		{
 			_alreadyPrintMultipleCallsError = true;
-			
+
 			var sb = new StringBuilder("A mod attempts to call NormalTickList.Tick multiple times within a single tick, " +
-			                           "it may cause Parallel Pawn Tick to malfunction.").AppendLine();
+									   "it may cause Parallel Pawn Tick to malfunction.").AppendLine();
 			if (_firstCallerStackTrace == null)
 				sb.AppendLine("Cannot find the first callstacks");
 			else
