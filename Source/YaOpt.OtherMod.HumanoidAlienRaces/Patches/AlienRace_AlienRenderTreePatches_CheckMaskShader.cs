@@ -27,7 +27,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 
 		private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
-			// Replace ContentFinder<Texture2D>.Get(texPath + "_northm", false) to TextureCache.GetNorthm(texPath, false)
+			// Replace ContentFinder<Texture2D>.Get(texPath + "_northm", false) to TextureCache.GetNorthm(texPath, false, true)
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Ldstr)
@@ -39,6 +39,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 
 					if (methodInfo.Name == "Get")
 					{
+						yield return new CodeInstruction(OpCodes.Ldc_I4_1); // needPostfixM: true
 						instruction.operand = AccessTools.Method(typeof(TextureCache), nameof(TextureCache.GetNorthm));
 					}
 				}

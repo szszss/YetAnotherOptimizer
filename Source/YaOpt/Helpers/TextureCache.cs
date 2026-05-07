@@ -16,6 +16,7 @@ namespace YaOpt.Helpers
 	{
 		public const int TYPE_COLOR = 0;
 		public const int TYPE_MASK = 1;
+		public const int TYPE_MASK_CUSTOMPATH = 2;
 		public const int VARIANT_DEFAULT = 0;
 		public const int VARIANT_NORTH = 1;
 		public const int VARIANT_EAST = 2;
@@ -102,6 +103,7 @@ namespace YaOpt.Helpers
 						}
 						break;
 					case TYPE_MASK:
+					case TYPE_MASK_CUSTOMPATH:
 						if (!texMaskCache.TryGetValue(pathWithoutAnyPostfix, out entry))
 						{
 							entry = new CacheEntry();
@@ -123,7 +125,7 @@ namespace YaOpt.Helpers
 			switch (variant)
 			{
 				case VARIANT_DEFAULT:
-					if (type == TYPE_MASK)
+					if (type != TYPE_COLOR)
 						return null;
 					texRef = entry.Default;
 					if (texRef == null || !texRef.IsAlive || texRef.Target == null)
@@ -162,49 +164,62 @@ namespace YaOpt.Helpers
 			return texRef.Target;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Texture2D GetDefault(string pathWithoutAnyPostfix, bool _)
 		{
 			return Get(pathWithoutAnyPostfix, TYPE_COLOR, VARIANT_DEFAULT);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Texture2D GetNorth(string pathWithoutAnyPostfix, bool _)
 		{
 			return Get(pathWithoutAnyPostfix, TYPE_COLOR, VARIANT_NORTH);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Texture2D GetEast(string pathWithoutAnyPostfix, bool _)
 		{
 			return Get(pathWithoutAnyPostfix, TYPE_COLOR, VARIANT_EAST);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Texture2D GetSouth(string pathWithoutAnyPostfix, bool _)
 		{
 			return Get(pathWithoutAnyPostfix, TYPE_COLOR, VARIANT_SOUTH);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Texture2D GetWest(string pathWithoutAnyPostfix, bool _)
 		{
 			return Get(pathWithoutAnyPostfix, TYPE_COLOR, VARIANT_WEST);
 		}
 
-		public static Texture2D GetNorthm(string pathWithoutAnyPostfix, bool _)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Texture2D GetNorthm(string pathWithoutAnyPostfix, bool _, bool needPostfixM)
 		{
-			return Get(pathWithoutAnyPostfix, TYPE_MASK, VARIANT_NORTH);
+			var type = needPostfixM ? TYPE_MASK : TYPE_MASK_CUSTOMPATH;
+			return Get(pathWithoutAnyPostfix, type, VARIANT_NORTH);
 		}
 
-		public static Texture2D GetEastm(string pathWithoutAnyPostfix, bool _)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Texture2D GetEastm(string pathWithoutAnyPostfix, bool _, bool needPostfixM)
 		{
-			return Get(pathWithoutAnyPostfix, TYPE_MASK, VARIANT_EAST);
+			var type = needPostfixM ? TYPE_MASK : TYPE_MASK_CUSTOMPATH;
+			return Get(pathWithoutAnyPostfix, type, VARIANT_EAST);
 		}
 
-		public static Texture2D GetSouthm(string pathWithoutAnyPostfix, bool _)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Texture2D GetSouthm(string pathWithoutAnyPostfix, bool _, bool needPostfixM)
 		{
-			return Get(pathWithoutAnyPostfix, TYPE_MASK, VARIANT_SOUTH);
+			var type = needPostfixM ? TYPE_MASK : TYPE_MASK_CUSTOMPATH;
+			return Get(pathWithoutAnyPostfix, type, VARIANT_SOUTH);
 		}
 
-		public static Texture2D GetWestm(string pathWithoutAnyPostfix, bool _)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Texture2D GetWestm(string pathWithoutAnyPostfix, bool _, bool needPostfixM)
 		{
-			return Get(pathWithoutAnyPostfix, TYPE_MASK, VARIANT_WEST);
+			var type = needPostfixM ? TYPE_MASK : TYPE_MASK_CUSTOMPATH;
+			return Get(pathWithoutAnyPostfix, type, VARIANT_WEST);
 		}
 	}
 }

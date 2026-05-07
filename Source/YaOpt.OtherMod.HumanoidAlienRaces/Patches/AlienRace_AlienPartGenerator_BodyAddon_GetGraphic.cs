@@ -29,7 +29,7 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 
 		private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
-			// Replace ContentFinder<Texture2D>.Get(texPath + "_southm", false) to TextureCache.GetSouthm(texPath, false)
+			// Replace ContentFinder<Texture2D>.Get(texPath + "_southm", false) to TextureCache.GetSouthm(texPath, false, true)
 			foreach (var instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Ldstr && instruction.operand is string str && str == "_southm")
@@ -44,7 +44,11 @@ namespace YaOpt.OtherMod.HumanoidAlienRaces.Patches
 						if (methodInfo.DeclaringType == typeof(GraphicDatabase))
 							instruction.operand = AccessTools.Method(typeof(HarHelper), nameof(HarHelper.GetGraphic));
 						else if (methodInfo.DeclaringType == typeof(ContentFinder<Texture2D>))
-							instruction.operand = AccessTools.Method(typeof(TextureCache), nameof(TextureCache.GetSouthm));
+						{
+							yield return new CodeInstruction(OpCodes.Ldc_I4_1); // needPostfixM: true
+							instruction.operand =
+								AccessTools.Method(typeof(TextureCache), nameof(TextureCache.GetSouthm));
+						}
 					}
 				}
 

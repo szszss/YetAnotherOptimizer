@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 using YaOpt.Helpers;
@@ -94,6 +95,15 @@ namespace YaOpt.Patches
 									case TextureCache.VARIANT_SOUTH: methodName = nameof(TextureCache.GetSouthm); break;
 									case TextureCache.VARIANT_WEST: methodName = nameof(TextureCache.GetWestm); break;
 								}
+
+								// Fix textures with custom mask path
+								yield return CodeInstruction.LoadArgument(0);
+								yield return CodeInstruction.LoadField(
+									typeof(Graphic),
+									nameof(Graphic.maskPath));
+								yield return CodeInstruction.Call(
+									typeof(Verse_Graphic_Multi_Init),
+									nameof(NeedPostfixM));
 								break;
 						}
 						if (methodName == null)
@@ -107,6 +117,12 @@ namespace YaOpt.Patches
 
 				yield return instruction;
 			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static bool NeedPostfixM(string maskPath)
+		{
+			return maskPath.NullOrEmpty();
 		}
 	}
 }
