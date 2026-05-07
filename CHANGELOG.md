@@ -1,4 +1,4 @@
-## 1.0.12
+## 1.0.12  (2026-05-07)
 
 * Compatibility: Thread-safe patch for Build From Inventory - Continued.
 * Fix: Graphic Texture Caching fails to load mask textures with custom path.
