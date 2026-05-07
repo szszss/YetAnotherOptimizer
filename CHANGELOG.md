@@ -1,3 +1,7 @@
+## 1.0.12
+
+* Compatibility: Thread-safe patch for Build From Inventory - Continued.
+
 ## 1.0.11  (2026-05-07)
 
 * Fix: Thread-safe for HaulAIUtility.

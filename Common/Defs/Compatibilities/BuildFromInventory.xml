@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="memegoddess.buildfrominventory">
+		<defName>BuildFromInventory</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>Build_From_Inventory.ItemInvAvailabilityMapComp:ThingsAvailableInventories</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
