@@ -6,6 +6,7 @@ using Verse.AI;
 namespace YaOpt.Patches.Debugging
 {
 	[HarmonyPatch]
+	[HarmonyPriority(Priority.VeryLow)]
 	internal static class MultiTargets_ReservationManager
 	{
 		static IEnumerable<MethodBase> TargetMethods()
@@ -22,9 +23,9 @@ namespace YaOpt.Patches.Debugging
 			return YaOptGlobal.Settings.OptParallelWorkGiver.Enabled;
 		}
 
-		static void Prefix()
+		static void Prefix(bool __runOriginal)
 		{
-			if (YaOptGlobal.IsParallelRunningInTick)
+			if (__runOriginal && YaOptGlobal.IsParallelRunningInTick)
 			{
 				YaOptMod.Error("A Reservation operation was detected during the execution of " +
 							   "ParallelWorkGiver or ParallelPawnTickManager. This is strictly prohibited. " +

@@ -173,6 +173,7 @@ namespace YaOpt.Helpers
 				}
 
 				YaOptGlobal.IsParallelRunningInTick = true;
+				ReservationPromiser.Start();
 				jobHandle = new YaOptManagedJobs.JobFor(
 						new IssueWorkJob(pawn, jobList))
 					.ScheduleParallel(parallelTaskCount, 1);
@@ -195,6 +196,7 @@ namespace YaOpt.Helpers
 				}
 				jobHandle = default;
 				YaOptGlobal.IsParallelRunningInTick = false;
+				ReservationPromiser.Stop();
 				if (mainThreadHasJobToDone)
 				{
 					MainThreadProcess(pawn, true);
@@ -248,6 +250,7 @@ namespace YaOpt.Helpers
 						}
 					}
 
+					ReservationPromiser.FulfilAndClear(pawn, bestResult.ResultJob);
 					thinkResult = new ThinkResult(bestResult.ResultJob, jgw, bestResult.Tag);
 				}
 				else if (JOBDEBUG)
@@ -278,6 +281,8 @@ namespace YaOpt.Helpers
 			finally
 			{
 				Running = false;
+				ReservationPromiser.Stop();
+				ReservationPromiser.Clear();
 				ThreadLocalMapPawns.PopPooledListsStack();
 				while (jobResults.TryTake(out var result))
 				{

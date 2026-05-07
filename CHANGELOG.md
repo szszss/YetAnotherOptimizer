@@ -1,6 +1,7 @@
 ## 1.0.12
 
 * Compatibility: Thread-safe patch for Build From Inventory - Continued.
+* Refactor: Introduce ReservationPromiser to improve compatibility of Parallel Work Giver.
 
 ## 1.0.11  (2026-05-07)
 
