@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Fix: When Facial Animation is installed and Parallel Facial Animation Update is enabled, switching to the world map results in a loop of the error message "Try to add a pending pawn while the updating facial animation job is running".
+
 ## 1.0.12  (2026-05-07)
 
 * Compatibility: Thread-safe patch for Build From Inventory - Continued.
