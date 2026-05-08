@@ -14,7 +14,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		static MethodBase TargetMethod()
 		{
 			foreach (var nestedType in typeof(MineAIUtility).GetNestedTypes(
-				         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
 				var method = nestedType.GetMethod("MoveNext",
 					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);

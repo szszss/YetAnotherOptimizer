@@ -1,7 +1,7 @@
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
 using YaOpt.Helpers;
 using YaOpt.Helpers.ThreadLocal;
 
@@ -14,7 +14,7 @@ namespace YaOpt.Patches.Compatibility.ReGrowth
 		{
 			var type = AccessTools.TypeByName("ReGrowthCore.MineAIUtility_PotentialMineables_Patch");
 			foreach (var nestedType in type.GetNestedTypes(
-				         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
 				var method = nestedType.GetMethod("MoveNext",
 					BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -30,7 +30,7 @@ namespace YaOpt.Patches.Compatibility.ReGrowth
 		static bool Prepare()
 		{
 			return (YaOptGlobal.NeedThreadSafe || YaOptGlobal.Settings.OptParallelWorkGiver.Enabled) &&
-			       YaOptGlobal.HasType("ReGrowthCore.MineAIUtility_PotentialMineables_Patch");
+				   YaOptGlobal.HasType("ReGrowthCore.MineAIUtility_PotentialMineables_Patch");
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(
