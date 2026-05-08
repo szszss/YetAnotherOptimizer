@@ -49,7 +49,8 @@ namespace YaOpt.Patches.Compatibility.PerformanceFish
 				method.DeclaringType.Name.Contains("RecipeIngredientCacheValue"));
 			if (dirtyCallIndex == -1)
 			{
-				throw new Exception("Cannot find get_Dirty in PerformanceFish WorkGiver_DoBill patch.");
+				// The user doesn't enable TryFindBestIngredientsHelpers_InnerDelegate in Performance Fish
+				return codes;
 			}
 
 			// The instruction immediately following get_Dirty should be a branch (brfalse) to skip the update block

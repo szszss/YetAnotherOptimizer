@@ -1,3 +1,5 @@
+* Fix: Exception during game launch when both YaOpt and Performance Fish are installed, but Performance Fish's TryFindBestIngredientsHelpers_InnerDelegate is disabled.
+
 ## 1.1.0
 
 * Fix: When Facial Animation is installed and Parallel Facial Animation Update is enabled, switching to the world map results in a loop of the error message "Try to add a pending pawn while the updating facial animation job is running".
