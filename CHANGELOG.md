@@ -1,3 +1,5 @@
+## 1.0.14  (2026-05-08)
+
 * Compatibility: Thread-safe patch for ReGrowth 2.
 * Fix: Exception during game launch when both YaOpt and Performance Fish are installed, but Performance Fish's TryFindBestIngredientsHelpers_InnerDelegate is disabled.
 * Fix: System.InvalidOperationException when both Target Finding Optimization and Constant Job Prediction are enabled.
@@ -5,7 +7,7 @@
 * Refactor: Introduce CacheWarmer to avoid potential System.InvalidOperationException when creating caches during gameplay.
 * Other: Add compatibility note for Pawn Render Node Worker Cache Fix.
 
-## 1.1.0
+## 1.0.13  (2026-05-08)
 
 * Fix: When Facial Animation is installed and Parallel Facial Animation Update is enabled, switching to the world map results in a loop of the error message "Try to add a pending pawn while the updating facial animation job is running".
 
