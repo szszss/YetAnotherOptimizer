@@ -80,6 +80,7 @@
 	<YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>調整兩次更新間最短的現實時間間隔，需要注意的是，由於遊戲對地形採用增量更新，這個選項是有邊際效應的，將間隔設為1000毫秒並不能將更新開銷降低為100毫秒的十分之一，因為單次更新需要處理的地塊也多了。推薦值為300或500，如果你不在乎視覺效果，調成1000也是可以的。</YaOpt.Setting.Option.MapMeshUpdateThrottle.UpdateInterval.Desc>
 	<YaOpt.Setting.Option.PRNRWorker>修復PawnRenderNodeProperties快取</YaOpt.Setting.Option.PRNRWorker>
 	<YaOpt.Setting.Option.PRNRWorker.Desc>PawnRenderNodeProperties的Worker在初始化時很慢。雖然遊戲為它準備了快取，但由於設計疏忽，快取永遠不會被讀取。此最佳化修復了該Bug，使其能正確使用快取。</YaOpt.Setting.Option.PRNRWorker.Desc>
+	<YaOpt.Setting.Option.PRNRWorker.Compatibility>不相容會動態修改PawnRenderNodeProperties.workerClass的Mod。</YaOpt.Setting.Option.PRNRWorker.Compatibility>
 	<YaOpt.Setting.Option.GraphicTextureCache>紋理索引快取</YaOpt.Setting.Option.GraphicTextureCache>
 	<YaOpt.Setting.Option.GraphicTextureCache.Desc>快取Graphic_Multi初始化所需的紋理。原版遊戲每次初始化時都需要透過字串拼接構建東西南北四個朝向的紋理路徑並進行資源查找。此最佳化快取了這些紋理，消除了重複的字串拼接和資源查找開銷。本最佳化最初為外星人框架開發，現已整合入本體，供任何頻繁重建Graphic_Multi的物體受益。註：這個最佳化可能會導致開發者選項中的紋理熱重載失效。</YaOpt.Setting.Option.GraphicTextureCache.Desc>
 	<YaOpt.Setting.Option.Silhouette>剪影快取最佳化</YaOpt.Setting.Option.Silhouette>

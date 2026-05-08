@@ -168,6 +168,7 @@ namespace YaOpt
 		{
 			Name = "YaOpt.Setting.Option.PRNRWorker",
 			Desc = "YaOpt.Setting.Option.PRNRWorker.Desc",
+			NoteCompatibility = "YaOpt.Setting.Option.PRNRWorker.Compatibility",
 			Category = OptimizationCategory.Fps
 		};
 

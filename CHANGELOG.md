@@ -3,6 +3,7 @@
 * Fix: System.InvalidOperationException when both Target Finding Optimization and Constant Job Prediction are enabled.
 * Fix: Thread-safe for ListerBuildingsRepairable and MineAIUtility.
 * Refactor: Introduce CacheWarmer to avoid potential System.InvalidOperationException when creating caches during gameplay.
+* Other: Add compatibility note for Pawn Render Node Worker Cache Fix.
 
 ## 1.1.0
 
