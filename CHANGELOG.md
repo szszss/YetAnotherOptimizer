@@ -2,6 +2,7 @@
 * Fix: Exception during game launch when both YaOpt and Performance Fish are installed, but Performance Fish's TryFindBestIngredientsHelpers_InnerDelegate is disabled.
 * Fix: System.InvalidOperationException when both Target Finding Optimization and Constant Job Prediction are enabled.
 * Fix: Thread-safe for ListerBuildingsRepairable and MineAIUtility.
+* Refactor: Introduce CacheWarmer to avoid potential System.InvalidOperationException when creating caches during gameplay.
 
 ## 1.1.0
 

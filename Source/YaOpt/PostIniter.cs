@@ -18,6 +18,7 @@ namespace YaOpt
 			DebugHelper.Init();
 			Patcher.Init();
 			YaOptSubMod.PostInitAll(YaOptGlobal.SubMods);
+			CacheWarmer.PostInit();
 		}
 	}
 }
