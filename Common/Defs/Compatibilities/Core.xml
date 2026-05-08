@@ -142,6 +142,16 @@
 				<replace>tmpExistingLovePartners</replace>
 			</ThreadLocalPatch>
 			
+			<!-- ListerBuildingsRepairable -->
+			<ThreadLocalPatch>
+				<method>RimWorld.ListerBuildingsRepairable:ListFor</method>
+				<replace>repairables</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.ListerBuildingsRepairable:HashSetFor</method>
+				<replace>repairablesSet</replace>
+			</ThreadLocalPatch>
+			
 			<!-- SpouseRelationUtility -->
 			<ThreadLocalPatch>
 				<method>RimWorld.SpouseRelationUtility:GetSpouses</method>
