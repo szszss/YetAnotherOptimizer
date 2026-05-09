@@ -46,6 +46,13 @@ namespace YaOpt.Helpers
 
 			public void Fulfil()
 			{
+				if (YaOptGlobal.IsDebug)
+				{
+					YaOptMod.Debug("Fulfil the promise of reserving: " +
+								   $"Pawn {Claimant.Name.ToStringShort}, " +
+								   $"Job {OwnerJob}," +
+								   $"Target {Target.ToString()}");
+				}
 				ReservationManager.Reserve(Claimant, OwnerJob, Target, MaxPawns, StackCount,
 					Layer, ErrorOnFailed, IgnoreOtherReservations, CanReserversStartJobs);
 			}
@@ -68,6 +75,13 @@ namespace YaOpt.Helpers
 			LocalTargetInfo target, int maxPawns, int stackCount, ReservationLayerDef layer,
 			bool errorOnFailed, bool ignoreOtherReservations, bool canReserversStartJobs)
 		{
+			if (YaOptGlobal.IsDebug)
+			{
+				YaOptMod.Debug("Promise a reserving: " +
+							   $"Pawn {claimant.Name.ToStringShort}, " +
+							   $"Job {ownerJob}," +
+							   $"Target {target.ToString()}");
+			}
 			_promisedReservation.Enqueue(new DelayedReservation(reservationManager, claimant, ownerJob, target,
 				maxPawns, stackCount, layer, errorOnFailed, ignoreOtherReservations, canReserversStartJobs));
 		}
