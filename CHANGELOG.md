@@ -1,5 +1,6 @@
 * Compatibility: Thread-safe patch for Qing's More Traits 2.
 * Compatibility: Thread-safe patch for DigitalStorage.
+* Compatibility: Thread-safe patch for MinifyEverything.
 
 ## 1.0.14  (2026-05-08)
 
