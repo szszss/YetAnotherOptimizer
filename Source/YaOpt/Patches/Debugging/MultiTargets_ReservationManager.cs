@@ -25,7 +25,7 @@ namespace YaOpt.Patches.Debugging
 
 		static void Prefix(bool __runOriginal)
 		{
-			if (__runOriginal && YaOptGlobal.IsParallelRunningInTick)
+			if (__runOriginal && YaOptGlobal.IsParallelRunningInTick && !YaOptGlobal.IsInMainThread)
 			{
 				YaOptMod.Error("A Reservation operation was detected during the execution of " +
 							   "ParallelWorkGiver or ParallelPawnTickManager. This is strictly prohibited. " +
