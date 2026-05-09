@@ -141,17 +141,7 @@
 				<method>RimWorld.LovePartnerRelationUtility:ExistingLovePartners</method>
 				<replace>tmpExistingLovePartners</replace>
 			</ThreadLocalPatch>
-			
-			<!-- ListerBuildingsRepairable -->
-			<ThreadLocalPatch>
-				<method>RimWorld.ListerBuildingsRepairable:ListFor</method>
-				<replace>repairables</replace>
-			</ThreadLocalPatch>
-			<ThreadLocalPatch>
-				<method>RimWorld.ListerBuildingsRepairable:HashSetFor</method>
-				<replace>repairablesSet</replace>
-			</ThreadLocalPatch>
-			
+
 			<!-- SpouseRelationUtility -->
 			<ThreadLocalPatch>
 				<method>RimWorld.SpouseRelationUtility:GetSpouses</method>
@@ -262,6 +252,16 @@
 			<!-- ListerArtificialBuildingsForMeditation -->
 			<LockPatch>
 				<method>RimWorld.ListerArtificialBuildingsForMeditation:GetForCell</method>
+			</LockPatch>
+			
+			<!-- ListerBuildingsRepairable -->
+			<LockPatch>
+				<method>RimWorld.ListerBuildingsRepairable:ListFor</method>
+				<scope>Method</scope> <!-- For performance -->
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.ListerBuildingsRepairable:HashSetFor</method>
+				<scope>Method</scope> <!-- For performance -->
 			</LockPatch>
 			
 			<!-- ListerBuildingWithTagInProximity -->

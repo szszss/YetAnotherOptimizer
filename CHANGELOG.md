@@ -2,6 +2,7 @@
 * Compatibility: Thread-safe patch for DigitalStorage.
 * Compatibility: Thread-safe patch for MinifyEverything.
 * Compatibility: Thread-safe patch for Vivi Race / RPE Framework.
+* Fix: Pawns don't repair damaged buildings when Parallel Work Giver is enabled.
 
 ## 1.0.14  (2026-05-08)
 
