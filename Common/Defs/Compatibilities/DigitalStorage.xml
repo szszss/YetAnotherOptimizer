@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="cagier.digitalstorage">
+		<defName>DigitalStorage</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>RimWorld.WorkGiver_ConstructDeliverResources</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+			<WorkGiverCompatibility>
+				<workGiverClass>RimWorld.WorkGiver_DoBill</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+</Defs>
