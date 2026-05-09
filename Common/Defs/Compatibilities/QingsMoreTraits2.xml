@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="qing.more.traits2">
+		<defName>QingsMoreTraits2</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>QING_Traits.QING_TraitCache:EnsureColonyCacheUpdated</method>
+			</LockPatch>
+			
+			<LockPatch>
+				<method>QING_Traits.QING_TraitCache:HasTraitInColony</method>
+			</LockPatch>
+			
+			<LockPatch>
+				<method>QING_Traits.QING_TraitCache:HasHediffInColony</method>
+			</LockPatch>
+			
+			<LockPatch>
+				<method>QING_Traits.QING_TraitCache:HasTrait</method>
+				<scope>Key</scope>
+				<key>___QING_TraitCache_pawnTraitCache</key>
+			</LockPatch>
+			<LockPatch>
+				<method>QING_Traits.QING_TraitCache:InvalidateForPawn</method>
+				<scope>Key</scope>
+				<key>___QING_TraitCache_pawnTraitCache</key>
+			</LockPatch>
+
+			<LockPatch>
+				<method>QING_Traits.QING_TraitCache:CanTrigger</method>
+				<scope>Key</scope>
+				<key>___QING_TraitCache_eventTriggerRecords</key>
+			</LockPatch>
+			<LockPatch>
+				<method>QING_Traits.QING_TraitCache:CleanupEventRecords</method>
+				<scope>Key</scope>
+				<key>___QING_TraitCache_eventTriggerRecords</key>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
