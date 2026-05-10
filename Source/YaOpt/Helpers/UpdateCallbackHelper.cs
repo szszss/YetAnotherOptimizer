@@ -124,6 +124,7 @@ namespace YaOpt.Helpers
 
 		public static void PreRender()
 		{
+			YaOptGlobal.IsRendering = true;
 			var tick = Find.TickManager.TicksGame;
 			foreach (var callback in preRenderMethods)
 			{
@@ -140,6 +141,7 @@ namespace YaOpt.Helpers
 
 		public static void PostRender()
 		{
+			YaOptGlobal.IsRendering = false;
 			var tick = Find.TickManager.TicksGame;
 			foreach (var callback in postRenderMethods)
 			{

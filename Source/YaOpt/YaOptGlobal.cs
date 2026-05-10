@@ -96,6 +96,17 @@ namespace YaOpt
 		public static bool IsParallelRunningInTick { get; set; }
 
 		/// <summary>
+		/// Gets or sets a value indicating whether the game world is currently being rendered.
+		/// It is false during tick updating and GUI rendering.
+		/// </summary>
+		/// <remarks>
+		/// During rendering, the game world is frozen in state, allowing some multi-threading
+		/// restrictions to be relaxed. Essentially, this value functions the same as
+		/// <c>IsParallelRunningInTick</c>, telling the program to relax thread safety checks.
+		/// </remarks>
+		public static bool IsRendering { get; set; }
+
+		/// <summary>
 		/// Gets the singleton mod instance.
 		/// </summary>
 		public static YaOptMod Mod => YaOptMod.Instance;

@@ -14,7 +14,7 @@ namespace YaOpt.Patches.ThreadSafe
 
 		static bool Prefix()
 		{
-			return !YaOptGlobal.IsParallelRunningInTick;
+			return !(YaOptGlobal.IsParallelRunningInTick || YaOptGlobal.IsRendering);
 		}
 	}
 }

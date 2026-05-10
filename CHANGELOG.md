@@ -1,4 +1,5 @@
 * Compatibility: DtrndG's Inverted Rack
+* Refactor: Relax the thread safety checks for MapPawns.
 
 ## 1.0.15  (2026-05-09)
 
