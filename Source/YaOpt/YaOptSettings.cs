@@ -560,6 +560,7 @@ namespace YaOpt
 		/// and updates the index of the moved element.
 		/// This reduces complexity to O(1) at the cost of a negligible increase in memory usage.
 		/// </summary>
+		/// <seealso cref="Patches.RimWorld_JobGiver_AIResurrectTarget_UpdateResurrectTarget"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Add"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Clear"/>
 		/// <seealso cref="Patches.Verse_ListerThings_Constructor"/>

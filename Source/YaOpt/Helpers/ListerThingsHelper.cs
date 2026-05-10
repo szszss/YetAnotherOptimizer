@@ -209,5 +209,34 @@ namespace YaOpt.Helpers
 			swapThingRecord.HaulIndex = index;
 			return true;
 		}
+
+		internal static void RebuildIndex(ListerThings lister, ThingRequestGroup group)
+		{
+			// Region ListerThings haven't indexer
+			if (lister.use != ListerThingsUse.Global)
+				return;
+
+			// No need to rebuild the index for banned group
+			if (_bannedThingRequestGroup.Get((int)group))
+				return;
+
+			var lists = GetListsByGroup(lister);
+			var indexType = (int)group;
+			var list = lists[indexType];
+			if (list == null)
+				return;
+
+			var indexer = GetListerThingsIndex(lister);
+
+			for (var i = 0; i < list.Count; i++)
+			{
+				var thing = list[i];
+				var record = indexer.TryGetThingRecord(thing, lister.use);
+				if (record != null)
+				{
+					record.GroupIndex[indexType] = i;
+				}
+			}
+		}
 	}
 }

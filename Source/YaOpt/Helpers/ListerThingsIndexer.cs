@@ -105,5 +105,12 @@ namespace YaOpt.Helpers
 			}
 			return value;
 		}
+
+		public ThingRecord TryGetThingRecord(Thing thing, ListerThingsUse use)
+		{
+			if (use != ListerThingsUse.Global)
+				return null;
+			return _records.GetValueOrDefault(thing);
+		}
 	}
 }

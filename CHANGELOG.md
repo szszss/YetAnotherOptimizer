@@ -1,4 +1,5 @@
 * Compatibility: DtrndG's Inverted Rack
+* Fix: ListerThingsIndexer fails after an apocriton resurrects mechanoid.
 * Refactor: Relax the thread safety checks for MapPawns.
 * Refactor: When ListerThingsIndexer encounters an index mismatch error, it will stop indexing that type and issue a warning, instead of continuously reporting errors.
 
