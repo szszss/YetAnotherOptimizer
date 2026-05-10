@@ -15,8 +15,6 @@ namespace YaOpt.Patches
 	[HarmonyPatch(nameof(ListerThings.Add))]
 	internal static class Verse_ListerThings_Add
 	{
-		private const int INDEX_TYPE_DEF = -1;
-
 		static bool Prepare()
 		{
 			return YaOptGlobal.Settings.OptFastListerRemove.Enabled;
@@ -67,8 +65,8 @@ namespace YaOpt.Patches
 					yield return CodeInstruction.LoadLocal(localUse.LocalIndex);
 					if (count == 0)
 					{
-						// indexType = INDEX_TYPE_DEF
-						yield return new CodeInstruction(OpCodes.Ldc_I4, INDEX_TYPE_DEF);
+						// indexType = ListerThingsHelper.INDEX_TYPE_DEF
+						yield return new CodeInstruction(OpCodes.Ldc_I4, ListerThingsHelper.INDEX_TYPE_DEF);
 					}
 					else
 					{

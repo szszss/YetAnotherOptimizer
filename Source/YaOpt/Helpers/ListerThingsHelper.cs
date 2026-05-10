@@ -1,5 +1,6 @@
 using HarmonyLib;
 using RimWorld;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
@@ -9,7 +10,20 @@ namespace YaOpt.Helpers
 {
 	public static class ListerThingsHelper
 	{
-		public const int INDEX_TYPE_DEF = -1;
+		public const int INDEX_TYPE_DEF = (int)ThingRequestGroup.ApparelSource + 1;
+
+		/// <summary>
+		/// For compatibility purposes, it records which ThingRequestGroup has index mismatch.
+		/// When a removal operation is performed, the use of the indexer for this type of
+		/// ThingRequestGroup will be disabled, forcing it to fall back to the vanilla path.
+		/// </summary>
+		private static readonly BitArray _bannedThingRequestGroup =
+			new BitArray((int)ThingRequestGroup.ApparelSource + 2);
+
+		/// <summary>
+		/// Like <c>_bannedThingRequestGroup</c>, but used for <c>IHaulSource</c>.
+		/// </summary>
+		private static bool _banHaulSourceIndex = false;
 
 		private static readonly AccessTools.FieldRef<ListerThings, List<Thing>[]> _fieldRefListsByGroup =
 			AccessTools.FieldRefAccess<ListerThings, List<Thing>[]>(
@@ -57,17 +71,17 @@ namespace YaOpt.Helpers
 				: $"{ThingListGroupHelper.AllGroups[indexType]}";
 			if (index < 0 || index >= list.Count)
 			{
-				YaOptMod.Error($"Thing index is out of bound: {index} for thing {thing}. " +
+				YaOptMod.Warning($"Thing index is out of bound: {index} for thing {thing}. " +
 							   $"List count: {list.Count}. " +
 							   $"List type: {listType}. " +
-							   "Fallback to the original path.");
+							   "Fallback to the original path and the indexer has been disabled for this type.");
 			}
 			else
 			{
-				YaOptMod.Error($"Thing does not match its index: {index} for thing {thing}. " +
-							   $"The actual thing in {index} is {list[index]}. " +
-							   $"List type: {listType}. " +
-							   "Fallback to the original path.");
+				YaOptMod.Warning($"Thing does not match its index: {index} for thing {thing}. " +
+								 $"The actual thing in {index} is {list[index]}. " +
+								 $"List type: {listType}. " +
+								 "Fallback to the original path and the indexer has been disabled for this type.");
 			}
 		}
 
@@ -75,15 +89,15 @@ namespace YaOpt.Helpers
 		{
 			if (index < 0 || index >= list.Count)
 			{
-				YaOptMod.Error($"IHaulSource index is out of bound: {index} for IHaulSource {haulSource}. " +
-							   $"List count: {list.Count}. " +
-							   "Fallback to the original path.");
+				YaOptMod.Warning($"IHaulSource index is out of bound: {index} for IHaulSource {haulSource}. " +
+								 $"List count: {list.Count}. " +
+								 "Fallback to the original path and the indexer has been disabled for this type.");
 			}
 			else
 			{
-				YaOptMod.Error($"IHaulSource does not match its index: {index} for IHaulSource {haulSource}. " +
-							   $"The actual IHaulSource in {index} is {list[index]}. " +
-							   "Fallback to the original path.");
+				YaOptMod.Warning($"IHaulSource does not match its index: {index} for IHaulSource {haulSource}. " +
+								 $"The actual IHaulSource in {index} is {list[index]}. " +
+								 "Fallback to the original path and the indexer has been disabled for this type.");
 			}
 		}
 
@@ -102,7 +116,13 @@ namespace YaOpt.Helpers
 				return true;
 			}
 
-			if (indexType == INDEX_TYPE_DEF)
+			if (_bannedThingRequestGroup.Get(indexType))
+			{
+				// If this ThingRequestGroup is banned, fall back to the vanilla path.
+				list.ReverseRemove(thing);
+				return true;
+			}
+			else if (indexType == INDEX_TYPE_DEF)
 			{
 				index = record.DefIndex;
 				record.DefIndex = -1;
@@ -122,8 +142,9 @@ namespace YaOpt.Helpers
 				{
 					return true;
 				}
+				_bannedThingRequestGroup.Set(indexType, true);
 				PrintErrorForBadIndex(thing, index, indexType, list);
-				list.Remove(thing);
+				list.ReverseRemove(thing);
 				return true;
 			}
 			if (index == listCount - 1)
@@ -159,6 +180,11 @@ namespace YaOpt.Helpers
 					list.RemoveAt(index);
 				return true;
 			}
+			if (_banHaulSourceIndex)
+			{
+				list.ReverseRemove(haul);
+				return true;
+			}
 
 			index = record.HaulIndex;
 			record.HaulIndex = -1;
@@ -167,7 +193,8 @@ namespace YaOpt.Helpers
 			if (index < 0 || index >= listCount || list[index] != haul)
 			{
 				PrintErrorForBadIndex(haul, index, list);
-				list.Remove(haul);
+				_banHaulSourceIndex = true;
+				list.ReverseRemove(haul);
 				return true;
 			}
 			if (index == listCount - 1)

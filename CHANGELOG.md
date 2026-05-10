@@ -1,5 +1,6 @@
 * Compatibility: DtrndG's Inverted Rack
 * Refactor: Relax the thread safety checks for MapPawns.
+* Refactor: When ListerThingsIndexer encounters an index mismatch error, it will stop indexing that type and issue a warning, instead of continuously reporting errors.
 
 ## 1.0.15  (2026-05-09)
 
