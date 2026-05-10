@@ -1,3 +1,5 @@
+## 1.0.16  (2026-05-10)
+
 * Compatibility: DtrndG's Inverted Rack
 * Fix: ListerThingsIndexer fails after an apocriton resurrects mechanoid.
 * Refactor: Relax the thread safety checks for MapPawns.
