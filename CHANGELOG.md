@@ -1,3 +1,5 @@
+* Compatibility: DtrndG's Inverted Rack
+
 ## 1.0.15  (2026-05-09)
 
 * Compatibility: Thread-safe patch for Qing's More Traits 2.
