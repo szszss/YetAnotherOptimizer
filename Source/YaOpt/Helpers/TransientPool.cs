@@ -11,55 +11,72 @@ namespace YaOpt.Helpers
 	/// </summary>
 	public static class TransientPool<T> where T : new()
 	{
-		private static readonly  ConcurrentQueue<T> _queue = new ConcurrentQueue<T>();
+		private const int CLEAR_INTERVAL = 30001;
 
-		private static readonly ConcurrentBag<T> _loans = new ConcurrentBag<T>();
+		private static ConcurrentBag<T> _front = new ConcurrentBag<T>();
 
-		private static volatile bool _hasLoan;
+		private static ConcurrentBag<T> _back = new ConcurrentBag<T>();
 
-		public static int FreeItemsCount => _queue.Count;
-
-		public static int BorrowedItemsCount => _loans.Count;
+		private static int _lastClearTick = -1;
 
 		static TransientPool()
 		{
-			UpdateCallbackHelper.RegisterPostRenderCallback(Recovery);
-			UpdateCallbackHelper.RegisterPostTickCallback(Recovery);
+			UpdateCallbackHelper.RegisterPostRenderCallback(PingPong);
+			UpdateCallbackHelper.RegisterPostTickCallback(PingPongWithClearCheck);
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
 			TransientPoolDebug.PrintDebug += TransientPoolPrintDebug;
 		}
 
-		private static void Recovery(int _)
+		private static void PingPongWithClearCheck(int tick)
 		{
-			if (_hasLoan)
+			PingPong(tick);
+			if (_lastClearTick == -1)
 			{
-				_hasLoan = false;
-				while (_loans.TryTake(out var t))
-				{
-					_queue.Enqueue(t);
-				}
+				// Force clear on the first tick after loading game.
+				_lastClearTick = tick - CLEAR_INTERVAL;
+			}
+			if (tick - _lastClearTick < CLEAR_INTERVAL)
+			{
+				return;
+			}
+			_lastClearTick = tick;
+			// When clear, we keep the bag with less items.
+			if (_back.Count < _front.Count)
+			{
+				(_front, _back) = (_back, _front);
+			}
+			_back.Clear();
+		}
+
+		private static void PingPong(int _)
+		{
+			// When swap, we keep the bag with more items.
+			if (_back.Count > _front.Count)
+			{
+				(_front, _back) = (_back, _front);
 			}
 		}
 
 		private static void ClearCache()
 		{
-			_queue.Clear();
-			_loans.Clear();
-			_hasLoan = false;
+			_front.Clear();
+			_back.Clear();
+			_lastClearTick = -1;
 		}
 
 		private static void TransientPoolPrintDebug()
 		{
-			var total = FreeItemsCount + BorrowedItemsCount;
+			var f = _front.Count;
+			var b = _back.Count;
+			var total = f + b;
 			YaOptMod.Log($"TransientPool<{typeof(T)}>");
-			YaOptMod.Log($"Count: {total}");
+			YaOptMod.Log($"Count: {total} (F: {f}, B: {b})");
 		}
 
 		public static T Borrow()
 		{
-			_hasLoan = true;
-			var t = _queue.TryDequeue(out var result) ? result : new T();
-			_loans.Add(t);
+			var t = _front.TryTake(out var result) ? result : new T();
+			_back.Add(t);
 			return t;
 		}
 
