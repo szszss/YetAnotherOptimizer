@@ -1,3 +1,4 @@
+* Compatibility: Research Reinvented
 * Fix: Thread-safe for Room.ContainedThings.
 * Fix: Thread-safe for Room.Owners when Performance Fish is installed.
 * Fix: Fix Memory Leak clears the cache too frequently.

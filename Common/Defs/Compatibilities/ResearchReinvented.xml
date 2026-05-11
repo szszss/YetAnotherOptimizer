@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="petetimessix.researchreinvented">
+		<defName>ResearchReinvented</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Defs.ResearchOpportunityCategoryDef:GetCurrentAvailability</method>
+			</LockPatch>
+			
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Rimworld.WorkGivers.WorkGiver_Analyse:get_MatchingOpportunities</method>
+			</LockPatch>
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Rimworld.WorkGivers.WorkGiver_Analyse:BuildCache</method>
+				<scope>Key</scope>
+				<key>___ResearchReinvented_WorkGiver_Analyse_BuildCache</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Rimworld.WorkGivers.WorkGiver_Analyse:GetBestResearchBench</method>
+				<scope>Key</scope>
+				<key>___ResearchReinvented_WorkGiver_Analyse_BuildCache</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Rimworld.WorkGivers.WorkGiver_Analyse:get_OpportunityCache</method>
+				<scope>Key</scope>
+				<key>___ResearchReinvented_WorkGiver_Analyse_BuildCache</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Rimworld.WorkGivers.WorkGiver_Analyse:ThingsForMap</method>
+				<scope>Key</scope>
+				<key>___ResearchReinvented_WorkGiver_Analyse_BuildCache</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Rimworld.WorkGivers.WorkGiver_ResearcherRR:get_MatchingOpportunities</method>
+			</LockPatch>
+			<LockPatch>
+				<method>PeteTimesSix.ResearchReinvented.Rimworld.WorkGivers.WorkGiver_ResearcherRR:get_OpportunityCache</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
