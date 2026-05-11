@@ -130,6 +130,19 @@
 				<replace>tmpEdgeCells</replace>
 			</ThreadLocalPatch>
 			
+			<!-- GenConstruct -->
+			<ThreadLocalPatch>
+				<method>RimWorld.GenConstruct:CanConstruct</method>
+				<parameters>
+					<li>Verse.Thing</li>
+					<li>Verse.Pawn</li>
+					<li>bool</li>
+					<li>bool</li>
+					<li>Verse.JobDef</li>
+				</parameters>
+				<replace>tmpIdeoMemberNames</replace>
+			</ThreadLocalPatch>
+			
 			<!-- JobGiver_AITrashBuildingsDistant -->
 			<ThreadLocalPatch>
 				<method>RimWorld.JobGiver_AITrashBuildingsDistant:TryGiveJob</method>
@@ -243,19 +256,7 @@
 			<LockPatch>
 				<method>RimWorld.FleeUtility:FleeJob</method>
 			</LockPatch>
-			
-			<!-- GenConstruct -->
-			<LockPatch>
-				<method>RimWorld.GenConstruct:CanConstruct</method>
-				<parameters>
-					<li>Verse.Thing</li>
-					<li>Verse.Pawn</li>
-					<li>bool</li>
-					<li>bool</li>
-					<li>Verse.JobDef</li>
-				</parameters>
-			</LockPatch>
-			
+
 			<!-- ItemAvailability -->
 			<LockPatch>
 				<method>RimWorld.ItemAvailability:ThingsAvailableAnywhere</method>
