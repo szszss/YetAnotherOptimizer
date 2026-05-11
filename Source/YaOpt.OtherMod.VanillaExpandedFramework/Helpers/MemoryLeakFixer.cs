@@ -49,7 +49,7 @@ namespace YaOpt.OtherMod.VanillaExpandedFramework.Helpers
 			{
 				return;
 			}
-			_lastClearTick = -tick;
+			_lastClearTick = tick;
 			ClearMemory();
 		}
 
