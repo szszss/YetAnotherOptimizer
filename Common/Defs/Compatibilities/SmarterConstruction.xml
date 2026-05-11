@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="dhultgren.smarterconstruction">
+		<defName>SmarterConstruction</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>SmarterConstruction.Core.PawnPositionCache:IsPawnStuck</method>
+			</LockPatch>
+			<LockPatch>
+				<method>SmarterConstruction.Core.EncloseThingsCache:Add</method>
+			</LockPatch>
+			<LockPatch>
+				<method>SmarterConstruction.Core.EncloseThingsCache:GetIfAvailable</method>
+			</LockPatch>
+			<LockPatch>
+				<method>SmarterConstruction.Patches.WorkGiver_ConstructFinishFrames_JobOnThing:Postfix</method>
+			</LockPatch>
+			<LockPatch>
+				<method>SmarterConstruction.Patches.Patch_WorkGiver_Scanner_GetPriority:PriorityPostfix</method>
+			</LockPatch>
+			<LockPatch>
+				<method>SmarterConstruction.Patches.Patch_WorkGiver_Scanner_GetPriority:RemoveNeighborCachedData</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>

@@ -380,6 +380,29 @@ namespace YaOpt.Helpers
 			return hasNext;
 		}
 
+		#region SmarterConstructionStubMethods
+		/// <summary>
+		/// Stub method. Used to provide SmarterConstruction compatibility.
+		/// If SmarterConstruction is installed, it will be replaced with
+		/// the actual method body by the compatibility patch.
+		/// </summary>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		internal static bool SmarterConstructionIsConstructFinishFrames(WorkGiver_Scanner workGiver)
+		{
+			return false;
+		}
+
+		/// <see cref="SmarterConstructionIsConstructFinishFrames"/>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		internal static Thing SmarterConstructionClosestThingGlobalReachableCustom(IntVec3 center,
+			Map map, IEnumerable<Thing> searchSet, PathEndMode peMode, TraverseParms traverseParams,
+			float maxDistance = 9999f, Predicate<Thing> validator = null, Func<Thing, float> priorityGetter = null,
+			bool canLookInHaulableSources = false)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
+
 		private readonly struct ScanThingsClosure
 		{
 			private readonly WorkGiver_Scanner _scanner;
@@ -552,7 +575,7 @@ namespace YaOpt.Helpers
 									closure.Validate(pawn.carryTracker.CarriedThing);
 						if (ShouldStop(workGiverIndex))
 							return;
-						if (scanner.Prioritized)
+						if (scanner.Prioritized || SmarterConstructionIsConstructFinishFrames(scanner))
 						{
 							var searchSet = potentialWorkThings ??
 											pawn.Map.listerThings.ThingsMatching(
@@ -562,6 +585,13 @@ namespace YaOpt.Helpers
 							if (scanner.AllowUnreachable)
 							{
 								thing = GenClosest.ClosestThing_Global(pawn.Position, searchSet, 99999f,
+									closure.Validate, closure.GetPriority);
+							}
+							else if (SmarterConstructionIsConstructFinishFrames(scanner))
+							{
+								thing = SmarterConstructionClosestThingGlobalReachableCustom(
+									pawn.Position, pawn.Map, searchSet, scanner.PathEndMode,
+									TraverseParms.For(pawn, scanner.MaxPathDanger(pawn)), 9999f,
 									closure.Validate, closure.GetPriority);
 							}
 							else

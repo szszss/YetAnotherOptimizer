@@ -1,4 +1,5 @@
 * Compatibility: Job Failure Fixes (Under testing)
+* Compatibility: Smarter Construction (Under testing)
 
 ## 1.0.17  (2026-05-11)
 
