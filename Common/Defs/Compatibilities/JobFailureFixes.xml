@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="round.about.jobfailurefixes">
+		<defName>JobFailureFixes</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>RimWorldJobFailureFixes.GuardLog:Once</method>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorldJobFailureFixes.MergeJobCache:RecordOrRestore</method>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorldJobFailureFixes.WardenDeliverFoodJobCache:RecordOrRestore</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>

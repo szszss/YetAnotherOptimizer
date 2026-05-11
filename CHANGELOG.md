@@ -1,3 +1,5 @@
+* Compatibility: Job Failure Fixes (Under testing)
+
 ## 1.0.17  (2026-05-11)
 
 * Compatibility: Research Reinvented
