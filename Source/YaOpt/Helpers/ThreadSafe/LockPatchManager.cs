@@ -109,8 +109,8 @@ namespace YaOpt.Helpers.ThreadSafe
 				request.SupportRecursion, request.DetectDeadlock, request.LockKey);
 
 			harmony.Patch(request.TargetMethod,
-				prefix: patch.PrefixMethod,
-				finalizer: patch.FinalizerMethod
+				prefix: new HarmonyMethod(patch.PrefixMethod, Priority.First + 200),
+				finalizer: new HarmonyMethod(patch.FinalizerMethod, Priority.Last - 200)
 			);
 		}
 	}

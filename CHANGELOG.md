@@ -1,3 +1,7 @@
+* Fix: Thread-safe for Room.ContainedThings.
+* Fix: Thread-safe for Room.Owners when Performance Fish is installed.
+* Refactor: Introduce TransientPool to solve the thread safety issue of Room.ContainedAndAdjacentThings.
+
 ## 1.0.16  (2026-05-10)
 
 * Compatibility: DtrndG's Inverted Rack

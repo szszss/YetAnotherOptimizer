@@ -10,6 +10,14 @@
 				<method>PerformanceFish.JobSystem.WorkGiver_DoBillOptimization/TryFindBestIngredientsInSet_NoMixHelper_Patch:MarkIngredientCountAsFound</method>
 			</LockPatch>
 			<LockPatch>
+				<method>PerformanceFish.RoomOptimizations/ContainedAndAdjacentThings_Patch:ContainedAndAdjacentThings_Replacement</method>
+				<scope>Method</scope>
+			</LockPatch>
+			<LockPatch>
+				<method>Verse.Room:get_Owners</method>
+				<scope>Method</scope>
+			</LockPatch>
+			<LockPatch>
 				<method>Verse.ListerBuildings:AllBuildingsColonistOfDef</method>
 				<scope>Method</scope>
 			</LockPatch>

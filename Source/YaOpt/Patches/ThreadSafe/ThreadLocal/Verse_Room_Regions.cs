@@ -1,10 +1,10 @@
 using HarmonyLib;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection.Emit;
 using Verse;
 using YaOpt.Helpers;
 
-namespace YaOpt.Patches.ThreadSafe.ThreadLocal
+namespace YaOpt.Patches.ThreadSafe
 {
 	[HarmonyPatch(typeof(Room))]
 	[HarmonyPatch(nameof(Room.Regions), MethodType.Getter)]
@@ -23,42 +23,29 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 		}
 		*/
 
-		// It's still not truly robust; it fails when other threads attempt to modify Room.Regions,
-		// but it's better than the old implementation.
-		static bool Prefix(List<Region> ___tmpRegions, List<District> ___districts, ref List<Region> __result)
+		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
-			__result = ___tmpRegions;
-			List<Region> tmpList = null;
-			try
+			var localList = generator.DeclareLocal(typeof(List<Region>));
+			var fieldList = AccessTools.Field(typeof(Room), "tmpRegions");
+			// var localList = TransientPool.BorrowIfNotMainThread(this.tmpRegions);
+			yield return CodeInstruction.LoadArgument(0);
+			yield return CodeInstruction.LoadField(typeof(Room), "tmpRegions");
+			yield return CodeInstruction.Call(
+				typeof(TransientPool<List<Region>>),
+				nameof(TransientPool<List<Region>>.BorrowIfNotMainThread));
+			yield return CodeInstruction.StoreLocal(localList.LocalIndex);
+
+			foreach (var instruction in instructions)
 			{
-				tmpList = ConcurrentPool<List<Region>>.Get();
-				tmpList.Clear();
-				for (int i = 0; i < ___districts.Count; i++)
+				// replace this.tmpRegions with localList
+				if (instruction.LoadsField(fieldList))
 				{
-					var regions = ___districts[i].Regions;
-					for (var j = 0; j < regions.Count; j++)
-					{
-						tmpList.Add(regions[j]);
-					}
+					yield return new CodeInstruction(OpCodes.Pop);
+					yield return CodeInstruction.LoadLocal(localList.LocalIndex);
+					continue;
 				}
-				lock (___tmpRegions)
-				{
-					if (!___tmpRegions.SequenceEqual(tmpList))
-					{
-						___tmpRegions.Clear();
-						___tmpRegions.AddRange(tmpList);
-					}
-				}
+				yield return instruction;
 			}
-			finally
-			{
-				if (tmpList != null)
-				{
-					tmpList.Clear();
-					ConcurrentPool<List<Region>>.Return(tmpList);
-				}
-			}
-			return false;
 		}
 	}
 }

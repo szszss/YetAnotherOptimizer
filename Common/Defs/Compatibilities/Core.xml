@@ -205,6 +205,18 @@
 				<supportRecursion>true</supportRecursion>
 			</LockPatch>
 			
+			<!-- We can't patch ContainedThings<T>. Therefore, we can only patch the methods that use it. -->
+			<LockPatch>
+				<method>RimWorld.RoomStatWorker_ReadingBonus:GetScore</method>
+				<scope>Key</scope>
+				<key>___Room_ContainedThings</key>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.ThoughtWorker_EntityInRoomBase:CurrentStateInternal</method>
+				<scope>Key</scope>
+				<key>___Room_ContainedThings</key>
+			</LockPatch>
+			
 			<!-- TileTemperaturesComp -->
 			<!-- Fixed a bug caused by a race condition in TileTemperaturesComp.RetrieveCachedData. -->
 			<LockPatch>
