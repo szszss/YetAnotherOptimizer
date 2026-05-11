@@ -1,3 +1,5 @@
+## 1.0.17  (2026-05-11)
+
 * Compatibility: Research Reinvented
 * Fix: Thread-safe for Room.ContainedThings.
 * Fix: Thread-safe for Room.Owners when Performance Fish is installed.
