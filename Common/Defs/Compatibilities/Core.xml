@@ -314,6 +314,11 @@
 				<supportRecursion>true</supportRecursion>
 			</LockPatch>
 			
+			<!-- Pawn -->
+			<LockPatch>
+				<method>Verse.Pawn:GetDisabledWorkTypes</method>
+			</LockPatch>
+			
 			<!-- Pawn_RelationsTracker -->
 			<LockPatch>
 				<method>RimWorld.Pawn_RelationsTracker:get_FamilyByBlood</method>

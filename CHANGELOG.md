@@ -1,5 +1,6 @@
 * Compatibility: Job Failure Fixes (Under testing)
 * Compatibility: Smarter Construction (Under testing)
+* Fix: Thread-safe for Pawn.GetDisabledWorkTypes.
 * Refactor: Replace the lock of GenConstruct.CanConstruct with thread local.
 * Refactor: Optimize TransientPool performance.
 
