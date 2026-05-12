@@ -1,6 +1,7 @@
 * Compatibility: Job Failure Fixes (Under testing)
 * Compatibility: Smarter Construction (Under testing)
 * Refactor: Replace the lock of GenConstruct.CanConstruct with thread local.
+* Refactor: Optimize TransientPool performance.
 
 ## 1.0.17  (2026-05-11)
 
