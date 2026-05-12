@@ -1,3 +1,5 @@
+## 1.0.18  (2026-05-12)
+
 * Compatibility: Job Failure Fixes (Under testing)
 * Compatibility: Smarter Construction (Under testing)
 * Fix: Thread-safe for Pawn.GetDisabledWorkTypes.
