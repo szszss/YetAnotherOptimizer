@@ -15,15 +15,6 @@ namespace YaOpt.Patches.ThreadSafe
 		static IEnumerable<MethodBase> TargetMethods()
 		{
 			yield return AccessTools.PropertyGetter(typeof(Room), nameof(Room.ContainedAndAdjacentThings));
-			if (YaOptGlobal.HasType("PerformanceFish.RoomOptimizations/ContainedAndAdjacentThings_Patch"))
-			{
-				yield return AccessTools.Method(
-					AccessTools.TypeByName("PerformanceFish.RoomOptimizations/ContainedAndAdjacentThings_Patch"),
-					"ContainedAndAdjacentThings_Replacement");
-				yield return AccessTools.Method(
-					AccessTools.TypeByName("PerformanceFish.RoomOptimizations/ContainedAndAdjacentThings_Patch"),
-					"RefreshContainedAndAdjacentThings");
-			}
 		}
 
 		static bool Prepare()
@@ -33,17 +24,6 @@ namespace YaOpt.Patches.ThreadSafe
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
-			// If Performance Fish has already replaced this method, then just skip. 
-			var list = instructions.ToList();
-			if (list.Any(instruction => instruction.Calls("ContainedAndAdjacentThings_Replacement")))
-			{
-				foreach (var instruction in list)
-				{
-					yield return instruction;
-				}
-				yield break;
-			}
-
 			var localSet = generator.DeclareLocal(typeof(HashSet<Thing>));
 			var localList = generator.DeclareLocal(typeof(List<Thing>));
 			var fieldSet = AccessTools.Field(typeof(Room), "uniqueContainedThingsSet");
@@ -63,7 +43,7 @@ namespace YaOpt.Patches.ThreadSafe
 				nameof(TransientPool<List<Thing>>.BorrowIfNotMainThread));
 			yield return CodeInstruction.StoreLocal(localList.LocalIndex);
 
-			foreach (var instruction in list)
+			foreach (var instruction in instructions)
 			{
 				// replace this.uniqueContainedThingsSet with localSet
 				if (instruction.LoadsField(fieldSet))
@@ -79,8 +59,43 @@ namespace YaOpt.Patches.ThreadSafe
 					yield return CodeInstruction.LoadLocal(localList.LocalIndex);
 					continue;
 				}
+				// Experimental fix for crash
+				if (instruction.Calls("ContainedAndAdjacentThings_Replacement"))
+				{
+					yield return CodeInstruction.LoadLocal(localSet.LocalIndex);
+					yield return CodeInstruction.LoadLocal(localList.LocalIndex);
+					instruction.operand = AccessTools.Method(
+						typeof(Verse_Room_ContainedAndAdjacentThings),
+						nameof(ContainedAndAdjacentThings));
+				}
 				yield return instruction;
 			}
+		}
+
+		static List<Thing> ContainedAndAdjacentThings(Room instance,
+			HashSet<Thing> uniqueContainedThingsSet,
+			List<Thing> uniqueContainedThings)
+		{
+			uniqueContainedThingsSet.Clear();
+			uniqueContainedThings.Clear();
+			var regions = instance.Regions;
+			for (var i = 0; i < regions.Count; i++)
+			{
+				var allThings = regions[i].ListerThings.AllThings;
+				if (allThings != null)
+				{
+					for (var j = 0; j < allThings.Count; j++)
+					{
+						var thing = allThings[j];
+						if (uniqueContainedThingsSet.Add(thing))
+						{
+							uniqueContainedThings.Add(thing);
+						}
+					}
+				}
+			}
+			uniqueContainedThingsSet.Clear();
+			return uniqueContainedThings;
 		}
 	}
 }
