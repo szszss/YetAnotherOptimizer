@@ -50,6 +50,18 @@ namespace YaOpt.Patches.Compatibility.WhileYouAreUp
 				{
 					instruction.operand = "ResourcesAvailable";
 				}
+				// While You're Up - Performance Fix (fluxxfield.whileyoureup.perffix)
+				else if (instruction.Calls("GetValue"))
+				{
+					yield return new CodeInstruction(OpCodes.Pop);
+					yield return new CodeInstruction(OpCodes.Pop);
+					yield return CodeInstruction.LoadField(
+						typeof(ThreadLocalConstructDeliverResources),
+						nameof(ThreadLocalConstructDeliverResources.ResourcesAvailable));
+					yield return new CodeInstruction(OpCodes.Call,
+						AccessTools.PropertyGetter(typeof(ThreadLocal<List<Thing>>), "Value"));
+					continue;
+				}
 
 				yield return instruction;
 

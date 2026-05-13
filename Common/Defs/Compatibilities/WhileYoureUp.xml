@@ -11,6 +11,17 @@
 		</workGiverCompatibilities>
 	</YaOpt.CompatibilityDef>
 	
+		<!-- While you're up 1.6 Performance Fix Fork -->
+	<YaOpt.CompatibilityDef MayRequire="fluxxfield.whileyoureup.perffix">
+		<defName>WhileYoureUp</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>RimWorld.WorkGiver_ConstructDeliverResources</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+	
 	<!-- While you're up 1.5 -->
 	<YaOpt.CompatibilityDef MayRequire="CodeOptimist.JobsOfOpportunity">
 		<defName>WhileYoureUp</defName>
@@ -24,6 +35,21 @@
 
 	<!-- While you're up + Pick up and haul 1.6 -->
 	<YaOpt.CompatibilityDef MayRequire="zsbk.patch16.whileyoureup,Mehni.PickUpAndHaul">
+		<defName>WhileYoureUp_PickUpAndHaul</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>PickUpAndHaul.WorkGiver_HaulToInventory</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+			<WorkGiverCompatibility> <!-- Occur in very rare cases. Maybe because of Performance Fish, too. -->
+				<workGiverClass>WorkGiver_HaulGeneral</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+	</YaOpt.CompatibilityDef>
+	
+	<!-- While you're up Performance Fix Fork + Pick up and haul 1.6 -->
+	<YaOpt.CompatibilityDef MayRequire="fluxxfield.whileyoureup.perffix,Mehni.PickUpAndHaul">
 		<defName>WhileYoureUp_PickUpAndHaul</defName>
 		<workGiverCompatibilities>
 			<WorkGiverCompatibility>
