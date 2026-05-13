@@ -1,3 +1,4 @@
+* Fix: Thread-safe for TendUtility, Medicine, and BuildableDef.PlaceWorkers.
 * Refactor: Replace the PooledList of ThreadLocalHelper with TransientPool.
 
 ## 1.0.18  (2026-05-12)

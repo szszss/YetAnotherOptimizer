@@ -190,6 +190,26 @@
 				<method>RimWorld.TraitSet:get_TraitsSorted</method>
 				<replace>tmpTraits</replace>
 			</ThreadLocalPatch>
+			
+			<!-- TendUtility -->
+			<ThreadLocalPatch>
+				<method>RimWorld.TendUtility:GetOptimalHediffsToTendWithSingleTreatment</method>
+				<replace>tmpHediffs</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.TendUtility:SortByTendPriority</method>
+				<replace>tmpHediffsWithTendPriority</replace>
+			</ThreadLocalPatch>
+			
+			<!-- Medicine -->
+			<ThreadLocalPatch>
+				<method>RimWorld.Medicine:GetMedicineCountToFullyHeal</method>
+				<replace>tmpHediffs</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RimWorld.Medicine:GetMedicineCountToFullyHeal</method>
+				<replace>tendableHediffsInTendPriorityOrder</replace>
+			</ThreadLocalPatch>
 		</threadLocalPatches>
 		
 		<lockPatches>
@@ -203,7 +223,7 @@
 			<LockPatch>
 				<method>Verse.BodyDef:GetPartsWithTag</method>
 			</LockPatch>
-			
+
 			<!-- Room -->
 			<LockPatch>
 				<method>Verse.Room:GetRoomRoleIfBuildingPlaced</method>
@@ -332,6 +352,11 @@
 			<!-- AutoSlaughterManager -->
 			<LockPatch>
 				<method>Verse.AutoSlaughterManager:get_AnimalsToSlaughter</method>
+			</LockPatch>
+			
+			<!-- BuildableDef -->
+			<LockPatch>
+				<method>Verse.BuildableDef:get_PlaceWorkers</method>
 			</LockPatch>
 			
 			<!-- CellFinder -->
