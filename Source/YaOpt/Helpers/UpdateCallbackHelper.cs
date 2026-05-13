@@ -126,8 +126,9 @@ namespace YaOpt.Helpers
 		{
 			YaOptGlobal.IsRendering = true;
 			var tick = Find.TickManager.TicksGame;
-			foreach (var callback in preRenderMethods)
+			for (var i = 0; i < preRenderMethods.Count; i++)
 			{
+				var callback = preRenderMethods[i];
 				try
 				{
 					callback(tick);
@@ -143,8 +144,9 @@ namespace YaOpt.Helpers
 		{
 			YaOptGlobal.IsRendering = false;
 			var tick = Find.TickManager.TicksGame;
-			foreach (var callback in postRenderMethods)
+			for (var i = 0; i < postRenderMethods.Count; i++)
 			{
+				var callback = postRenderMethods[i];
 				try
 				{
 					callback(tick);
@@ -159,8 +161,9 @@ namespace YaOpt.Helpers
 		public static void PreTick()
 		{
 			var tick = Find.TickManager.TicksGame;
-			foreach (var callback in preTickMethods)
+			for (var i = 0; i < preTickMethods.Count; i++)
 			{
+				var callback = preTickMethods[i];
 				try
 				{
 					callback(tick);
@@ -175,8 +178,9 @@ namespace YaOpt.Helpers
 		public static void PostTick()
 		{
 			var tick = Find.TickManager.TicksGame;
-			foreach (var callback in postTickMethods)
+			for (var i = 0; i < postTickMethods.Count; i++)
 			{
+				var callback = postTickMethods[i];
 				try
 				{
 					callback(tick);
@@ -191,8 +195,9 @@ namespace YaOpt.Helpers
 		public static void PreDynamicDraw()
 		{
 			var tick = Find.TickManager.TicksGame;
-			foreach (var callback in preDynamicDrawMethods)
+			for (var i = 0; i < preDynamicDrawMethods.Count; i++)
 			{
+				var callback = preDynamicDrawMethods[i];
 				try
 				{
 					callback(tick);
@@ -206,8 +211,9 @@ namespace YaOpt.Helpers
 
 		public static void ClearCache()
 		{
-			foreach (var callback in clearCacheMethods)
+			for (var i = 0; i < clearCacheMethods.Count; i++)
 			{
+				var callback = clearCacheMethods[i];
 				try
 				{
 					callback();

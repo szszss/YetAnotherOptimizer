@@ -1,7 +1,6 @@
 using RimWorld;
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Verse;
 using static YaOpt.Helpers.ThreadLocal.ThreadLocalHelper;
@@ -35,25 +34,9 @@ namespace YaOpt.Helpers.ThreadLocal
 		public static ThreadLocal<List<Thing>> TmpThings = new ThreadLocal<List<Thing>>(NewThingList);
 		public static ThreadLocal<List<Faction>> TmpFactionsOnMap = new ThreadLocal<List<Faction>>(NewList<Faction>);
 
-		private static readonly ConcurrentBag<List<Pawn>>[] takenPooledFactionListStack = new ConcurrentBag<List<Pawn>>[]
-		{
-			new ConcurrentBag<List<Pawn>>(),
-			new ConcurrentBag<List<Pawn>>(),
-			new ConcurrentBag<List<Pawn>>()
-		};
-
-		private static int stackDepth = 0;
-
 		static ThreadLocalMapPawns()
 		{
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
-			UpdateCallbackHelper.RegisterPreTickCallback((_) => { PushPooledListsStack(); });
-			UpdateCallbackHelper.RegisterPostTickCallback((_) => { PopPooledListsStack(); });
-			UpdateCallbackHelper.RegisterPostRenderCallback((_) =>
-			{
-				PopPooledListsStack();
-				PushPooledListsStack();
-			});
 		}
 
 		private static void ClearCache()
@@ -106,46 +89,12 @@ namespace YaOpt.Helpers.ThreadLocal
 			TmpThings = new ThreadLocal<List<Thing>>(NewThingList);
 			TmpFactionsOnMap.Dispose();
 			TmpFactionsOnMap = new ThreadLocal<List<Faction>>(NewList<Faction>);
-
-			while (stackDepth >= 0)
-			{
-				PopPooledListsStack();
-			}
-			PushPooledListsStack();
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static List<Pawn> GetPooledList()
 		{
-			if (stackDepth < 0)
-			{
-				throw new Exception("Unable to get pooled list. The stack is empty.");
-			}
-			var list = ConcurrentPool<List<Pawn>>.Get();
-			takenPooledFactionListStack[stackDepth].Add(list);
-			return list;
-		}
-
-		public static void PushPooledListsStack()
-		{
-			if (stackDepth >= takenPooledFactionListStack.Length - 1)
-			{
-				throw new Exception("Unable to push PooledListsStack. The stack is already full.");
-			}
-			stackDepth++;
-		}
-
-		public static void PopPooledListsStack()
-		{
-			if (stackDepth < 0)
-			{
-				throw new Exception("Unable to pop PooledListsStack. The stack is already empty.");
-			}
-			var lists = takenPooledFactionListStack[stackDepth--];
-			while (lists.TryTake(out var list))
-			{
-				list.Clear();
-				ConcurrentPool<List<Pawn>>.Return(list);
-			}
+			return TransientPool<List<Pawn>>.Borrow();
 		}
 	}
 }

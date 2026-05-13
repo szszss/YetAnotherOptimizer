@@ -13,7 +13,6 @@ using Unity.Jobs.LowLevel.Unsafe;
 using Verse;
 using Verse.AI;
 using YaOpt.Defines;
-using YaOpt.Helpers.ThreadLocal;
 using static YaOpt.Defines.WorkGiverCompatibility.Parallelism;
 
 namespace YaOpt.Helpers
@@ -92,7 +91,6 @@ namespace YaOpt.Helpers
 		{
 			if (Running)
 				throw new Exception("Cannot recursively call ParellellyIssueJobPackage");
-			ThreadLocalMapPawns.PushPooledListsStack();
 			Running = true;
 			try
 			{
@@ -283,7 +281,6 @@ namespace YaOpt.Helpers
 				Running = false;
 				ReservationPromiser.Stop();
 				ReservationPromiser.Clear();
-				ThreadLocalMapPawns.PopPooledListsStack();
 				while (jobResults.TryTake(out var result))
 				{
 					result.Dispose(pawn);

@@ -61,7 +61,7 @@ namespace YaOpt.Helpers
 					_pool = newPool;
 				}
 			}
-			
+
 			_maxBorrowCount = 0;
 		}
 
