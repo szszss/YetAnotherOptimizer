@@ -334,6 +334,11 @@
 				<supportRecursion>true</supportRecursion>
 			</LockPatch>
 			
+			<!-- SituationalThoughtHandler -->
+			<LockPatch>
+				<method>RimWorld.SituationalThoughtHandler:CheckRecalculateSocialThoughts</method>
+			</LockPatch>
+			
 			<!-- Pawn -->
 			<LockPatch>
 				<method>Verse.Pawn:GetDisabledWorkTypes</method>

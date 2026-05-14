@@ -1,3 +1,5 @@
+* Fix: Thread-safe for SituationalThoughtHandler.CheckRecalculateSocialThoughts.
+
 ## 1.0.19  (2026-05-13)
 
 * Compatibility: While You're Up - Performance Fix Fork
