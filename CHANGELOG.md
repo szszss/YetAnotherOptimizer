@@ -1,3 +1,5 @@
+## 1.0.19  (2026-05-13)
+
 * Compatibility: While You're Up - Performance Fix Fork
 * Fix: Thread-safe for TendUtility, Medicine, and BuildableDef.PlaceWorkers.
 * Refactor: Replace the PooledList of ThreadLocalHelper with TransientPool.
