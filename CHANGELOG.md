@@ -1,4 +1,5 @@
 * Fix: Thread-safe for SituationalThoughtHandler.CheckRecalculateSocialThoughts.
+* Fix: Thread-safe for RegionGrid.
 
 ## 1.0.19  (2026-05-13)
 
