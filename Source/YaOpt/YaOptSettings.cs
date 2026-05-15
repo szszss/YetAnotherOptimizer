@@ -59,17 +59,16 @@ namespace YaOpt
 		/// <list type="bullet">
 		/// <item>Removes <c>ComputeCulledThings</c>, <c>DynamicDrawPhase(DrawPhase.EnsureInitialized)</c>,
 		///		and <c>PreDrawVisibleThings</c> from <c>DynamicDrawManager.DrawDynamicThings</c>.</item>
-		/// <item>Moves camera culling (<c>ComputeCulledThings</c>) to <c>MapMeshDrawerUpdate_First</c>
-		///		(which runs before dynamic drawing).</item>
-		/// <item>Moves initialization and parallel preparation to <c>DrawMapMesh</c>
-		///		(which allows the main thread to render the static map mesh while worker threads prepare dynamic things).</item>
+		/// <item>Runs camera culling (<c>ComputeCulledThings</c>) before <c>MapMeshDrawerUpdate_First</c>.</item>
+		/// <item>Runs initialization and parallel preparation before <c>DrawMapMesh</c>.</item>
 		/// </list>
 		/// </summary>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_ComputeCulledThings"/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_DrawDynamicThings"/>
 		/// <seealso cref="Patches.Verse_DynamicDrawManager_PreDrawVisibleThings"/>
-		/// <seealso cref="Patches.Verse_MapDrawer_DrawMapMesh"/>
-		/// <seealso cref="Patches.Verse_MapDrawer_MapMeshDrawerUpdate_First"/>
+		/// <seealso cref="Patches.Verse_Map_MapUpdate"/>
+		/// <seealso cref="Patches.YaOpt_Helpers_ParallelPreDrawHelper_StartPreDrawJob"/>
+		/// <seealso cref="Patches.YaOpt_Helpers_ParallelPreDrawHelper_StartCullingJob"/>
 		public OptimizationOption OptEarlyRenderPrepare { get; } = new OptimizationOption
 		{
 			Name = "YaOpt.Setting.Option.EarlyRenderPrepare",

@@ -170,6 +170,19 @@ namespace YaOpt.Helpers
 			return true;
 		}
 
+		/// <see cref="Patches.YaOpt_Helpers_ParallelPreDrawHelper_StartCullingJob"/>
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public static void StartCullingJob()
+		{
+			// Stub method. Will be replaced by the harmony patch.
+			throw new NotImplementedException();
+
+			// var nativeArray = new NativeArray<DynamicDrawManager.ThingCullDetails>(
+			//		Find.CurrentMap.dynamicDrawManager.drawThings.Count, Allocator.TempJob, NativeArrayOptions.ClearMemory);
+			// ParallelPreDrawHelper.Data = (object)nativeArray;
+			// Find.CurrentMap.dynamicDrawManager.ComputeCulledThings(nativeArray);
+		}
+
 		/// <summary>
 		/// Waits for the camera culling job to complete using spin-wait.
 		/// </summary>
@@ -180,6 +193,25 @@ namespace YaOpt.Helpers
 		public static void WaitUntilCullJobComplete()
 		{
 			CullJobHandle.CompleteWithSpinWait();
+		}
+
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public static void StartPreDrawJob()
+		{
+			// Stub method. Will be replaced by the harmony patch.
+			throw new NotImplementedException();
+
+			// ParallelPreDrawHelper.WaitUntilCullJobComplete();
+			// var nativeArray = (NativeArray<DynamicDrawManager.ThingCullDetails>)ParallelPreDrawHelper.Data;
+			// var drawThings = Find.CurrentMap.dynamicDrawManager.drawThings;
+			// for (int i = 0, j = nativeArray.length; i < j, i++)
+			// {
+			//   if (nativeArray[i].shouldDraw)
+			//   {
+			//     drawThings[i].DynamicDrawPhase(DrawPhase.EnsureInitialized);
+			//   }
+			// }
+			// Find.CurrentMap.dynamicDrawManager.PreDrawVisibleThings(nativeArray);
 		}
 
 		/// <summary>

@@ -11,9 +11,9 @@ namespace YaOpt.Patches
 	/// Initiates parallel camera culling before map mesh rendering starts.
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
-	[HarmonyPatch(typeof(MapDrawer))]
-	[HarmonyPatch(nameof(MapDrawer.MapMeshDrawerUpdate_First))]
-	internal static class Verse_MapDrawer_MapMeshDrawerUpdate_First
+	[HarmonyPatch(typeof(ParallelPreDrawHelper))]
+	[HarmonyPatch(nameof(ParallelPreDrawHelper.StartCullingJob))]
+	internal static class YaOpt_Helpers_ParallelPreDrawHelper_StartCullingJob
 	{
 		static bool Prepare()
 		{
@@ -53,10 +53,7 @@ namespace YaOpt.Patches
 			yield return CodeInstruction.LoadLocal(local.LocalIndex);
 			yield return CodeInstruction.Call(typeof(DynamicDrawManager), "ComputeCulledThings");
 
-			foreach (var instruction in instructions)
-			{
-				yield return instruction;
-			}
+			yield return new CodeInstruction(OpCodes.Ret);
 		}
 	}
 }

@@ -11,9 +11,9 @@ namespace YaOpt.Patches
 	/// Performs parallel pawn render preparation while map mesh is being drawn.
 	/// </summary>
 	/// <seealso cref="YaOptSettings.OptEarlyRenderPrepare"/>
-	[HarmonyPatch(typeof(MapDrawer))]
-	[HarmonyPatch(nameof(MapDrawer.DrawMapMesh))]
-	internal static class Verse_MapDrawer_DrawMapMesh
+	[HarmonyPatch(typeof(ParallelPreDrawHelper))]
+	[HarmonyPatch(nameof(ParallelPreDrawHelper.StartPreDrawJob))]
+	internal static class YaOpt_Helpers_ParallelPreDrawHelper_StartPreDrawJob
 	{
 		static bool Prepare()
 		{
@@ -86,10 +86,7 @@ namespace YaOpt.Patches
 			yield return CodeInstruction.LoadLocal(localNativeArray.LocalIndex);
 			yield return CodeInstruction.Call(typeof(DynamicDrawManager), "PreDrawVisibleThings");
 
-			foreach (var instruction in instructions)
-			{
-				yield return instruction;
-			}
+			yield return new CodeInstruction(OpCodes.Ret);
 		}
 	}
 }
