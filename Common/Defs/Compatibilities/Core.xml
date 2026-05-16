@@ -269,6 +269,7 @@
 					<li>Verse.ThingDef</li>
 					<li>bool</li>
 				</parameters>
+				<supportRecursion>true</supportRecursion> <!-- For compatibility with Nivarian Race -->
 			</LockPatch>
 			
 			<!-- FleeUtility -->
