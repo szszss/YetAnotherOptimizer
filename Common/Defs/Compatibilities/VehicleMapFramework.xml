@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="oels.vehiclemapframework">
+		<defName>VehicleMapFramework</defName>
+		<BannedOptimizations>
+			<li>OptParallelWorkGiver</li>
+		</BannedOptimizations>
+		
+		<threadLocalPatches>
+			<ThreadLocalPatch>
+				<method>VehicleMapFramework.VehicleMapUtility:GetThingListAcrossMaps</method>
+				<replace>tmpThingList</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>VehicleMapFramework.VehicleMapUtility:AddColonistBuildingList</method>
+				<replace>tmpBuildingList</replace>
+			</ThreadLocalPatch>
+
+			<ThreadLocalPatch>
+				<method>VehicleMapFramework.ReservationAcrossMapsUtility:CanReserve</method>
+				<replace>tmpReservations</replace>
+			</ThreadLocalPatch>
+			
+			<ThreadLocalPatch>
+				<method>VehicleMapFramework.GenClosestCrossMap:ClosestThingReachable</method>
+				<replace>tmpThings</replace>
+			</ThreadLocalPatch>
+		</threadLocalPatches>
+		
+		<lockPatches>
+			<LockPatch>
+				<method>VehicleMapFramework.VehicleMapUtility:TryGetDrawPos</method>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>VehicleMapFramework.VehicleMapUtility:get_PositionOnBaseMap</method>
+			</LockPatch>
+			<LockPatch>
+				<method>VehicleMapFramework.VehicleMapUtility:get_PositionOnBaseMapSpawned</method>
+			</LockPatch>
+			<LockPatch>
+				<method>VehicleMapFramework.VehicleMapUtility:TryGetFullRotation</method>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
