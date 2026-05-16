@@ -2,7 +2,7 @@
 <ModMetaData>
 	<name>Yet another Optimizer</name>
 	<author>szszss</author>
-	<modVersion IgnoreIfNoMatchingField="True">1.0.20</modVersion>
+	<modVersion IgnoreIfNoMatchingField="True">1.0.21</modVersion>
 	<supportedVersions>
 		<li>1.6</li>
 	</supportedVersions>
