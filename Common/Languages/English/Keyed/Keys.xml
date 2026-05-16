@@ -38,6 +38,7 @@
 	<YaOpt.Setting.InvalidOption.RequireBurst>Requires loaded Burst library.</YaOpt.Setting.InvalidOption.RequireBurst>
 	<YaOpt.Setting.Message.RequireReload>Changed settings will take effect after loading a save or restarting the game.</YaOpt.Setting.Message.RequireReload>
 	<YaOpt.Setting.Note.Banned>Disabled by {0}</YaOpt.Setting.Note.Banned>
+	<YaOpt.Setting.Note.FromMod>{0} (from {1})</YaOpt.Setting.Note.FromMod>
 	<YaOpt.Setting.Note.Stability>[Stability Note]</YaOpt.Setting.Note.Stability>
 	<YaOpt.Setting.Note.Compatibility>[Mod Compatibility Note]</YaOpt.Setting.Note.Compatibility>
 	<YaOpt.Setting.Note.Prepatch>[Prepatch]</YaOpt.Setting.Note.Prepatch>

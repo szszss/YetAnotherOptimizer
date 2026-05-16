@@ -38,6 +38,7 @@
 	<YaOpt.Setting.InvalidOption.RequireBurst>需要正常載入的Burst庫。</YaOpt.Setting.InvalidOption.RequireBurst>
 	<YaOpt.Setting.Message.RequireReload>更改的設定將在載入存檔或重啟遊戲後生效。</YaOpt.Setting.Message.RequireReload>
 	<YaOpt.Setting.Note.Banned>被{0}停用</YaOpt.Setting.Note.Banned>
+	<YaOpt.Setting.Note.FromMod>{0}（來自 {1}）</YaOpt.Setting.Note.FromMod>
 	<YaOpt.Setting.Note.Stability>【穩定性說明】</YaOpt.Setting.Note.Stability>
 	<YaOpt.Setting.Note.Compatibility>【Mod相容性說明】</YaOpt.Setting.Note.Compatibility>
 	<YaOpt.Setting.Note.Prepatch>【預修補程式】</YaOpt.Setting.Note.Prepatch>

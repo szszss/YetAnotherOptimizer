@@ -68,9 +68,10 @@ namespace YaOpt
 									   $"couldn't find optimization {bannedOptimization}");
 						continue;
 					}
-					YaOptMod.Debug($"Optimization {bannedOptimization} is banned by {mod}.");
+					YaOptMod.Debug($"Optimization {bannedOptimization} is banned by {defName} from {mod}.");
 					CompatibilityDefines.CachedBannedOptimizations.Add(bannedOptimization);
-					CompatibilityDefines.CachedBannedBy[bannedOptimization] = mod;
+					CompatibilityDefines.CachedBannedBy[bannedOptimization] =
+						"YaOpt.Setting.Note.FromMod".Translate(defName, mod);
 				}
 			}
 
@@ -85,7 +86,7 @@ namespace YaOpt
 									   $"tried to ignore an inexistent toggle tab {toggleTabTypeName}.");
 						continue;
 					}
-					YaOptMod.Debug($"Toggle tab {toggleTabTypeName} will not be cached because of {mod}.");
+					YaOptMod.Debug($"Toggle tab {toggleTabTypeName} will not be cached because of {defName} from {mod}.");
 					CompatibilityDefines.CachedIgnoredToggleTabCaching.Add(type);
 				}
 			}
