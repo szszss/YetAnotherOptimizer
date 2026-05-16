@@ -1,3 +1,5 @@
+## 1.0.20  (2026-05-16)
+
 * Compatibility: Vehicle Map Framework (Under testing. Partial compatibility; Parallel Work Giver will be disabled)
 * Fix: Thread-safe for SituationalThoughtHandler.CheckRecalculateSocialThoughts.
 * Fix: Thread-safe for RegionGrid.
