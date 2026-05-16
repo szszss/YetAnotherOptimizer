@@ -1,4 +1,5 @@
 * Compatibility: Make CostListCalculator.CostListAdjusted reentrant. (For compatibility with Nivarian Race)
+* Fix: Constant job prediction may incorrectly dispose of the pawn's current job.
 
 ## 1.0.20  (2026-05-16)
 

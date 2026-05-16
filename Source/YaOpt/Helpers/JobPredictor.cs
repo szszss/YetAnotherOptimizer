@@ -453,7 +453,11 @@ namespace YaOpt.Helpers
 				if (thinkResult.IsValid)
 				{
 					var result = ThingHelper.ShouldStartJobFromThinkTree(pawn.jobs, thinkResult);
-					JobMaker.ReturnToPool(thinkResult.Job);
+					// Some ShouldStartJobFromThinkTree will return the pawn's current job. (i.e. Sentry Drone)
+					if (thinkResult.Job != pawn.CurJob)
+					{
+						JobMaker.ReturnToPool(thinkResult.Job);
+					}
 					return result;
 				}
 			}
