@@ -121,7 +121,7 @@ namespace YaOpt.Helpers
 				_thoughtHandler = thoughtHandler;
 				_situationalNonSocialThoughtDefs = situationalNonSocialThoughtDefs;
 			}
-
+			
 
 			public void Execute(int index)
 			{
