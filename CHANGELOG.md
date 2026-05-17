@@ -1,3 +1,5 @@
+* Fix: Fast Patch Operation may behave differently from the original operation in rare, specific cases.
+
 ## 1.0.22  (2026-05-17)
 
 * Compatibility: BondageFurniture

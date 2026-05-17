@@ -144,10 +144,15 @@ namespace YaOpt.Helpers
 
 											if (childNode.Name == nodeName)
 											{
-												var queryNode = childNode[queryName];
-												if (queryNode != null && queryNode.InnerText == queryValue)
+												foreach (object subObj in childNode.ChildNodes)
 												{
-													_tmpQueue.Enqueue((childNode, i));
+													if (subObj is XmlElement subElem &&
+														subElem.Name == queryName &&
+														subElem.InnerText == queryValue)
+													{
+														_tmpQueue.Enqueue((childNode, i));
+														break;
+													}
 												}
 											}
 										}
