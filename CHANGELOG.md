@@ -1,3 +1,5 @@
+## 1.0.22  (2026-05-17)
+
 * Compatibility: BondageFurniture
 * Refactor: Rewrite the XML compatibility patch loading method to provide better compatibility.
 
