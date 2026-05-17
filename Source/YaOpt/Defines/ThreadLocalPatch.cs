@@ -19,21 +19,23 @@ namespace YaOpt.Defines
 		[UsedImplicitly]
 		public void LoadDataFromXmlCustom(XmlNode xmlRoot)
 		{
-			XmlNode elem = null;
-			if ((elem = xmlRoot.SelectSingleNode("method")) != null)
+			foreach (XmlNode child in xmlRoot.ChildNodes)
 			{
-				_targetMethod = ParseHelper.FromString<string>(elem.InnerText);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("replace")) != null)
-			{
-				_fieldToReplace = ParseHelper.FromString<string>(elem.InnerText);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("parameters")) != null)
-			{
-				if (elem.HasChildNodes)
-					_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(elem, false);
-				else
-					_methodParameters = new List<string>(0);
+				switch (child.Name)
+				{
+				case "method":
+					_targetMethod = ParseHelper.FromString<string>(child.InnerText);
+					break;
+				case "replace":
+					_fieldToReplace = ParseHelper.FromString<string>(child.InnerText);
+					break;
+				case "parameters":
+					if (child.HasChildNodes)
+						_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(child, false);
+					else
+						_methodParameters = new List<string>(0);
+					break;
+				}
 			}
 		}
 

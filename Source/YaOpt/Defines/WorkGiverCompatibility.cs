@@ -29,21 +29,23 @@ namespace YaOpt.Defines
 		[UsedImplicitly]
 		public void LoadDataFromXmlCustom(XmlNode xmlRoot)
 		{
-			XmlNode elem = null;
-			if ((elem = xmlRoot.SelectSingleNode("workGiverDefName")) != null)
+			foreach (XmlNode child in xmlRoot.ChildNodes)
 			{
-				WorkGiverDefName = ParseHelper.FromString<string>(elem.InnerText);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("workGiverClass")) != null)
-			{
-				WorkGiverClass = ParseHelper.FromString<string>(elem.InnerText);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("parallelism")) != null)
-			{
-				if (!Enum.TryParse(ParseHelper.FromString<string>(elem.InnerText), true, out WorkGiverParallelism))
+				switch (child.Name)
 				{
-					throw new XmlException(
-						$"Wrong YaOpt.CompatibilityDef.WorkGiverCompatibility.Parallelism: {WorkGiverParallelism}");
+				case "workGiverDefName":
+					WorkGiverDefName = ParseHelper.FromString<string>(child.InnerText);
+					break;
+				case "workGiverClass":
+					WorkGiverClass = ParseHelper.FromString<string>(child.InnerText);
+					break;
+				case "parallelism":
+					if (!Enum.TryParse(ParseHelper.FromString<string>(child.InnerText), true, out WorkGiverParallelism))
+					{
+						throw new XmlException(
+							$"Wrong YaOpt.CompatibilityDef.WorkGiverCompatibility.Parallelism: {WorkGiverParallelism}");
+					}
+					break;
 				}
 			}
 		}

@@ -25,35 +25,33 @@ namespace YaOpt.Defines
 		[UsedImplicitly]
 		public void LoadDataFromXmlCustom(XmlNode xmlRoot)
 		{
-			XmlNode elem = null;
-			if ((elem = xmlRoot.SelectSingleNode("method")) != null)
+			foreach (XmlNode child in xmlRoot.ChildNodes)
 			{
-				_targetMethod = ParseHelper.FromString<string>(elem.InnerText);
+				switch (child.Name)
+				{
+				case "method":
+					_targetMethod = ParseHelper.FromString<string>(child.InnerText);
+					break;
+				case "key":
+					_key = ParseHelper.FromString<string>(child.InnerText);
+					break;
+				case "scope":
+					_scope = Enum.Parse<LockScope>(child.InnerText, true);
+					break;
+				case "supportRecursion":
+					_supportRecursion = ParseHelper.ParseBool(child.InnerText);
+					break;
+				case "detectDeadlock":
+					_detectDeadlock = ParseHelper.ParseBool(child.InnerText);
+					break;
+				case "parameters":
+					if (child.HasChildNodes)
+						_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(child, false);
+					else
+						_methodParameters = new List<string>(0);
+					break;
+				}
 			}
-			if ((elem = xmlRoot.SelectSingleNode("key")) != null)
-			{
-				_key = ParseHelper.FromString<string>(elem.InnerText);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("scope")) != null)
-			{
-				_scope = Enum.Parse<LockScope>(elem.InnerText, true);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("supportRecursion")) != null)
-			{
-				_supportRecursion = ParseHelper.ParseBool(elem.InnerText);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("detectDeadlock")) != null)
-			{
-				_detectDeadlock = ParseHelper.ParseBool(elem.InnerText);
-			}
-			if ((elem = xmlRoot.SelectSingleNode("parameters")) != null)
-			{
-				if (elem.HasChildNodes)
-					_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(elem, false);
-				else
-					_methodParameters = new List<string>(0);
-			}
-
 		}
 
 		public LockPatchManager.PatchRequest Read(string owner)
