@@ -1,18 +1,18 @@
-using FacialAnimation;
-using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using FacialAnimation;
+using HarmonyLib;
 using YaOpt.Helpers.ThreadLocal;
 
-namespace YaOpt.OtherMod.FacialAnimation.Patches.Compatibility.InvertedRack
+namespace YaOpt.OtherMod.FacialAnimation.Patches.Compatibility.BondageFurniture
 {
-	[HarmonyPatch("DtrndGsInvertedRackMod.FacialAnimation_Compatibility", "FilterAnimations")]
-	internal static class DtrndGsInvertedRackMod_FacialAnimation_Compatibility_FilterAnimations
+	[HarmonyPatch("DDJY_BED.Patch.FacialAnimationControllerComp_Patch", "FilterAnimations")]
+	internal static class DDJY_BED_Patch_FacialAnimationControllerComp_Patch_FilterAnimations
 	{
 		static bool Prepare(MethodBase original)
 		{
-			return SubMod.OptFAAnimCache.Enabled && YaOptGlobal.HasMod("dtrndg.invertedrack");
+			return SubMod.OptFAAnimCache.Enabled && YaOptGlobal.HasMod("ddjy.bondagefurniture");
 		}
 
 		static void Postfix(ref IEnumerable<object> __result, IEnumerable<object> animations)

@@ -15,7 +15,10 @@ namespace YaOpt.OtherMod.FacialAnimation.Patches
 	/// <seealso cref="SubMod.OptFAAnimCache"/>
 	[HarmonyPatch(typeof(FacialAnimationControllerComp))]
 	[HarmonyPatch(nameof(FacialAnimationControllerComp.UpdateAnimation))]
-	[HarmonyAfter("DtrndG.InvertedRack")]
+	[HarmonyAfter(
+		"DtrndG.InvertedRack", // DtrndGs Inverted Rack (dtrndg.invertedrack)
+		"FacialAnimation_Patch" // BondageFurniture (ddjy.bondagefurniture)
+		)]
 	internal static class FacialAnimation_FacialAnimationControllerComp_UpdateAnimation
 	{
 		static bool Prepare(MethodBase original)
