@@ -2,9 +2,9 @@
 <Defs>
 	<YaOpt.CompatibilityDef MayRequire="oels.vehiclemapframework">
 		<defName>VehicleMapFramework</defName>
-		<BannedOptimizations>
+		<bannedOptimizations>
 			<li>OptParallelWorkGiver</li>
-		</BannedOptimizations>
+		</bannedOptimizations>
 		
 		<threadLocalPatches>
 			<ThreadLocalPatch>
