@@ -29,7 +29,8 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 					if (param?.Length == 1 && param[0].ParameterType == typeof(Region) &&
 						method.ReturnType == typeof(bool) &&
 						(method.Name.Contains("<RandomRegionNear>") ||
-						 method.Name.Contains("<TryFindRandomReachableNearbyCell>")))
+						 method.Name.Contains("<TryFindRandomReachableNearbyCell>") ||
+						 method.Name.Contains("<TryFindRandomReachableCellNearPosition>")))
 					{
 						YaOptMod.Debug($"MultiTargets_CellFinder found a method from CellFinder: {method.FullName()}");
 						yield return method;

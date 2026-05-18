@@ -1,4 +1,5 @@
 * Fix: Fast Patch Operation may behave differently from the original operation in rare, specific cases.
+* Fix: CellFinder.TryFindRandomReachableCellNearPosition may not work.
 
 ## 1.0.22  (2026-05-17)
 
