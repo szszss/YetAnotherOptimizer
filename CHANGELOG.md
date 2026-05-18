@@ -1,3 +1,5 @@
+## 1.0.23  (2026-05-18)
+
 * Compatibility: Pick Up And Haul compatibility patch will recognize the unofficial fork (package id: mehni.pickupandhaul.unoffical), though this version is obsolete.
 * Fix: Fast Patch Operation may behave differently from the original operation in rare, specific cases.
 * Fix: CellFinder.TryFindRandomReachableCellNearPosition may not work.
