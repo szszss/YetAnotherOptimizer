@@ -23,7 +23,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
 				foreach (var method in nestedType.GetMethods(
-					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
 				{
 					var param = method.GetParameters();
 					if (param?.Length == 1 && param[0].ParameterType == typeof(Region) &&

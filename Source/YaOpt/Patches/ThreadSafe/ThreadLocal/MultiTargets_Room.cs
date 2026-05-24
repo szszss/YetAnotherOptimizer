@@ -22,7 +22,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 				if (nestedType.IsGenericType)
 					continue;
 				foreach (var method in nestedType.GetMethods(
-					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
 				{
 					if (nestedType.Name.Contains("<ContainedThings>") &&
 						method.Name == "MoveNext")

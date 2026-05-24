@@ -30,7 +30,7 @@ namespace YaOpt.Patches.ThreadSafe
 			{
 				if (nested.GetField("<>1__state", BindingFlags.NonPublic | BindingFlags.Instance) == null)
 					continue;
-				foreach (var method in nested.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+				foreach (var method in nested.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 				{
 					if (method.Name == "Reset") continue;
 					yield return method;

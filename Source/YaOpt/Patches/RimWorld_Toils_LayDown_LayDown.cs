@@ -20,7 +20,7 @@ namespace YaOpt.Patches
 		{
 			foreach (var nestedType in typeof(Toils_LayDown).GetNestedTypes(BindingFlags.NonPublic))
 			{
-				foreach (var method in nestedType.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
+				foreach (var method in nestedType.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly))
 				{
 					if (method.ReturnType == typeof(void) && method.GetParameters().Length == 0)
 					{

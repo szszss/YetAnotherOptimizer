@@ -17,7 +17,7 @@ namespace YaOpt.Patches.ThreadSafe.ThreadLocal
 			{
 				foreach (var method in nestedType.GetMethods(
 					BindingFlags.Instance | BindingFlags.Static |
-					BindingFlags.Public | BindingFlags.NonPublic))
+					BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
 				{
 					if (nestedType.Name.Contains("<get_AllRegions_NoRebuild_InvalidAllowed>") &&
 						method.Name == "MoveNext")
