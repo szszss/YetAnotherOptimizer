@@ -1,8 +1,8 @@
+using FacialAnimation;
+using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using FacialAnimation;
-using HarmonyLib;
 using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.OtherMod.FacialAnimation.Patches.Compatibility.BondageFurniture

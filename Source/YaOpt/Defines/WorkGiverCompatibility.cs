@@ -33,19 +33,19 @@ namespace YaOpt.Defines
 			{
 				switch (child.Name)
 				{
-				case "workGiverDefName":
-					WorkGiverDefName = ParseHelper.FromString<string>(child.InnerText);
-					break;
-				case "workGiverClass":
-					WorkGiverClass = ParseHelper.FromString<string>(child.InnerText);
-					break;
-				case "parallelism":
-					if (!Enum.TryParse(ParseHelper.FromString<string>(child.InnerText), true, out WorkGiverParallelism))
-					{
-						throw new XmlException(
-							$"Wrong YaOpt.CompatibilityDef.WorkGiverCompatibility.Parallelism: {WorkGiverParallelism}");
-					}
-					break;
+					case "workGiverDefName":
+						WorkGiverDefName = ParseHelper.FromString<string>(child.InnerText);
+						break;
+					case "workGiverClass":
+						WorkGiverClass = ParseHelper.FromString<string>(child.InnerText);
+						break;
+					case "parallelism":
+						if (!Enum.TryParse(ParseHelper.FromString<string>(child.InnerText), true, out WorkGiverParallelism))
+						{
+							throw new XmlException(
+								$"Wrong YaOpt.CompatibilityDef.WorkGiverCompatibility.Parallelism: {WorkGiverParallelism}");
+						}
+						break;
 				}
 			}
 		}

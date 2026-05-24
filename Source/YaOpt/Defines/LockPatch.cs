@@ -29,27 +29,27 @@ namespace YaOpt.Defines
 			{
 				switch (child.Name)
 				{
-				case "method":
-					_targetMethod = ParseHelper.FromString<string>(child.InnerText);
-					break;
-				case "key":
-					_key = ParseHelper.FromString<string>(child.InnerText);
-					break;
-				case "scope":
-					_scope = Enum.Parse<LockScope>(child.InnerText, true);
-					break;
-				case "supportRecursion":
-					_supportRecursion = ParseHelper.ParseBool(child.InnerText);
-					break;
-				case "detectDeadlock":
-					_detectDeadlock = ParseHelper.ParseBool(child.InnerText);
-					break;
-				case "parameters":
-					if (child.HasChildNodes)
-						_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(child, false);
-					else
-						_methodParameters = new List<string>(0);
-					break;
+					case "method":
+						_targetMethod = ParseHelper.FromString<string>(child.InnerText);
+						break;
+					case "key":
+						_key = ParseHelper.FromString<string>(child.InnerText);
+						break;
+					case "scope":
+						_scope = Enum.Parse<LockScope>(child.InnerText, true);
+						break;
+					case "supportRecursion":
+						_supportRecursion = ParseHelper.ParseBool(child.InnerText);
+						break;
+					case "detectDeadlock":
+						_detectDeadlock = ParseHelper.ParseBool(child.InnerText);
+						break;
+					case "parameters":
+						if (child.HasChildNodes)
+							_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(child, false);
+						else
+							_methodParameters = new List<string>(0);
+						break;
 				}
 			}
 		}

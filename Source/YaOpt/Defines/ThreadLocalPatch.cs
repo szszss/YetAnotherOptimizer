@@ -23,18 +23,18 @@ namespace YaOpt.Defines
 			{
 				switch (child.Name)
 				{
-				case "method":
-					_targetMethod = ParseHelper.FromString<string>(child.InnerText);
-					break;
-				case "replace":
-					_fieldToReplace = ParseHelper.FromString<string>(child.InnerText);
-					break;
-				case "parameters":
-					if (child.HasChildNodes)
-						_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(child, false);
-					else
-						_methodParameters = new List<string>(0);
-					break;
+					case "method":
+						_targetMethod = ParseHelper.FromString<string>(child.InnerText);
+						break;
+					case "replace":
+						_fieldToReplace = ParseHelper.FromString<string>(child.InnerText);
+						break;
+					case "parameters":
+						if (child.HasChildNodes)
+							_methodParameters = DirectXmlToObject.ObjectFromXml<List<string>>(child, false);
+						else
+							_methodParameters = new List<string>(0);
+						break;
 				}
 			}
 		}
