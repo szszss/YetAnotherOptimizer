@@ -41,6 +41,12 @@
 			<LockPatch>
 				<method>VehicleMapFramework.VehicleMapUtility:TryGetFullRotation</method>
 			</LockPatch>
+			<LockPatch>
+				<method>VehicleMapFramework.CrossMapMapPawnsCache:Get</method>
+			</LockPatch>
+			<LockPatch>
+				<method>VehicleMapFramework.CrossMapMapPawnsCache:Sum</method>
+			</LockPatch>
 		</lockPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>

@@ -1,6 +1,7 @@
 * Fix: The false alarm that Elite Bionics Framework will detect itself violating the EBF protocol.
 * Fix: Thread-safe for Pawn_RelationsTracker.FamilyByBlood_Internal.
 * Fix: Parallel Post Map Tick attempts to duplicated destroy things, causing an error.
+* Fix: PawnsFinder.AllMaps and AllMaps_Spawned fail when Vehicle Map Framework is installed.
 
 ## 1.0.23  (2026-05-18)
 

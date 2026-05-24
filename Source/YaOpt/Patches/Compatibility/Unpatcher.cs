@@ -13,6 +13,8 @@ namespace YaOpt.Patches.Compatibility
 
 		private static bool unpatchedWyau;
 
+		private static bool unpatchedVmf;
+
 		private static bool shouldRecoverWyau;
 
 		public static void Unpatch()
@@ -61,7 +63,19 @@ namespace YaOpt.Patches.Compatibility
 					HarmonyPatchType.Postfix, "CodeOptimist.WhileYoureUp");
 			}
 
-
+			if (YaOptGlobal.NeedThreadSafe &&
+				YaOptGlobal.HasMod("oels.vehiclemapframework"))
+			{
+				unpatchedVmf = true;
+				YaOptGlobal.Harmony.Unpatch(AccessTools.PropertyGetter(
+						typeof(PawnsFinder),
+						nameof(PawnsFinder.AllMaps)),
+					HarmonyPatchType.Transpiler, "OELS.VehicleMapFramework");
+				YaOptGlobal.Harmony.Unpatch(AccessTools.PropertyGetter(
+						typeof(PawnsFinder),
+						nameof(PawnsFinder.AllMaps_Spawned)),
+					HarmonyPatchType.Transpiler, "OELS.VehicleMapFramework");
+			}
 		}
 
 		public static void PatchAgain()
