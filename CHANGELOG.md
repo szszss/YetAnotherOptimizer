@@ -1,3 +1,5 @@
+## 1.0.24  (2026-05-25)
+
 * Compatibility: Vanilla Gravship Expanded - Chapter 1
 * Fix: The false alarm that Elite Bionics Framework will detect itself violating the EBF protocol.
 * Fix: Thread-safe for Pawn_RelationsTracker.FamilyByBlood_Internal.
