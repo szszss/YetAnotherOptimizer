@@ -1,4 +1,5 @@
 * Fix: The false alarm that Elite Bionics Framework will detect itself violating the EBF protocol.
+* Fix: Thread-safe for Pawn_RelationsTracker.FamilyByBlood_Internal.
 
 ## 1.0.23  (2026-05-18)
 

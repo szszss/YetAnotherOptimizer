@@ -30,9 +30,11 @@ namespace YaOpt.Patches.ThreadSafe
 			{
 				if (nested.GetField("<>1__state", BindingFlags.NonPublic | BindingFlags.Instance) == null)
 					continue;
-				var moveNext = nested.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
-				if (moveNext != null)
-					yield return moveNext;
+				foreach (var method in nested.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+				{
+					if (method.Name == "Reset") continue;
+					yield return method;
+				}
 			}
 		}
 
