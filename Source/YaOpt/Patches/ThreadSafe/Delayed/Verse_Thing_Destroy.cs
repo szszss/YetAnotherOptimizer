@@ -33,6 +33,10 @@ namespace YaOpt.Patches.ThreadSafe.Delayed
 			{
 				while (_delayedThingDestroy.TryDequeue(out var result))
 				{
+					if (result.Item1.Destroyed)
+					{
+						continue;
+					}
 					var oldValue = Thing.allowDestroyNonDestroyable;
 					Thing.allowDestroyNonDestroyable = result.Item3;
 					result.Item1.Destroy(result.Item2);
