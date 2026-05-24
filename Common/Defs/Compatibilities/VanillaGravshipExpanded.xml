@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="vanillaexpanded.gravship">
+		<defName>VanillaGravshipExpanded</defName>
+		<threadLocalPatches>
+			<ThreadLocalPatch>
+				<method>VanillaGravshipExpanded.ListAllGravEngines_Patch:ReturnAllGravEngines</method>
+				<replace>TmpList</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>VanillaGravshipExpanded.PlaceWorker_InRangeOfGravEngine_DrawGhost_Patch:AllLinkableBuildings</method>
+				<replace>TmpWorkingList</replace>
+			</ThreadLocalPatch>
+		</threadLocalPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
