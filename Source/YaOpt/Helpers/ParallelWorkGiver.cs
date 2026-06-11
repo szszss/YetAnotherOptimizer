@@ -19,9 +19,9 @@ namespace YaOpt.Helpers
 {
 	internal static class ParallelWorkGiver
 	{
-		public static bool Running;
+		public static volatile bool Running;
 
-		private static /*volatile*/ int workingFence;
+		private static volatile int workingFence;
 
 		private static int jobIssueErrorAfter;
 

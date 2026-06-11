@@ -19,7 +19,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 
 		private static JobHandle _jobHandle = default;
 
-		private static bool _jobRunning = false;
+		private static volatile bool _jobRunning = false;
 
 		private static readonly List<Pawn> _pendingPawns = new List<Pawn>();
 

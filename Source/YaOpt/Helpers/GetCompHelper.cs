@@ -120,9 +120,10 @@ namespace YaOpt.Helpers
 					};
 				}
 				_tmpCompsByType.Clear();
-				_listVersionFieldRef(comps) = hasThingHolder
+				var newVersion = hasThingHolder
 						? VERSION_MAGICNUMBER_HAS_THINGHOLDER
 						: VERSION_MAGICNUMBER_NO_THINGHOLDER;
+				Volatile.Write(ref _listVersionFieldRef(comps), newVersion);
 			}
 		}
 
@@ -148,7 +149,7 @@ namespace YaOpt.Helpers
 				lock (compsByType)
 				{
 					Interlocked.MemoryBarrier();
-					version = _listVersionFieldRef(compList);
+					version = Volatile.Read(ref _listVersionFieldRef(compList));
 					if (version != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
 						version != VERSION_MAGICNUMBER_NO_THINGHOLDER)
 					{
@@ -205,7 +206,7 @@ namespace YaOpt.Helpers
 				lock (compsByType)
 				{
 					Interlocked.MemoryBarrier();
-					listVersion = _listVersionFieldRef(list);
+					listVersion = Volatile.Read(ref _listVersionFieldRef(list));
 					if (listVersion != VERSION_MAGICNUMBER_HAS_THINGHOLDER &&
 						listVersion != VERSION_MAGICNUMBER_NO_THINGHOLDER)
 					{

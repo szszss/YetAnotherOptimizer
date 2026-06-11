@@ -93,7 +93,13 @@ namespace YaOpt
 		/// <seealso cref="Helpers.JobPredictor"/>
 		/// <seealso cref="ParallelWorkGiver"/>
 		/// <seealso cref="Helpers.ParallelThoughtUpdater"/>
-		public static bool IsParallelRunningInTick { get; set; }
+		public static bool IsParallelRunningInTick
+		{
+			get => _isParallelRunningInTick;
+			set => _isParallelRunningInTick = value;
+		}
+
+		private static volatile bool _isParallelRunningInTick;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the game world is currently being rendered.
@@ -104,7 +110,13 @@ namespace YaOpt
 		/// restrictions to be relaxed. Essentially, this value functions the same as
 		/// <c>IsParallelRunningInTick</c>, telling the program to relax thread safety checks.
 		/// </remarks>
-		public static bool IsRendering { get; set; }
+		public static bool IsRendering
+		{
+			get => _isRendering;
+			set => _isRendering = value;
+		}
+
+		private static volatile bool _isRendering;
 
 		/// <summary>
 		/// Gets the singleton mod instance.

@@ -782,7 +782,7 @@ namespace YaOpt.Helpers
 					tmpTex.LoadImage(array);
 					texture.Reinitialize(tmpTex.width, tmpTex.height, tmpTex.format, tmpTex.mipmapCount > 1);
 					texture.LoadRawTextureData(tmpTex.GetRawTextureData());
-					global::UnityEngine.Object.DestroyImmediate(tmpTex);
+					global::UnityEngine.Object.Destroy(tmpTex);
 				}
 			}
 			var flag = texture.width % 4 == 0 && texture.height % 4 == 0;
@@ -817,7 +817,7 @@ namespace YaOpt.Helpers
 								mipmapWidth, mipmapHeight, texture, 0, i, 0, 0);
 						}
 
-						global::UnityEngine.Object.DestroyImmediate(compressedTex);
+						global::UnityEngine.Object.Destroy(compressedTex);
 					}
 					else
 					{
