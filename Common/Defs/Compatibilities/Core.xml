@@ -277,6 +277,43 @@
 			<LockPatch>
 				<method>RimWorld.FleeUtility:FleeJob</method>
 			</LockPatch>
+			
+			<!-- GenLabel -->
+			<LockPatch>
+				<method>RimWorld.GenLabel:BestGroupLabel</method>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.GenLabel:ThingLabel</method>
+				<parameters>
+					<li>Verse.BuildableDef</li>
+					<li>Verse.ThingDef</li>
+					<li>int</li>
+				</parameters>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.GenLabel:ThingLabel</method>
+				<parameters>
+					<li>Verse.Thing</li>
+					<li>int</li>
+					<li>bool</li>
+					<li>bool</li>
+				</parameters>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.GenLabel:ThingsLabel</method>
+				<parameters>
+					<li>System.Collections.Generic.IEnumerable(Verse.Thing)</li>
+					<li>string</li>
+				</parameters>
+			</LockPatch>
+			<LockPatch>
+				<method>RimWorld.GenLabel:ThingsLabel</method>
+				<parameters>
+					<li>System.Collections.Generic.List(Verse.ThingCount)</li>
+					<li>string</li>
+					<li>bool</li>
+				</parameters>
+			</LockPatch>
 
 			<!-- ItemAvailability -->
 			<LockPatch>
