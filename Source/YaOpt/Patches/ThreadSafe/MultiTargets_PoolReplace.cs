@@ -32,8 +32,8 @@ namespace YaOpt.Patches.ThreadSafe
 					continue;
 				foreach (var method in nested.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly))
 				{
-					if (method.Name == "Reset") continue;
-					yield return method;
+					if (method.Name == "MoveNext" || method.Name.StartsWith("<>m__Finally"))
+						yield return method;
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 * Compatibility: RepairableGear
 * Fix: Thread-safe for GenLabel (Some mods use it multi-threaded)
+* Fix: Pawn_RelationsTracker.RelatedPawns may fail in some situations.
 
 ## 1.0.24  (2026-05-25)
 
