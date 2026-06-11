@@ -24,6 +24,8 @@ namespace YaOpt.Patches
 		{
 			if (!__runOriginal)
 				return false;
+			if (!YaOptGlobal.IsInMainThread)
+				return true;
 			___thoughtsDirty = false;
 			ParallelThoughtUpdater.Update(__instance, ___cachedThoughts);
 			return false;
