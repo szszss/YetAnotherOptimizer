@@ -1,3 +1,4 @@
+* Compatibility: RepairableGear
 * Fix: Thread-safe for GenLabel (Some mods use it multi-threaded)
 
 ## 1.0.24  (2026-05-25)

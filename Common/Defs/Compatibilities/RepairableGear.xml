@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="stevezero.repairablegear">
+		<defName>RepairableGear</defName>
+		<workGiverCompatibilities>
+			<WorkGiverCompatibility>
+				<workGiverClass>RepairableGear.WorkGiver_RepairItem</workGiverClass>
+				<parallelism>MainThreaded</parallelism>
+			</WorkGiverCompatibility>
+		</workGiverCompatibilities>
+		
+		<!--threadLocalPatches>
+			<ThreadLocalPatch>
+				<method>RepairableGear.WorkGiver_RepairItem:JobOnThing</method>
+				<replace>RepairCostThings</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RepairableGear.WorkGiver_RepairItem:TryFindBestBillIngredientsInSet_NoMix</method>
+				<replace>RepairCostAssignedThings</replace>
+			</ThreadLocalPatch>
+			<ThreadLocalPatch>
+				<method>RepairableGear.WorkGiver_RepairItem:TryFindBestBillIngredientsInSet_NoMix</method>
+				<replace>AvailableCounts</replace>
+			</ThreadLocalPatch>
+		</threadLocalPatches -->
+		
+		<lockPatches>
+			<LockPatch>
+				<method>RepairableGear.ThingCache:Get</method>
+				<scope>Type</scope>
+			</LockPatch>
+			<LockPatch>
+				<method>RepairableGear.ThingCache:Add</method>
+				<scope>Type</scope>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>
