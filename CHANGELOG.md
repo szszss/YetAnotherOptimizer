@@ -4,6 +4,7 @@
 * Fix: Pawn_RelationsTracker.RelatedPawns may fail in some situations.
 * Fix: If you disable all multi-threading optimizations during a game and load a save file when Performance Fish is installed, the save file will fail to load due to map initialization failure.
 * Refactor: Only the main thread can initiate parallel thought updates to avoid potential Unity Jobs System failures.
+* Refactor: Parallel Post Map Tick will now force all operations to be completed at the end of the tick, which may reduce performance in extreme cases, but can avoid some errors.
 
 ## 1.0.24  (2026-05-25)
 

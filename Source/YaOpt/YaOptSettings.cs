@@ -447,10 +447,7 @@ namespace YaOpt
 		/// </summary>
 		/// <seealso cref="Patches.Verse_AI_JobDriver_DriverTick"/>
 		/// <seealso cref="Patches.Verse_AI_Pawn_JobTracker_JobTrackerTickInterval"/>
-		/// <seealso cref="Patches.Verse_TickList_BucketOf"/>
-		/// <seealso cref="Patches.Verse_TickList_Constructor"/>
 		/// <seealso cref="Patches.Verse_TickList_Tick"/>
-		/// <seealso cref="Patches.Verse_TickManager_DoSingleTick"/>
 		/// <seealso cref="YaOptGlobal.NeedThreadSafe"/>
 		public OptimizationOption OptParallelPawnTick { get; } = new OptimizationOption
 		{

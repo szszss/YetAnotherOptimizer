@@ -1,6 +1,5 @@
 using RimWorld;
 using System;
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Jobs;
 using Verse;
@@ -42,18 +41,6 @@ namespace YaOpt.Helpers
 		static ParallelMapTickManager()
 		{
 			UpdateCallbackHelper.RegisterClearCacheCallback(ClearCache);
-			UpdateCallbackHelper.RegisterPreRenderCallback(FinishPostMapTick);
-			UpdateCallbackHelper.RegisterPreTickCallback(FinishPostMapTick);
-		}
-
-		/// <summary>
-		/// Performs parallel pre-tick processing for all maps.
-		/// </summary>
-		/// <remarks>
-		/// Currently a placeholder for future pre-tick parallelization opportunities.
-		/// </remarks>
-		public static void ParellellyPreTickMaps(List<Map> maps)
-		{
 		}
 
 		/// <summary>

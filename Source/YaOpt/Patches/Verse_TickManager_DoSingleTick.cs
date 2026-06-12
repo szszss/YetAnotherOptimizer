@@ -1,6 +1,5 @@
 using HarmonyLib;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 using Verse;
 using YaOpt.Helpers;
 
@@ -28,7 +27,6 @@ namespace YaOpt.Patches
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
-			var ppt = YaOptGlobal.Settings.OptParallelPawnTick.Enabled;
 			var ppmt = YaOptGlobal.Settings.OptParallelPostMapTick.Enabled;
 			var tr = YaOptGlobal.Settings.OptFastListerRemove.Enabled;
 
@@ -42,21 +40,20 @@ namespace YaOpt.Patches
 						typeof(DrawableRemovalHelper), nameof(DrawableRemovalHelper.StartRemovalJob));
 				}
 
-				yield return instruction;
-
-				// Call ParallelPawnTickManager.ParellellyPreTickMaps before MapPreTick
-				if (ppt && instruction.Calls("get_Maps"))
+				// Call ParallelMapTickManager.FinishPostMapTick after MapPostTick 
+				if (ppmt && instruction.Calls("get_History"))
 				{
-					ppt = false;
-					yield return new CodeInstruction(OpCodes.Dup);
+					yield return CodeInstruction.LoadArgument(0);
+					yield return CodeInstruction.LoadField(typeof(TickManager), "ticksGameInt");
 					yield return CodeInstruction.Call(
-						typeof(ParallelMapTickManager), nameof(ParallelMapTickManager.ParellellyPreTickMaps));
+						typeof(ParallelMapTickManager), nameof(ParallelMapTickManager.FinishPostMapTick));
 				}
 
-				// Call ParallelPawnTickManager.ParellellyPostTickMaps before MapPostTick 
+				yield return instruction;
+
+				// Call ParallelMapTickManager.ParellellyPostTickMaps before MapPostTick 
 				if (ppmt && instruction.Calls("WorldPostTick"))
 				{
-					ppmt = false;
 					yield return CodeInstruction.Call(
 						typeof(ParallelMapTickManager), nameof(ParallelMapTickManager.ParellellyPostTickMaps));
 				}

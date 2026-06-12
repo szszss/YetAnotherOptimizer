@@ -38,7 +38,6 @@ namespace YaOpt.Helpers
 		/// </summary>
 		private static void PreRender(int _)
 		{
-			ParallelMapTickManager.FinishPostMapTick(_);
 			if (!_thingToDeRegisterDrawable.IsEmpty)
 			{
 #if DEBUG
