@@ -45,6 +45,8 @@
 	<YaOpt.Setting.Note.Multithread>【多執行緒】</YaOpt.Setting.Note.Multithread>
 	<YaOpt.Setting.Option.DebugOutput>偵錯輸出</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>在主控台中輸出偵錯資訊，啟用這個選項可能會略微降低遊戲速度，因為遊戲會在每次輸出主控台資訊時記錄整個呼叫堆疊，這是一個開銷很大的操作。</YaOpt.Setting.Option.DebugOutput.Desc>
+	<YaOpt.Setting.Option.VectoredExceptionHandler>擷取堆疊溢位導致的閃退</YaOpt.Setting.Option.VectoredExceptionHandler>
+	<YaOpt.Setting.Option.VectoredExceptionHandler.Desc>Unity使用的Mono無法擷取堆疊溢位例外狀況（StackOverflowException），當出現堆疊溢位時（通常由函式在遞迴呼叫中陷入無窮迴圈導致），遊戲會直接閃退，特點是遊戲立即關閉，沒有UnityCrashHandler視窗，日誌無輸出，閃退前的瞬間停頓極短甚至沒有停頓。啟用此選項後，Mod會使用Windows的向量化例外處理來擷取堆疊溢位例外狀況，並將呼叫堆疊記錄在遊戲日誌檔案內（Player.log）。\n\n此選項並非最佳化，也無法阻止閃退，僅能記錄錯誤原因以供日後修復。顯然，這個選項僅能在Windows上啟用。\n\n對效能的影響接近於零，如果從未遇到閃退情況，可以關閉此選項。\n\n變更此選項後需要重啟遊戲來生效。</YaOpt.Setting.Option.VectoredExceptionHandler.Desc>
 	<YaOpt.Setting.Option.MaterialGetColor>材質顏色快取</YaOpt.Setting.Option.MaterialGetColor>
 	<YaOpt.Setting.Option.MaterialGetColor.Desc>快取材質顏色以減少頻繁呼叫底層引擎函式帶來的開銷。當顏色發生變化時會自動更新快取。</YaOpt.Setting.Option.MaterialGetColor.Desc>
 	<YaOpt.Setting.Option.ColoredText>富文本最佳化</YaOpt.Setting.Option.ColoredText>

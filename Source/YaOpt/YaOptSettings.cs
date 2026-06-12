@@ -2,6 +2,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using Verse;
@@ -21,6 +22,15 @@ namespace YaOpt
 			Category = OptimizationCategory.Main,
 			Flags = OptimizationFlags.IgnoreEnableAll | OptimizationFlags.IgnoreDisableAll | OptimizationFlags.NoSnapshot,
 			Default = false
+		};
+
+		public OptimizationOption VectoredExceptionHandler { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.VectoredExceptionHandler",
+			Desc = "YaOpt.Setting.Option.VectoredExceptionHandler.Desc",
+			Category = OptimizationCategory.Main,
+			Flags = OptimizationFlags.IgnoreEnableAll | OptimizationFlags.IgnoreDisableAll,
+			FuncShow = (_) => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
 		};
 
 		/// <summary>

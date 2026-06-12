@@ -45,6 +45,8 @@
 	<YaOpt.Setting.Note.Multithread>【多线程】</YaOpt.Setting.Note.Multithread>
 	<YaOpt.Setting.Option.DebugOutput>调试输出</YaOpt.Setting.Option.DebugOutput>
 	<YaOpt.Setting.Option.DebugOutput.Desc>在控制台中输出调试信息，启用这个选项可能会略微降低游戏速度，因为游戏会在每次输出控制台信息时记录整个调用栈，这是一个开销很大的操作。</YaOpt.Setting.Option.DebugOutput.Desc>
+	<YaOpt.Setting.Option.VectoredExceptionHandler>捕获栈溢出导致的闪退</YaOpt.Setting.Option.VectoredExceptionHandler>
+	<YaOpt.Setting.Option.VectoredExceptionHandler.Desc>Unity使用的Mono无法捕获栈溢出异常（StackOverflowException），当出现栈溢出时（通常由函数在递归调用中陷入死循环导致），游戏会直接闪退，特点是游戏立即关闭，没有UnityCrashHandler小窗，日志无输出，闪退前的瞬间卡顿极短甚至没有卡顿。启用此选项后，Mod会使用Windows的向量化异常处理来捕获栈溢出异常，并将调用栈记录在游戏日志文件内（Player.log）。\n\n此选项并非优化，也无法阻止闪退，仅能记录错误原因以供日后修复。显然，这个选项仅能在Windows上启用。\n\n对性能的影响接近于零，如果从未遇到闪退情况，可以关闭此选项。\n\n更改此选项后需要重启游戏来生效。</YaOpt.Setting.Option.VectoredExceptionHandler.Desc>
 	<YaOpt.Setting.Option.MaterialGetColor>材质颜色缓存</YaOpt.Setting.Option.MaterialGetColor>
 	<YaOpt.Setting.Option.MaterialGetColor.Desc>缓存材质颜色以减少频繁调用底层引擎函数带来的开销。当颜色发生变化时会自动更新缓存。</YaOpt.Setting.Option.MaterialGetColor.Desc>
 	<YaOpt.Setting.Option.ColoredText>富文本优化</YaOpt.Setting.Option.ColoredText>
