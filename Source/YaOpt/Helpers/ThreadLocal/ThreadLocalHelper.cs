@@ -12,6 +12,8 @@ namespace YaOpt.Helpers.ThreadLocal
 	{
 		public static List<T> NewList<T>() => new List<T>();
 
+		public static HashSet<T> NewSet<T>() => new HashSet<T>();
+
 		public static Dictionary<K, V> NewDictionary<K, V>() => new Dictionary<K, V>();
 
 		public static List<Thing> NewThingList() => new List<Thing>();

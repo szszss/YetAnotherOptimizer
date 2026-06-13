@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 using Verse;
 using Verse.AI;
 using YaOpt.Helpers;
+using YaOpt.Helpers.ThreadLocal;
 
 namespace YaOpt.Patches
 {
@@ -14,7 +16,11 @@ namespace YaOpt.Patches
 	[HarmonyPatch("FriendlyFireConeTargetScoreOffset")]
 	internal static class Verse_AI_AttackTargetFinder_FriendlyFireConeTargetScoreOffset
 	{
-		private static readonly HashSet<IntVec3> _cells = new HashSet<IntVec3>();
+		private static readonly ThreadLocal<HashSet<IntVec3>> _threadLocalCellSet =
+			new ThreadLocal<HashSet<IntVec3>>(ThreadLocalHelper.NewSet<IntVec3>);
+
+		private static readonly ThreadLocal<HashSet<IntVec3>> _threadLocalCellList =
+			new ThreadLocal<HashSet<IntVec3>>(ThreadLocalHelper.NewSet<IntVec3>);
 
 		static bool Prepare()
 		{
@@ -24,7 +30,10 @@ namespace YaOpt.Patches
 		static IEnumerable<IntVec3> GetCellsWhereBulletFlyThrough(
 			Pawn shooter, in ShotReport report, float radius)
 		{
-			_cells.Clear();
+			var cellSet = _threadLocalCellSet.Value;
+			var cellList = _threadLocalCellList.Value;
+			cellSet.Clear();
+			cellList.Clear();
 			var map = shooter.Map;
 			foreach (var dest in GenRadial.RadialCellsAround(report.ShootLine.Dest, radius, true))
 			{
@@ -39,18 +48,20 @@ namespace YaOpt.Patches
 						shouldBreak = true;
 						break;
 					}
-					if (pos.GetThingList(map).Count > 0)
+					if (pos.GetThingList(map).Count > 0 &&
+						cellSet.Add(pos))
 					{
-						_cells.Add(pos);
+						cellList.Add(pos);
 					}
 				}
 				if (!shouldBreak && shootLine.Dest.CanBeSeenOverFast(map)
-								 && shootLine.Dest.GetThingList(map).Count > 0)
+								 && shootLine.Dest.GetThingList(map).Count > 0
+								 && cellSet.Add(shootLine.Dest))
 				{
-					_cells.Add(shootLine.Dest);
+					cellList.Add(shootLine.Dest);
 				}
 			}
-			return _cells;
+			return cellList;
 		}
 
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
