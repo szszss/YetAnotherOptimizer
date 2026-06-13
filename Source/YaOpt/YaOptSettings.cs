@@ -636,6 +636,20 @@ namespace YaOpt
 		};
 
 		/// <summary>
+		/// Eliminates redundant CanTouchTargetFromValidCell checks in construction resource delivery.
+		/// Vanilla calls CanTouchTargetFromValidCell before FirstBlockingThing and again inside CanConstruct.
+		/// This optimization moves the CanTouchTargetFromValidCell check into FirstBlockingThing,
+		/// so it is only evaluated when there is actually a blocking thing to handle.
+		/// </summary>
+		/// <seealso cref="Patches.MultiTargets_ConstructDeliverResources"/>
+		public OptimizationOption OptConstructDeliverResources { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ConstructDeliverResources",
+			Desc = "YaOpt.Setting.Option.ConstructDeliverResources.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
+		/// <summary>
 		/// Delays texture loading until they are first requested.
 		/// Vanilla loads all mod textures into VRAM at startup.
 		/// This optimization reduces startup time and initial VRAM usage,

@@ -168,6 +168,8 @@
 	<YaOpt.Setting.Option.MeditationTick.Compatibility>相容原版靈能擴展（Vanilla Psycasts Expanded）,但可能會與其他大幅修改冥想機制的Mod產生衝突。與Performance Esmolas的功能重複，如果同時安裝了Performance Esmolas，會優先使用它的最佳化實現。</YaOpt.Setting.Option.MeditationTick.Compatibility>
 	<YaOpt.Setting.Option.StatCache>更多屬性快取</YaOpt.Setting.Option.StatCache>
 	<YaOpt.Setting.Option.StatCache.Desc>將角色的舒適溫度和污垢率加入原版的屬性快取系統。舒適溫度改為每20幀更新一次（裝備變動時強制重新整理），污垢率每60幀更新一次。這能減少頻繁存取這些高開銷屬性時的效能損耗。</YaOpt.Setting.Option.StatCache.Desc>
+	<YaOpt.Setting.Option.ConstructDeliverResources>建造資源搬運檢查最佳化</YaOpt.Setting.Option.ConstructDeliverResources>
+	<YaOpt.Setting.Option.ConstructDeliverResources.Desc>最佳化建造時資源搬運工作的檢查順序，原版在分配建造工作時會重複檢測兩次可通行性，此最佳化會剔除多餘的一次。</YaOpt.Setting.Option.ConstructDeliverResources.Desc>
 	<YaOpt.Setting.Option.ConnectivityUpdate>連通性更新最佳化</YaOpt.Setting.Option.ConnectivityUpdate>
 	<YaOpt.Setting.Option.ConnectivityUpdate.Desc>最佳化當地圖連通性更新（如建牆、拆牆）時的效能。原版程式碼使用了一個巨大的去重池並在迴圈內反覆清空，造成了顯著的效能開銷。此最佳化將其替換為更小的去重池並將清空操作正確外置，從而提升了效能。</YaOpt.Setting.Option.ConnectivityUpdate.Desc>
 	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>
