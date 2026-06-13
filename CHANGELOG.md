@@ -1,3 +1,5 @@
+## 1.1.0  (2026-06-14)
+
 * Feature: Connectivity Update Optimization
 * Feature: Construction Resource Delivery Check Optimization
 * Feature: Catch Stack Overflow Crash. Log stack overflow exceptions that cannot be caught.
