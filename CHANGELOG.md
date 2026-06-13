@@ -1,3 +1,4 @@
+* Feature: Connectivity Update Optimization
 * Feature: Catch Stack Overflow Crash. Log stack overflow exceptions that cannot be caught.
 * Compatibility: RepairableGear
 * Fix: Thread-safe for GenLabel (Some mods use it multi-threaded)

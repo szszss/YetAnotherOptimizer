@@ -168,6 +168,8 @@
 	<YaOpt.Setting.Option.MeditationTick.Compatibility>兼容原版灵能扩展（Vanilla Psycasts Expanded）,但可能会与其他大幅修改冥想机制的Mod产生冲突。与Performance Esmolas的功能重复，如果同时安装了Performance Esmolas，会优先使用它的优化实现。</YaOpt.Setting.Option.MeditationTick.Compatibility>
 	<YaOpt.Setting.Option.StatCache>更多属性缓存</YaOpt.Setting.Option.StatCache>
 	<YaOpt.Setting.Option.StatCache.Desc>将角色的舒适温度和污垢率加入原版的属性缓存系统。舒适温度改为每20帧更新一次（装备变动时强制刷新），污垢率每60帧更新一次。这能减少频繁访问这些高开销属性时的性能损耗。</YaOpt.Setting.Option.StatCache.Desc>
+	<YaOpt.Setting.Option.ConnectivityUpdate>连通性更新优化</YaOpt.Setting.Option.ConnectivityUpdate>
+	<YaOpt.Setting.Option.ConnectivityUpdate.Desc>优化当地图连通性更新（如建墙、拆墙）时的性能。原版代码使用了一个巨大的去重池并在循环内反复清空，造成了显著的性能开销。此优化将其替换为更小的去重池并将清空操作正确外置，从而提升了性能。</YaOpt.Setting.Option.ConnectivityUpdate.Desc>
 	<YaOpt.Setting.Tab.Main>全部</YaOpt.Setting.Tab.Main>
 	<YaOpt.Setting.Tab.Fps>FPS</YaOpt.Setting.Tab.Fps>
 	<YaOpt.Setting.Tab.Tps>TPS</YaOpt.Setting.Tab.Tps>

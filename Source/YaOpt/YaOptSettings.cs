@@ -581,6 +581,20 @@ namespace YaOpt
 			Category = OptimizationCategory.Tps,
 		};
 
+		/// <summary>
+		/// Optimizes <see cref="ConnectivitySource.UpdateIncrementally"/>.
+		/// Vanilla re-clears a massive 160k-capacity HashSet within a loop when updating connectivity,
+		/// causing significant overhead. This optimization replaces it with a smaller HashSet
+		/// and hoists the clear operation outside the loop to improve performance and preserve deduplication.
+		/// </summary>
+		/// <seealso cref="Patches.Verse_ConnectivitySource_UpdateIncrementally"/>
+		public OptimizationOption OptConnectivityUpdate { get; } = new OptimizationOption
+		{
+			Name = "YaOpt.Setting.Option.ConnectivityUpdate",
+			Desc = "YaOpt.Setting.Option.ConnectivityUpdate.Desc",
+			Category = OptimizationCategory.Tps,
+		};
+
 		/// <seealso cref="Patches.Verse_GenTicks_GetCameraUpdateRate"/>
 		public OptimizationOption OptCameraUpdateRate { get; } = new OptimizationOption
 		{
