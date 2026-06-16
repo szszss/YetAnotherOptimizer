@@ -152,7 +152,6 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 						yield return CodeInstruction.Call(
 							typeof(ThreadLocalReachability),
 							nameof(ThreadLocalReachability.ExitLock));
-						yield return new CodeInstruction(OpCodes.Leave, labelReturn);
 						yield return new CodeInstruction(OpCodes.Endfinally)
 							.WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
 						continue;
