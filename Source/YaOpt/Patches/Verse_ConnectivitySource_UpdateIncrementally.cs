@@ -35,7 +35,7 @@ namespace YaOpt.Patches
 			yield return CodeInstruction.StoreLocal(local.LocalIndex);
 			foreach (var instruction in instructions)
 			{
-				if (instruction.LoadsField("checkedCells"))
+				if (instruction.LoadsField("checkedCells", true))
 				{
 					yield return CodeInstruction.LoadLocal(local.LocalIndex);
 					continue;
