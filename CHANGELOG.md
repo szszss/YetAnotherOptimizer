@@ -1,3 +1,5 @@
+## 1.1.1  (2026-06-16)
+
 * Fix: Connectivity Update Optimization may not update the connectivity of bridges on impassable terrain.
 
 ## 1.1.0  (2026-06-14)
