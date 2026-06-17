@@ -56,8 +56,20 @@ namespace YaOpt.Helpers
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool LoadsField(this CodeInstruction code, string fieldName)
+		{
+			var opcode = code.opcode;
+			var opcodeCheck =
+				opcode == OpCodes.Ldsflda ||
+				opcode == OpCodes.Ldsfld ||
+				opcode == OpCodes.Ldflda ||
+				opcode == OpCodes.Ldfld;
+			return opcodeCheck && code.operand is FieldInfo fieldInfo && fieldInfo.Name == fieldName;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool LoadsField(this CodeInstruction code, string fieldName,
-			bool isStatic = false, bool byAddress = false)
+			bool isStatic, bool byAddress = false)
 		{
 			var opcode = code.opcode;
 			var opcodeCheck = false;
