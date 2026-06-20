@@ -16,8 +16,8 @@ namespace YaOpt.Helpers
 			public FloatRange Range;
 		}
 
-		private static readonly ConcurrentDictionary<Pawn, CacheEntry> _cachedSafeTemperatureRanges =
-			new ConcurrentDictionary<Pawn, CacheEntry>();
+		private static readonly ConcurrentDictionary<int, CacheEntry> _cachedSafeTemperatureRanges =
+			new ConcurrentDictionary<int, CacheEntry>();
 
 		private static int _currentTick;
 
@@ -57,7 +57,8 @@ namespace YaOpt.Helpers
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static FloatRange GetSafeTemperatureRange(Pawn pawn)
 		{
-			if (!_cachedSafeTemperatureRanges.TryGetValue(pawn, out var entry) ||
+			var key = pawn.thingIDNumber;
+			if (!_cachedSafeTemperatureRanges.TryGetValue(key, out var entry) ||
 				_currentTick - entry.CreatedTick >= _cachedCacheLifespan)
 			{
 				entry = new CacheEntry()
@@ -65,7 +66,7 @@ namespace YaOpt.Helpers
 					Range = pawn.SafeTemperatureRange(),
 					CreatedTick = _currentTick
 				};
-				_cachedSafeTemperatureRanges[pawn] = entry;
+				_cachedSafeTemperatureRanges[key] = entry;
 			}
 			return entry.Range;
 		}

@@ -1,5 +1,5 @@
-using FacialAnimation;
 using System.Collections.Concurrent;
+using FacialAnimation;
 using System.Collections.Generic;
 using Unity.Jobs;
 using Verse;
@@ -23,11 +23,13 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 
 		private static readonly List<Pawn> _pendingPawns = new List<Pawn>();
 
+		private static int _lastClearTick = -1;
+
 		// This is actually a concurrent hashset since there is not ConcurrentSet in .net
-		// Key is thingIdNumber and value is pawn.
+		// Key is thingIdNumber and value is the tick of its last update.
 		// Used to prevent updating the same pawn multiple times in the same frame/tick.
-		private static readonly ConcurrentDictionary<int, Pawn> _updatedPawns
-			= new ConcurrentDictionary<int, Pawn>();
+		private static readonly ConcurrentDictionary<int, int> _updatedPawns
+			= new ConcurrentDictionary<int, int>();
 
 		static ParallelUpdateHelper()
 		{
@@ -42,6 +44,7 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 			_jobHandle = default;
 			_pendingPawns.Clear();
 			_updatedPawns.Clear();
+			_lastClearTick = -1;
 		}
 
 		private static void PreRender(int tick)
@@ -65,18 +68,29 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 				_jobRunning = false;
 				_pendingPawns.Clear();
 			}
-			if (!_updatedPawns.IsEmpty)
+
+			if (_lastClearTick == -1)
+			{
+				_lastClearTick = tick;
+			}
+			if (tick - _lastClearTick > 18000)
+			{
+				_lastClearTick = tick;
 				_updatedPawns.Clear();
+			}
 		}
 
-		private static bool ShouldPawnUpdate(Pawn pawn)
+		private static bool ShouldPawnUpdate(Pawn pawn, int currentTick)
 		{
-			if (_updatedPawns.TryGetValue(pawn.thingIDNumber, out var renderPawn))
+			var key = pawn.thingIDNumber;
+			if (_updatedPawns.TryGetValue(key, out var lastUpdateTick))
 			{
-				if (renderPawn == pawn)
+				if (lastUpdateTick == currentTick)
+					return false;
+				if (!_updatedPawns.TryUpdate(key, currentTick, lastUpdateTick))
 					return false;
 			}
-			else if (!_updatedPawns.TryAdd(pawn.thingIDNumber, pawn))
+			else if (!_updatedPawns.TryAdd(key, currentTick))
 			{
 				return false;
 			}
@@ -105,11 +119,12 @@ namespace YaOpt.OtherMod.FacialAnimation.Helpers
 		{
 			if (pawn.TryGetComp<FacialAnimationControllerComp>(out var comp))
 			{
-				if (!ShouldPawnUpdate(pawn))
+				var currentTick = Find.TickManager.TicksGame;
+				if (!ShouldPawnUpdate(pawn, currentTick))
 					return;
 				if (!comp.CheckUpdateableInitial())
 					return;
-				comp.UpdateStatus(Find.TickManager.TicksGame);
+				comp.UpdateStatus(currentTick);
 				comp.UpdateAnimation();
 			}
 		}
