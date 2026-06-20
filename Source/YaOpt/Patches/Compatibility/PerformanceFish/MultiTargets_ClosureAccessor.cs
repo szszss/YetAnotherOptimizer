@@ -1,10 +1,10 @@
 using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
-using RimWorld;
 using Verse;
 
 namespace YaOpt.Patches.Compatibility.PerformanceFish
@@ -74,13 +74,13 @@ namespace YaOpt.Patches.Compatibility.PerformanceFish
 				AccessTools.TypeByName("PerformanceFish.JobSystem.WorkGiver_DoBillOptimization/TryFindBestIngredientsHelper_Patch"),
 				"Postfix");
 			foreach (var nestedType in typeof(WorkGiver_DoBill).GetNestedTypes(
-				         BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+						 BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
 			{
 				var method = AccessTools.FirstMethod(nestedType, methodInfo =>
 				{
 					var param = methodInfo.GetParameters();
 					return param?.Length == 1 && param[0].ParameterType == typeof(Region) &&
-					       (methodInfo.Name.Contains("<TryFindBestIngredientsHelper>b__4"));
+						   (methodInfo.Name.Contains("<TryFindBestIngredientsHelper>b__4"));
 				});
 				if (method != null)
 				{

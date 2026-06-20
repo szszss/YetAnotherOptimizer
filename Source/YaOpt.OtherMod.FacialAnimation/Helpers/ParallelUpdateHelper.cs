@@ -1,5 +1,5 @@
-using System.Collections.Concurrent;
 using FacialAnimation;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.Jobs;
 using Verse;
