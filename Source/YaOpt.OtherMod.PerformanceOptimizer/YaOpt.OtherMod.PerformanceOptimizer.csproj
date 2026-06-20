@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\YaOpt\YaOpt.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimworldVersion)" />
+	<Reference Include="PerformanceOptimizer">
+      <HintPath>$([System.IO.Path]::Combine($(SteamWorkshopDirectory), 'content\294100\2664723367\$(GameVersion)\Assemblies\PerformanceOptimizer.dll'))</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;$(SolutionDir)..\1.6\Mods\Performance Optimizer\Assemblies\&quot; /i /y" />
+  </Target>
+</Project>

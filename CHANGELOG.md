@@ -1,3 +1,5 @@
+* Compatibility: "Faster GetComp methods replacement" of Performance Optimizer.
+
 ## 1.1.1  (2026-06-16)
 
 * Fix: Connectivity Update Optimization may not update the connectivity of bridges on impassable terrain.

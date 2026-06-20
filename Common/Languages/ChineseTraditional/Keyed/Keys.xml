@@ -4,7 +4,6 @@
 	<YaOpt.Loading.Patching>YaOpt: 重新套用設定</YaOpt.Loading.Patching>
 	<YaOpt.Message.ButterCompatibilityNotEnabled>你同時安裝了YaOpt和Butter++，必須在設定中開啟Butter++的相容模式，或者在YaOpt的設定選單裡點擊“修復相容性選項”。</YaOpt.Message.ButterCompatibilityNotEnabled>
 	<YaOpt.Message.ButterCompatibilityForceEnable>你同時安裝了YaOpt和Butter++，已強制開啟Butter++的相容模式。</YaOpt.Message.ButterCompatibilityForceEnable>
-	<YaOpt.Message.PerformanceOptimizerGetComp>你同時安裝了YaOpt和Performance Optimizer，並且啟用了YaOpt的多執行緒類最佳化，如果你在遊戲中遇到隨機出現但不頻繁的“System.InvalidOperationException: Collection was modified”報錯的話，嘗試關閉Performance Optimizer的“更快的GetComp方法替換（Faster GetComp methods replacement）”。</YaOpt.Message.PerformanceOptimizerGetComp>
 	<YaOpt.Message.PerformanceFishSeeConsole>你同時安裝了YaOpt和Performance Fish，並且開啟了有相容問題的選項，詳細資訊見主控台。</YaOpt.Message.PerformanceFishSeeConsole>
 	<YaOpt.Message.PerformanceFishIncompatibility1>你同時安裝了YaOpt和Performance Fish，並且開啟了有相容問題的選項，請在YaOpt的設定選單裡點擊“修復相容性選項”，或者按照以下資訊選擇性地關閉衝突的最佳化。</YaOpt.Message.PerformanceFishIncompatibility1>
 	<YaOpt.Message.PerformanceFishIncompatibility2>（左側：YaOpt）      （右側：Performance Fish）</YaOpt.Message.PerformanceFishIncompatibility2>

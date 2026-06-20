@@ -39,7 +39,6 @@ namespace YaOpt
 
 			var noProblem = true;
 			noProblem &= CheckButterPlusPlus(canForceDo, canSave, silent);
-			CheckPerformanceOptimizer(silent);
 			noProblem &= CheckPerformanceFish(canForceDo & canSave, canSave, silent);
 			HasProblem = !noProblem;
 		}
@@ -86,44 +85,6 @@ namespace YaOpt
 							   e.ToStringSafe());
 			}
 			return true;
-		}
-
-		private static void CheckPerformanceOptimizer(bool silent)
-		{
-			if (silent)
-				return;
-			if (!YaOptGlobal.HasMod("Taranchuk.PerformanceOptimizer"))
-				return;
-			if (!YaOptGlobal.NeedThreadSafe)
-				return;
-			try
-			{
-				var typeMod = AccessTools.TypeByName("PerformanceOptimizer.PerformanceOptimizerMod");
-				var typePerformPatchesPerFrames = AccessTools.TypeByName("PerformanceOptimizer.PerformPatchesPerFrames");
-				var typeFasterGetCompReplacement = AccessTools.TypeByName("PerformanceOptimizer.Optimization_FasterGetCompReplacement");
-				var typeOptimization = AccessTools.TypeByName("PerformanceOptimizer.Optimization");
-				var fieldPerformPatchesPerFrames = AccessTools.Field(typeMod, "performPatchesPerFrames");
-				var fieldOptimization = AccessTools.Field(typePerformPatchesPerFrames, "optimization");
-				var getterEnabled = AccessTools.PropertyGetter(typeOptimization, "IsEnabled");
-
-				var objPerformPatchesPerFrames = fieldPerformPatchesPerFrames.GetValue(null);
-				if (objPerformPatchesPerFrames == null)
-					return;
-				var objOptimization = fieldOptimization.GetValue(objPerformPatchesPerFrames);
-				if (objOptimization == null)
-					return;
-				var enabled = getterEnabled.Invoke(objOptimization, null);
-
-				if (enabled is bool b && b)
-				{
-					YaOptMod.Warning("YaOpt.Message.PerformanceOptimizerGetComp".Translate());
-				}
-			}
-			catch (Exception e)
-			{
-				YaOptMod.Error("Performance Optimizer was detected but failed to get the compatibility info: " +
-							   e.ToStringSafe());
-			}
 		}
 
 		private static bool CheckPerformanceFish(bool canForceDo, bool canSave, bool silent)

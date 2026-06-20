@@ -72,5 +72,10 @@ namespace YaOpt.Helpers.ThirdParty
 
 		// Add back MinValue to undo the subtraction, preserving any in-flight reader increments
 		public void ExitWriteLock() => Interlocked.Add(ref _state, long.MinValue);
+
+		public static class InstanceOf<T>
+		{
+			public static UnfairRwLock Lock = new UnfairRwLock();
+		}
 	}
 }

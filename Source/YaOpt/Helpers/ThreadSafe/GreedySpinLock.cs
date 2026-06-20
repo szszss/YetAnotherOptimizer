@@ -1,9 +1,11 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace YaOpt.Helpers.ThreadSafe
 {
+	[StructLayout(LayoutKind.Auto, Size = 64)] // Fill a cache line to avoid false sharing
 	public struct GreedySpinLock
 	{
 		private const int DEADLOCK_TIMEOUT = 10000; // The unit is Ms
@@ -121,6 +123,11 @@ namespace YaOpt.Helpers.ThreadSafe
 				}
 				Panic();
 			}
+		}
+
+		public static class InstanceOf<T>
+		{
+			public static GreedySpinLock Lock = new GreedySpinLock();
 		}
 	}
 }
