@@ -314,6 +314,11 @@
 					<li>bool</li>
 				</parameters>
 			</LockPatch>
+			
+			<!-- GenConstruct -->
+			<LockPatch>
+				<method>RimWorld.GenConstruct:CanGetResources_NewTemp</method>
+			</LockPatch>
 
 			<!-- ItemAvailability -->
 			<LockPatch>
