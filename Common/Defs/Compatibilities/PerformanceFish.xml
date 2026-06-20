@@ -4,12 +4,6 @@
 		<defName>PerformanceFish</defName>
 		<lockPatches>
 			<LockPatch>
-				<method>PerformanceFish.JobSystem.WorkGiver_DoBillOptimization/TryFindBestIngredientsHelper_Patch:Postfix</method>
-			</LockPatch>
-			<LockPatch>
-				<method>PerformanceFish.JobSystem.WorkGiver_DoBillOptimization/TryFindBestIngredientsInSet_NoMixHelper_Patch:MarkIngredientCountAsFound</method>
-			</LockPatch>
-			<LockPatch>
 				<method>Verse.Room:get_Owners</method>
 				<scope>Method</scope>
 			</LockPatch>

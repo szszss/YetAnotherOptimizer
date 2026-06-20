@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 using Verse;
 using YaOpt.Helpers.ThreadSafe;
 
@@ -12,8 +13,6 @@ namespace YaOpt.Patches.Compatibility.PerformanceFish
 	[HarmonyPatch]
 	internal static class RimWorld_WorkGiver_DoBill_TryFindBestIngredientsHelper
 	{
-		private static GreedySpinLock _spinLock = new GreedySpinLock();
-
 		static MethodBase TargetMethod()
 		{
 			foreach (var nestedType in typeof(WorkGiver_DoBill).GetNestedTypes(
@@ -88,18 +87,52 @@ namespace YaOpt.Patches.Compatibility.PerformanceFish
 				throw new Exception("Cannot find the target label for cache update skip.");
 			}
 
-			// 1. Move labels from skipLabelIndex to a new leave instruction
+			// Find the GetList call after the cache check. GetList reads cache.thingDefs,
+			// which UpdateCache mutates in-place (Clear/Add on inner Defs lists). Reading
+			// it outside the lock races with a concurrent UpdateCache on the same Bill.
+			// Extend the try-finally to cover GetList so read and write are atomic.
+			var getListCallIndex = -1;
+			for (var i = skipLabelIndex + 1; i < codes.Count; i++)
+			{
+				if (codes[i].opcode == OpCodes.Call
+					&& codes[i].operand is MethodInfo method
+					&& method.Name == "GetList")
+				{
+					getListCallIndex = i;
+					break;
+				}
+			}
+			if (getListCallIndex == -1)
+			{
+				throw new Exception("Cannot find the GetList call after the cache check.");
+			}
+
+			// The stloc right after GetList stores its return value. The leave must go
+			// after that stloc, otherwise Leave would discard the GetList result on stack.
+			var getListStoreIndex = getListCallIndex + 1;
+			if (getListStoreIndex >= codes.Count
+				|| !codes[getListStoreIndex].opcode.Name.StartsWith("stloc"))
+			{
+				throw new Exception("Cannot find the stloc following the GetList call.");
+			}
+
+			// The instruction following the stloc is where execution continues after the
+			// try-finally (ActualLoop etc.). This is the new leave target.
+			var afterStoreIndex = getListStoreIndex + 1;
+
+			// 1. Create a new leave instruction after GetList's stloc.
+			// Label1 and Label8 (used by br jumps from outside the try region) must
+			// remain on the after-store instruction so they land after the finally block.
+			// Add labelFinally as an extra label on the same instruction for the leave target.
 			var leaveInst = new CodeInstruction(OpCodes.Leave);
 			var labelFinally = generator.DefineLabel();
 			leaveInst.operand = labelFinally;
-			leaveInst.labels.AddRange(codes[skipLabelIndex].labels);
-			codes[skipLabelIndex].labels.Clear();
-			codes[skipLabelIndex].labels.Add(labelFinally);
+			codes[afterStoreIndex].labels.Add(labelFinally);
 
 			// 2. Create finally block instructions
 			var finallyStart = new CodeInstruction(OpCodes.Ldsflda, AccessTools.Field(
-				typeof(RimWorld_WorkGiver_DoBill_TryFindBestIngredientsHelper),
-				nameof(_spinLock)));
+				typeof(MultiTargets_RecipeIngredientCache),
+				nameof(SpinLock)));
 			finallyStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
 
 			var finallyCall = new CodeInstruction(OpCodes.Call, AccessTools.Method(
@@ -109,18 +142,20 @@ namespace YaOpt.Patches.Compatibility.PerformanceFish
 			var endFinally = new CodeInstruction(OpCodes.Endfinally);
 			endFinally.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
 
-			// Insert leave and finally instructions at skipLabelIndex
-			codes.Insert(skipLabelIndex, leaveInst);
-			codes.Insert(skipLabelIndex + 1, finallyStart);
-			codes.Insert(skipLabelIndex + 2, finallyCall);
-			codes.Insert(skipLabelIndex + 3, endFinally);
+			// Insert leave and finally instructions right after the GetList stloc.
+			// skipLabelIndex keeps its original labels so brfalse still lands there
+			// and falls through into the GetList call, now inside the try block.
+			codes.Insert(afterStoreIndex, leaveInst);
+			codes.Insert(afterStoreIndex + 1, finallyStart);
+			codes.Insert(afterStoreIndex + 2, finallyCall);
+			codes.Insert(afterStoreIndex + 3, endFinally);
 
 			// 3. Create try block start and enter lock
 			codes[insertTarget].blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
 
 			var enterLock1 = new CodeInstruction(OpCodes.Ldsflda, AccessTools.Field(
-				typeof(RimWorld_WorkGiver_DoBill_TryFindBestIngredientsHelper),
-				nameof(_spinLock)));
+				typeof(MultiTargets_RecipeIngredientCache),
+				nameof(SpinLock)));
 			var enterLock2 = new CodeInstruction(OpCodes.Call, AccessTools.Method(
 				typeof(GreedySpinLock),
 				nameof(GreedySpinLock.Enter), Type.EmptyTypes));
