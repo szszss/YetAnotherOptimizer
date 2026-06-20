@@ -76,6 +76,15 @@ namespace YaOpt.Patches.Compatibility
 						nameof(PawnsFinder.AllMaps_Spawned)),
 					HarmonyPatchType.Transpiler, "OELS.VehicleMapFramework");
 			}
+
+			if (YaOptGlobal.NeedThreadSafe &&
+				YaOptGlobal.HasType("Build_From_Inventory.NothingNearbyDummy"))
+			{
+				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
+						typeof(WorkGiver_ConstructDeliverResources),
+						"FindAvailableNearbyResources"),
+					HarmonyPatchType.Prefix, "Uuugggg.rimworld.Build_From_Inventory.main");
+			}
 		}
 
 		public static void PatchAgain()

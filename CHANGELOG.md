@@ -1,5 +1,6 @@
 * Compatibility: "Faster GetComp methods replacement" of Performance Optimizer.
 * Compatibility: "DoBillOptimization.TryFindBestIngredientsInSet_NoMixHelper" and "DoBillPrepatches.TryFindBestIngredientsHelper_InnerDelegate" of Performance Fish.
+* Fix: Attempting to fix the System.ArgumentOutOfRangeException in Build From Inventory - Continued (Unable to verify, BFI does not work in any case in my environment).
 * Refactor: Adjust the patching priority and error detection of Reachability thread safety patches.
 
 ## 1.1.1  (2026-06-16)
