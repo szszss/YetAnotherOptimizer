@@ -1,4 +1,5 @@
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Verse;
@@ -11,6 +12,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 	[HarmonyPatch(typeof(Reachability))]
 	[HarmonyPatch(nameof(Reachability.CanReach),
 		typeof(IntVec3), typeof(LocalTargetInfo), typeof(PathEndMode), typeof(TraverseParms))]
+	[HarmonyPriority(Priority.High)]
 	internal static class Verse_Reachability_CanReach
 	{
 		static bool Prepare()
@@ -31,6 +33,9 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			var foundTryBegin = false;
 			var foundDestRegionsClear = false;
 			var beginFieldReplace = false;
+			var cntWorking = 0;
+			var cntTryBegin = 0;
+			var cntClear = 0;
 			foreach (var instruction in instructions)
 			{
 				// skip working check
@@ -39,6 +44,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 					if (!hasSkippedWorkingCheck)
 					{
 						hasSkippedWorkingCheck = true;
+						cntWorking++;
 						yield return new CodeInstruction(OpCodes.Pop);
 						yield return new CodeInstruction(OpCodes.Ldc_I4_0);
 						continue;
@@ -47,6 +53,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 				else if (!foundTryBegin && instruction.HasBlock(ExceptionBlockType.BeginExceptionBlock))
 				{
 					foundTryBegin = true;
+					cntTryBegin++;
 					instruction.blocks.Clear();
 					// var isMainThread = YaOptGlobal.IsInMainThread;
 					yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread")
@@ -95,6 +102,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 				if (foundTryBegin && !foundDestRegionsClear && instruction.Calls("Clear"))
 				{
 					foundDestRegionsClear = true;
+					cntClear++;
 					beginFieldReplace = true;
 					// }
 					yield return new CodeInstruction(OpCodes.Br_S, labelIfMainThreadEnd);
@@ -128,6 +136,15 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 					// }
 					yield return new CodeInstruction(OpCodes.Nop).WithLabels(labelIfMainThreadEnd);
 				}
+			}
+			if (cntWorking != 1 || cntTryBegin != 1 || cntClear != 1)
+			{
+				throw new Exception(
+					"CanReach pattern mismatch. " +
+					$"Expected: Working=1, TryBegin=1, Clear=1. " +
+					$"Actual: Working={cntWorking}, TryBegin={cntTryBegin}, " +
+					$"Clear={cntClear}. " +
+					"Another mod may have modified the IL of Verse.Reachability.CanReach.");
 			}
 		}
 	}

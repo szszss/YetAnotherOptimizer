@@ -10,6 +10,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 {
 	[HarmonyPatch(typeof(Reachability))]
 	[HarmonyPatch("CheckCellBasedReachability")]
+	[HarmonyPriority(Priority.High)]
 	internal static class Verse_Reachability_CheckCellBasedReachability
 	{
 		static bool Prepare()
@@ -31,6 +32,9 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			var prepareEmitFinally = false;
 			Label jumpTarget = default;
 			Label labelBrfalseFix = default;
+			var cntCanUseCache = 0;
+			var cntEnterLock = 0;
+			var cntExitLock = 0;
 
 			// var isMainThread = YaOptGlobal.IsInMainThread;
 			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
@@ -112,6 +116,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 				if (instruction.Calls("CanUseCache"))
 				{
 					findNextBrfalse = true;
+					cntCanUseCache++;
 				}
 
 				// (Try-Finally block: Stage2 - Fix brfalse) (Optional, only used in foundCell.IsValid block)
@@ -132,6 +137,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 				if (prepareEmitFinally && instruction.labels.Contains(jumpTarget))
 				{
 					prepareEmitFinally = false;
+					cntExitLock++;
 
 					if (!fixNextBrfalse) // if the brfalse is found and a label is created
 					{
@@ -161,6 +167,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 					findNextBrfalse = false;
 					prepareEmitFinally = true;
 					fixNextBrfalse = true;
+					cntEnterLock++;
 					yield return CodeInstruction.LoadLocal(localLockTaken.LocalIndex, true);
 					yield return CodeInstruction.Call(
 						typeof(ThreadLocalReachability),
@@ -169,7 +176,15 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 						.WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
 				}
 			}
-
+			if (cntCanUseCache != 2 || cntEnterLock != 2 || cntExitLock != 2)
+			{
+				throw new Exception(
+					"CheckCellBasedReachability pattern mismatch. " +
+					$"Expected: CanUseCache=1, EnterLock=1, ExitLock=1. " +
+					$"Actual: CanUseCache={cntCanUseCache}, EnterLock={cntEnterLock}, " +
+					$"ExitLock={cntExitLock}. " +
+					"Another mod may have modified the IL of Verse.Reachability.CheckCellBasedReachability.");
+			}
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -10,6 +11,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 {
 	[HarmonyPatch(typeof(Reachability))]
 	[HarmonyPatch("CheckRegionBasedReachability")]
+	[HarmonyPriority(Priority.High)]
 	internal static class Verse_Reachability_CheckRegionBasedReachability
 	{
 		static bool Prepare()
@@ -33,6 +35,10 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 			var labelIfMainThreadEnd = generator.DefineLabel();
 			var list = instructions.ToList();
 			var firstTryFinallyBlock = false;
+			var cntContains = 0;
+			var cntCount = 0;
+			var cntRetFirst = 0;
+			var cntRetLast = 0;
 			// var isMainThread = YaOptGlobal.IsInMainThread;
 			yield return CodeInstruction.Call(typeof(YaOptGlobal), "get_IsInMainThread");
 			yield return CodeInstruction.StoreLocal(localIsMainThread.LocalIndex);
@@ -145,6 +151,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 					// }
 					if (firstTryFinallyBlock)
 					{
+						cntRetFirst++;
 						firstTryFinallyBlock = false;
 						yield return CodeInstruction.StoreLocal(localResult.LocalIndex);
 						yield return CodeInstruction.LoadLocal(localLockTaken.LocalIndex)
@@ -164,6 +171,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 					// return result;
 					else
 					{
+						cntRetLast++;
 						yield return new CodeInstruction(OpCodes.Pop);
 						yield return CodeInstruction.LoadLocal(localLockTaken.LocalIndex)
 							.WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
@@ -187,6 +195,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 					list[i - 1].Calls("Contains"))
 				{
 					firstTryFinallyBlock = true;
+					cntContains++;
 					yield return CodeInstruction.LoadLocal(localLockTaken.LocalIndex, true);
 					yield return CodeInstruction.Call(
 						typeof(ThreadLocalReachability),
@@ -202,6 +211,7 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 				else if ((instruction.opcode == OpCodes.Bgt || instruction.opcode == OpCodes.Bgt_S) &&
 						 list[i - 2].Calls("get_Count"))
 				{
+					cntCount++;
 					yield return CodeInstruction.LoadLocal(localLockTaken.LocalIndex, true);
 					yield return CodeInstruction.Call(
 						typeof(ThreadLocalReachability),
@@ -209,6 +219,16 @@ namespace YaOpt.Patches.ThreadSafe.Reach
 					yield return new CodeInstruction(OpCodes.Nop)
 						.WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
 				}
+			}
+			if (cntContains != 1 || cntCount != 1 ||
+				cntRetFirst != 1 || cntRetLast != 1)
+			{
+				throw new Exception(
+					"CheckRegionBasedReachability pattern mismatch. " +
+					$"Expected: Contains=1, Count=1, RetFirst=1, RetLast=1. " +
+					$"Actual: Contains={cntContains}, Count={cntCount}, " +
+					$"RetFirst={cntRetFirst}, RetLast={cntRetLast}. " +
+					"Another mod may have modified the IL of Verse.Reachability.CheckRegionBasedReachability.");
 			}
 		}
 	}

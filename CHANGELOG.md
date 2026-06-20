@@ -1,4 +1,5 @@
 * Compatibility: "Faster GetComp methods replacement" of Performance Optimizer.
+* Refactor: Adjust the patching priority and error detection of Reachability thread safety patches.
 
 ## 1.1.1  (2026-06-16)
 
