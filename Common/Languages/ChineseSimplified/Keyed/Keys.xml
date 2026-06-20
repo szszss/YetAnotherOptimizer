@@ -21,6 +21,7 @@
 	<YaOpt.Message.CompatibilityFixSucceed>已修复兼容性选项，重启游戏以生效。</YaOpt.Message.CompatibilityFixSucceed>
 	<YaOpt.Message.CompatibilityFixFailed>修复兼容性选项失败，仍有不兼容项存在，详见控制台。</YaOpt.Message.CompatibilityFixFailed>
 	<YaOpt.Message.ErrorWhilePatching>YaOpt在应用设置时出现了错误，游戏可能无法正常运行，查阅控制台获取详细信息。</YaOpt.Message.ErrorWhilePatching>
+	<YaOpt.Message.ErrorWhileEarlyPatching>YaOpt在安装早期补丁时出现了错误，游戏可能无法正常运行，查阅控制台获取详细信息。</YaOpt.Message.ErrorWhileEarlyPatching>
 	<YaOpt.Setting.Button.AutoFixCompatibility>修复兼容性选项</YaOpt.Setting.Button.AutoFixCompatibility>
 	<YaOpt.Setting.Button.DisableAll>禁用全部优化</YaOpt.Setting.Button.DisableAll>
 	<YaOpt.Setting.Button.EnableAll>启用全部优化</YaOpt.Setting.Button.EnableAll>

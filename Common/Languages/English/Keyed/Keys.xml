@@ -21,6 +21,7 @@
 	<YaOpt.Message.CompatibilityFixSucceed>Compatibility options have been fixed. Restart the game to take effect.</YaOpt.Message.CompatibilityFixSucceed>
 	<YaOpt.Message.CompatibilityFixFailed>Failed to fix compatibility options. Incompatible items still exist, check the console for details.</YaOpt.Message.CompatibilityFixFailed>
 	<YaOpt.Message.ErrorWhilePatching>YaOpt encountered an error while applying settings. The game may not function correctly. Check the console for details.</YaOpt.Message.ErrorWhilePatching>
+	<YaOpt.Message.ErrorWhileEarlyPatching>YaOpt encountered an error while applying early patches. The game may not function correctly. Check the console for details.</YaOpt.Message.ErrorWhileEarlyPatching>
 	<YaOpt.Setting.Button.AutoFixCompatibility>Fix Compatibility Options</YaOpt.Setting.Button.AutoFixCompatibility>
 	<YaOpt.Setting.Button.DisableAll>Disable All Optimizations</YaOpt.Setting.Button.DisableAll>
 	<YaOpt.Setting.Button.EnableAll>Enable All Optimizations</YaOpt.Setting.Button.EnableAll>

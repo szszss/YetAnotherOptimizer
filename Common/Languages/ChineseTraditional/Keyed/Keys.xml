@@ -21,6 +21,7 @@
 	<YaOpt.Message.CompatibilityFixSucceed>已修復相容性選項，重啟遊戲以生效。</YaOpt.Message.CompatibilityFixSucceed>
 	<YaOpt.Message.CompatibilityFixFailed>修復相容性選項失敗，仍有不相容項存在，詳見主控台。</YaOpt.Message.CompatibilityFixFailed>
 	<YaOpt.Message.ErrorWhilePatching>YaOpt在套用設定時出現了錯誤，遊戲可能無法正常執行，查閱主控台獲取詳細資訊。</YaOpt.Message.ErrorWhilePatching>
+	<YaOpt.Message.ErrorWhileEarlyPatching>YaOpt在安裝早期修補程式時出現了錯誤，遊戲可能無法正常執行，查閱主控台獲取詳細資訊。</YaOpt.Message.ErrorWhileEarlyPatching>
 	<YaOpt.Setting.Button.AutoFixCompatibility>修復相容性選項</YaOpt.Setting.Button.AutoFixCompatibility>
 	<YaOpt.Setting.Button.DisableAll>停用全部最佳化</YaOpt.Setting.Button.DisableAll>
 	<YaOpt.Setting.Button.EnableAll>啟用全部最佳化</YaOpt.Setting.Button.EnableAll>

@@ -25,6 +25,12 @@ namespace YaOpt
 			yield break;
 		}
 
+		public virtual bool OnPrePatch(Harmony harmony)
+		{
+			return true;
+		}
+
+
 		public virtual bool OnPatch(Harmony harmony)
 		{
 			return true;
@@ -95,6 +101,23 @@ namespace YaOpt
 					YaOptMod.Error($"Failed to run OnPostInit for {subMod.GetType().FullName}\n{ex}");
 				}
 			}
+		}
+
+		internal static bool PrePatchAll(IEnumerable<YaOptSubMod> subMods, Harmony harmony)
+		{
+			var noError = true;
+			foreach (var subMod in subMods)
+			{
+				try
+				{
+					noError &= subMod.OnPrePatch(harmony);
+				}
+				catch (Exception ex)
+				{
+					YaOptMod.Error(ex.ToString());
+				}
+			}
+			return noError;
 		}
 
 		internal static bool PatchAll(IEnumerable<YaOptSubMod> subMods, Harmony harmony)

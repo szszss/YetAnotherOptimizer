@@ -1,4 +1,6 @@
 using HarmonyLib;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -99,7 +101,24 @@ namespace YaOpt
 		/// </summary>
 		private void ApplyEarlyPatches()
 		{
-			EarlyHarmony.TryPatchAll(Assembly.GetExecutingAssembly(), true);
+			var noError = true;
+			try
+			{
+				noError &= EarlyHarmony.TryPatchAll(Assembly.GetExecutingAssembly(), true);
+				noError &= YaOptSubMod.PrePatchAll(SubMods, EarlyHarmony);
+			}
+			catch (Exception ex)
+			{
+				noError = false;
+				Error(ex.ToString());
+			}
+
+			if (!noError)
+			{
+				Panic("Error(s) happened while early patching. The game may not run properly.");
+				Messages.Message("YaOpt.Message.ErrorWhileEarlyPatching".Translate().ToString(),
+					null, MessageTypeDefOf.CautionInput, false);
+			}
 
 			if (Settings.OptLazyTextureLoad.Enabled)
 			{
