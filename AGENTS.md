@@ -13,7 +13,8 @@ The project consists of three modules:
     - `Early/` — Patches applied before other mods load via the `EarlyHarmony` instance (ID `"YetAnotherOptimizer.Early"`).
     - `Prepatch/` — Patches for the Prepatcher mod.
     - `ThreadSafe/` — Thread-safety patches. Subcategories: `ThreadLocal/` (per-thread instance fields), `ThreadStatic/` (simple `[ThreadStatic]` replacements), `Locked/` (critical section lock injection), `Delayed/` (deferred execution).
-    - `Compatibility/` — Runtime compatibility patches for other mods (e.g., `RocketMan`, `PerformanceFish`, `CombatExtended`, `VehicleFramework`) plus `Unpatcher.cs` for conflict resolution.
+    - `Compatibility/` — Runtime compatibility patches for other mods, plus `Unpatcher.cs` for conflict resolution.
+    - `Debugging/` — Debugging and diagnostic patches.
   - `Helpers/`: Utility classes including:
     - `ParallelPawnTickManager`, `ParallelMapTickManager`, `ParallelWorkGiver` — Multi-threaded tick computations via Unity Job System.
     - `UpdateCallbackHelper.cs` — Central event system for game lifecycle hooks (pre-tick, post-tick, pre-render, post-render, cache-clear).
@@ -55,8 +56,7 @@ Root
 │   ├── YaOpt/                  # Core C# project
 │   │   ├── Defines/            # Compile-time compatibility definitions
 │   │   ├── Helpers/            # Utility classes and trampolines
-│   │   ├── Patches/            # Harmony patches (Early, Prepatch, ThreadSafe, Compatibility)
-│   │   └── Settings/           # Option framework
+│   │   └── Patches/            # Harmony patches (Early, Prepatch, ThreadSafe, Compatibility, Debugging)
 │   ├── YaOpt.Unity/            # Unity Burst project (reference only)
 │   ├── YaOpt.OtherMod.*/       # Compatibility sub-module projects
 │   ├── Settings.props          # Shared build properties (GameVersion, HarmonyVersion)
@@ -79,6 +79,7 @@ Root
       DoSomething();
   }
   ```
+- **Indentation**: **Tabs** (width 4), **LF** line endings, **UTF-8** encoding, trim trailing whitespace. Enforced by `.editorconfig`.
 - **Exemption**: Ignore the non-standard naming in `Source/YaOpt/CompatibilityDef.cs`, where member names are designed for compatibility with RimWorld deserialization.
 
 ### 3.2 Performance Guidelines
@@ -107,6 +108,8 @@ Since this is an optimization mod, performance is the highest priority:
 - **Harmony Instances**: The project maintains two Harmony instances:
   - `"YetAnotherOptimizer"` — Main instance for standard patches.
   - `"YetAnotherOptimizer.Early"` — Applied during mod constructor, before other mods' patches execute.
+- **Patch File Naming**: Place patch files under `Patches/`. Name them `Namespace_Type_Method.cs` (e.g., `RimWorld_Pawn_Tick.cs`). For patches targeting multiple types or methods, use the `MultiTargets_` prefix (e.g., `MultiTargets_ClosestThingGlobal.cs`). Compatibility patch files use the target mod name as prefix (e.g., `CombatExtended_CompInventory_TrySwitchToWeapon.cs`).
+- **Patch Class Modifiers**: All patch classes must be `internal static`.
 
 ### 3.4 Documentation Style
 - **Be Concise**: XML documentation should be brief and to the point.
@@ -133,11 +136,23 @@ Since this is an optimization mod, performance is the highest priority:
   ```
 
 ## 4. Build & Test
-- **Build Config**: Version parameters are in `Source/Settings.props` (shared) and `Source/UserSettings.props` (local, gitignored; copy from `.template`).
-- **Build**: Open `Source/YaOpt.sln` with Visual Studio to compile.
+- **Build Config**: Version parameters are in `Source/Settings.props` (shared) and `Source/UserSettings.props` (local, gitignored; copy from `Source/UserSettings.props.template`).
+- **Build**: Run `dotnet build Source\YaOpt.sln` or open `Source/YaOpt.sln` with Visual Studio 2022+.
 - **Output**:
   - Main DLL: `1.6/Assemblies/YaOpt.dll`
   - OtherMod DLLs: `1.6/Mods/<ModName>/Assemblies/`
   - Burst native libraries: `1.6/Burst/yaopt_burst_*.dll`
 - **Conditional Compilation**: `DEBUG` symbol enables performance diagnostics and profiling output.
 - **Test**: Launch RimWorld with the mod loaded. Verify via in-game TPS display and log messages.
+
+## 5. Adding a New Optimization
+
+1. **Register a toggle** in `YaOptSettings.cs` — add a boolean property with `[Unsaved]` attribute and corresponding translation keys.
+2. **Write the Harmony patch** under `Source/YaOpt/Patches/` following the naming and modifier conventions in section 3.3.
+3. **Add translations** in `Common/Languages/` (ChineseSimplified, ChineseTraditional, English) for the toggle label and description.
+4. **Build and test** — run `dotnet build Source\YaOpt.sln`, then launch RimWorld to verify the optimization works correctly.
+
+## 6. Threading Model
+
+- **Game tick is single-threaded**: All Thing Tick calls are executed serially on a single thread — there are never two Things ticking concurrently. Parallel work giver assignment and parallel thought updates do execute within the logical tick cycle, but they block the main thread while running, so no other Thing is being ticked simultaneously.
+- **No race conditions in ClearCache**: All `ClearCache` calls are invoked exclusively from the main thread. There are never concurrent cache clears, so caches do not require locks for write operations during invalidation.
