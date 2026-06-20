@@ -1,6 +1,6 @@
-* Compatibility: "Faster GetComp methods replacement" of Performance Optimizer.
-* Compatibility: "DoBillOptimization.TryFindBestIngredientsInSet_NoMixHelper" and "DoBillPrepatches.TryFindBestIngredientsHelper_InnerDelegate" of Performance Fish.
-* Fix: Attempting to fix the System.ArgumentOutOfRangeException in Build From Inventory - Continued (Unable to verify, BFI does not work in any case in my environment).
+* Compatibility: Performance Optimizer - Faster GetComp methods replacement option.
+* Compatibility: Performance Fish - DoBillOptimization.TryFindBestIngredientsInSet_NoMixHelper and DoBillPrepatches.TryFindBestIngredientsHelper_InnerDelegate options.
+* Fix: Try to fix the System.ArgumentOutOfRangeException in Build From Inventory - Continued (Unable to verify, BFI does not work in any case in my environment).
 * Fix: Dubs Bad Hygiene may throw System.InvalidOperationException shortly after loading a save.
 * Fix: Thread-safe for GenConstruct.anGetResources_NewTemp.
 * Refactor: Adjust the patching priority and error detection of Reachability thread safety patches.
