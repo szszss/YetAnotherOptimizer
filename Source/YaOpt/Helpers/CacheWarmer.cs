@@ -9,8 +9,15 @@ namespace YaOpt.Helpers
 	{
 		public static void PostInit()
 		{
-			WarmPawnRenderNodeWorker();
-			WarmDubsBadHygiene();
+			try
+			{
+				WarmPawnRenderNodeWorker();
+				WarmDubsBadHygiene();
+			}
+			catch (Exception ex)
+			{
+				YaOptMod.Error($"Error when warm up the caches: {ex.ToString()}");
+			}
 		}
 
 		private static void WarmPawnRenderNodeWorker()
