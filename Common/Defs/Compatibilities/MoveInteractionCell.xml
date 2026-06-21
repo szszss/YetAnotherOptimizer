@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<YaOpt.CompatibilityDef MayRequire="mlie.moveinteractioncell">
+		<defName>MoveInteractionCell</defName>
+		<lockPatches>
+			<LockPatch>
+				<method>MoveInteractionCell.Designator_Install_SelectedUpdate:Prefix</method>
+				<scope>Key</scope>
+				<key>___MoveInteractionCell_Overrides</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>MoveInteractionCell.MoveInteractionCell:ResetOverrideCell</method>
+				<scope>Key</scope>
+				<key>___MoveInteractionCell_Overrides</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>MoveInteractionCell.MoveInteractionCell:RotateSpot</method>
+				<scope>Key</scope>
+				<key>___MoveInteractionCell_Overrides</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>MoveInteractionCell.MoveInteractionCell:SetOverride</method>
+				<scope>Key</scope>
+				<key>___MoveInteractionCell_Overrides</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>MoveInteractionCell.ThingUtility_InteractionCell:Prefix</method>
+				<scope>Key</scope>
+				<key>___MoveInteractionCell_Overrides</key>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+		</lockPatches>
+	</YaOpt.CompatibilityDef>
+</Defs>

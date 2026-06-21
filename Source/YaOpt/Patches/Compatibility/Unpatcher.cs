@@ -85,6 +85,23 @@ namespace YaOpt.Patches.Compatibility
 						"FindAvailableNearbyResources"),
 					HarmonyPatchType.Prefix, "Uuugggg.rimworld.Build_From_Inventory.main");
 			}
+
+			if (YaOptGlobal.NeedThreadSafe &&
+				YaOptGlobal.HasType("MoveInteractionCell.GridsUtility_GetThingList"))
+			{
+				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
+						typeof(GenConstruct),
+						nameof(GenConstruct.CanPlaceBlueprintAt)),
+					HarmonyPatchType.Postfix, "Mlie.MoveInteractionCell");
+			}
+			if (YaOptGlobal.NeedThreadSafe &&
+				YaOptGlobal.HasType("MoveInteractionCell.ThingGrid_ThingsListAtFast"))
+			{
+				YaOptGlobal.Harmony.Unpatch(AccessTools.Method(
+						typeof(PlaceWorker_PreventInteractionSpotOverlap),
+						nameof(PlaceWorker_PreventInteractionSpotOverlap.AllowsPlacing)),
+					HarmonyPatchType.Postfix, "Mlie.MoveInteractionCell");
+			}
 		}
 
 		public static void PatchAgain()
