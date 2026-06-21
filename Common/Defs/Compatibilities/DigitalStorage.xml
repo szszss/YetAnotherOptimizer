@@ -2,15 +2,28 @@
 <Defs>
 	<YaOpt.CompatibilityDef MayRequire="cagier.digitalstorage">
 		<defName>DigitalStorage</defName>
-		<workGiverCompatibilities>
-			<WorkGiverCompatibility>
-				<workGiverClass>RimWorld.WorkGiver_ConstructDeliverResources</workGiverClass>
-				<parallelism>MainThreaded</parallelism>
-			</WorkGiverCompatibility>
-			<WorkGiverCompatibility>
-				<workGiverClass>RimWorld.WorkGiver_DoBill</workGiverClass>
-				<parallelism>MainThreaded</parallelism>
-			</WorkGiverCompatibility>
-		</workGiverCompatibilities>
+		<lockPatches>
+			<LockPatch>
+				<method>DigitalStorage.AI.CoreFinder:AllUsableAccesses</method>
+				<scope>Type</scope>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>DigitalStorage.AI.CoreFinder:AnyUsableAccess</method>
+				<scope>Type</scope>
+				<supportRecursion>true</supportRecursion>
+			</LockPatch>
+			<LockPatch>
+				<method>DigitalStorage.AI.JobDriver_DS_ReserveHelper:SetPendingPlan</method>
+				<scope>Type</scope>
+			</LockPatch>
+			<LockPatch>
+				<method>DigitalStorage.AI.JobDriver_DS_ReserveHelper:TryConsumePendingPlan</method>
+				<scope>Type</scope>
+			</LockPatch>
+			<LockPatch>
+				<method>DigitalStorage.Core.ItemGrouping:GroupOf</method>
+			</LockPatch>
+		</lockPatches>
 	</YaOpt.CompatibilityDef>
 </Defs>

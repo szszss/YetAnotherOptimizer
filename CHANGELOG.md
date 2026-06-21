@@ -1,5 +1,6 @@
 * Compatibility: Romance On The Rim (Imperfect; when Parallel Thought Update is enabled, the thoughts "missing lover" and "worrying about lover's health" do not display thought bubbles)
 * Compatibility: Move Interaction Cell
+* Compatibility: DigitalStorage 3.0
 
 ## 1.1.2  (2026-06-21)
 
