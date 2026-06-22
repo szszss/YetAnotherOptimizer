@@ -69,6 +69,9 @@ namespace YaOpt
 			NativeLoader.LoadLibraries(content);
 			YaOptGlobal.IsLibraryLoaded = true;
 
+			// Fix compatibility with Hyperdrive mod.
+			CompatibilityChecker.CheckHyperdrive();
+
 			// Apply settings and early Harmony patches.
 			ApplySettings();
 			ApplyEarlyPatches();

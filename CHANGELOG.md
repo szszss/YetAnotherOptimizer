@@ -1,3 +1,5 @@
+* Compatibility: Hyperdrive
+
 ## 1.1.3 (2026-06-22)
 
 * Compatibility: Romance On The Rim (Imperfect; when Parallel Thought Update is enabled, the thoughts "missing lover" and "worrying about lover's health" do not display thought bubbles)

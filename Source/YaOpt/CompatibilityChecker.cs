@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Verse;
+using YaOpt.Defines;
 
 namespace YaOpt
 {
@@ -278,6 +279,18 @@ namespace YaOpt
 			}
 			error = null;
 			return true;
+		}
+
+		/// <summary>
+		/// A hard-coded compatibility check, disabling FastPatchOperation if Hyperdrive is installed.
+		/// </summary>
+		public static void CheckHyperdrive()
+		{
+			if (YaOptGlobal.HasMod("vopaga.hyperdrive"))
+			{
+				CompatibilityDefines.CachedBannedOptimizations.Add("OptFastPatchOperation");
+				CompatibilityDefines.CachedBannedBy["OptFastPatchOperation"] = "Hyperdrive";
+			}
 		}
 	}
 }
