@@ -1,3 +1,5 @@
+## 1.1.4 (2026-06-22)
+
 * Compatibility: Hyperdrive
 * Compatibility: Kyulen - NinetailFox
 
