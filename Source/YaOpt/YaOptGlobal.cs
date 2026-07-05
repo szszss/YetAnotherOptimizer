@@ -182,7 +182,7 @@ namespace YaOpt
 		{
 			if (!_modLookup.TryGetValue(modId, out var result))
 			{
-				result = ModLister.GetActiveModWithIdentifier(modId) != null;
+				result = ModLister.GetActiveModWithIdentifier(modId, ignorePostfix: true) != null;
 				_modLookup[modId] = result;
 			}
 			return result;
